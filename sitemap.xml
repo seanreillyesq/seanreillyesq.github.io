@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="http://localhost:8080/wp-content/plugins/google-sitemap-generator/sitemap.xsl"?><!-- sitemap-generator-url="http://www.arnebrachhold.de" sitemap-generator-version="4.0.8" -->
+<!-- generated-on="December 31, 2014 10:25 am" -->
+<sitemapindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">	<sitemap>
+		<loc>http://localhost:8080/sitemap-misc.xml</loc>
+		<lastmod>2014-12-13T20:59:52+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-post-2014-12.xml</loc>
+		<lastmod>2014-12-13T20:59:52+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-post-2014-03.xml</loc>
+		<lastmod>2014-04-10T16:54:48+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-post-2012-08.xml</loc>
+		<lastmod>2014-02-26T23:24:54+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-post-2011-06.xml</loc>
+		<lastmod>2011-06-05T10:43:19+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-post-2010-10.xml</loc>
+		<lastmod>2010-10-01T21:28:21+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-post-2010-09.xml</loc>
+		<lastmod>2010-09-16T21:23:59+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-page-2014-04.xml</loc>
+		<lastmod>2014-04-03T09:51:38+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-page-2012-07.xml</loc>
+		<lastmod>2014-02-26T23:33:02+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-page-2010-10.xml</loc>
+		<lastmod>2014-04-10T16:38:50+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-page-2010-09.xml</loc>
+		<lastmod>2010-09-30T21:28:42+00:00</lastmod>
+	</sitemap>
+	<sitemap>
+		<loc>http://localhost:8080/sitemap-pt-page-2010-03.xml</loc>
+		<lastmod>2014-02-26T21:01:42+00:00</lastmod>
+	</sitemap>
+</sitemapindex><!-- <p>Please edit wp-db.inc.php in wp-includes and set SAVEQUERIES to true if you want to see the queries.</p> --> <!-- Request ID: c22da0ccd37060069d2d91b44eeb1436; Queries for sitemap: 6; Total queries: 40; Seconds: 0.05; Memory for sitemap: 0.5MB; Total memory: 7.75MB -->
