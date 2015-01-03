@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
+var host = "www.sreilly.net";
+if ((host == window.location.host) && (window.location.protocol != "https:"))
+    window.location.protocol = "https";
+
 <head>
 
     <meta charset="utf-8">
