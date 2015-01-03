@@ -10,7 +10,7 @@ header-img: "img/digital-marketing-consultant.jpg"
 meta-description: "In an attempt to organise my life a little better, as well as publish more to my blog, I am trying out using the Day One Journal app"
 ---
 
-So I have decided to take note of [Robin Sharma](http://www.robinsharma.com)'s excellent teachings and spend a little time journaling my life. 
+So I have decided to take note of <a href="http://www.robinsharma.com" target="_blank" rel="nofollow">Robin Sharma's</a> excellent teachings and spend a little time journaling my life. 
 
 My guess is that given his general philosophy, that he would forgive me for using an app to journal rather than a written journal, as at least it means I am doing rather than not doing. 
 
@@ -21,11 +21,11 @@ Robin suggests writing your journal in the "Power Hour" between 05:00 - 06:00 ho
 Many of my daily journals I will publish to my website, some I will keep
 private. 
 
-So this is day 1 using [Day One] (http://dayoneapp.com). 
+So this is day 1 using <a href="http://dayoneapp.com" target="_blank" rel="nofollow"> Day One</a>. 
 
 I chose Day One after finding it on the App Store looking for apps that supported markdown as I have just converted my personal website from Wordpress to Jekyll Static Site Generator (I intend to write a blog post on this move and my reasons for it within the next few days). 
 
-Further more I found that there is a [Jekyll-DayOne](https://github.com/jverkoey/jekyll-dayone) plugin from Jeff Verkoeyen and frankly [his blog](http://blog.jeffverkoeyen.com/) looks excellent. But I don't intend to set this up yet. 
+Further more I found that there is a <a href="https://github.com/jverkoey/jekyll-dayone" target="_blank" rel="nofollow"> Jekyll-DayOne</a> plugin from Jeff Verkoeyen and frankly <a href="http://blog.jeffverkoeyen.com" target="_blank" rel="nofollow">his blog</a> looks excellent. But I don't intend to set this up yet. 
 
 Anyway I am currently just trying out the Day One app on my iPhone whilst my wife,  Nicole, has her first ever go of Minecraft with our two boys (massive Minecraft fans) something she promised to do for a while. Well done Nicole, you survived the first night!
 
