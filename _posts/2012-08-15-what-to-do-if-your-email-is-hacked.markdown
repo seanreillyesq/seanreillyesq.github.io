@@ -19,9 +19,6 @@ meta-description: Four simple things you can do to help yourself if your email a
 
 4. Write to everybody in your contact list and make them aware that your email was hacked and warn them to not click on the link of the previous email:
 
-
-
-	
   * Make sure to send email your contacts by using the BCC line of your email so you're not sending out people’s non-public email addresses to others. (Put your email address within the To line.)
 
 	
