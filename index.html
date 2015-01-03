@@ -15,6 +15,11 @@ meta-description: Lover of adventure &amp; family, doer of marketing. Currently 
             {{ post.subtitle }}
         </h3>
         {% endif %}
+        {% if post.meta-description %}
+        <h3 class="post-subtitle">
+            {{ post.meta-description }}
+        </h3>
+        {% endif %}
     </a>
     <p class="post-meta">Posted by {{ post.author }} on {{ post.date | date: "%B %-d, %Y" }}</p>
 </div>
