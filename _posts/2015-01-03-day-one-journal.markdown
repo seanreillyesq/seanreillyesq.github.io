@@ -5,11 +5,10 @@ date: 2015-01-03 21:23:59+00:00
 layout: post
 title: Day One Journal
 categories:
+meta-description: In an attempt to organise my life a little better, as well as publish more to my blog, I am trying out using the Day One Journal app
 - News
 header-img: "img/digital-marketing-consultant.jpg"
-meta-description: In an attempt to organise my life a little better, as well as publish more to my blog, I am trying out using the Day One Journal app
 ---
-
 So I have decided to take note of [Robin Sharma](www.robinsharma.com)'s excellent teachings and spend a little time journaling my life. 
 
 My guess is that given his general philosophy, that he would forgive me for using an app to journal rather than a written journal, as at least it means I am doing rather than not doing. 
