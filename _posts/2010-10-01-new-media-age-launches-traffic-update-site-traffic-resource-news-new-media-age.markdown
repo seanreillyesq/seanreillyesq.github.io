@@ -11,6 +11,8 @@ header-img: "img/digital-marketing-consultant.jpg"
 meta-description: In 2010 NMA launched "Traffic Update" a site traffic resource reflecting the true visitor numbers to some of the UK's biggest websites including View London
 ---
 
+A copy of the article from the sadly departed NMA website:
+
 Fri, 1 Oct 2010 | By Sebastian Joseph published in NMA
 
 The beta version of the resource lists sites across industry vertical sectors automotive, community, entertainment, finance, media, property, retail, sports, technology and travel by the number of unique visitors received each month.
