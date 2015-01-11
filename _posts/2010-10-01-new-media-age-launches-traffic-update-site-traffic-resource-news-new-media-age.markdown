@@ -7,7 +7,7 @@ slug: new-media-age-launches-traffic-update-site-traffic-resource-news-new-media
 title: new media age launches Traffic Update site traffic resource
 categories:
 - News
-header-img: "img/digital-marketing-consultant.jpg"
+header-img: "img/traffic-update.jpg"
 meta-description: In 2010 NMA launched "Traffic Update" a site traffic resource reflecting the true visitor numbers to some of the UK's biggest websites including View London
 ---
 

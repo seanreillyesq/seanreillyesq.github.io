@@ -15,7 +15,7 @@ slug: recommended-wordpress-plugins
 title: Recommended Wordpress Plugins
 categories:
 - Online
-header-img: "img/digital-marketing-consultant.jpg"
+header-img: "img/recommended-wordpress-plugins.jpg"
 meta-description: WordPress is one of the best content management systems, but what makes it so powerful are the plugins. Here is my list of recommended Wordpress plugins.
 ---
 

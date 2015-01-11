@@ -7,7 +7,7 @@ slug: what-to-do-if-your-email-is-hacked
 title: What to do if your email's hacked
 categories:
 - Online
-header-img: "img/digital-marketing-consultant.jpg"
+header-img: "img/what-to-do-if-email-hacked.jpg"
 meta-description: Four simple things you can do to help yourself if your email account has been hacked and how to alert yourself in the future if your email is hacked
 ---
 
