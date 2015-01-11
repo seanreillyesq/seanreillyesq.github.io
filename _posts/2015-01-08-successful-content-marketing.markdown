@@ -4,7 +4,7 @@ comments: true
 date: 2015-01-08 07:30:59+00:00
 layout: post
 title: "Seven Steps to Successful Content Marketing"
-header-img: "img/digital-marketing-consultant.jpg"
+header-img: "img/content-marketing.jpg"
 meta-description: "Content marketing can take many forms. These strategies can help you make the most of them and allow you to keep your site content fresh"
 categories:
 - Blog
