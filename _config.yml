@@ -18,3 +18,4 @@ permalink:    /:title-:year:month:day
 gems:
   - jekyll-sitemap
   - jekyll-redirect-from
+  - jekyll-feed
