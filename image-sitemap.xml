@@ -4,9 +4,9 @@
   <url>
     <image:image>
       <image:loc>http://www.sreilly.net/SeanReilly.jpg</image:loc>
-      <image:caption>Sean Reilly</image>
-      <image:title>Sean Reilly</imag>
-      <image:geo_location>Mont Blanc, France</image>
+      <image:caption>Sean Reilly</image:caption>
+      <image:title>Sean Reilly</image:title>
+      <image:geo_location>Mont Blanc, France</image:geo_location>
     </image:image>
   </url> 
 </urlset> 
