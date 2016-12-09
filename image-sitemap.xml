@@ -3,6 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <image:image>
+      <loc>http://www.sreilly.net</loc>
       <image:loc>http://www.sreilly.net/SeanReilly.jpg</image:loc>
       <image:title>Sean Reilly</image:title>
       <image:geo_location>Mont Blanc, France</image:geo_location>
