@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <image:image>
+      <image:loc>http://www.sreilly.net/SeanReilly.jpg</image:loc>
+      <image:caption>Sean Reilly</image>
+      <image:title>Sean Reilly</imag>
+      <image:geo_location>Mont Blanc, France</image>
+    </image:image>
+  </url> 
+</urlset> 
