@@ -19,3 +19,4 @@ gems:
   - jekyll-sitemap
   - jekyll-redirect-from
   - jekyll-feed
+  - amp-jekyll
