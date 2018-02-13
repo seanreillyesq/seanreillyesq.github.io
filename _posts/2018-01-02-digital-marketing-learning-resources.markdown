@@ -14,7 +14,7 @@ categories:
 Thought I’d share this with everyone just in case there are any nuggets that might be useful for others. 
 
 Any of the blogs for the tools that are used can be great especially Moz and their Whiteboard Friday video:
-https://moz.com/blog
+[https://moz.com/blog](https://moz.com/blog)
 
 Also the following tools, bearing in mind their content will skew towards using their tools but can be widely applied
 https://www.semrush.com/blog/ 
