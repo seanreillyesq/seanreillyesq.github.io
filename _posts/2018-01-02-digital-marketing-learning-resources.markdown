@@ -43,6 +43,6 @@ If you want to get a wide overview on all digital marketing topics spend £11 on
 That should get you started. I haven’t touched outreach, social or local there (saying that Greg Gifford is good for local SEO albeit with a US skew – definitely watch his content its brilliant).
 
 Finally, look to the wider marketing field as well especially as digital marketing becomes more just marketing. Marketing Week is good in this respect and especially the content from Mark Ritson who is a very straight shooter (plus adjunct professor or marketing for Sydney University and marketing advisor for LVMH) – he is not a social media marketing fan though! <br />
-[https://www.marketingweek.com/focus/mark-ritson/] (https://www.marketingweek.com/focus/mark-ritson/)
+[https://www.marketingweek.com/focus/mark-ritson/](https://www.marketingweek.com/focus/mark-ritson/)
 
 Have any suggestions for me, tweet me [https://twitter.com/seanreillyesq](@seanreillyesq)
