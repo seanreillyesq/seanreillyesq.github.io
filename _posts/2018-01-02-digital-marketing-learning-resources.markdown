@@ -17,9 +17,9 @@ Any of the blogs for the tools that are used can be great especially Moz and the
 [https://moz.com/blog](https://moz.com/blog)
 
 Also the following tools, bearing in mind their content will skew towards using their tools but can be widely applied
-https://www.semrush.com/blog/ 
-https://ahrefs.com/blog/ 
-https://blog.majestic.com/
+[https://www.semrush.com/blog/]
+[https://ahrefs.com/blog/]
+[https://blog.majestic.com/]
 
 The Official Google Webmaster Tools Blog is the source for many new updates 
 https://webmasters.googleblog.com
