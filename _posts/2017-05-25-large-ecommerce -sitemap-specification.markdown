@@ -102,8 +102,8 @@ And that we have pages, images and videos
 When the assets are published and added to an XML sitemap  
 Then we need to list these URL schema sets within the `<urlset >` tag  
 And for pages the schema is `xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"`  
-And for pages the schema is `xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"`  
-And for pages the schema is `xmlns:image="http://www.google.com/schemas/sitemap-image/1.1)"`  
+And for video the schema is `xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"`  
+And for images the schema is `xmlns:image="http://www.google.com/schemas/sitemap-image/1.1)"`  
 And it should look like this `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="https://www.google.com/schemas/sitemap-video/1.1">`  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
