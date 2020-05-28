@@ -4,7 +4,7 @@ comments: true
 date: 2017-05-25 11:51:57+00:00
 layout: post
 title: "Large Ecommerce Sitemap Specifications"
-header-img: "img/google-algorithms.jpg"
+header-img: "img/large-ecommerce-sitemap-specification.jpg"
 meta-description: "Here are the specifications I wrote for a bespoke sitemap set up for a large ecommerce website in Febraruy 2017 in an attempt to optimise the performance of the site"
 categories:
 - Blog
