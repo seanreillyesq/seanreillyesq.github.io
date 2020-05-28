@@ -1,7 +1,7 @@
 ---
 author: Sean
 comments: true
-date: 2017-05-25 11:51:57+00:00
+date: 20-05-28 17:51:57+00:00
 layout: post
 title: "Large Ecommerce Sitemap Specifications"
 header-img: "img/large-ecommerce-sitemap-specification.jpg"
