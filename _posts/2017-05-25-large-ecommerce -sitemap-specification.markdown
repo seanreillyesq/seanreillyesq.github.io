@@ -106,99 +106,99 @@ At the request of the development manager I used an Agile Given When Then approa
     xmlns:image="[https://www.google.com/schemas/sitemap-image/1.1](http://www.google.com/schemas/sitemap-image/1.1)"  
     xmlns:video="[https://www.google.com/schemas/sitemap-video/1.1](http://www.google.com/schemas/sitemap-video/1.1)">  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And some of them are web pages
-    When the assets are published and added to an XML sitemap
-    Then we need to list the locations of URLs using <loc> </loc> tags
-    And these need to be within the URL group which is wrapped <URL> </URL> tags
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And some of them are web pages  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list the locations of URLs using <loc> </loc> tags  
+    And these need to be within the URL group which is wrapped <URL> </URL> tags  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And some of them are images
-    And we can provide a title which will help the search engines understand what is in an image
-    When the assets are published and added to an XML sitemap
-    Then we need to list details of images using <image:image> </image:image> tags
-    And we need to list the URL of an image within <image:loc> </image:/loc> tags
-    And we need to provide a title in <image:title> </image:title> tags
-    And this image, where it is a product should contain the H1 of the product page, the angle of the shot and the product code (e.g. Rolex Datejust 116231 Front 82309)
-    And we need to provide license details which will be for every one <image:license>[https://www.website.co.uk/info/Licensed-Images</image:license>
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And some of them are images  
+    And we can provide a title which will help the search engines understand what is in an image  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list details of images using <image:image> </image:image> tags  
+    And we need to list the URL of an image within <image:loc> </image:/loc> tags  
+    And we need to provide a title in <image:title> </image:title> tags  
+    And this image, where it is a product should contain the H1 of the product page, the angle of the shot and the product code (e.g. Rolex Datejust 116231 Front 82309)  
+    And we need to provide license details which will be for every one <image:license>[https://www.website.co.uk/info/Licensed-Images</image:license>  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And some of them are videos
-    And we can provide additional details about these videos
-    And we host all our videos on YouTube
-    When the assets are published and added to an XML sitemap
-    Then we need to list details of videos using <video:video> </video:video> tags within the URL group below the page location details
-    And we need to provide a thumbnail by using <video:thumbnail_loc>[httpss://img.youtube.com/vi/<insert-youtube-video-id-here>/default.jpg](https://img.youtube.com/vi/%3cinsert-youtube-video-id-here%3e/default.jpg) </video:thumbnail_loc> (e.g. [httpss://img.youtube.com/vi/X6geC2Wbh7s/default.jpg](https://img.youtube.com/vi/X6geC2Wbh7s/default.jpg))
-    And we need to provide the title which should match the page's H1 tag and this should be wrapped in <video:title> </video:title>
-    And we need to provide the title which should match the description from the page (currently wrapped in itemprop="description" tags on page) and be wrapped in <video:description> </video:description>
-    And we need to provide the content location which will be <video:content_loc> [httpss://www.youtube.com/embed/<insert-youtube-video-id-here></video:content_loc](https://www.youtube.com/embed/%3cinsert-youtube-video-id-here%3e%3c/video:content_loc)>
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And some of them are videos  
+    And we can provide additional details about these videos  
+    And we host all our videos on YouTube  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list details of videos using <video:video> </video:video> tags within the URL group below the page location details  
+    And we need to provide a thumbnail by using <video:thumbnail_loc>[httpss://img.youtube.com/vi/<insert-youtube-video-id-here>/default.jpg](https://img.youtube.com/vi/%3cinsert-youtube-video-id-here%3e/default.jpg) </video:thumbnail_loc> (e.g. [httpss://img.youtube.com/vi/X6geC2Wbh7s/default.jpg](https://img.youtube.com/vi/X6geC2Wbh7s/default.jpg))  
+    And we need to provide the title which should match the page's H1 tag and this should be wrapped in <video:title> </video:title>  
+    And we need to provide the title which should match the description from the page (currently wrapped in itemprop="description" tags on page) and be wrapped in <video:description> </video:description>  
+    And we need to provide the content location which will be <video:content_loc> [httpss://www.youtube.com/embed/<insert-youtube-video-id-here></video:content_loc](https://www.youtube.com/embed/%3cinsert-youtube-video-id-here%3e%3c/video:content_loc)>  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And that we have a lot of different types
-    And that when we list all of them the lists can become large
-    And that speed means a lot to us
-    And that aside from splitting up sitemaps we can also compress them
-    When the assets are published
-    Then we can publish gzipped sitemaps along site unzipped sitemaps
-    And provide these gzipped sitemaps to the search engines instead
-    And list these in a public sitemap index xml with the filename https://www.website.co.uk/sitemap.xml that we provide to the search engines
-    And this should be listed in robots.txt
-    And this should be the only one uploaded to search engine webmaster tools
-    And list the uncompressed in another file for internal SEO and human use that we publish at /sitemaps.xml
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And that we have a lot of different types  
+    And that when we list all of them the lists can become large  
+    And that speed means a lot to us  
+    And that aside from splitting up sitemaps we can also compress them  
+    When the assets are published  
+    Then we can publish gzipped sitemaps along site unzipped sitemaps  
+    And provide these gzipped sitemaps to the search engines instead  
+    And list these in a public sitemap index xml with the filename https://www.website.co.uk/sitemap.xml that we provide to the search engines  
+    And this should be listed in robots.txt  
+    And this should be the only one uploaded to search engine webmaster tools  
+    And list the uncompressed in another file for internal SEO and human use that we publish at /sitemaps.xml  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And the search engines have a 50,000 item limit per sitemap
-    When the assets are published and added to an XML sitemap
-    Then we need to split any lists that go above this size
-    And if this happens it would make sense to split sitemaps into logical categories
-    But this should not need to be thought about for a while
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And the search engines have a 50,000 item limit per sitemap  
+    When the assets are published and added to an XML sitemap  
+    Then we need to split any lists that go above this size  
+    And if this happens it would make sense to split sitemaps into logical categories  
+    But this should not need to be thought about for a while  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And that we can advise the search engines on when a page was last modified to help with crawl prioritisation
-    And that we can advise the search engines on what priority we rate a page from 0.0 (lowest) to 1.0 (highest)
-    And that we can advise the search engines on how frequently a page is likely to change (always[changes when accessed]/hourly/daily/weekly/monthly/yearly/never[archived pages])
-    When the assets are published and added to an XML sitemap
-    Then we need to add this data within the <url> </url> tags
-    And we need to use the <lastmod> tag in W3C datetime format with time omitted (e.g. 2017-12-25)
-    And we need to set a priority on pages
-    And that should be set to 1.0 for new arrivals, 0.9 for promo pages, 0.8 for all product pages and left to 0.5 (default) for all other pages (we can tweak later if required)
-    And we need to use the <changefreq> to advise on change frequency (always/hourly/daily/weekly/monthly/yearly/never)
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And that we can advise the search engines on when a page was last modified to help with crawl prioritisation  
+    And that we can advise the search engines on what priority we rate a page from 0.0 (lowest) to 1.0 (highest)  
+    And that we can advise the search engines on how frequently a page is likely to change (always[changes when accessed]/hourly/daily/weekly/monthly/yearly/never[archived pages])  
+    When the assets are published and added to an XML sitemap  
+    Then we need to add this data within the <url> </url> tags  
+    And we need to use the <lastmod> tag in W3C datetime format with time omitted (e.g. 2017-12-25)  
+    And we need to set a priority on pages  
+    And that should be set to 1.0 for new arrivals, 0.9 for promo pages, 0.8 for all product pages and left to 0.5 (default) for all other pages (we can tweak later if required)  
+    And we need to use the <changefreq> to advise on change frequency (always/hourly/daily/weekly/monthly/yearly/never)  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And we don't want to have duplicate content being pushed to the search engines
-    When the assets are published and added to an XML sitemap
-    Then we need to list only canonical URLs
-    And we don't want any pages that have a query string in them in the url to feature in the sitemap
-    And if we have important pages that have query strings in, these need to be changed to non-query based URL's so the search engines don't ignore them
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And we don't want to have duplicate content being pushed to the search engines  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list only canonical URLs  
+    And we don't want any pages that have a query string in them in the url to feature in the sitemap  
+    And if we have important pages that have query strings in, these need to be changed to non-query based URL's so the search engines don't ignore them  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And we have multiple country sites
-    And some we don't provide certain services in some countries (e.g. serving)
-    When the assets are published and added to an XML sitemap
-    Then we need to have a specific set of sitemaps per country
-    And not list in the sitemap services we don't provide in these countries
-    But we also need to make sure these pages do not have hreflang tags point them to non-existent pages within the pages themselves (added otherwise I will forget to tell you this)
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And we have multiple country sites  
+    And some we don't provide certain services in some countries (e.g. serving)  
+    When the assets are published and added to an XML sitemap  
+    Then we need to have a specific set of sitemaps per country  
+    And not list in the sitemap services we don't provide in these countries  
+    But we also need to make sure these pages do not have hreflang tags point them to non-existent pages within the pages themselves (added otherwise I will forget to tell you this)  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And we have multiple country sites
-    And these are in multiple languages
-    When the assets are published and added to an XML sitemap
-    Then we need include hreflang alternatives for each page URL
-    But if this does not exist in the language or is not available as a service then we should not list it as an hreflang alternative on any sitemap (e.g. https://www.website.fr/service)
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And we have multiple country sites  
+    And these are in multiple languages  
+    When the assets are published and added to an XML sitemap  
+    Then we need include hreflang alternatives for each page URL  
+    But if this does not exist in the language or is not available as a service then we should not list it as an hreflang alternative on any sitemap (e.g. https://www.website.fr/service)  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And sometimes these pages are archived
-    When the assets are archived
-    Then we need to move them off all lists into an archive.xml
-    And give all these pages priority 0.0
-    And if this list exceedes 50,000 items we need to split the list and come up with a genius name like archive2.xml
-    And if their URL group contains any other assets they need to be included as well
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And sometimes these pages are archived  
+    When the assets are archived  
+    Then we need to move them off all lists into an archive.xml  
+    And give all these pages priority 0.0 
+    And if this list exceedes 50,000 items we need to split the list and come up with a genius name like archive2.xml  
+    And if their URL group contains any other assets they need to be included as well  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And sometimes are removed
-    When the assets are unpublished or deleted
-    Then we need them to be removed from all sitemaps
-    And if their URL group contains any other assets they need to be removed as well
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And sometimes are removed  
+    When the assets are unpublished or deleted  
+    Then we need them to be removed from all sitemaps  
+    And if their URL group contains any other assets they need to be removed as well  
 
 ---
 
