@@ -10,7 +10,7 @@ categories:
 - Blog
 - Marketing
 ---
-Here are the specifications I wrote for a bespoke sitemap set up for a large ecommerce website in Febraruy 2017 in an attempt to optimise the performance of the site and enhance discovery of new product, pages and articles as well as any other assets accociated with them.
+Here are the specifications I wrote for a bespoke sitemap set up for a large ecommerce website in February 2017 in an attempt to optimise the performance of the site and enhance discovery of new product, pages and articles as well as any other assets accociated with them.
 
 At the request of the development manager I used an Agile Given When Then approach to writing the specification.
 
