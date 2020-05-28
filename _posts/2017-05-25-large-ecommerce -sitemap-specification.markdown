@@ -37,23 +37,23 @@ And each category has its own file
 And if a category has its own format requirement that we use that format  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
-And we wish to sell watches  
+And we wish to sell our products  
 And we have a large amount of stock  
 And this stock is categorised by different brands  
 When the assets are published and added to an XML sitemap  
 Then we need to list products of a given brand in their own sitemap xml  
-And this should be called Brand.xml so it is quick for humans to understand what is in it (for example Rolex.xml)  
+And this should be called Brand.xml so it is quick for humans to understand what is in it (for example Category.xml)  
 And this can contain the URL groups that include pages, images and videos  
-And this sitemaps should contain the URLs for the root page for the brand (e.g. https://www.website.co.uk/Rolex/Watches)  
-And this sitemaps should contain the URLs for the root page for all series under this brand (e.g. https://www.website.co.uk/Rolex/Submariner/Watches)  
-And where applicable this should contain the URLs for the root page for models and sub models where these pages exists (e.g. https://www.website.co.uk/Rolex/Submariner/16618/Watches, https://www.website.co.uk/Rolex/Submariner/116610%20LV/Watches, https://www.website.co.uk/Rolex/Submariner/116610%20LN/Watches)  
+And this sitemaps should contain the URLs for the root page for the brand (e.g. https://www.website.co.uk/Category)  
+And this sitemaps should contain the URLs for the root page for all series under this brand (e.g. https://www.website.co.uk/Category/SubCategory)  
+And where applicable this should contain the URLs for the root page for models and sub models where these pages exists (e.g. https://www.website.co.uk/Category/SubCategory/16618, https://www.website.co.uk/Category/SubCategory/116610-LV, https://www.website.co.uk/Category/SubCategory/116610-LN)  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
-And we wish to buy watches  
+And we wish to buy products from the general public  
 And this stock is categorised by different brands  
 When the assets are published and added to an XML sitemap  
 Then we need to list products of a given brand in their own sitemap xml  
-And this should be called SellBrand.xml (for example SellRolex.xml)  
+And this should be called SellBrand.xml 
 And this can contain the URL groups that include page URLs only (not images or video)  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
@@ -64,7 +64,7 @@ When the assets are published and added to an XML sitemap
 Then we need to list the latest 100 new arrivals page URLs on their own NewArrivals.xml sitemap  
 And new arrivals that are older than the latest 100 need to be removed  
 And this sitemaps does need to contain URLs but does not need to list image or video details on it  
-But this sitemap can and will list URLs that are on product sitemaps (Rolex.xml etc.)  
+But this sitemap can and will list URLs that are on product sitemaps (Category.xml etc.)  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
 And some of these pages are relating to our service centre  
@@ -117,7 +117,7 @@ When the assets are published and added to an XML sitemap
 Then we need to list details of images using `<image:image> </image:image>` tags  
 And we need to list the URL of an image within `<image:loc> </image:/loc>` tags  
 And we need to provide a title in `<image:title> </image:title>` tags  
-And this image, where it is a product should contain the H1 of the product page, the angle of the shot and the product code (e.g. Rolex Datejust 116231 Front 82309)  
+And this image, where it is a product should contain the H1 of the product page, the angle of the shot and the product code
 And we need to provide license details which will be for every one `<image:license>[https://www.website.co.uk/info/Licensed-Images</image:license>`  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
