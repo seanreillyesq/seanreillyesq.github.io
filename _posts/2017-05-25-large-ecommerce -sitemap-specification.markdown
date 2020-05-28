@@ -10,7 +10,9 @@ categories:
 - Blog
 - Marketing
 ---
-Here are the specifications I wrote for a bespoke sitemap set up for a large ecommerce website in Febraruy 2017 in an attempt to optimise the performance of the site and enhance discovery of new product, pages and articles as well as any other assets accociated with them using a Given When Then approach:
+Here are the specifications I wrote for a bespoke sitemap set up for a large ecommerce website in Febraruy 2017 in an attempt to optimise the performance of the site and enhance discovery of new product, pages and articles as well as any other assets accociated with them.
+
+At the request of the development manager I used an Agile Given When Then approach to writing the specification.
 
     Given that we have assets on the websites and that we want search engines to find them and index them quickly
     When the assets are published
