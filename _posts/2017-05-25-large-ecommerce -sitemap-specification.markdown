@@ -202,13 +202,12 @@ And if their URL group contains any other assets they need to be removed as well
 
 Given that I have tried to make this document exhaustive but I am only human  
 When the developer comes to do the coding  
-Then here is a list of relevant documentation written by far smarter people than I  
+Then here is a list of relevant assets written by far smarter people than me  
 
-Documentation  
-[httpss://www.sitemaps.org/protocol.html](Google, Microsoft & Yahoo Sitemaps partnership site)  
-[httpss://support.google.com/webmasters/answer/156184?hl=en](Google Sitemaps Help) 
-[httpss://developers.google.com/webmasters/videosearch/sitemaps](https://developers.google.com/webmasters/videosearch/sitemaps) (Google Video Sitemaps Help)  
-[httpss://support.google.com/webmasters/answer/178636](Google Image Sitemap Help)  
-[httpss://support.google.com/news/publisher/answer/74288?hl=en-GB](Google News Sitemaps)  
+[Google, Microsoft & Yahoo Sitemaps partnership site](httpss://www.sitemaps.org/protocol.html)
+[Google Sitemaps Help](httpss://support.google.com/webmasters/answer/156184?hl=en)
+[Google Video Sitemaps Help](httpss://developers.google.com/webmasters/videosearch/sitemaps)  
+[Google Image Sitemap Help](httpss://support.google.com/webmasters/answer/178636)  
+[Google News Sitemaps](httpss://support.google.com/news/publisher/answer/74288?hl=en-GB)
 
 Note that I am not using anything even remotely as complex on this on this blog as this is more for me playing around and testing stuff out.
