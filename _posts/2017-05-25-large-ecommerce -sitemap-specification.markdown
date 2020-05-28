@@ -14,97 +14,97 @@ Here are the specifications I wrote for a bespoke sitemap set up for a large eco
 
 At the request of the development manager I used an Agile Given When Then approach to writing the specification.
 
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    When the assets are published
-    Then they should be listed in a XML sitemap file in order to make it quick for the search engines to find
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    When the assets are published  
+    Then they should be listed in a XML sitemap file in order to make it quick for the search engines to find  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And these assets are of different types
-    And some of them are webpages
-    And some of them are images
-    And some of them are videos
-    When the assets are published
-    Then they can be grouped together where these assets all feature on one page
-    And we need to group related items together within <url> </url> tags
-    And we need to encapsulate the items in the correct tags for their type
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And these assets are of different types  
+    And some of them are webpages  
+    And some of them are images  
+    And some of them are videos  
+    When the assets are published  
+    Then they can be grouped together where these assets all feature on one page  
+    And we need to group related items together within <url> </url> tags  
+    And we need to encapsulate the items in the correct tags for their type  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And that they belong to a variety of different categories
-    And that some of these categories have specific sitemap formats
-    When the assets are published and added to an XML sitemap
-    Then we need to make sure that these sitemaps are split into various categories
-    And each category has its own file
-    And if a category has its own format requirement that we use that format
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And that they belong to a variety of different categories  
+    And that some of these categories have specific sitemap formats  
+    When the assets are published and added to an XML sitemap  
+    Then we need to make sure that these sitemaps are split into various categories  
+    And each category has its own file  
+    And if a category has its own format requirement that we use that format  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And we wish to sell watches
-    And we have a large amount of stock
-    And this stock is categorised by different brands
-    When the assets are published and added to an XML sitemap
-    Then we need to list products of a given brand in their own sitemap xml
-    And this should be called Brand.xml so it is quick for humans to understand what is in it (for example Rolex.xml)
-    And this can contain the URL groups that include pages, images and videos
-    And this sitemaps should contain the URLs for the root page for the brand (e.g. https://www.website.co.uk/Rolex/Watches)
-    And this sitemaps should contain the URLs for the root page for all series under this brand (e.g. https://www.website.co.uk/Rolex/Submariner/Watches)
-    And where applicable this should contain the URLs for the root page for models and sub models where these pages exists (e.g. https://www.website.co.uk/Rolex/Submariner/16618/Watches, https://www.website.co.uk/Rolex/Submariner/116610%20LV/Watches, https://www.website.co.uk/Rolex/Submariner/116610%20LN/Watches)
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And we wish to sell watches  
+    And we have a large amount of stock  
+    And this stock is categorised by different brands  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list products of a given brand in their own sitemap xml  
+    And this should be called Brand.xml so it is quick for humans to understand what is in it (for example Rolex.xml)  
+    And this can contain the URL groups that include pages, images and videos  
+    And this sitemaps should contain the URLs for the root page for the brand (e.g. https://www.website.co.uk/Rolex/Watches)  
+    And this sitemaps should contain the URLs for the root page for all series under this brand (e.g. https://www.website.co.uk/Rolex/Submariner/Watches)  
+    And where applicable this should contain the URLs for the root page for models and sub models where these pages exists (e.g. https://www.website.co.uk/Rolex/Submariner/16618/Watches, https://www.website.co.uk/Rolex/Submariner/116610%20LV/Watches, https://www.website.co.uk/Rolex/Submariner/116610%20LN/Watches)  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And we wish to buy watches
-    And this stock is categorised by different brands
-    When the assets are published and added to an XML sitemap
-    Then we need to list products of a given brand in their own sitemap xml
-    And this should be called SellBrand.xml (for example SellRolex.xml)
-    And this can contain the URL groups that include page URLs only (not images or video)
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And we wish to buy watches  
+    And this stock is categorised by different brands  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list products of a given brand in their own sitemap xml  
+    And this should be called SellBrand.xml (for example SellRolex.xml)  
+    And this can contain the URL groups that include page URLs only (not images or video)  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And we have a New Arrivals section drives many new sales
-    And it would benefit us to make this most regularly crawled section of the website by search engines
-    And search engines tailor their crawl frequencies based on files they see changing rapidly
-    When the assets are published and added to an XML sitemap
-    Then we need to list the latest 100 new arrivals page URLs on their own NewArrivals.xml sitemap
-    And new arrivals that are older than the latest 100 need to be removed
-    And this sitemaps does need to contain URLs but does not need to list image or video details on it
-    But this sitemap can and will list URLs that are on product sitemaps (Rolex.xml etc.)
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And we have a New Arrivals section drives many new sales  
+    And it would benefit us to make this most regularly crawled section of the website by search engines  
+    And search engines tailor their crawl frequencies based on files they see changing rapidly  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list the latest 100 new arrivals page URLs on their own NewArrivals.xml sitemap  
+    And new arrivals that are older than the latest 100 need to be removed  
+    And this sitemaps does need to contain URLs but does not need to list image or video details on it  
+    But this sitemap can and will list URLs that are on product sitemaps (Rolex.xml etc.)  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And some of these pages are relating to our service centre
-    When the assets are published and added to an XML sitemap
-    Then we need to list all servicing pages in a Servicing.xml sitemap
-    And this does need to contain images and videos
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And some of these pages are relating to our service centre  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list all servicing pages in a Servicing.xml sitemap  
+    And this does need to contain images and videos  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And some of these assets are articles
-    And some of these assets are news
-    When the assets are published and added to an XML sitemap
-    Then we need to list all the pages that are in this category in a Articles.xml sitemap
-    And this should list all images and videos that relate to the articles
-    And we should also add them to specific News.xml for the first 48 hours that they are published
-    But then remove them after 48 hours from the News.xml
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And some of these assets are articles  
+    And some of these assets are news  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list all the pages that are in this category in a Articles.xml sitemap  
+    And this should list all images and videos that relate to the articles  
+    And we should also add them to specific News.xml for the first 48 hours that they are published  
+    But then remove them after 48 hours from the News.xml  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And some of them do not fit into the categories listed (homepage, info pages, about us, awards, promos/sale pages etc.)
-    And that we do want these to be picked up by the search engines
-    When the assets are published and added to an XML sitemap
-    Then we need to list these in a mop up sitemap Website.xml
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And some of them do not fit into the categories listed (homepage, info pages, about us, awards, promos/sale pages etc.)  
+    And that we do want these to be picked up by the search engines  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list these in a mop up sitemap Website.xml  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    When the assets are published and listed in an XML sitemap
-    Then we need to make sure the XML file is Encoded correctly
-    And we need to tell the search engines it is so by starting each file with <?xml version="1.0" encoding="UTF-8"?>
-    And we need to tell search engines what types of URL sets we are publishing
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    When the assets are published and listed in an XML sitemap  
+    Then we need to make sure the XML file is Encoded correctly  
+    And we need to tell the search engines it is so by starting each file with <?xml version="1.0" encoding="UTF-8"?>  
+    And we need to tell search engines what types of URL sets we are publishing  
     
-    Given that we have assets on the websites and that we want search engines to find them and index them quickly
-    And we need to tell search engines what types of URL sets to publish
-    And where they can find the matching schemas
-    And that we have pages, images and videos
-    When the assets are published and added to an XML sitemap
-    Then we need to list these URL schema sets within the <urlset > tag
-    And for pages the schema is xmlns="[https://www.sitemaps.org/schemas/sitemap/0.9](http://www.sitemaps.org/schemas/sitemap/0.9)"
-    And for pages the schema is xmlns:video="[https://www.google.com/schemas/sitemap-video/1.1](http://www.google.com/schemas/sitemap-video/1.1)"
-    And for pages the schema is xmlns:image="[https://www.google.com/schemas/sitemap-image/1.1](http://www.google.com/schemas/sitemap-image/1.1)"
-    And it should look like this <urlset xmlns="[https://www.sitemaps.org/schemas/sitemap/0.9](http://www.sitemaps.org/schemas/sitemap/0.9)"
-    xmlns:image="[https://www.google.com/schemas/sitemap-image/1.1](http://www.google.com/schemas/sitemap-image/1.1)"
-    xmlns:video="[https://www.google.com/schemas/sitemap-video/1.1](http://www.google.com/schemas/sitemap-video/1.1)">
+    Given that we have assets on the websites and that we want search engines to find them and index them quickly  
+    And we need to tell search engines what types of URL sets to publish  
+    And where they can find the matching schemas  
+    And that we have pages, images and videos  
+    When the assets are published and added to an XML sitemap  
+    Then we need to list these URL schema sets within the <urlset > tag  
+    And for pages the schema is xmlns="[https://www.sitemaps.org/schemas/sitemap/0.9](http://www.sitemaps.org/schemas/sitemap/0.9)"  
+    And for pages the schema is xmlns:video="[https://www.google.com/schemas/sitemap-video/1.1](http://www.google.com/schemas/sitemap-video/1.1)"  
+    And for pages the schema is xmlns:image="[https://www.google.com/schemas/sitemap-image/1.1](http://www.google.com/schemas/sitemap-image/1.1)"  
+    And it should look like this <urlset xmlns="[https://www.sitemaps.org/schemas/sitemap/0.9](http://www.sitemaps.org/schemas/sitemap/0.9)"  
+    xmlns:image="[https://www.google.com/schemas/sitemap-image/1.1](http://www.google.com/schemas/sitemap-image/1.1)"  
+    xmlns:video="[https://www.google.com/schemas/sitemap-video/1.1](http://www.google.com/schemas/sitemap-video/1.1)">  
     
     Given that we have assets on the websites and that we want search engines to find them and index them quickly
     And some of them are web pages
@@ -202,15 +202,15 @@ At the request of the development manager I used an Agile Given When Then approa
 
 ---
 
-Given that I have tried to make this document exhaustive but I am only human
-When the developer comes to do the coding
-Then here is a list of relevant documentation written by far smarter people than I
+Given that I have tried to make this document exhaustive but I am only human  
+When the developer comes to do the coding  
+Then here is a list of relevant documentation written by far smarter people than I  
 
-Documentation
-[httpss://www.sitemaps.org/protocol.html](https://www.sitemaps.org/protocol.html) (Google, Microsoft & Yahoo partnership site)
-[httpss://support.google.com/webmasters/answer/156184?hl=en](https://support.google.com/webmasters/answer/156184?hl=en) (Google Sitemaps)
-[httpss://developers.google.com/webmasters/videosearch/sitemaps](https://developers.google.com/webmasters/videosearch/sitemaps) (Video Sitemaps)
-[httpss://support.google.com/webmasters/answer/178636](https://support.google.com/webmasters/answer/178636) (Image Sitemap)
-[httpss://support.google.com/news/publisher/answer/74288?hl=en-GB](https://support.google.com/news/publisher/answer/74288?hl=en-GB) (News Sitemaps)
+Documentation  
+[httpss://www.sitemaps.org/protocol.html](https://www.sitemaps.org/protocol.html) (Google, Microsoft & Yahoo partnership site)  
+[httpss://support.google.com/webmasters/answer/156184?hl=en](https://support.google.com/webmasters/answer/156184?hl=en) (Google Sitemaps)  
+[httpss://developers.google.com/webmasters/videosearch/sitemaps](https://developers.google.com/webmasters/videosearch/sitemaps) (Video Sitemaps)  
+[httpss://support.google.com/webmasters/answer/178636](https://support.google.com/webmasters/answer/178636) (Image Sitemap)  
+[httpss://support.google.com/news/publisher/answer/74288?hl=en-GB](https://support.google.com/news/publisher/answer/74288?hl=en-GB) (News Sitemaps)  
 
 Note that I am not using this on this blog as this is more for me playing around and testing stuff out.
