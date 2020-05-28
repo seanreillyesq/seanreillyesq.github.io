@@ -14,6 +14,8 @@ Here are the specifications I wrote for a bespoke sitemap set up for a large eco
 
 At the request of the development manager I used an Agile Given When Then approach to writing the specification.
 
+---
+
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
 When the assets are published  
 Then they should be listed in a XML sitemap file in order to make it quick for the search engines to find  
@@ -209,5 +211,7 @@ Then here is a list of relevant assets written by far smarter people than me
 [Google Video Sitemaps Help](httpss://developers.google.com/webmasters/videosearch/sitemaps)  
 [Google Image Sitemap Help](httpss://support.google.com/webmasters/answer/178636)  
 [Google News Sitemaps](httpss://support.google.com/news/publisher/answer/74288?hl=en-GB)
+
+---
 
 Note that I am not using anything even remotely as complex on this on this blog as this is more for me playing around and testing stuff out.
