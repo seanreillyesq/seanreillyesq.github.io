@@ -55,7 +55,7 @@ And we wish to buy products from the general public
 And this stock is categorised by different brands  
 When the assets are published and added to an XML sitemap  
 Then we need to list products of a given brand in their own sitemap xml  
-And this should be called SellBrand.xml 
+And this should be called SellBrand.xml  
 And this can contain the URL groups that include page URLs only (not images or video)  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
@@ -101,10 +101,10 @@ And where they can find the matching schemas
 And that we have pages, images and videos  
 When the assets are published and added to an XML sitemap  
 Then we need to list these URL schema sets within the `<urlset >` tag  
-And for pages the schema is xmlns="[https://www.sitemaps.org/schemas/sitemap/0.9](http://www.sitemaps.org/schemas/sitemap/0.9)"  
-And for pages the schema is xmlns:video="[https://www.google.com/schemas/sitemap-video/1.1](http://www.google.com/schemas/sitemap-video/1.1)"  
-And for pages the schema is xmlns:image="[https://www.google.com/schemas/sitemap-image/1.1](http://www.google.com/schemas/sitemap-image/1.1)"  
-And it should look like this `<urlset xmlns="[https://www.sitemaps.org/schemas/sitemap/0.9](http://www.sitemaps.org/schemas/sitemap/0.9)" xmlns:image="[https://www.google.com/schemas/sitemap-image/1.1](http://www.google.com/schemas/sitemap-image/1.1)" xmlns:video="[https://www.google.com/schemas/sitemap-video/1.1](http://www.google.com/schemas/sitemap-video/1.1)">`  
+And for pages the schema is `xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"`  
+And for pages the schema is `xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"`  
+And for pages the schema is `xmlns:image="http://www.google.com/schemas/sitemap-image/1.1)"`  
+And it should look like this `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="https://www.google.com/schemas/sitemap-video/1.1">`  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
 And some of them are web pages  
