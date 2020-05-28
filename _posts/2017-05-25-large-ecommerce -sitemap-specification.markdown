@@ -119,7 +119,7 @@ When the assets are published and added to an XML sitemap
 Then we need to list details of images using `<image:image> </image:image>` tags  
 And we need to list the URL of an image within `<image:loc> </image:/loc>` tags  
 And we need to provide a title in `<image:title> </image:title>` tags  
-And this image, where it is a product should contain the H1 of the product page, the angle of the shot and the product code
+And this image, where it is a product should contain the H1 of the product page, the angle of the shot and the product code  
 And we need to provide license details which will be for every one `<image:license>[https://www.website.co.uk/info/Licensed-Images</image:license>`  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
@@ -128,9 +128,9 @@ And we can provide additional details about these videos
 And we host all our videos on YouTube  
 When the assets are published and added to an XML sitemap  
 Then we need to list details of videos using `<video:video> </video:video>` tags within the URL group below the page location details  
-And we need to provide a thumbnail by using `<video:thumbnail_loc>[httpss://img.youtube.com/vi/<insert-youtube-video-id-here></video:thumbnail_loc>`
+And we need to provide a thumbnail by using `<video:thumbnail_loc>[httpss://img.youtube.com/vi/<insert-youtube-video-id-here></video:thumbnail_loc>`  
 And we need to provide the title which should match the page's H1 tag and this should be wrapped in `<video:title> </video:title>`  
-And we need to provide the title which should match the description from the page (currently wrapped in itemprop="description" tags on page) and be wrapped in `<video:description> </video:description>`
+And we need to provide the title which should match the description from the page (currently wrapped in itemprop="description" tags on page) and be wrapped in `<video:description> </video:description>`  
 And we need to provide the content location which will be `<video:content_loc> [httpss://www.youtube.com/embed/<insert-youtube-video-id-here></video:content_loc>`
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
