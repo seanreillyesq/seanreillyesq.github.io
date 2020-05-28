@@ -205,10 +205,10 @@ When the developer comes to do the coding
 Then here is a list of relevant documentation written by far smarter people than I  
 
 Documentation  
-[httpss://www.sitemaps.org/protocol.html](https://www.sitemaps.org/protocol.html) (Google, Microsoft & Yahoo partnership site)  
-[httpss://support.google.com/webmasters/answer/156184?hl=en](https://support.google.com/webmasters/answer/156184?hl=en) (Google Sitemaps)  
-[httpss://developers.google.com/webmasters/videosearch/sitemaps](https://developers.google.com/webmasters/videosearch/sitemaps) (Video Sitemaps)  
-[httpss://support.google.com/webmasters/answer/178636](https://support.google.com/webmasters/answer/178636) (Image Sitemap)  
-[httpss://support.google.com/news/publisher/answer/74288?hl=en-GB](https://support.google.com/news/publisher/answer/74288?hl=en-GB) (News Sitemaps)  
+[httpss://www.sitemaps.org/protocol.html](Google, Microsoft & Yahoo Sitemaps partnership site)  
+[httpss://support.google.com/webmasters/answer/156184?hl=en](Google Sitemaps Help) 
+[httpss://developers.google.com/webmasters/videosearch/sitemaps](https://developers.google.com/webmasters/videosearch/sitemaps) (Google Video Sitemaps Help)  
+[httpss://support.google.com/webmasters/answer/178636](Google Image Sitemap Help)  
+[httpss://support.google.com/news/publisher/answer/74288?hl=en-GB](Google News Sitemaps)  
 
-Note that I am not using this on this blog as this is more for me playing around and testing stuff out.
+Note that I am not using anything even remotely as complex on this on this blog as this is more for me playing around and testing stuff out.
