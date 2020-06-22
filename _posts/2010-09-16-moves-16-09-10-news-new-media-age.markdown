@@ -15,4 +15,4 @@ The 2View Group, owner of 21 online city guides including ViewLondon.co.uk, has 
 
 ![Sean Reilly - New Media Age Moves](/assets/new-media-age/sean-reilly-newmediaage-moves.png)
 
-[Moves - 16.09.10 | News | New Media Age](http://www.nma.co.uk/news/people-moves/moves-160910/3018195.article).
+[New Media Age - Moves - 16.09.10](http://www.nma.co.uk/news/people-moves/moves-160910/3018195.article)
