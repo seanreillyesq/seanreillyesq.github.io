@@ -25,8 +25,8 @@ The Official Google Webmaster Tools Blog is the source for many new updates <br 
 [https://webmasters.googleblog.com](https://webmasters.googleblog.com)
 
 Many official updates, plus things that are being widely noticed by the community but not being talked about officially by the search engines  will come out on the following closely related sites:<br />
-[https://searchengineland.com] (https://searchengineland.com)<br />
-[https://www.seroundtable.com] (https://www.seroundtable.com)
+[https://searchengineland.com](https://searchengineland.com)<br />
+[https://www.seroundtable.com](https://www.seroundtable.com)
 
 If you can make it up to town, Search London is worth attending. They have regular speakers such as Aleyda Solis, Lukas Zelezney, Russell McAthy, etc. as well as the founders/directors of many of the other agencies and toolsets – good opportunity to network, normally paid ticket but you get a load of content and normally a couple of free drinks<br />
 [https://www.meetup.com/search-london/](https://www.meetup.com/search-london/)<br />
