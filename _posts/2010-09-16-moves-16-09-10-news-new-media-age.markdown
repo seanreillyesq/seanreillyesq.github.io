@@ -9,10 +9,9 @@ categories:
 - News
 header-img: "img/moves.jpg"
 meta-description: 2View Group, owner of View London, has hired Sean Reilly as marketing manager. He was previously marketing consultant for 3 network website dealson3.co.uk
----
 
 The 2View Group, owner of 21 online city guides including ViewLondon.co.uk, has hired [Sean Reilly](http://www.sreilly.net) as marketing manager. He was previously marketing consultant for 3 network website dealson3.co.uk
 
-![Sean Reilly - New Media Age Moves](/assets/new-media-age/sean-reilly-newmediaage-moves.png)
+[Sean Reilly - New Media Age Moves](/assets/new-media-age/sean-reilly-newmediaage-moves.png)
 
 [New Media Age - Moves - 16.09.10](http://www.nma.co.uk/news/people-moves/moves-160910/3018195.article)
