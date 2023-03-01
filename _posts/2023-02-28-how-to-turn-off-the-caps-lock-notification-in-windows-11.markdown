@@ -8,7 +8,7 @@ header-img: img/google-algorithms.jpg
 meta-description: How to Disable Caps Lock Notifications in Windows 11 and Dell Peripheral Manager - A Step-by-Step Guide
 categories:
 - Blog
-- Marketing
+- IT
 ---
 The Caps Lock key can be a nuisance, and you may accidentally enable it and find yourself typing with all caps. Worsem if you're using Windows 11 or 10, notifications that pop up when turning on or off Caps Lock are helpful for some but distracting for others, especaily if you accidently hit it when immersed in the action of a first person shooter like I was yesterday and suddenly get exited from the full screee experience. 
 
