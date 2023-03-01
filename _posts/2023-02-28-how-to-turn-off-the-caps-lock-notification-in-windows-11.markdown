@@ -3,22 +3,20 @@ author: Sean
 comments: true
 date: 2023-02-28 10:05:00+00:00
 layout: post
-slug: 2023-02-28-how-to-turn-off-the-caps-lock-notification-in-windows-11
 title: How to Disable Caps Lock Notifications in Windows 11 & Dell Peripheral Manager
-
-
-categories:
-- News
-header-img: "img/moves.jpg"
+header-img: img/google-algorithms.jpg
 meta-description: How to Disable Caps Lock Notifications in Windows 11 and Dell Peripheral Manager - A Step-by-Step Guide
-
+categories:
+- Blog
+- Marketing
+---
 The Caps Lock key can be a nuisance, and you may accidentally enable it and find yourself typing with all caps. Worsem if you're using Windows 11 or 10, notifications that pop up when turning on or off Caps Lock are helpful for some but distracting for others, especaily if you accidently hit it when immersed in the action of a first person shooter like I was yesterday and suddenly get exited from the full screee experience. 
 
 Fortunately, there's an easy way to turn off these notifications in this article we'll show you how to turn off notifications related to Caps Lock in both Windows 11 and Dell Peripheral Manager.
 
 Step-by-Step Guide to Disabling Caps Lock Notifications in Windows 11
 
-These easy steps will enable Caps Lock notifications in Windows 11
+These easy steps will enable Caps Lock notifications in Windows 11:
 
 To open the Settings app, begin by clicking on the Start menu in the bottom left corner of your screen. From there, click on the gear icon to launch the Settings app.
 
