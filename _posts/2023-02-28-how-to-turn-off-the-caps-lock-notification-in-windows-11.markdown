@@ -4,7 +4,7 @@ comments: true
 date: 2023-02-28 10:05:00+00:00
 layout: post
 title: How to Disable Caps Lock Notifications in Windows 11 & Dell Peripheral Manager
-header-img: img/google-algorithms.jpg
+header-img: img/caps-lock-notification-windows-11.jpg
 meta-description: How to Disable Caps Lock Notifications in Windows 11 and Dell Peripheral Manager - A Step-by-Step Guide
 categories:
 - Blog
