@@ -10,7 +10,7 @@ categories:
 - Blog
 - Marketing
 ---
-Thought I’d share this with everyone just in case there are any nuggets that might be useful for others. 
+Thought I’d share this with everyone just in case there are any nuggets that might be useful for others.
 
 Any of the blogs for the tools that are used can be great especially Moz and their Whiteboard Friday video:
 [moz.com/blog](https://moz.com/blog)
@@ -44,4 +44,4 @@ That should get you started. I haven’t touched outreach, social or local there
 Finally, look to the wider marketing field as well especially as digital marketing becomes more just marketing. Marketing Week is good in this respect and especially the content from Mark Ritson who is a very straight shooter (plus adjunct professor or marketing for Sydney University and marketing advisor for LVMH) – he is not a social media marketing fan though! [
 [www.marketingweek.com/focus/mark-ritson/](https://www.marketingweek.com/focus/mark-ritson/)
 
-Have any suggestions for me, tweet me [twitter.com/seanreillyesq](@seanreillyesq)
+Have any suggestions for me, tweet me [twitter.com/seanreillyesq](@seanreillyesq
