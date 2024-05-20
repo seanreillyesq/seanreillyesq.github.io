@@ -398,3 +398,8 @@ body {
 .black-header-text {
   color: black;
 }
+header.black-header-text .post-heading h1,
+header.black-header-text .post-heading h2,
+header.black-header-text .post-heading .meta {
+    color: black !important;
+}
