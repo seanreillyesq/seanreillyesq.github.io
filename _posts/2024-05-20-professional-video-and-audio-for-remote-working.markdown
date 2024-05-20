@@ -13,15 +13,15 @@ categories:
 
 In today's digital age, appearing professional on video calls and recordings is essential. Whether you're creating content, conducting business meetings, or simply want to look your best on Zoom, having the right equipment can make a significant difference. While I don't publish videos of myself, I use podcast/streaming-quality equipment for my Zoom calls, which helps me appear more professional than using a laptop's built-in microphone and camera. Here's a detailed look at my setup, balancing cost and quality.
 
-## Why Audio Matters Most
-
-Before diving into the equipment, it's crucial to understand the importance of audio. Poor audio quality can detract from your message, no matter how good your video looks. To understand why audio is so critical, check out [this video](https://www.youtube.com/watch?v=hEMZa5VN3Zw).
-
 ## My Desk Setup
 
 Here’s a snapshot of my desk setup, featuring most of the equipment discussed below:
 
 ![Desk Setup](img/professional-video-and-audio-for-remote-working.jpg)
+
+## Why Audio Matters Most
+
+Before diving into the equipment, it's crucial to understand the importance of audio. Poor audio quality can detract from your message, no matter how good your video looks. To understand why audio is so critical, check out [this video](https://www.youtube.com/watch?v=hEMZa5VN3Zw){:target="_blank"}.
 
 ## Microphone: Logitech Blue Yeti
 
