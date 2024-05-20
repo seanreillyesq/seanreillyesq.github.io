@@ -21,7 +21,7 @@ Here’s a snapshot of my desk setup, featuring most of the equipment discussed 
 
 ## Why Audio Matters Most
 
-Before diving into the equipment, it's crucial to understand the importance of audio. Poor audio quality can detract from your message, no matter how good your video looks. To understand why audio is so critical, check out [this video](https://www.youtube.com/watch?v=hEMZa5VN3Zw){:target="_blank"}.
+Before diving into the equipment, it's crucial to understand the importance of audio. Poor audio quality can detract from your message, no matter how good your video looks. To understand why audio is so critical, check out [this video](https://www.youtube.com/watch?v=hEMZa5VN3Zw).
 
 ## Microphone: Logitech Blue Yeti
 
