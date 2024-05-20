@@ -1,7 +1,7 @@
 ---
 author: Sean
 comments: true
-date: 2024-05-20 12:00:59+00:00
+date: 2024-05-20 12:00:00+00:00
 layout: post
 title: Professional video and audio for remote working
 header-img: "img/professional-video-and-audio-for-remote-working.jpg"
