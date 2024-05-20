@@ -23,11 +23,11 @@ On a recent family holiday to Benalmádena I had the opportunity to have a quick
 
 
 
-[![CIMG4066.JPG](http://lh6.ggpht.com/-aXKRAD9Lkpk/TetFv1vDCzI/AAAAAAAAAUA/LHl3Tb0uFls/h350/CIMG4066.JPG)](http://lh6.ggpht.com/-aXKRAD9Lkpk/TetFv1vDCzI/AAAAAAAAAUA/LHl3Tb0uFls/CIMG4066.JPG)
+![CIMG4066.JPG](http://lh6.ggpht.com/-aXKRAD9Lkpk/TetFv1vDCzI/AAAAAAAAAUA/LHl3Tb0uFls/h350/CIMG4066.JPG)
 
 At only 771 metres high, it was far lower that most of the Tour du Mont Blanc that I tackled last year, however it was a pleasant surprise to have the chance to go up as I was only expecting to have a simple “bucket and spade” holiday with my lovely wife and kids; fortunately I had packed my running shoes!
 
-[![IMG_0422.JPG](http://lh3.ggpht.com/-c-cFVS3nRzQ/TetFxOszoiI/AAAAAAAAAVg/Vjp9r5AV-3w/h350/IMG_0422.JPG)](http://lh3.ggpht.com/-c-cFVS3nRzQ/TetFxOszoiI/AAAAAAAAAVg/Vjp9r5AV-3w/IMG_0422.JPG)
+![IMG_0422.JPG](http://lh3.ggpht.com/-c-cFVS3nRzQ/TetFxOszoiI/AAAAAAAAAVg/Vjp9r5AV-3w/h350/IMG_0422.JPG)
 
 The trail map to Mount Calamorro, Cerro del Morro and a few other treks in the municipality can be seen on a board just by the start of the cable car, [Teleférico Benalmádena](http://www.telefericobenalmadena.com/), which is where I left my the family and set off.
 
