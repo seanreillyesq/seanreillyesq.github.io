@@ -6,7 +6,7 @@ layout: post
 slug: professional-video-and-audio-for-remote-working
 title: Professional video and audio for remote working
 categories:
-- News
+- Blog
 header-img: professional-video-and-audio-for-remote-working.jpg
 meta-description: Discover the essential equipment and setup tips for creating a professional video recording and audio for remote working.
 
