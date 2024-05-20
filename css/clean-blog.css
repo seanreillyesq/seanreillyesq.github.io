@@ -395,8 +395,8 @@ img::-moz-selection {
 body {
   webkit-tap-highlight-color: #0085a1;
 }
-header.black-header-text .post-heading h1,
-header.black-header-text .post-heading h2,
-header.black-header-text .post-heading .meta {
-    color: black !important;
+.intro-header .post-heading h1,
+.intro-header .post-heading h2,
+.intro-header .post-heading .meta {
+    color: inherit; /* Ensures the text inherits the color from the header */
 }
