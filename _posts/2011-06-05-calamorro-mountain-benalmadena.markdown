@@ -21,9 +21,7 @@ meta-description: On a family holiday to Benalmádena I had the opportunity to h
 
 On a recent family holiday to Benalmádena I had the opportunity to have a quick run up Mount Calamorro, part of the coastal Sierra de Mijas mountain range in the Costa Del Sol region of southern Spain.
 
-
-
-![Calamorro](/assets/calamorro.jpg)
+![Calamorro](/assets/calamorro/calamorro.jpg)
 
 At only 771 metres high, it was far lower that most of the Tour du Mont Blanc that I tackled last year, however it was a pleasant surprise to have the chance to go up as I was only expecting to have a simple “bucket and spade” holiday with my lovely wife and kids; fortunately I had packed my running shoes!
 
