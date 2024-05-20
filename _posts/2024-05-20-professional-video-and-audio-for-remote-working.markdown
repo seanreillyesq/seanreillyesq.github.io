@@ -21,7 +21,7 @@ Before diving into the equipment, it's crucial to understand the importance of a
 
 Here’s a snapshot of my desk setup, featuring most of the equipment discussed below:
 
-![Desk Setup](professional-video-and-audio-for-remote-working.jpg)
+![Desk Setup](img/professional-video-and-audio-for-remote-working.jpg)
 
 ## Microphone: Logitech Blue Yeti
 
