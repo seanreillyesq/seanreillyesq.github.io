@@ -5,26 +5,19 @@ description: "Digital Marketing Consultant"
 baseurl: ""
 url: "https://www.seanreilly.org"
 twitter_username: seanreillyesq
-github_username: seanreillyesq
-facebook_username: 
+github_username:  seanreillyesq
+facebook_username:  
 
 # Build settings
 markdown: kramdown
 highlighter: rouge
-permalink: /:title-:year-:month-:day/
+permalink: pretty
 paginate: 5
-exclude:
-  - less
-  - node_modules
-  - Gruntfile.js
-  - package.json
-  - README.md
-plugins:
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+permalink:    /:title-:year:month:day
+gems:
   - jekyll-sitemap
   - jekyll-redirect-from
   - jekyll-feed
   - amp-jekyll
   - jekyll-target-blank
-
-# Additional settings
-theme: minima
