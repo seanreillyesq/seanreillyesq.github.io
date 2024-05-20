@@ -7,6 +7,10 @@
 {% include gtm-body.html %}
     {% include nav.html %}
 
+    <header class="{% if page.header_text_color == 'black' %}black-header-text{% endif %}">
+        <!-- Your header content here -->
+    </header>
+
     {{ content }}
 
     {% include footer.html %}
