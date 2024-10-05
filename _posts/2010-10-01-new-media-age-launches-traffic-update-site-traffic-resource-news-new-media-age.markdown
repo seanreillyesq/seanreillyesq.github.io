@@ -33,7 +33,7 @@ Despite expressing concern over the need for greater clarity around the nature o
 
 “The industry is going through a process of consolidation when web analytics and media measurement departments are coming together,” he said. “As this happens there needs to be greater transparency and awareness around data, which Traffic Update could provide.”_
 
-Sean Reilly, marketing manager of 2View Group, whose viewlondon.co.uk is one of the sites already taking part, echoed Goode’s reservations but felt transparent charts in trade publications was the “true mark” of a maturing industry.
+[Sean Reilly](https://www.seanreilly.org), marketing manager of 2View Group, whose viewlondon.co.uk is one of the sites already taking part, echoed Goode’s reservations but felt transparent charts in trade publications was the “true mark” of a maturing industry.
 
 “Charts that measure an industry’s performance are only truly of interest if they’re public,” he said. “This is the only way buyers can make the right decisions and sellers can set the right prices without having to spend half their day hunting down the information. Markets only work effectively when standardised metrics are publicised and in a single location.”_
 
@@ -43,7 +43,7 @@ ABC Electronic MD Richard Foan felt that although Traffic Update could educate t
 
 Justin Pearse, editor of new media age, said, “Traffic Update is complementary to existing sources of data on website traffic. The manually compiled resource is in its early stages of development and we hope the industry will welcome its arrival and support its expansion. Please get in touch to give me your thoughts on how we can develop it into a useful tool for your business.""
 
-Traffic Update is avaible to [nma.co.uk/data/trafficupdate](http://www.nma.co.uk/data/traffic-update)
+Traffic Update is avaible to [nma.co.uk/data/trafficupdate](https://web.archive.org/web/20110909034456/http://www.nma.co.uk/data/traffic-update)
 
 
-[new media age launches Traffic Update site traffic resource | News | New Media Age](http://www.nma.co.uk/news/new-media-age-launches-traffic-update-site-traffic-resource/3018865.article).
+[new media age launches Traffic Update site traffic resource | News | New Media Age](https://web.archive.org/web/20110607164112/http://www.nma.co.uk/news/new-media-age-launches-traffic-update-site-traffic-resource/3018865.article).
