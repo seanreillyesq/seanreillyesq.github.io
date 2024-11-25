@@ -206,16 +206,13 @@ Given that I have tried to make this document exhaustive but I am only human
 When the developer comes to do the coding  
 Then here is a list of relevant assets written by far smarter people than me  
 
-[Google, Microsoft & Yahoo Sitemaps partnership site](httpss://www.sitemaps.org/protocol.html)
+<a href="https://www.sitemaps.org/protocol.html" target="_blank" rel="nofollow">Google, Microsoft & Yahoo Sitemaps partnership site</a>
 
-[Google Sitemaps Help](httpss://support.google.com/webmasters/answer/156184?hl=en)
+<a href="https://support.google.com/webmasters/answer/156184?hl=en" target="_blank" rel="nofollow">Google Sitemaps Help</a>
 
-[Google Video Sitemaps Help](httpss://developers.google.com/webmasters/videosearch/sitemaps)
+<a href="https://developers.google.com/webmasters/videosearch/sitemaps" target="_blank" rel="nofollow">Google Video Sitemaps Help</a>
 
-[Google Image Sitemap Help](httpss://support.google.com/webmasters/answer/178636)
-
-[Google News Sitemaps](httpss://support.google.com/news/publisher/answer/74288?hl=en-GB)
-
+<a href="https://support.google.com/webmasters/answer/178636" target="_blank" rel="nofollow">Google Image Sitemap Help</a>
 ---
 
 Note that I am not using anything even remotely as complex on this on this blog as this is more for me playing around and testing stuff out.
