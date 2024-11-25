@@ -207,9 +207,13 @@ When the developer comes to do the coding
 Then here is a list of relevant assets written by far smarter people than me  
 
 [Google, Microsoft & Yahoo Sitemaps partnership site](httpss://www.sitemaps.org/protocol.html)
+
 [Google Sitemaps Help](httpss://support.google.com/webmasters/answer/156184?hl=en)
-[Google Video Sitemaps Help](httpss://developers.google.com/webmasters/videosearch/sitemaps)  
-[Google Image Sitemap Help](httpss://support.google.com/webmasters/answer/178636)  
+
+[Google Video Sitemaps Help](httpss://developers.google.com/webmasters/videosearch/sitemaps)
+
+[Google Image Sitemap Help](httpss://support.google.com/webmasters/answer/178636)
+
 [Google News Sitemaps](httpss://support.google.com/news/publisher/answer/74288?hl=en-GB)
 
 ---
