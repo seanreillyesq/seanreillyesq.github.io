@@ -213,6 +213,7 @@ Then here is a list of relevant assets written by far smarter people than me
 <a href="https://developers.google.com/webmasters/videosearch/sitemaps" target="_blank" rel="nofollow">Google Video Sitemaps Help</a>
 
 <a href="https://support.google.com/webmasters/answer/178636" target="_blank" rel="nofollow">Google Image Sitemap Help</a>
+
 ---
 
 Note that I am not using anything even remotely as complex on this on this blog as this is more for me playing around and testing stuff out.
