@@ -1,93 +1,113 @@
-🗓️ **Available Meeting Slots**  
-_Last updated: Thursday, 17 July 2025 at 11:01_
+🗓️ **Available Meeting Slots**
+_Last updated: Thursday, 17 July 2025 at 11:07_
 
 ---
 
-**Thu, 17 July 2025**
+### 📅 Week of Sun, 13 July 2025
+
+**Thu 17 July**
   • 09:00–10:15 — 1h 15m
   • 12:00–12:45 — 45m
 
-**Fri, 18 July 2025**
+**Fri 18 July**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Mon, 21 July 2025**
+---
+
+### 📅 Week of Sun, 20 July 2025
+
+**Mon 21 July**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Tue, 22 July 2025**
+**Tue 22 July**
   • 09:00–09:45 — 45m
   • 12:00–12:45 — 45m
   • 15:00–16:00 — 1h 0m
 
-**Wed, 23 July 2025**
+**Wed 23 July**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Thu, 24 July 2025**
+**Thu 24 July**
   • 09:00–11:45 — 2h 45m
   • 15:00–16:00 — 1h 0m
 
-**Fri, 25 July 2025**
+**Fri 25 July**
   • 09:00–10:45 — 1h 45m
   • 15:00–16:00 — 1h 0m
 
-**Mon, 28 July 2025**
+---
+
+### 📅 Week of Sun, 27 July 2025
+
+**Mon 28 July**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Tue, 29 July 2025**
+**Tue 29 July**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Wed, 30 July 2025**
+**Wed 30 July**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Thu, 31 July 2025**
+**Thu 31 July**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Fri, 01 August 2025**
+**Fri 01 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Mon, 04 August 2025**
+---
+
+### 📅 Week of Sun, 03 August 2025
+
+**Mon 04 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Tue, 05 August 2025**
+**Tue 05 August**
   • 09:00–09:45 — 45m
   • 15:00–16:00 — 1h 0m
 
-**Wed, 06 August 2025**
+**Wed 06 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Thu, 07 August 2025**
+**Thu 07 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Fri, 08 August 2025**
+**Fri 08 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Mon, 11 August 2025**
+---
+
+### 📅 Week of Sun, 10 August 2025
+
+**Mon 11 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Tue, 12 August 2025**
+**Tue 12 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Wed, 13 August 2025**
+**Wed 13 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Thu, 14 August 2025**
+**Thu 14 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
-**Fri, 15 August 2025**
+**Fri 15 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
+
+---
