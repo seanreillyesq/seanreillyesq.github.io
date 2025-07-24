@@ -1,15 +1,9 @@
 🗓️ **Available Meeting Slots**
-_Last updated: Wednesday, 23 July 2025 at 13:00_
+_Last updated: Thursday, 24 July 2025 at 13:00_
 
 ---
 
 ### 📅 Week of Sun, 20 July 2025
-
-**Wed 23 July**
-  • 15:30–16:00 — 30m
-
-**Thu 24 July**
-  • 09:00–11:15 — 2h 15m
 
 **Fri 25 July**
   • 09:00–09:45 — 45m
@@ -105,6 +99,10 @@ _Last updated: Wednesday, 23 July 2025 at 13:00_
   • 15:00–16:00 — 1h 0m
 
 **Thu 21 August**
+  • 09:00–12:45 — 3h 45m
+  • 15:00–16:00 — 1h 0m
+
+**Fri 22 August**
   • 09:00–12:45 — 3h 45m
   • 15:00–16:00 — 1h 0m
 
