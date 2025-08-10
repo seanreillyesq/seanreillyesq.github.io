@@ -1,5 +1,5 @@
 🗓️ **Available Meeting Slots**
-_Last updated: Saturday, 09 August 2025 at 13:00_
+_Last updated: Sunday, 10 August 2025 at 13:00_
 
 ---
 
@@ -95,6 +95,14 @@ _Last updated: Saturday, 09 August 2025 at 13:00_
 
 **Fri 05 September**
   • 09:00–12:45 — 3h 45m
+  • 15:00–16:00 — 1h 0m
+
+---
+
+### 📅 Week of Sun, 07 September 2025
+
+**Mon 08 September**
+  • 11:00–12:45 — 1h 45m
   • 15:00–16:00 — 1h 0m
 
 ---
