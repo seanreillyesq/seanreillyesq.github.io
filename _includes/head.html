@@ -1,0 +1,35 @@
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if page.meta-description %}<meta name="description" content="{{ page.meta-description }}">{% endif %}
+    {% if page.robots %}<meta name="robots" content="{{ page.robots }}">{% endif %}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
+    <meta property="og:description" content="{% if page.meta-description %}{{ page.meta-description }}{% else %}{{ site.description }}{% endif %}">
+    <meta property="og:url" content="{{ page.url | prepend: site.url }}">
+    <meta property="og:site_name" content="{{ site.title }}">
+    {% if page.header-img %}<meta property="og:image" content="{{ site.url }}/{{ page.header-img }}">{% endif %}
+    <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+
+    <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+    <link rel="canonical" href="{{ page.url | prepend: site.url }}">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="{{ "/css/bootstrap.min.css" | prepend: site.baseurl }}">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ "/css/clean-blog.css" | prepend: site.baseurl }}">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="{{ "/css/syntax.css" | prepend: site.baseurl }}">
+
+    <!-- Custom Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+{% include gtm.html %}
+</head>

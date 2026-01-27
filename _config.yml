@@ -1,0 +1,21 @@
+# Site settings
+title: Sean Reilly
+email: sreilly@seanreilly.org
+description: "Digital Marketing Consultant"
+baseurl: ""
+url: "https://www.seanreilly.org"
+github_username:  seanreillyesq
+facebook_username:
+linkedin_username: seanreillyesq
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+encoding: utf-8
+paginate: 5
+exclude: ["less","node_modules","README.md"]
+permalink:    /:title-:year:month:day
+plugins:
+  - jekyll-sitemap
+  - jekyll-redirect-from
+  - jekyll-feed

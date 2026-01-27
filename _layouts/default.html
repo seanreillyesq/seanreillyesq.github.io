@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include head.html %}
+
+<body>
+{% include gtm-body.html %}
+    {% include nav.html %}
+
+    <header class="{% if page.header_text_color == 'black' %}black-header-text{% endif %}">
+        <!-- Your header content here -->
+    </header>
+
+    {{ content }}
+
+    {% include footer.html %}
+
+</body>
+
+</html>
