@@ -1,26 +1,21 @@
 ---
-layout: post
+layout: page
 title: "Theme Formatting Test Page"
-subtitle: "Demonstrating all available formatting options"
-author: Sean
-date: 2026-01-28 21:00:00+00:00
+description: "Demonstrating all available formatting options"
 header-img: "img/home-bg.jpg"
-header_overlay: true
 meta-description: "Test page for Jekyll theme formatting options - not indexed"
 robots: "noindex, nofollow"
 hidden: true
-categories:
-- Test
+permalink: /test-page/
 ---
 
 This page demonstrates all formatting options available in the Clean Blog Jekyll theme. It is excluded from search engines via the robots meta tag.
 
 ## Front Matter Options
 
-This post uses these front matter options:
+This page uses these front matter options:
 
-- `subtitle` - The secondary heading you see below the title
-- `header_overlay: true` - Dark gradient over the header image
+- `hidden: true` - Excluded from navigation and blog roll
 - `robots: "noindex, nofollow"` - Prevents search engine indexing
 
 ---
