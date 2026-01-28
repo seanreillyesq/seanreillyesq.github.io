@@ -131,9 +131,7 @@ This is where I owe a huge thank you to [Daniel Miessler](https://danielmiessler
 
 If you want the richer, more detailed version his work, this is where to start:
 
-<div class="video-container">
-<iframe src="https://www.youtube.com/embed/iKwRWwabkEc" frameborder="0" allowfullscreen></iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/iKwRWwabkEc" frameborder="0" allowfullscreen></iframe>
 
 For a gentler introduction, [NetworkChuck's AI in Terminal video](https://www.youtube.com/watch?v=MsQACpcuTkU){:target="_blank"} gets you running in an afternoon - though you'll need coffee (don't worry, he'll remind you), because Chuck's energy level is... a lot. Daniel's approach is more powerful and comprehensive, but Chuck's is more accessible if you're not sure where to begin.
 

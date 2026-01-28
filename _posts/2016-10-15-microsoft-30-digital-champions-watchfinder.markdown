@@ -48,9 +48,7 @@ That said, the Real Business team made it straightforward. They knew what story 
 
 Here's the finished piece:
 
-<div class="video-container">
-<iframe src="https://www.youtube.com/embed/oJ4vAwpaqRs" frameborder="0" allowfullscreen></iframe>
-</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/oJ4vAwpaqRs" frameborder="0" allowfullscreen></iframe>
 
 ## Further reading
 

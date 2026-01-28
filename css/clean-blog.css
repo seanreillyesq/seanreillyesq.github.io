@@ -415,19 +415,3 @@ body {
 .intro-header .post-heading .meta {
     color: inherit; /* Ensures the text inherits the color from the header */
 }
-
-/* Responsive video container */
-.video-container {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
-  height: 0;
-  overflow: hidden;
-  margin: 30px 0;
-}
-.video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
