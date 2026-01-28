@@ -36,7 +36,7 @@ So instead of guessing, we ask the right questions.
 Here's a quick checklist to help surface the right context before we jump to conclusions:
 
 1. **Which AI tool did they use?**  
-   ChatGPT, Claude, Perplexity, Gemini, Harvey... If they mention self-hosted tools (e.g. Ollama, DeepSeek) or say things like “13b model,” it’s best to pass it to someone technical.
+   ChatGPT, Claude, Perplexity, Gemini, Harvey... If they mention self-hosted tools (e.g. Ollama, DeepSeek) or say things like "13b model," tell them to keep reading - I explain it below.
 
 2. **What model version was used?**  
    GPT-4, GPT-4o, Claude 3.5, Gemini 1.5, etc.
@@ -85,6 +85,6 @@ Think of it like engine size: more power doesn't always mean a better ride. My s
 - **Traditional SEO still matters most**. It powers both human and AI understanding.
 - Treat AI visibility checks as **qualitative research**, not a KPI.
 - If someone flags something from an AI chat, ask for the right context before jumping in.
-- And if they say "7b" like it's gospel, smile and tell them to come talk to you.
+- And if they say "7b" like it's gospel, smile and tell them to come talk to me.
 
 ---
