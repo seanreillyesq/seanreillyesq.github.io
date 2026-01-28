@@ -8,6 +8,7 @@ header-img: "img/home-bg.jpg"
 header_overlay: true
 meta-description: "Test page for Jekyll theme formatting options - not indexed"
 robots: "noindex, nofollow"
+hidden: true
 categories:
 - Test
 ---
