@@ -41,7 +41,9 @@ I'd assumed that anyone who needed to know about the rebrand would find out thro
 
 **The actual lesson**
 
+<div class="well">
 When you're changing something fundamental about your business, your stakeholder list is longer than you think. It's not just the people you have direct relationships with; it's the people connected to those relationships who have their own reasons to pay attention.
+</div>
 
 A quick heads-up to client organisations about upcoming administrative changes - even before the marketing rebrand - would have taken five minutes and saved a lot of stress. Not everything needs to be a coordinated launch. Some things just need a phone call.
 

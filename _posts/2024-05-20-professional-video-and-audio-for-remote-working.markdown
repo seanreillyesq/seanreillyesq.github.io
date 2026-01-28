@@ -19,7 +19,13 @@ Here's a snapshot of my desk setup, featuring most of the equipment discussed be
 
 ![Desk Setup](img/professional-video-and-audio-for-remote-working.jpg)
 
+<p class="caption">My home studio: Logitech Blue Yeti mic, Brio 4K camera, and dual Litra Glow lights.</p>
+
 ## Why Audio Matters Most
+
+<div class="alert alert-warning">
+<strong>Audio quality matters more than video.</strong> Poor audio will undermine even the best camera setup. Viewers will tolerate grainy video, but they'll click away from bad sound.
+</div>
 
 Before diving into the equipment, it's crucial to understand the importance of audio. Poor audio quality can detract from your message, no matter how good your video looks. To understand why audio is so critical, check out <a href="https://www.youtube.com/watch?v=hEMZa5VN3Zw" target="_blank" rel="noopener">this video</a>.
 

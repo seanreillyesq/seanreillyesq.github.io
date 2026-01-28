@@ -17,7 +17,11 @@ I put together a checklist after a board member raised exactly this question. Wh
 
 ## Why Asking the Right Questions Matters
 
-AI chat-based tools like ChatGPT, Perplexity, Gemini, and Copilot are growing fast in visibility. Yet they still make up only around **3% of total web search traffic**. By contrast, **Google accounts for over 90% market share** globally (and around 90% in the UK), with **Bing at just 3-4%**. That means marketing should still prioritise traditional SEO. AI chat tools are growing fast and worth watching, but they're nowhere near replacing Google or Bing.
+<div class="alert alert-info">
+<strong>Perspective check:</strong> AI chat tools make up only around <strong>3% of total web search traffic</strong>. Google still accounts for <strong>over 90% market share</strong> globally. AI search is growing fast and worth watching, but it's nowhere near replacing traditional search.
+</div>
+
+AI chat-based tools like ChatGPT, Perplexity, Gemini, and Copilot are growing fast in visibility. That means marketing should still prioritise traditional SEO - AI chat tools aren't replacing Google or Bing anytime soon.
 
 Still, someone asking "why don't we appear in ChatGPT?" deserves a decent response. The same phrasing or tool can produce very different results depending on a few key variables:
 

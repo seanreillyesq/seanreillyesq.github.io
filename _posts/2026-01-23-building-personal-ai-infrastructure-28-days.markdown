@@ -112,14 +112,18 @@ I prefer open source where possible. [Ollama](https://ollama.ai/){:target="_blan
 
 I need to be honest here, I invested time and money upfront to get SAI going using top-tier Claude MAX, which is £150/month.
 
-- **28 days** from zero to production system
-- **204 commits** tracking evolution of thinking
-- **1,038** ChatGPT conversations migrated and organised
-- **2,595** conversation files standardised to consistent naming
-- **4,469** lines of AI context and instructions across the workspace
-- **233+** AI prompt patterns available via Fabric
-- **3** MCP servers connected (Todoist, Notion, n8n)
-- **£25-75/month** ongoing cost (Claude subscription plus minimal API usage)
+<div class="well">
+<strong>28 days from zero to production:</strong>
+<ul>
+<li><strong>204 commits</strong> tracking evolution of thinking</li>
+<li><strong>1,038</strong> ChatGPT conversations migrated and organised</li>
+<li><strong>2,595</strong> conversation files standardised to consistent naming</li>
+<li><strong>4,469</strong> lines of AI context and instructions across the workspace</li>
+<li><strong>233+</strong> AI prompt patterns available via Fabric</li>
+<li><strong>3</strong> MCP servers connected (Todoist, Notion, n8n)</li>
+<li><strong>£25-75/month</strong> ongoing cost (Claude subscription plus minimal API usage)</li>
+</ul>
+</div>
 
 ## Credit Where It's Due
 
