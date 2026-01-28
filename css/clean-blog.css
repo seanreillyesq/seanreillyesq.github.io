@@ -422,8 +422,7 @@ body {
   padding-bottom: 56.25%; /* 16:9 aspect ratio */
   height: 0;
   overflow: hidden;
-  max-width: 800px;
-  margin: 30px auto;
+  margin: 30px 0;
 }
 .video-container iframe {
   position: absolute;
