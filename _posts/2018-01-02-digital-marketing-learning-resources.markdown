@@ -61,4 +61,3 @@ Finally, look to the wider marketing field as well, especially as digital market
 
 - <a href="https://www.marketingweek.com/focus/mark-ritson/" target="_blank">Mark Ritson on Marketing Week</a>
 
-Have any suggestions for me? Get in touch via the comments below.
