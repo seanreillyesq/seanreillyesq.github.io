@@ -175,6 +175,22 @@ Standard image:
 
 ---
 
+## Responsive Video
+
+Wrap YouTube/Vimeo iframes in a `.video-container` div for mobile-friendly responsive videos:
+
+<div class="video-container">
+<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+</div>
+
+```html
+<div class="video-container">
+<iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+</div>
+```
+
+---
+
 ## Tables
 
 | Feature | Status | Notes |
