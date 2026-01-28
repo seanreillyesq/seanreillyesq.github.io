@@ -17,7 +17,7 @@ I put together a checklist after a board member raised exactly this question. Wh
 
 ## Why Asking the Right Questions Matters
 
-AI chat-based tools like ChatGPT, Perplexity, Gemini, and Copilot are growing fast in visibility. Yet they still make up only around **3% of total web search traffic**. By contrast, **Google accounts for over 90% market share** globally (and around 90% in the UK), with **Bing at just 3-4%**. That means marketing should still prioritise traditional SEO. AI chat tools are interesting and worth watching, but they're nowhere near replacing Google or Bing in terms of volume.
+AI chat-based tools like ChatGPT, Perplexity, Gemini, and Copilot are growing fast in visibility. Yet they still make up only around **3% of total web search traffic**. By contrast, **Google accounts for over 90% market share** globally (and around 90% in the UK), with **Bing at just 3-4%**. That means marketing should still prioritise traditional SEO. AI chat tools are growing fast and worth watching, but they're nowhere near replacing Google or Bing.
 
 Still, someone asking "why don't we appear in ChatGPT?" deserves a decent response. The same phrasing or tool can produce very different results depending on a few key variables:
 
@@ -33,7 +33,7 @@ So instead of guessing, we ask the right questions.
 
 ## Questions to Ask When Auditing an AI Search Claim
 
-Here's a quick checklist to help surface the right context before we jump to conclusions:
+Here's a quick checklist to get the right context before we jump to conclusions:
 
 1. **Which AI tool did they use?**  
    ChatGPT, Claude, Perplexity, Gemini, Harvey... If they mention self-hosted tools (e.g. Ollama, DeepSeek) or say things like "13b model," tell them to keep reading - I explain it below.
@@ -55,7 +55,7 @@ Here's a quick checklist to help surface the right context before we jump to con
    Things like tone of voice, safe-search filters, or restricted sources.
 
 7. **Was it a fine-tuned or company-trained model?**
-   If yes, that's a different game entirely. Flag it to a technical contact.
+   If yes, that's a different game entirely - and probably beyond what most marketers need to worry about.
 
 8. **Can they share the full transcript or a chat link?**  
    Most paid tools (like ChatGPT Plus) allow sharing.
