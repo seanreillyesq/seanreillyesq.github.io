@@ -11,7 +11,9 @@ categories:
 - Blog
 ---
 
-When someone claims, “I searched this in ChatGPT and we didn’t show up,” it’s tempting to shrug it off. But in the messy world of **AI-powered search**, those offhand comments can spark legitimate concerns, and they need a structured response.
+When someone claims, "I searched this in ChatGPT and we didn't show up," it's tempting to shrug it off. But in the messy world of **AI-powered search**, those offhand comments can spark legitimate concerns, and they need a structured response.
+
+I put together a checklist after a board member raised exactly this question. When I emailed it to colleagues, it saved a lot of back-and-forth - so here's a version for anyone facing similar conversations.
 
 ## Why Asking the Right Questions Matters
 
@@ -66,14 +68,14 @@ Marketers sometimes hear terms like “7b,” “13b,” or “70b” and assume
 
 Those numbers refer to **the number of parameters in a model**: the internal "knobs" it uses to understand language. A 70b model has more of these than a 13b one. But that doesn’t guarantee better answers.
 
-Think of it like engine size: more power doesn't always mean a better ride. It depends on the training, tuning, and context.
+Think of it like engine size: more power doesn't always mean a better ride. My son James is a talented <a href="https://www.jamesreillyracing.com" target="_blank">racing driver</a>, and I've watched him hustle a Citroen C1 around Silverstone against BMW Z4s, Mazda RX8s, and Honda Type Rs. It's about training, tuning, and context.
 
 ---
 
 ## Why This All Matters
 
-- Google has **begun surfacing Gemini activity in Search Console**, but only for AI Overview impressions. It's early days, and far from comprehensive.
-- There are now a few unofficial tools that let you peek into Gemini or ChatGPT behaviour, but they're often fragile, manually operated, and not scalable.
+- Google has **begun surfacing Gemini activity in Search Console**, but only for AI Overview impressions. I was at Google's offices in June for the Amadeus Google Summit and spoke directly with a Senior Product Manager about this - it's early days, and far from comprehensive.
+- There are now a few unofficial tools that let you peek into Gemini or ChatGPT behaviour. I spoke with a large SEO agency who'd just built and launched one - they were honest that it's useful for investigation but fragile, manually operated, and nowhere near scalable.
 - Crucially: **AI models don't retrieve results like search engines**. They **generate** responses based on data, prompts, and model behaviour - not a ranked list of pages.
 
 ---
