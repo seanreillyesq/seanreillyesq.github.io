@@ -154,7 +154,7 @@ CookieConsent.run({
                         },
                         {
                             title: 'More Information',
-                            description: 'For any queries about my cookie policy, please <a href="mailto:sean@seanreilly.net">contact me</a>.'
+                            description: 'For any queries about my cookie policy, please contact me via <a href="https://www.linkedin.com/in/seanreillyesq" target="_blank" rel="noopener">LinkedIn</a>.'
                         }
                     ]
                 }
