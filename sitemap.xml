@@ -1,0 +1,27 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+{%- assign all_pages = site.pages | concat: site.posts -%}
+{%- for page in all_pages -%}
+{%- unless page.sitemap == false or page.hidden == true or page.url contains '/page/' or page.url contains '/category/' or page.url contains '/tag/' %}
+  <url>
+    <loc>{{ site.hreflang_domains.default }}{{ page.url | replace: 'index.html', '' }}</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.hreflang_domains.default }}{{ page.url | replace: 'index.html', '' }}" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.hreflang_domains.default }}{{ page.url | replace: 'index.html', '' }}" />
+{%- for domain in site.hreflang_domains -%}
+{%- if domain[0] != 'default' %}
+    <xhtml:link rel="alternate" hreflang="{{ domain[0] }}" href="{{ domain[1] }}{{ page.url | replace: 'index.html', '' }}" />
+{%- endif -%}
+{%- endfor %}
+{%- if page.last_modified_at %}
+    <lastmod>{{ page.last_modified_at | date_to_xmlschema }}</lastmod>
+{%- elsif page.date %}
+    <lastmod>{{ page.date | date_to_xmlschema }}</lastmod>
+{%- endif %}
+  </url>
+{%- endunless -%}
+{%- endfor %}
+</urlset>

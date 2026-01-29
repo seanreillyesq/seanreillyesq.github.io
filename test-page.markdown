@@ -6,6 +6,7 @@ header-img: "img/home-bg.jpg"
 meta-description: "Test page for Jekyll theme formatting options - not indexed"
 robots: "noindex, nofollow"
 hidden: true
+sitemap: false
 permalink: /test-page/
 ---
 
