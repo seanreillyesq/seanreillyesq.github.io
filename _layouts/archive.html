@@ -1,0 +1,37 @@
+---
+layout: default
+---
+
+<header class="intro-header" style="background-image: url('{{ site.baseurl }}/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1>{{ page.title }}</h1>
+                    <span class="subheading">{{ page.type | capitalize }}: {{ page.title }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <p class="lead">{{ page.posts | size }} post{% if page.posts.size != 1 %}s{% endif %} in this {{ page.type }}.</p>
+
+            {% for post in page.posts %}
+            <div class="post-preview">
+                <a href="{{ post.url | prepend: site.baseurl }}">
+                    <h2 class="post-title">{{ post.title }}</h2>
+                    {% if post.meta-description %}
+                    <h3 class="post-subtitle">{{ post.meta-description | truncate: 150 }}</h3>
+                    {% endif %}
+                </a>
+                <p class="post-meta">Posted on {{ post.date | date: "%B %-d, %Y" }}</p>
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -1,9 +1,9 @@
 # Site settings
 title: Sean Reilly
-email: sreilly@seanreilly.org
+email: sean@seanreilly.net
 description: "Digital Marketing Consultant"
 baseurl: ""
-url: "https://www.seanreilly.org"
+url: "https://www.seanreilly.net"
 github_username:  seanreillyesq
 facebook_username:
 linkedin_username: seanreillyesq
@@ -12,10 +12,42 @@ linkedin_username: seanreillyesq
 markdown: kramdown
 highlighter: rouge
 encoding: utf-8
-paginate: 5
-exclude: ["less","node_modules","README.md"]
-permalink:    /:title-:year:month:day
+exclude: ["less","node_modules","README.md","Gemfile","Gemfile.lock"]
+permalink: /:title-:year:month:day
+
+# Plugins
 plugins:
   - jekyll-sitemap
   - jekyll-redirect-from
   - jekyll-feed
+  - jekyll-archives
+  - jekyll-last-modified-at
+  - jekyll-paginate-v2
+
+# Pagination (v2)
+pagination:
+  enabled: true
+  per_page: 5
+  permalink: '/page/:num/'
+  title: ':title - Page :num'
+  sort_field: 'date'
+  sort_reverse: true
+
+# Archives
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+  layouts:
+    category: archive
+    tag: archive
+  permalinks:
+    category: /category/:name/
+    tag: /tag/:name/
+
+# hreflang domains
+hreflang_domains:
+  default: "https://www.seanreilly.net"
+  en-GB: "https://www.seanreilly.uk"
+  en-IE: "https://www.seanreilly.ie"
+  en-EU: "https://www.seanreilly.eu"
