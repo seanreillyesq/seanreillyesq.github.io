@@ -16,8 +16,9 @@ exclude: ["less","node_modules","README.md","Gemfile","Gemfile.lock"]
 permalink: /:title-:year:month:day
 
 # Plugins
+# Note: jekyll-sitemap removed - using custom sitemap templates for full control
+# (sitemap_index.xml, sitemap-content.xml, sitemap-images.xml, sitemap-news.xml, sitemap-archives.xml)
 plugins:
-  - jekyll-sitemap
   - jekyll-redirect-from
   - jekyll-feed
   - jekyll-archives

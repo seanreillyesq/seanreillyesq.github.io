@@ -1,0 +1,33 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+{%- comment -%}
+  News Sitemap: Recent posts for Google News
+  Google News requires posts to be < 48 hours old
+  Only includes posts from the last 2 days
+{%- endcomment -%}
+
+{%- assign two_days_ago = 'now' | date: '%s' | minus: 172800 -%}
+{%- for post in site.posts limit: 10 -%}
+{%- assign post_timestamp = post.date | date: '%s' | plus: 0 -%}
+{%- if post_timestamp >= two_days_ago %}
+  <url>
+    <loc>{{ site.url }}{{ post.url }}</loc>
+    <news:news>
+      <news:publication>
+        <news:name>{{ site.title }}</news:name>
+        <news:language>en</news:language>
+      </news:publication>
+      <news:publication_date>{{ post.date | date_to_xmlschema }}</news:publication_date>
+      <news:title>{{ post.title | xml_escape }}</news:title>
+{%- if post.categories.size > 0 %}
+      <news:keywords>{{ post.categories | join: ', ' }}{% if post.tags.size > 0 %}, {{ post.tags | join: ', ' }}{% endif %}</news:keywords>
+{%- endif %}
+    </news:news>
+  </url>
+{%- endif -%}
+{%- endfor %}
+</urlset>

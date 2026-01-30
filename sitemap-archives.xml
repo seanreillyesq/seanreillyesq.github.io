@@ -1,0 +1,31 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- comment -%}
+  Archives Sitemap: Category and Tag pages
+  Lower priority as these are aggregation pages, not primary content
+  Some SEOs exclude these; we include them with low priority for completeness
+{%- endcomment -%}
+
+{%- comment -%} Category archive pages {%- endcomment -%}
+{%- for category in site.categories %}
+  <url>
+    <loc>{{ site.url }}/category/{{ category[0] | slugify }}/</loc>
+    <lastmod>{{ site.posts | where: "categories", category[0] | map: "date" | first | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.3</priority>
+  </url>
+{%- endfor %}
+
+{%- comment -%} Tag archive pages {%- endcomment -%}
+{%- for tag in site.tags %}
+  <url>
+    <loc>{{ site.url }}/tag/{{ tag[0] | slugify }}/</loc>
+    <lastmod>{{ site.posts | where: "tags", tag[0] | map: "date" | first | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+{%- endfor %}
+</urlset>

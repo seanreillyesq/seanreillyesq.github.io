@@ -1,0 +1,48 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+{%- comment -%}
+  Image Sitemap: Header images from all posts
+  Helps search engines discover and index images for image search
+{%- endcomment -%}
+
+{%- comment -%} Site author image on about page {%- endcomment -%}
+  <url>
+    <loc>{{ site.url }}/about</loc>
+    <image:image>
+      <image:loc>{{ site.url }}/img/SeanReilly.jpg</image:loc>
+      <image:title>Sean Reilly</image:title>
+      <image:caption>Sean Reilly - Digital Marketing Consultant</image:caption>
+    </image:image>
+  </url>
+
+{%- comment -%} Header images from all posts {%- endcomment -%}
+{%- for post in site.posts -%}
+{%- if post.header-img %}
+  <url>
+    <loc>{{ site.url }}{{ post.url }}</loc>
+    <image:image>
+      <image:loc>{{ site.url }}/{{ post.header-img }}</image:loc>
+      <image:title>{{ post.title | xml_escape }}</image:title>
+{%- if post.meta-description %}
+      <image:caption>{{ post.meta-description | xml_escape }}</image:caption>
+{%- endif %}
+    </image:image>
+{%- comment -%} Include inline images from post assets folder if it exists {%- endcomment -%}
+{%- assign post_slug = post.url | split: '/' | last | split: '-20' | first -%}
+{%- assign asset_path = '/assets/' | append: post_slug | append: '/' -%}
+{%- for static_file in site.static_files -%}
+{%- if static_file.path contains asset_path and static_file.extname == '.jpg' or static_file.extname == '.png' or static_file.extname == '.webp' %}
+    <image:image>
+      <image:loc>{{ site.url }}{{ static_file.path }}</image:loc>
+      <image:title>{{ static_file.basename | replace: '-', ' ' | capitalize }}</image:title>
+    </image:image>
+{%- endif -%}
+{%- endfor -%}
+  </url>
+{%- endif -%}
+{%- endfor %}
+</urlset>

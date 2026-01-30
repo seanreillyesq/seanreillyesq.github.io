@@ -1,0 +1,72 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+{%- comment -%}
+  Content Sitemap: Pages and Posts
+  Includes hreflang for regional variants, lastmod, changefreq, priority
+{%- endcomment -%}
+
+{%- comment -%} Homepage first - highest priority {%- endcomment -%}
+  <url>
+    <loc>{{ site.hreflang_domains.default }}/</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.hreflang_domains.default }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.hreflang_domains.default }}/" />
+{%- for domain in site.hreflang_domains -%}
+{%- if domain[0] != 'default' %}
+    <xhtml:link rel="alternate" hreflang="{{ domain[0] }}" href="{{ domain[1] }}/" />
+{%- endif -%}
+{%- endfor %}
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+{%- comment -%} Static pages - high priority {%- endcomment -%}
+{%- assign static_pages = site.pages | where_exp: "page", "page.layout == 'page'" -%}
+{%- for page in static_pages -%}
+{%- unless page.sitemap == false or page.hidden == true or page.robots contains 'noindex' %}
+  <url>
+    <loc>{{ site.hreflang_domains.default }}{{ page.url | replace: 'index.html', '' }}</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.hreflang_domains.default }}{{ page.url | replace: 'index.html', '' }}" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.hreflang_domains.default }}{{ page.url | replace: 'index.html', '' }}" />
+{%- for domain in site.hreflang_domains -%}
+{%- if domain[0] != 'default' %}
+    <xhtml:link rel="alternate" hreflang="{{ domain[0] }}" href="{{ domain[1] }}{{ page.url | replace: 'index.html', '' }}" />
+{%- endif -%}
+{%- endfor %}
+{%- if page.last_modified_at %}
+    <lastmod>{{ page.last_modified_at | date_to_xmlschema }}</lastmod>
+{%- endif %}
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+{%- endunless -%}
+{%- endfor %}
+
+{%- comment -%} Blog posts - medium-high priority, sorted by date {%- endcomment -%}
+{%- assign sorted_posts = site.posts | sort: 'date' | reverse -%}
+{%- for post in sorted_posts -%}
+{%- unless post.sitemap == false or post.hidden == true %}
+  <url>
+    <loc>{{ site.hreflang_domains.default }}{{ post.url }}</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.hreflang_domains.default }}{{ post.url }}" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.hreflang_domains.default }}{{ post.url }}" />
+{%- for domain in site.hreflang_domains -%}
+{%- if domain[0] != 'default' %}
+    <xhtml:link rel="alternate" hreflang="{{ domain[0] }}" href="{{ domain[1] }}{{ post.url }}" />
+{%- endif -%}
+{%- endfor %}
+{%- if post.last_modified_at %}
+    <lastmod>{{ post.last_modified_at | date_to_xmlschema }}</lastmod>
+{%- elsif post.date %}
+    <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
+{%- endif %}
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+{%- endunless -%}
+{%- endfor %}
+</urlset>
