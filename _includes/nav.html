@@ -20,7 +20,7 @@
                 </li>
                 {% for page in site.pages %}{% if page.title %}{% unless page.hidden or page.layout == 'archive' or page.url contains '/page/' or page.url == '/' or page.url == '/index.html' %}
                 <li>
-                    <a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
+                    <a href="{{ page.url | prepend: site.baseurl }}">{{ page.menu | default: page.title }}</a>
                 </li>
                 {% endunless %}{% endif %}{% endfor %}
             </ul>
