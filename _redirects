@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects
+# See: https://developers.cloudflare.com/pages/configuration/redirects/
+
+# Redirect legacy sitemap.xml to sitemap index
+/sitemap.xml /sitemap_index.xml 301

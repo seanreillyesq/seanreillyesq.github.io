@@ -34,6 +34,10 @@ pagination:
   sort_field: 'date'
   sort_reverse: true
 
+# Autopages - disable sitemap generation (using custom templates instead)
+autopages:
+  enabled: false
+
 # Archives
 jekyll-archives:
   enabled:
