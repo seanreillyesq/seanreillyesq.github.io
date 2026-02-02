@@ -10,9 +10,7 @@ categories:
 - Blog
 - Marketing
 ---
-Here are the specifications I wrote for a bespoke sitemap set up for a large ecommerce website in February 2017 in an attempt to optimise the performance of the site and enhance discovery of new product, pages and articles as well as any other assets accociated with them.
-
-At the request of the development manager I used an Agile Given When Then approach to writing the specification.
+A sitemap specification I wrote in 2017 for a large ecommerce client with significant inventory churn. The development manager requested the Agile Given/When/Then format. Published here for reference.
 
 ---
 
@@ -103,7 +101,7 @@ When the assets are published and added to an XML sitemap
 Then we need to list these URL schema sets within the `<urlset >` tag  
 And for pages the schema is `xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"`  
 And for video the schema is `xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"`  
-And for images the schema is `xmlns:image="http://www.google.com/schemas/sitemap-image/1.1)"`  
+And for images the schema is `xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"`  
 And it should look like this `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="https://www.google.com/schemas/sitemap-video/1.1">`  
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
@@ -128,10 +126,10 @@ And we can provide additional details about these videos
 And we host all our videos on YouTube  
 When the assets are published and added to an XML sitemap  
 Then we need to list details of videos using `<video:video> </video:video>` tags within the URL group below the page location details  
-And we need to provide a thumbnail by using `<video:thumbnail_loc>[httpss://img.youtube.com/vi/<insert-youtube-video-id-here></video:thumbnail_loc>`  
+And we need to provide a thumbnail by using `<video:thumbnail_loc>https://img.youtube.com/vi/<insert-youtube-video-id-here>/maxresdefault.jpg</video:thumbnail_loc>`  
 And we need to provide the title which should match the page's H1 tag and this should be wrapped in `<video:title> </video:title>`  
 And we need to provide the title which should match the description from the page (currently wrapped in itemprop="description" tags on page) and be wrapped in `<video:description> </video:description>`  
-And we need to provide the content location which will be `<video:content_loc> [httpss://www.youtube.com/embed/<insert-youtube-video-id-here></video:content_loc>`
+And we need to provide the content location which will be `<video:content_loc>https://www.youtube.com/embed/<insert-youtube-video-id-here></video:content_loc>`
 
 Given that we have assets on the websites and that we want search engines to find them and index them quickly  
 And that we have a lot of different types  
@@ -202,18 +200,10 @@ And if their URL group contains any other assets they need to be removed as well
 
 ---
 
-Given that I have tried to make this document exhaustive but I am only human  
-When the developer comes to do the coding  
-Then here is a list of relevant assets written by far smarter people than me  
+**Reference documentation:**  
 
-<a href="https://www.sitemaps.org/protocol.html" target="_blank" rel="nofollow">Google, Microsoft & Yahoo Sitemaps partnership site</a>
+- <a href="https://www.sitemaps.org/protocol.html" target="_blank">Sitemaps.org protocol specification</a>
+- <a href="https://support.google.com/webmasters/answer/156184?hl=en" target="_blank">Google Sitemaps documentation</a>
+- <a href="https://developers.google.com/webmasters/videosearch/sitemaps" target="_blank">Google Video Sitemaps</a>
+- <a href="https://support.google.com/webmasters/answer/178636" target="_blank">Google Image Sitemaps</a>
 
-<a href="https://support.google.com/webmasters/answer/156184?hl=en" target="_blank" rel="nofollow">Google Sitemaps Help</a>
-
-<a href="https://developers.google.com/webmasters/videosearch/sitemaps" target="_blank" rel="nofollow">Google Video Sitemaps Help</a>
-
-<a href="https://support.google.com/webmasters/answer/178636" target="_blank" rel="nofollow">Google Image Sitemap Help</a>
-
----
-
-Note that I am not using anything even remotely as complex on this on this blog as this is more for me playing around and testing stuff out.
