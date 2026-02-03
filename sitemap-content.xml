@@ -24,10 +24,10 @@ layout: null
     <priority>1.0</priority>
   </url>
 
-{%- comment -%} Static pages - high priority {%- endcomment -%}
+{%- comment -%} Static pages - high priority (exclude homepage and pagination) {%- endcomment -%}
 {%- assign static_pages = site.pages | where_exp: "page", "page.layout == 'page'" -%}
 {%- for page in static_pages -%}
-{%- unless page.sitemap == false or page.hidden == true or page.robots contains 'noindex' %}
+{%- unless page.sitemap == false or page.hidden == true or page.robots contains 'noindex' or page.url == '/' or page.url == '/index.html' or page.url contains '/page/' %}
   <url>
     <loc>{{ site.hreflang_domains.default }}{{ page.url | replace: 'index.html', '' }}</loc>
     <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.hreflang_domains.default }}{{ page.url | replace: 'index.html', '' }}" />
