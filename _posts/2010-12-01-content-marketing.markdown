@@ -3,6 +3,8 @@ author: Sean
 comments: true
 date: 2010-12-01 09:00:00+00:00
 layout: post
+redirect_from:
+  - /content-marketing-2011-20101201
 title: "Content Marketing in 2011: Lessons from a Year of Algorithm Changes"
 header-img: "img/content-marketing-2011.jpg"
 header_overlay: true
