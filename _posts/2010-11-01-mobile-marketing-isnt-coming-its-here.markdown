@@ -28,3 +28,5 @@ The site works on mobile. Sort of. You can pinch and zoom your way around. But i
 So I'm watching a number grow and I don't have a clear playbook for what to do about it. Mobile is obviously becoming important. The question is whether "obviously important" translates to "worth significant investment" when it's still under 10% of traffic.
 
 I suspect I'll look back on this period and either think "we should have moved faster" or "good thing we didn't overreact." No way to know which yet.
+
+And if you're in the market for a new smartphone, check out <a href="https://web.archive.org/web/20130526093510/http://www.dealson3.co.uk:80/" target="_blank">the deals site I run with a mate</a>. We're doing alright on it, actually.
