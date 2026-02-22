@@ -29,4 +29,4 @@ So I'm watching a number grow and I don't have a clear playbook for what to do a
 
 I suspect I'll look back on this period and either think "we should have moved faster" or "good thing we didn't overreact." No way to know which yet.
 
-And if you're in the market for a new smartphone, check out <a href="https://web.archive.org/web/20130526093510/http://www.dealson3.co.uk:80/" target="_blank">the deals site I run with a mate</a>. We're doing alright on it, actually.
+And if you're in the market for a new smartphone, check out <a href="https://web.archive.org/web/20130526093510/http://www.dealson3.co.uk:80/" target="_blank">Deals on 3</a> - a site I run with a mate. We're doing alright on it, actually.
