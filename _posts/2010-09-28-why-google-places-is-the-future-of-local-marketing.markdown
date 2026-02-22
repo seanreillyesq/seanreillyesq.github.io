@@ -5,6 +5,7 @@ date: 2010-09-28 09:15:00+00:00
 layout: post
 title: "Why Google Places is the Future of Local Marketing"
 header-img: "img/google-places.jpg"
+header_overlay: true
 meta-description: Google Places is five months old and already reshaping local search. What this means for local businesses and marketers.
 categories:
 - Blog
