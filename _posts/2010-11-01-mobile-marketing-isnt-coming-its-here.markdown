@@ -5,6 +5,7 @@ date: 2010-11-01 09:30:00 +0000
 author: Sean
 comments: true
 header-img: "img/mobile-marketing-isnt-coming-its-here.jpg"
+header_overlay: true
 categories:
 - Digital Marketing
 meta-description: "Mobile traffic is growing faster than expected. But what do you actually do about it when BlackBerry dominates your analytics?"
