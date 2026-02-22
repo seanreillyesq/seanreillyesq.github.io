@@ -6,7 +6,7 @@ layout: post
 title: "Instagram and the Visual Web: What Publishers Should Watch"
 header-img: "img/instagram-visual-web-2010.jpg"
 header_overlay: true
-meta-description: "Instagram launched this week. As someone who failed a Sony camera interview, I'm sceptical about phone photos but excited about instant sharing."
+meta-description: "Instagram launched this week. The photos are worse than my Canon. But I've shared more this week than in the previous month."
 categories:
 - Digital Marketing
 - Social Media
