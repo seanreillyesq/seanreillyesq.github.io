@@ -18,7 +18,7 @@ I picked a compact.
 
 The moment I got to the slide and saw the hiring manager's face, I knew I'd fucked up. A field marketing rep for Sony Digital Cameras, presenting a point-and-shoot to a panel of product managers who lived and breathed DSLRs. But they made me do the whole presentation anyway - ten minutes of explaining the virtues of a camera that cost a third of what anyone serious would buy. Bastards.
 
-Anyway. Five years at Dixons in Canterbury before that, selling cameras to people who mostly didn't know what they wanted. I have opinions about megapixels. Too many opinions, probably.
+Anyway. Five years at Dixons in Canterbury (1998 - 2003) before that, selling cameras to people who mostly didn't know what they wanted. I have opinions about megapixels. Too many opinions, probably.
 
 So when Instagram launched this Wednesday, my first thought was: why would anyone want worse photos?
 
@@ -32,7 +32,7 @@ My Canon PowerShot S90 takes better photos than my iPhone 4. Obviously it does. 
 
 ## The bit I didn't expect
 
-I've been using Flickr to share photos with Canterbury Harriers - my running club. The process goes: run, take photos, get home, find the cable, transfer to laptop, wait for Flickr to upload, post the link to the forum. By Tuesday nobody remembers what we're looking at.
+I've been using Flickr to share photos with <a href="https://www.canterburyharriers.org/" target="_blank">Canterbury Harriers</a> - my running club. The process goes: run, take photos, get home, find the cable, transfer to laptop, wait for Flickr to upload, post the link to the forum. By Tuesday nobody remembers what we're looking at.
 
 I downloaded Instagram and posted a photo from this morning's run. Took about thirty seconds. Got three comments before I'd finished my coffee.
 
