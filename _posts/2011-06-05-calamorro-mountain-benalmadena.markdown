@@ -11,13 +11,6 @@ tags:
 - Travel
 - Running
 - Spain
-- Benalmádena
-- calamorro
-- Cerro del Morro
-- costa del sol
-- Mount Calamorro
-- Sierra de Mijas
-- Teleférico Benalmádena
 header-img: "img/calamorro.jpg"
 meta-description: On a family holiday to Benalmádena I had the opportunity to have a quick run up Mount Calamorro, part of the coastal Sierra de Mijas mountain range.
 ---
