@@ -7,8 +7,9 @@ title: Useful Digital Marketing Learning Resources
 header-img: img/google-algorithms.jpg
 meta-description: A quick little list of useful Digital Marketing Learning Resources that I rate
 categories:
-- Blog
-- Marketing
+- Digital Marketing
+tags:
+- Learning
 ---
 Thought I'd share this with everyone just in case there are any nuggets that might be useful for others.
 

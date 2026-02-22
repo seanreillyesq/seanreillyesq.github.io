@@ -7,8 +7,9 @@ title: "How to Disable Caps Lock Notifications in Windows 11"
 header-img: img/caps-lock-notification-windows-11.jpg
 meta-description: Stop the Caps Lock popup interrupting your games and workflow. Quick fixes for Windows 11 and Dell Peripheral Manager.
 categories:
-- Blog
-- IT
+- Technology
+tags:
+- Windows
 ---
 
 Nothing ruins a tense moment in a first-person shooter quite like accidentally hitting Caps Lock and having Windows throw a notification across your screen. This happened to me yesterday, mid-firefight, and I finally snapped and fixed it properly.

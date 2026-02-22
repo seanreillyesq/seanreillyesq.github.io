@@ -8,7 +8,11 @@ header-img: "img/google-places.jpg"
 header_overlay: true
 meta-description: Google Places is five months old and already reshaping local search. What this means for local businesses and marketers.
 categories:
-- Blog
+- Digital Marketing
+tags:
+- SEO
+- Local Search
+- Google
 ---
 
 I claimed my first Google Places listing last month. Not for a client; for my barber.

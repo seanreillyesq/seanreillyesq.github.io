@@ -7,8 +7,10 @@ title: "How to make Google algorithms work for you"
 header-img: "img/google-algorithms.jpg"
 meta-description: "Every second of every day Google's algorithms work to deliver relevant results, but how can you use them to help your site?"
 categories:
-- Blog
-- Marketing
+- Digital Marketing
+tags:
+- SEO
+- Google
 ---
 Every second of every day, Google processes 40,000 search queries from all over the world. That's more than 3.5 billion searches every year. With more than 100 million active websites hosted on the internet, how does the company sort through all this information?
 

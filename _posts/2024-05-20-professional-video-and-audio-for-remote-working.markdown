@@ -7,7 +7,10 @@ title: Professional video and audio for remote working
 header-img: "img/professional-video-and-audio-for-remote-working.jpg"
 meta-description: Discover the essential equipment and setup tips for creating a professional video recording and audio for remote working.
 categories:
-- Blog
+- Technology
+tags:
+- Remote Working
+- Kit
 ---
 # A Complete Guide to Setting Up Your Home Studio for Professional Video Recording
 

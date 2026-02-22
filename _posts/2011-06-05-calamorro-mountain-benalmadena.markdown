@@ -6,8 +6,11 @@ layout: post
 slug: calamorro-mountain-benalmadena
 title: Calamorro - A confusing run up a sunny mountain
 categories:
-- Adventure
+- Lifestyle
 tags:
+- Travel
+- Running
+- Spain
 - Benalmádena
 - calamorro
 - Cerro del Morro

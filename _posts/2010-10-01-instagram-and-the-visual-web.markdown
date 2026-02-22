@@ -9,7 +9,10 @@ header_overlay: true
 meta-description: "Instagram launched this week. The photos are worse than my Canon. But I've shared more this week than in the previous month."
 categories:
 - Digital Marketing
+tags:
 - Social Media
+- Instagram
+- Mobile
 ---
 
 I should probably start by admitting I once bombed an interview with Sony Digital Cameras so badly that I'm fairly sure they still use it as a training example. This was 2006; I'd applied for a Southern field marketing rep position. The format was simple: pick a camera from the range and present it as if to a retail audience.

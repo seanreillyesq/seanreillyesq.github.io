@@ -5,7 +5,10 @@ date: 2015-01-03 21:23:59+00:00
 layout: post
 title: Day One Journal
 categories:
-- Blog
+- Lifestyle
+tags:
+- Productivity
+- Apps
 header-img: "img/day-one-journal.jpg"
 meta-description: "In an attempt to organise my life a little better, as well as publish more to my blog, I am trying out using the Day One Journal app"
 ---

@@ -8,8 +8,10 @@ header-img: "img/watchfinder-digital-champions.jpg"
 header_overlay: true
 meta-description: "Watch my interview on scaling Watchfinder from £20m to £90m using Azure, machine learning and programmatic ads."
 categories:
-- Blog
-- Digital Marketing
+- Career
+tags:
+- Press
+- Ecommerce
 ---
 
 Real Business and Microsoft have been running a series called "30 Digital Champions" - profiling UK companies that have used digital transformation to achieve significant growth. Watchfinder was selected as one of the 30, and I was asked to represent the company on camera.

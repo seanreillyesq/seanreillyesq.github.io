@@ -7,8 +7,9 @@ title: "Seven Steps to Successful Content Marketing"
 header-img: "img/content-marketing.jpg"
 meta-description: "Content marketing can take many forms. These strategies can help you make the most of them and allow you to keep your site content fresh"
 categories:
-- Blog
-- Marketing
+- Digital Marketing
+tags:
+- Content Marketing
 ---
 As the competition in advertising heats up, more companies and major brands are turning to content marketing to attract customers and build awareness among consumers. Experts are predicting that search engine optimisation (SEO) and content marketing will go hand in hand to boost page rankings in Google search results.
 

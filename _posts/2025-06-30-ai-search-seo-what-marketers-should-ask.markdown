@@ -8,7 +8,10 @@ header-img: "img/ai-search-seo-what-marketers-should-ask.png"
 header_overlay: true
 meta-description: Understand how to respond when stakeholders ask why a brand isn't appearing in ChatGPT, Gemini, or other AI search tools - and what marketers should be asking in return.
 categories:
-- Blog
+- Digital Marketing
+tags:
+- SEO
+- AI
 ---
 
 When someone claims, "I searched this in ChatGPT and we didn't show up," it's tempting to shrug it off. But in the messy world of **AI-powered search**, those offhand comments can spark legitimate concerns, and they need a structured response.

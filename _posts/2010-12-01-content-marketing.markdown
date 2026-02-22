@@ -10,7 +10,11 @@ header-img: "img/content-marketing-2011.jpg"
 header_overlay: true
 meta-description: "Six months with Google's Caffeine update. Here's what actually changed for publishers."
 categories:
-- Blog
+- Digital Marketing
+tags:
+- SEO
+- Content Marketing
+- Google
 ---
 
 Google named their biggest update of the year "Caffeine." Finally, a search algorithm I can get behind.

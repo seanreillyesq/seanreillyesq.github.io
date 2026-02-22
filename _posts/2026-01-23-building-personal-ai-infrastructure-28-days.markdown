@@ -7,9 +7,10 @@ title: "Building a Personal AI Infrastructure in 28 Days"
 header-img: "img/building-personal-ai-infrastructure.png"
 meta-description: I built a personal AI infrastructure in 28 days using Daniel Miessler's PAI concept. Here's what I learned and why it matters for business.
 categories:
-- Blog
-- AI
 - Technology
+tags:
+- AI
+- Productivity
 ---
 
 Most people treat AI conversations as disposable. Ask a question, get an answer, close the tab, forget the context. I did that for two years and despite pruning ended up with 1,038 ChatGPT conversations - a graveyard of half-finished thinking, abandoned research, and strategic planning that existed only in a chat history I'd never revisit.

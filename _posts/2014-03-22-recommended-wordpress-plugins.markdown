@@ -6,7 +6,9 @@ layout: post
 slug: recommended-wordpress-plugins
 title: Recommended WordPress Plugins
 categories:
-- Online
+- Technology
+tags:
+- WordPress
 header-img: "img/recommended-wordpress-plugins.jpg"
 meta-description: WordPress is one of the best content management systems, but what makes it so powerful are the plugins. Here is my list of recommended WordPress plugins.
 ---

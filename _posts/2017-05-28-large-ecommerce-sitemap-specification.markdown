@@ -7,8 +7,10 @@ title: "Large Ecommerce Sitemap Specifications"
 header-img: "img/large-ecommerce-sitemap-specification.jpg"
 meta-description: "Here are the specifications I wrote for a bespoke sitemap set up for a large ecommerce website in February 2017 in an attempt to optimise the performance of the site"
 categories:
-- Blog
-- Marketing
+- Digital Marketing
+tags:
+- SEO
+- Technical SEO
 ---
 A sitemap specification I wrote in 2017 for a large ecommerce client with significant inventory churn. The development manager requested the Agile Given/When/Then format. Published here for reference.
 

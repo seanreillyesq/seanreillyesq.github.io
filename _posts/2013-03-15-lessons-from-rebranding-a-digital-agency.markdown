@@ -7,8 +7,9 @@ title: "Lessons from Rebranding a Digital Agency"
 header-img: "img/post-bg-01.jpg"
 meta-description: "Agency rebrand gone wrong? How a Companies House name change triggered an unexpected visit from the Official Receiver - and what it taught me."
 categories:
-- Blog
-- Marketing
+- Career
+tags:
+- Agency Life
 ---
 
 We'd planned the rebrand to the nth degree. New name, new positioning, new everything. The agency had grown beyond its original identity and we needed a brand that reflected where we were heading, not where we'd started.

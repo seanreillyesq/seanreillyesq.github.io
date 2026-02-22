@@ -8,6 +8,9 @@ header-img: "img/mobile-marketing-isnt-coming-its-here.jpg"
 header_overlay: true
 categories:
 - Digital Marketing
+tags:
+- Mobile
+- Analytics
 meta-description: "Mobile traffic is growing faster than expected. But what do you actually do about it when BlackBerry dominates your analytics?"
 ---
 

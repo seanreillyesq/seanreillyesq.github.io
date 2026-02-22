@@ -6,6 +6,8 @@ layout: post
 slug: nero-wallet-unboxing
 title: Nero Wallet Unboxing
 categories:
+- Lifestyle
+tags:
 - Kit
 header-img: "img/nero-wallet.jpg"
 meta-description: My new Nero Wallets just arrived and I wanted to share some photos of these awesome looking, super slim RFID blocking wallets.
