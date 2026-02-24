@@ -96,10 +96,6 @@ hidden: true
 
     <div id="work-countdown" class="countdown-display">
         <div class="countdown-unit">
-            <div class="countdown-number" id="work-days">--</div>
-            <div class="countdown-label">Days</div>
-        </div>
-        <div class="countdown-unit">
             <div class="countdown-number" id="work-hours">--</div>
             <div class="countdown-label">Hours</div>
         </div>
@@ -206,16 +202,12 @@ hidden: true
         document.getElementById('minutes').textContent = minutes;
         document.getElementById('seconds').textContent = seconds;
 
-        // Work countdown
+        // Work countdown (hours, minutes, seconds only)
         var workMsTotal = calculateWorkMs(now, targetDate);
-        var workDayMs = WORK_DAY_MINUTES * 60 * 1000;
-        var workDays = Math.floor(workMsTotal / workDayMs);
-        var remainingMs = workMsTotal % workDayMs;
-        var workHours = Math.floor(remainingMs / (1000 * 60 * 60));
-        var workMins = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
-        var workSecs = Math.floor((remainingMs % (1000 * 60)) / 1000);
+        var workHours = Math.floor(workMsTotal / (1000 * 60 * 60));
+        var workMins = Math.floor((workMsTotal % (1000 * 60 * 60)) / (1000 * 60));
+        var workSecs = Math.floor((workMsTotal % (1000 * 60)) / 1000);
 
-        document.getElementById('work-days').textContent = workDays;
         document.getElementById('work-hours').textContent = workHours;
         document.getElementById('work-minutes').textContent = workMins;
         document.getElementById('work-seconds').textContent = workSecs;
