@@ -1,0 +1,39 @@
+---
+layout: default
+---
+
+<style>
+/* Solid navbar for pages without header image */
+@media only screen and (min-width: 768px) {
+    .navbar-custom {
+        background: white !important;
+        border-bottom: 1px solid #f2f2f2 !important;
+    }
+    .navbar-custom .navbar-brand,
+    .navbar-custom .nav li a {
+        color: #404040 !important;
+    }
+    .navbar-custom .navbar-brand:hover,
+    .navbar-custom .navbar-brand:focus,
+    .navbar-custom .nav li a:hover,
+    .navbar-custom .nav li a:focus {
+        color: #0085a1 !important;
+    }
+}
+</style>
+
+<div style="padding-top: 70px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <img src="{{ site.baseurl }}/img/sean-reilly-sq.jpg" alt="Sean Reilly" class="img-responsive" style="width: 100%;">
+                <h1 style="margin-top: 25px;">Sean Reilly</h1>
+                <p style="color: #808080; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 300; font-size: 24px; line-height: 1.1;">{{ page.description }}</p>
+                <hr>
+                {{ content }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
