@@ -1,0 +1,50 @@
+---
+layout: page
+title: "Sean Reilly"
+description: "Digital leader, founder & adventurer"
+header-img: "img/digital-marketing-consultant.jpg"
+meta-description: Sean Reilly - 15+ years scaling digital revenues for luxury, hospitality and consumer brands. Founder of CanMarket. Writes about digital strategy, e-commerce, and adventure.
+hidden: true
+sitemap: false
+robots: noindex, nofollow
+---
+
+<p class="lead">I'm a digital marketing leader, entrepreneur, and investor with over 15 years' experience building and scaling digital businesses across luxury hospitality, ecommerce, and SaaS.</p>
+
+<p>Currently <strong>Head of Digital Marketing at <a href="https://www.handpickedhotels.co.uk/" target="_blank">Hand Picked Hotels</a></strong>, a luxury hotel group, where I lead strategy across performance marketing, CRM, web development, and analytics. I also run <a href="https://www.canmarket.co.uk" target="_blank">CanMarket</a>, co-founded <a href="https://emailmarketingtools.io" target="_blank">Email Marketing Tools</a>, and invest through <a href="https://www.caninvest.uk" target="_blank">CanInvest</a>.</p>
+
+<p>
+    <a href="https://www.linkedin.com/in/seanreillyesq" target="_blank" class="btn btn-default">LinkedIn</a>
+    <a href="https://github.com/seanreillyesq" target="_blank" class="btn btn-default">GitHub</a>
+    <a href="/contact" class="btn btn-default">Get in touch</a>
+</p>
+
+<hr>
+
+<h2 class="section-heading">Latest Posts</h2>
+
+{% for post in site.posts limit: 3 %}{% unless post.hidden %}
+<div class="post-preview">
+    <a href="{{ post.url }}">
+        <h2 class="post-title">
+            {{ post.title }}
+        </h2>
+        {% if post.subtitle %}
+        <h3 class="post-subtitle">
+            {{ post.subtitle }}
+        </h3>
+        {% endif %}
+        {% if post.meta-description %}
+        <h3 class="post-subtitle">
+            {{ post.meta-description }}
+        </h3>
+        {% endif %}
+    </a>
+    <p class="post-meta">Posted by {{ post.author }} on {{ post.date | date: "%B %-d, %Y" }}</p>
+</div>
+<hr>
+{% endunless %}{% endfor %}
+
+<p class="text-center">
+    <a href="/blog/" class="btn btn-default">View all posts</a>
+</p>
