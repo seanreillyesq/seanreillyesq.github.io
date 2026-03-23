@@ -635,6 +635,74 @@ hr.small {
     height: auto;
 }
 
+/* ---- Homepage Hero Variants (temporary - remove after choosing) ---- */
+
+/* V1: Full hero with sky fade to white */
+.hp-hero[data-variant="1"] {
+    background: url('/img/home-bg.jpg') no-repeat center top;
+    background-size: cover;
+    position: relative;
+    padding-top: 9rem;
+}
+.hp-hero[data-variant="1"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 40%, rgba(255,255,255,1) 70%);
+    z-index: 0;
+}
+.hp-hero[data-variant="1"] > .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* V2: Sky strip above hero content */
+.hp-hero[data-variant="2"] {
+    padding-top: 0;
+}
+.hp-hero[data-variant="2"]::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 35vh;
+    background: url('/img/home-bg.jpg') no-repeat center center;
+    background-size: cover;
+    margin-bottom: 3rem;
+}
+@media (max-width: 991.98px) {
+    .hp-hero[data-variant="2"]::before {
+        height: 25vh;
+        margin-bottom: 2rem;
+    }
+    .hp-hero[data-variant="2"] {
+        padding-top: 0;
+    }
+}
+
+/* V3: Subtle sky tint behind hero */
+.hp-hero[data-variant="3"] {
+    position: relative;
+}
+.hp-hero[data-variant="3"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/img/home-bg.jpg') no-repeat center top;
+    background-size: cover;
+    opacity: 0.08;
+    z-index: 0;
+}
+.hp-hero[data-variant="3"] > .container {
+    position: relative;
+    z-index: 1;
+}
+
 /* ---- About Page ---- */
 .about-photo img {
     border-radius: 1rem;

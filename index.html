@@ -6,7 +6,7 @@ meta-description: Sean Reilly - digital marketing consultant with 18+ years scal
 ---
 
 <!-- ==================== HERO ==================== -->
-<section class="hp-hero">
+<section class="hp-hero" id="hp-hero">
     <div class="container">
         <div class="row align-items-center gy-4">
             <!-- Photo first on mobile (order-1 on lg+, order-0 means it shows first on mobile) -->
@@ -66,6 +66,21 @@ meta-description: Sean Reilly - digital marketing consultant with 18+ years scal
         </div>
     </div>
 </section>
+
+<!-- Variant switcher (temporary - remove after choosing) -->
+<script>
+(function() {
+    var v = new URLSearchParams(window.location.search).get('v');
+    if (!v) return;
+    var hero = document.getElementById('hp-hero');
+    var nav = document.getElementById('mainNav');
+    if (hero) hero.setAttribute('data-variant', v);
+    if (nav && (v === '1' || v === '2')) {
+        nav.classList.remove('bg-white', 'border-bottom');
+        nav.classList.add('navbar-transparent');
+    }
+})();
+</script>
 
 <!-- ==================== ABOUT TEASER ==================== -->
 <section class="hp-about py-5">
