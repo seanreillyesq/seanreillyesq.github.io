@@ -28,7 +28,7 @@ plugins:
 # Pagination (v2)
 pagination:
   enabled: true
-  per_page: 5
+  per_page: 9
   permalink: '/blog/page/:num/'
   title: ':title - Page :num'
   sort_field: 'date'
