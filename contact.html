@@ -1,0 +1,83 @@
+---
+layout: page
+title: "Contact"
+menu: "Contact"
+header-img: "img/contact-bg.jpg"
+meta-description: Get in touch with Sean Reilly - digital marketing consultant, entrepreneur, and investor.
+---
+
+<p>Drop me a message and I'll get back to you.</p>
+
+<form id="contact-form">
+    <div class="form-group">
+        <label for="contact-name">Name</label>
+        <input type="text" class="form-control" id="contact-name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="contact-email">Email</label>
+        <input type="email" class="form-control" id="contact-email" name="email" required>
+    </div>
+    <div class="form-group">
+        <label for="contact-message">Message</label>
+        <textarea class="form-control" id="contact-message" name="message" rows="6" required></textarea>
+    </div>
+
+    <div class="cf-turnstile" data-sitekey="{{ site.turnstile_site_key }}" data-theme="light"></div>
+
+    <br>
+    <button type="submit" class="btn btn-default" id="contact-submit">Send Message</button>
+</form>
+
+<div id="contact-feedback" style="display: none; margin-top: 20px;"></div>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    var btn = document.getElementById('contact-submit');
+    var feedback = document.getElementById('contact-feedback');
+    var form = this;
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    feedback.style.display = 'none';
+
+    var data = {
+        name: document.getElementById('contact-name').value,
+        email: document.getElementById('contact-email').value,
+        message: document.getElementById('contact-message').value,
+        token: document.querySelector('[name="cf-turnstile-response"]').value
+    };
+
+    try {
+        var response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        var result = await response.json();
+
+        if (response.ok) {
+            feedback.className = 'alert alert-success';
+            feedback.textContent = 'Message sent - thanks for getting in touch.';
+            feedback.style.display = 'block';
+            form.reset();
+            turnstile.reset();
+        } else {
+            feedback.className = 'alert alert-danger';
+            feedback.textContent = result.error || 'Something went wrong. Please try again.';
+            feedback.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = 'Send Message';
+        }
+    } catch (err) {
+        feedback.className = 'alert alert-danger';
+        feedback.textContent = 'Something went wrong. Please try again.';
+        feedback.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+    }
+});
+</script>

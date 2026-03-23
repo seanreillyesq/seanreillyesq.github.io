@@ -50,6 +50,9 @@ jekyll-archives:
     category: /category/:name/
     tag: /tag/:name/
 
+# Cloudflare Turnstile (public site key - safe to commit)
+turnstile_site_key: "REPLACE_WITH_SITE_KEY"
+
 # hreflang domains
 hreflang_domains:
   default: "https://www.seanreilly.net"
