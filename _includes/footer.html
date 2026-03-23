@@ -1,32 +1,54 @@
 <!-- Footer -->
-<footer class="site-footer border-top">
-    <div class="container text-center">
-        <div class="d-flex justify-content-center gap-3 mb-3">
-            <a href="{{ "/feed.xml" | prepend: site.baseurl }}">
-                <span class="fa-stack fa-lg">
-                    <i class="fa-solid fa-circle fa-stack-2x"></i>
-                    <i class="fa-solid fa-rss fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-            {% if site.linkedin_username %}
-            <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}" rel="nofollow" target="_blank">
-                <span class="fa-stack fa-lg">
-                    <i class="fa-solid fa-circle fa-stack-2x"></i>
-                    <i class="fa-brands fa-linkedin-in fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-            {% endif %}
-            {% if site.github_username %}
-            <a href="https://github.com/{{ site.github_username }}" rel="nofollow" target="_blank">
-                <span class="fa-stack fa-lg">
-                    <i class="fa-solid fa-circle fa-stack-2x"></i>
-                    <i class="fa-brands fa-github fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
-            {% endif %}
+<footer class="site-footer-enhanced">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-4">
+                <h6 class="font-mono">Sean Reilly</h6>
+                <p style="line-height: 1.6;">Digital marketing consultant with 18+ years building and scaling digital businesses across luxury hospitality, ecommerce, and SaaS.</p>
+            </div>
+            <div class="col-lg-4">
+                <h6 class="font-mono">Navigate</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/">Home</a></li>
+                    <li class="mb-2"><a href="/about/">About</a></li>
+                    <li class="mb-2"><a href="/blog/">Blog</a></li>
+                    <li class="mb-2"><a href="/ventures/">Ventures</a></li>
+                    <li class="mb-2"><a href="/contact/">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <h6 class="font-mono">Connect</h6>
+                <div class="d-flex gap-3 mb-3">
+                    <a href="{{ "/feed.xml" | prepend: site.baseurl }}" title="RSS Feed">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa-solid fa-circle fa-stack-2x"></i>
+                            <i class="fa-solid fa-rss fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                    {% if site.linkedin_username %}
+                    <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}" rel="nofollow" target="_blank" title="LinkedIn">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa-solid fa-circle fa-stack-2x"></i>
+                            <i class="fa-brands fa-linkedin-in fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                    {% endif %}
+                    {% if site.github_username %}
+                    <a href="https://github.com/{{ site.github_username }}" rel="nofollow" target="_blank" title="GitHub">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa-solid fa-circle fa-stack-2x"></i>
+                            <i class="fa-brands fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <p class="mb-0">Copyright &copy; {{ site.title }} {{ site.time | date: '%Y' }} All Rights Reserved.<br>
-        <a href="/privacy">Privacy Policy</a> | <a href="#" data-cc="show-preferencesModal">Cookie Settings</a></p>
+        <hr class="footer-divider">
+        <div class="footer-bottom d-flex flex-wrap justify-content-between gap-2">
+            <span>&copy; {{ site.title }} {{ site.time | date: '%Y' }}</span>
+            <span><a href="/privacy">Privacy Policy</a> | <a href="#" data-cc="show-preferencesModal">Cookie Settings</a></span>
+        </div>
     </div>
 </footer>
 

@@ -34,11 +34,14 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
     color: var(--color-text);
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 a:hover,
 a:focus {
     color: var(--color-accent);
+}
+a:not(.btn):not(.nav-link):not(.navbar-brand):not(.hp-card a):not(.venture-card a):hover {
+    transform: translateY(-1px);
 }
 
 a img:hover,
@@ -458,21 +461,6 @@ hr.small {
 .reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.16s; }
 
 /* ---- Footer ---- */
-.site-footer {
-    padding: 3rem 0 4rem;
-    color: var(--color-text-muted);
-    font-size: 0.875rem;
-}
-.site-footer a {
-    color: var(--color-text-muted);
-    text-decoration: none;
-}
-.site-footer a:hover {
-    color: var(--color-accent);
-}
-.site-footer .fa-stack {
-    font-size: 1.2em;
-}
 
 /* ---- Mono Utility ---- */
 .font-mono {
@@ -644,4 +632,156 @@ hr.small {
 .img-fluid {
     max-width: 100%;
     height: auto;
+}
+
+/* ---- About Page ---- */
+.about-photo img {
+    border-radius: 1rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ---- Timeline ---- */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--color-border);
+}
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0.35rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    transform: translateX(-4px);
+}
+.timeline-year {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.125rem;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+}
+.timeline-item ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+.timeline-item li {
+    padding: 0.25rem 0;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+}
+
+/* ---- Venture Cards ---- */
+.venture-card {
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    height: 100%;
+    transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.2s ease;
+}
+.venture-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+.venture-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+}
+.venture-card h3 a {
+    text-decoration: none;
+    color: var(--color-text);
+}
+.venture-card h3 a:hover {
+    color: var(--color-accent);
+}
+.venture-card .venture-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    margin-bottom: 0.75rem;
+}
+.venture-card p:last-child {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* ---- Bio Card ---- */
+.bio-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 2rem;
+}
+
+/* ---- Contact Card ---- */
+.contact-card {
+    background-color: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* ---- Enhanced Footer ---- */
+.site-footer-enhanced {
+    background-color: var(--color-surface-dark);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 3rem 0 2rem;
+    font-size: 0.9375rem;
+}
+.site-footer-enhanced a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.site-footer-enhanced a:hover {
+    color: #fff;
+}
+.site-footer-enhanced h6 {
+    color: #fff;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 1rem;
+}
+.site-footer-enhanced .footer-divider {
+    border-color: rgba(255, 255, 255, 0.1);
+    margin: 1.5rem 0;
+}
+.site-footer-enhanced .footer-bottom {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+.site-footer-enhanced .footer-bottom a {
+    color: rgba(255, 255, 255, 0.4);
+}
+.site-footer-enhanced .footer-bottom a:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+.site-footer-enhanced .fa-stack {
+    font-size: 1em;
 }
