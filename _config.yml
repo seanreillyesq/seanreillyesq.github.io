@@ -29,7 +29,7 @@ plugins:
 pagination:
   enabled: true
   per_page: 5
-  permalink: '/page/:num/'
+  permalink: '/blog/page/:num/'
   title: ':title - Page :num'
   sort_field: 'date'
   sort_reverse: true
