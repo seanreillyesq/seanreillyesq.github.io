@@ -38,9 +38,6 @@ meta-description: Get in touch with Sean Reilly - digital marketing consultant, 
 
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
-window._contactLoadedAt = Date.now();
-</script>
-<script>
 document.getElementById('contact-form').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -57,8 +54,7 @@ document.getElementById('contact-form').addEventListener('submit', async functio
         email: document.getElementById('contact-email').value,
         message: document.getElementById('contact-message').value,
         website: document.getElementById('contact-website').value,
-        token: document.querySelector('[name="cf-turnstile-response"]').value,
-        loadedAt: window._contactLoadedAt
+        token: document.querySelector('[name="cf-turnstile-response"]').value
     };
 
     try {

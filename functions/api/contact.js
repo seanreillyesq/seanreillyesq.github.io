@@ -8,21 +8,13 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json();
-    const { name, email, message, website, loadedAt, token } = body;
+    const { name, email, message, website, token } = body;
 
     // Honeypot - if filled in, it's a bot
     if (website) {
       return new Response(
         JSON.stringify({ success: true }),
         { status: 200, headers: corsHeaders }
-      );
-    }
-
-    // Time check - reject if submitted less than 3 seconds after page load
-    if (loadedAt && (Date.now() - loadedAt) < 3000) {
-      return new Response(
-        JSON.stringify({ error: 'Please take a moment before submitting.' }),
-        { status: 429, headers: corsHeaders }
       );
     }
 
@@ -79,6 +71,17 @@ export async function onRequestPost(context) {
         JSON.stringify({ error: 'Verification failed. Please try again.' }),
         { status: 403, headers: corsHeaders }
       );
+    }
+
+    // Time check - reject if submitted too quickly after Turnstile challenge
+    if (turnstileResult.challenge_ts) {
+      const challengeAge = Date.now() - new Date(turnstileResult.challenge_ts).getTime();
+      if (challengeAge < 3000) {
+        return new Response(
+          JSON.stringify({ error: 'Please take a moment before submitting.' }),
+          { status: 429, headers: corsHeaders }
+        );
+      }
     }
 
     // Store in D1
