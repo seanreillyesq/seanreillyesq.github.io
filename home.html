@@ -49,17 +49,40 @@ sitemap: false
 .hp-credibility {
     background-color: var(--color-surface);
 }
-.hp-logos img {
-    max-height: 40px;
-    max-width: 120px;
-    height: auto;
+.hp-logos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1.5rem 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.hp-logo-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+.hp-logo-cell img {
+    max-height: 32px;
+    max-width: 100%;
     width: auto;
+    height: auto;
+    object-fit: contain;
     filter: grayscale(100%);
-    opacity: 0.6;
+    opacity: 0.55;
     transition: opacity 0.3s ease;
 }
-.hp-logos img:hover {
+.hp-logo-cell img:hover {
     opacity: 1;
+}
+@media (max-width: 767.98px) {
+    .hp-logos {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem 0.75rem;
+    }
+    .hp-logo-cell img {
+        max-height: 28px;
+    }
 }
 
 /* ---- POST CARDS ---- */
@@ -173,16 +196,16 @@ sitemap: false
 <section class="hp-credibility py-5 border-top border-bottom reveal">
     <div class="container">
         <p class="font-mono text-uppercase text-center mb-4 small" style="letter-spacing: 2px; color: var(--color-text-muted);">Brands I've worked with</p>
-        <div class="hp-logos d-flex flex-wrap align-items-center justify-content-center gap-4 gap-lg-5">
-            <img src="/img/logos/watchfinder.png" alt="Watchfinder" height="40">
-            <img src="/img/logos/hand-picked-hotels.svg" alt="Hand Picked Hotels" height="40">
-            <img src="/img/logos/tusting.png" alt="Tusting" height="40">
-            <img src="/img/logos/budd.svg" alt="Budd" height="40">
-            <img src="/img/logos/ally-capellino.svg" alt="Ally Capellino" height="40">
-            <img src="/img/logos/protolabs.svg" alt="Protolabs" height="40">
-            <img src="/img/logos/vinci.svg" alt="Vinci Hair Clinic" height="40">
-            <img src="/img/logos/10cc.svg" alt="10cc" height="40">
-            <img src="/img/logos/view.gif" alt="View" height="40">
+        <div class="hp-logos">
+            <div class="hp-logo-cell"><img src="/img/logos/watchfinder.png" alt="Watchfinder"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/hand-picked-hotels.svg" alt="Hand Picked Hotels"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/tusting.png" alt="Tusting"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/budd.svg" alt="Budd"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/ally-capellino.svg" alt="Ally Capellino"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/protolabs.svg" alt="Protolabs"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/vinci.svg" alt="Vinci Hair Clinic"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/10cc.svg" alt="10cc"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/view.gif" alt="View"></div>
         </div>
     </div>
 </section>
