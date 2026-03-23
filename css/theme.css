@@ -135,6 +135,7 @@ img::-moz-selection {
 .navbar-transparent.scrolled .navbar-brand,
 .navbar-transparent.scrolled .nav-link {
     color: var(--color-text) !important;
+    text-shadow: none;
 }
 .navbar-transparent.scrolled .navbar-brand:hover,
 .navbar-transparent.scrolled .nav-link:hover {
@@ -149,10 +150,6 @@ img::-moz-selection {
 .navbar-transparent.scrolled .navbar-toggler-icon {
     filter: none;
 }
-.navbar-transparent.scrolled .navbar-brand,
-.navbar-transparent.scrolled .nav-link {
-    text-shadow: none;
-}
 /* When collapsed menu is open on transparent navbar, add background */
 .navbar-transparent .navbar-collapse.show,
 .navbar-transparent .navbar-collapse.collapsing {
@@ -164,6 +161,21 @@ img::-moz-selection {
 .navbar-transparent .navbar-collapse.show .nav-link,
 .navbar-transparent .navbar-collapse.collapsing .nav-link {
     color: var(--color-text) !important;
+}
+
+/* ---- Responsive Video Embed ---- */
+.video-embed {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+}
+.video-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /* ---- Intro Header ---- */
