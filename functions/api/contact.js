@@ -8,12 +8,45 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json();
-    const { name, email, message, token } = body;
+    const { name, email, message, website, loadedAt, token } = body;
+
+    // Honeypot - if filled in, it's a bot
+    if (website) {
+      return new Response(
+        JSON.stringify({ success: true }),
+        { status: 200, headers: corsHeaders }
+      );
+    }
+
+    // Time check - reject if submitted less than 3 seconds after page load
+    if (loadedAt && (Date.now() - loadedAt) < 3000) {
+      return new Response(
+        JSON.stringify({ error: 'Please take a moment before submitting.' }),
+        { status: 429, headers: corsHeaders }
+      );
+    }
 
     // Validate required fields
     if (!name || !email || !message) {
       return new Response(
         JSON.stringify({ error: 'All fields are required.' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ error: 'Please enter a valid email address.' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    // Message length check
+    if (message.trim().length < 10) {
+      return new Response(
+        JSON.stringify({ error: 'Message is too short.' }),
         { status: 400, headers: corsHeaders }
       );
     }
