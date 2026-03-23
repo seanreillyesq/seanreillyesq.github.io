@@ -51,7 +51,7 @@ jekyll-archives:
     tag: /tag/:name/
 
 # Cloudflare Turnstile (public site key - safe to commit)
-turnstile_site_key: "REPLACE_WITH_SITE_KEY"
+turnstile_site_key: "0x4AAAAAACvA8L5dkTm4ydnB"
 
 # hreflang domains
 hreflang_domains:
