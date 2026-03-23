@@ -5,76 +5,105 @@ description: "Digital leader, founder & occasional adventurer"
 meta-description: Sean Reilly - digital marketing consultant with 18+ years scaling digital revenues for luxury, hospitality and consumer brands. Writes about digital strategy, ecommerce, and adventure.
 ---
 
-<!-- Hero -->
-<div class="container">
-    <!-- Desktop: name/tagline row then photo+bio row -->
-    <!-- Mobile: photo first, then name, tagline, bio (via flex order) -->
-    <div class="row hidden-xs hidden-sm" style="margin-bottom: 15px; display: flex; align-items: baseline; flex-wrap: wrap;">
-        <div class="col-md-5"><h1 style="margin-top: 10px; margin-bottom: 0;">Sean Reilly</h1></div>
-        <div class="col-md-7"><h2 style="color: #808080; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 300; font-size: 24px; line-height: 1.1; margin: 10px 0 0 0;">Digital leader, founder & occasional adventurer</h2></div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-5 home-photo">
-            <img src="/img/sean-reilly-sq.jpg" alt="Sean Reilly" class="img-responsive" style="width: 100%;">
-            <div class="visible-xs visible-sm" style="margin-top: 15px; padding-left: 15px;">
-                <h1 style="margin-top: 0; margin-bottom: 5px;">Sean Reilly</h1>
-                <h2 style="color: #808080; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 300; font-size: 24px; line-height: 1.1; margin: 0 0 15px 0;">Digital leader, founder & occasional adventurer</h2>
+<!-- ==================== HERO ==================== -->
+<section class="hp-hero">
+    <div class="container">
+        <div class="row align-items-center gy-4">
+            <!-- Photo first on mobile (order-1 on lg+, order-0 means it shows first on mobile) -->
+            <div class="col-lg-5 order-lg-1">
+                <div class="hp-hero-photo reveal">
+                    <img src="/img/sean-reilly-sq.jpg" alt="Sean Reilly" class="img-fluid" width="1000" height="1000">
+                </div>
             </div>
-            <p class="hidden-xs hidden-sm" style="margin-top: 15px;">
-                <a href="https://www.linkedin.com/in/seanreillyesq" target="_blank" class="btn btn-default" style="margin-bottom: 5px;">LinkedIn</a>
-            </p>
-        </div>
-        <div class="col-md-7">
-            <p>I'm a digital marketing leader, entrepreneur, and investor with over 18 years' experience building and scaling digital businesses across luxury hospitality, ecommerce, and SaaS.</p>
-            <p>Currently working as a <strong>digital marketing consultant</strong>, helping brands with digital strategy, performance marketing, and martech.</p>
-            <p style="color: #808080; font-size: 14px; text-transform: uppercase; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px;">Brands I've worked with</p>
-            <div class="row" style="margin-bottom: 12px; display: flex; align-items: center;">
-                <div class="col-xs-4" style="padding: 8px; text-align: center;"><img src="/img/logos/watchfinder.png" alt="Watchfinder" style="max-height: 45px; max-width: 90%; height: auto; filter: grayscale(100%); opacity: 0.7;"></div>
-                <div class="col-xs-4" style="padding: 8px; text-align: center;"><img src="/img/logos/tusting.png" alt="Tusting" style="max-height: 45px; max-width: 90%; height: auto; filter: grayscale(100%); opacity: 0.7;"></div>
-                <div class="col-xs-4" style="padding: 8px; text-align: center;"><img src="/img/logos/budd.svg" alt="Budd" style="max-height: 45px; max-width: 90%; height: auto; filter: grayscale(100%); opacity: 0.7;"></div>
+            <!-- Text second on mobile -->
+            <div class="col-lg-7 order-lg-0">
+                <h1 class="hp-name mb-2 reveal">Sean Reilly</h1>
+                <p class="hp-tagline mb-4 reveal">Digital leader, founder & occasional adventurer</p>
+                <div class="hp-bio mb-4 reveal">
+                    <p class="mb-3">I'm a digital marketing leader, entrepreneur, and investor with over 18 years' experience building and scaling digital businesses across luxury hospitality, ecommerce, and SaaS.</p>
+                    <p class="mb-0">Currently working as a digital marketing consultant, helping brands with digital strategy, performance marketing, and martech.</p>
+                </div>
+                <div class="d-flex gap-3 flex-wrap reveal">
+                    <a href="https://www.linkedin.com/in/seanreillyesq" target="_blank" class="btn btn-accent text-uppercase fw-bold letter-spacing-1">LinkedIn</a>
+                    <a href="/blog/" class="btn btn-outline-accent text-uppercase fw-bold">Read the blog</a>
+                </div>
             </div>
-            <div class="row" style="margin-bottom: 12px; display: flex; align-items: center;">
-                <div class="col-xs-4" style="padding: 8px; text-align: center;"><img src="/img/logos/ally-capellino.svg" alt="Ally Capellino" style="max-height: 40px; max-width: 90%; height: auto; filter: grayscale(100%); opacity: 0.7;"></div>
-                <div class="col-xs-4" style="padding: 8px; text-align: center;"><img src="/img/logos/hand-picked-hotels.svg" alt="Hand Picked Hotels" style="max-height: 45px; max-width: 90%; height: auto; filter: grayscale(100%); opacity: 0.7;"></div>
-                <div class="col-xs-4" style="padding: 8px; text-align: center;"><img src="/img/logos/protolabs.svg" alt="Protolabs" style="max-height: 45px; max-width: 90%; height: auto; filter: grayscale(100%); opacity: 0.7;"></div>
-            </div>
-            <div class="row" style="margin-bottom: 12px; display: flex; align-items: center;">
-                <div class="col-xs-4" style="padding: 8px; text-align: center;"><img src="/img/logos/vinci.svg" alt="Vinci Hair Clinic" style="max-height: 45px; max-width: 90%; height: auto; filter: grayscale(100%); opacity: 0.7;"></div>
-                <div class="col-xs-4" style="padding: 8px; text-align: center;"><img src="/img/logos/10cc.svg" alt="10cc" style="max-height: 45px; max-width: 90%; height: auto; filter: grayscale(100%); opacity: 0.7;"></div>
-                <div class="col-xs-4" style="padding: 8px; text-align: center;"><img src="/img/logos/view.gif" alt="View" style="max-height: 45px; max-width: 90%; height: auto; filter: grayscale(100%); opacity: 0.7;"></div>
-            </div>
-            <p class="visible-xs visible-sm" style="margin-top: 15px;">
-                <a href="https://www.linkedin.com/in/seanreillyesq" target="_blank" class="btn btn-default" style="margin-bottom: 5px;">LinkedIn</a>
-            </p>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Latest posts -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <hr>
-            <h2 class="section-heading">Latest Posts</h2>
+<!-- ==================== CREDIBILITY BAR ==================== -->
+<section class="hp-credibility py-5 border-top border-bottom reveal">
+    <div class="container">
+        <p class="font-mono text-uppercase text-center mb-4 small" style="letter-spacing: 2px; color: var(--color-text-muted);">Brands I've worked with</p>
+        <div class="hp-logos">
+            <div class="hp-logo-cell"><img src="/img/logos/watchfinder.png" alt="Watchfinder"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/hand-picked-hotels.svg" alt="Hand Picked Hotels"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/tusting.png" alt="Tusting"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/budd.svg" alt="Budd"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/ally-capellino.svg" alt="Ally Capellino"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/protolabs.svg" alt="Protolabs"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/vinci.svg" alt="Vinci Hair Clinic"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/10cc.svg" alt="10cc"></div>
+            <div class="hp-logo-cell"><img src="/img/logos/view.gif" alt="View"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== LATEST WRITING ==================== -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5 reveal" style="font-size: 2rem;">Latest Writing</h2>
+        <div class="row g-4 reveal-stagger">
             {% for post in site.posts limit: 3 %}{% unless post.hidden %}
-            <div class="post-preview">
-                <a href="{{ post.url }}">
-                    <h2 class="post-title">{{ post.title }}</h2>
-                    {% if post.subtitle %}
-                    <h3 class="post-subtitle">{{ post.subtitle }}</h3>
-                    {% endif %}
-                    {% if post.meta-description %}
-                    <h3 class="post-subtitle">{{ post.meta-description }}</h3>
-                    {% endif %}
-                </a>
-                <p class="post-meta">Posted by {{ post.author }} on {{ post.date | date: "%B %-d, %Y" }}</p>
+            <div class="col-lg-4 reveal">
+                <div class="hp-card h-100">
+                    <a href="{{ post.url }}">
+                        {% if post.header-img %}
+                        <img src="/{{ post.header-img }}" alt="{{ post.title }}" class="hp-card-img">
+                        {% endif %}
+                        <div class="hp-card-body p-4">
+                            {% if post.categories.first %}
+                            <p class="font-mono text-uppercase small mb-2" style="letter-spacing: 1.5px; color: var(--color-accent); font-size: 0.6875rem;">{{ post.categories.first }}</p>
+                            {% endif %}
+                            <h3 class="fw-bold mb-2" style="font-size: 1.25rem; line-height: 1.3;">{{ post.title }}</h3>
+                            {% if post.meta-description %}
+                            <p class="hp-card-excerpt mb-3" style="font-size: 0.9375rem; line-height: 1.5; color: var(--color-text-muted);">{{ post.meta-description }}</p>
+                            {% endif %}
+                            <p class="hp-card-date font-mono small mb-0" style="color: var(--color-text-muted); font-size: 0.75rem;">{{ post.date | date: "%d %b %Y" }}</p>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <hr>
             {% endunless %}{% endfor %}
-            <p class="text-center">
-                <a href="/blog/" class="btn btn-default">View all posts</a>
-            </p>
+        </div>
+        <div class="text-center mt-5 reveal">
+            <a href="/blog/" class="btn btn-outline-accent text-uppercase fw-bold">View all posts</a>
         </div>
     </div>
-</div>
+</section>
+
+<!-- ==================== ABOUT TEASER ==================== -->
+<section class="hp-about text-white py-5">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-6 reveal">
+                <h2 class="fw-bold mb-3" style="font-size: 1.75rem; line-height: 1.3;">18+ years building digital businesses</h2>
+                <div style="color: rgba(255,255,255,0.75); font-size: 1.0625rem; line-height: 1.6;">
+                    <p class="mb-3">From scaling Watchfinder's ecommerce to leading digital marketing for Hand Picked Hotels, I've spent my career at the intersection of strategy, technology, and commercial growth.</p>
+                    <p class="mb-4">I run CanMarket, a marketing consultancy, alongside several other ventures in hosting, running, and investment.</p>
+                </div>
+                <a href="/about/" class="fw-bold text-uppercase small" style="color: var(--color-accent); letter-spacing: 1px; text-decoration: none;">More about me &rarr;</a>
+            </div>
+            <div class="col-lg-6 reveal">
+                <p class="font-mono text-uppercase small mb-3" style="letter-spacing: 2px; color: rgba(255,255,255,0.5); font-size: 0.75rem;">Core expertise</p>
+                <ul class="hp-about-list">
+                    <li>Digital strategy & performance marketing</li>
+                    <li>Martech architecture & analytics</li>
+                    <li>Ecommerce & CRM</li>
+                    <li>Team leadership & commercial strategy</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

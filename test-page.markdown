@@ -125,7 +125,8 @@ bundle exec jekyll serve
 
 ## Buttons
 
-<a href="#" class="btn btn-default">Default Button</a>
+<a href="#" class="btn btn-accent">Accent Button</a>
+<a href="#" class="btn btn-outline-accent">Outline Accent</a>
 <a href="#" class="btn btn-primary">Primary Button</a>
 
 <a href="#" class="btn btn-success">Success</a>
@@ -134,11 +135,11 @@ bundle exec jekyll serve
 <a href="#" class="btn btn-danger">Danger</a>
 
 <p style="margin-top: 20px;">
-<a href="#" class="btn btn-default btn-lg">Large Button</a>
-<a href="#" class="btn btn-default btn-sm">Small Button</a>
+<a href="#" class="btn btn-accent btn-lg">Large Button</a>
+<a href="#" class="btn btn-accent btn-sm">Small Button</a>
 </p>
 
-<a href="#" class="btn btn-primary btn-block">Full Width Block Button</a>
+<a href="#" class="btn btn-primary d-block w-100">Full Width Block Button</a>
 
 ---
 
@@ -209,14 +210,14 @@ ___
 
 ## Badges and Labels
 
-<span class="badge">42</span> Badge for counts
+<span class="badge bg-secondary">42</span> Badge for counts
 
-<span class="label label-default">Default</span>
-<span class="label label-primary">Primary</span>
-<span class="label label-success">Success</span>
-<span class="label label-info">Info</span>
-<span class="label label-warning">Warning</span>
-<span class="label label-danger">Danger</span>
+<span class="badge bg-secondary">Default</span>
+<span class="badge bg-primary">Primary</span>
+<span class="badge bg-success">Success</span>
+<span class="badge bg-info">Info</span>
+<span class="badge bg-warning text-dark">Warning</span>
+<span class="badge bg-danger">Danger</span>
 
 ---
 
@@ -247,4 +248,4 @@ Small well with less padding.
 
 ## Summary
 
-This page demonstrates the formatting options available without any theme modifications. Most features come from Bootstrap 3, which is included in the Clean Blog theme.
+This page demonstrates the formatting options available without any theme modifications. Most features come from Bootstrap 5, which powers the site theme.

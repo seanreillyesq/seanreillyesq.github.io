@@ -5,15 +5,14 @@
 
 <body>
 {% include gtm-body.html %}
-    {% include nav.html %}
 
-    <header class="{% if page.header_text_color == 'black' %}black-header-text{% endif %}">
-        <!-- Your header content here -->
-    </header>
+{% include nav.html %}
 
+<div class="hp-wrapper">
     {{ content }}
+</div>
 
-    {% include footer.html %}
+{% include footer.html %}
 
 </body>
 

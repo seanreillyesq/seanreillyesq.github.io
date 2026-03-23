@@ -34,16 +34,22 @@ pagination:
 
 <!-- Pager -->
 {% if paginator.total_pages > 1 %}
-<ul class="pager">
-    {% if paginator.previous_page %}
-    <li class="previous">
-        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>
-    </li>
-    {% endif %}
-    {% if paginator.next_page %}
-    <li class="next">
-        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>
-    </li>
-    {% endif %}
-</ul>
+<nav aria-label="Blog pagination">
+    <ul class="pagination justify-content-between">
+        <li class="page-item{% unless paginator.previous_page %} disabled{% endunless %}">
+            {% if paginator.previous_page %}
+            <a class="page-link" href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&larr; Newer Posts</a>
+            {% else %}
+            <span class="page-link">&larr; Newer Posts</span>
+            {% endif %}
+        </li>
+        <li class="page-item{% unless paginator.next_page %} disabled{% endunless %}">
+            {% if paginator.next_page %}
+            <a class="page-link" href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Older Posts &rarr;</a>
+            {% else %}
+            <span class="page-link">Older Posts &rarr;</span>
+            {% endif %}
+        </li>
+    </ul>
+</nav>
 {% endif %}

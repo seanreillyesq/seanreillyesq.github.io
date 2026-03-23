@@ -2,35 +2,4 @@
 layout: default
 ---
 
-<style>
-/* Solid navbar for pages without header image */
-@media only screen and (min-width: 768px) {
-    .navbar-custom {
-        background: white !important;
-        border-bottom: 1px solid #f2f2f2 !important;
-    }
-    .navbar-custom .navbar-brand,
-    .navbar-custom .nav li a {
-        color: #404040 !important;
-    }
-    .navbar-custom .navbar-brand:hover,
-    .navbar-custom .navbar-brand:focus,
-    .navbar-custom .nav li a:hover,
-    .navbar-custom .nav li a:focus {
-        color: #0085a1 !important;
-    }
-}
-/* Edge-to-edge photo when stacked on mobile/tablet */
-@media (max-width: 991px) {
-    .home-photo {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-</style>
-
-<div style="padding-top: 70px;">
-    {{ content }}
-</div>
-
-<hr>
+{{ content }}

@@ -9,23 +9,23 @@ meta-description: Get in touch with Sean Reilly - digital marketing consultant, 
 <p>Drop me a message and I'll get back to you.</p>
 
 <form id="contact-form">
-    <div class="form-group">
-        <label for="contact-name">Name</label>
+    <div class="mb-3">
+        <label for="contact-name" class="form-label">Name</label>
         <input type="text" class="form-control" id="contact-name" name="name" required>
     </div>
-    <div class="form-group">
-        <label for="contact-email">Email</label>
+    <div class="mb-3">
+        <label for="contact-email" class="form-label">Email</label>
         <input type="email" class="form-control" id="contact-email" name="email" required>
     </div>
-    <div class="form-group">
-        <label for="contact-message">Message</label>
+    <div class="mb-3">
+        <label for="contact-message" class="form-label">Message</label>
         <textarea class="form-control" id="contact-message" name="message" rows="6" required></textarea>
     </div>
 
     <div class="cf-turnstile" data-sitekey="{{ site.turnstile_site_key }}" data-theme="light"></div>
 
     <br>
-    <button type="submit" class="btn btn-default" id="contact-submit">Send Message</button>
+    <button type="submit" class="btn btn-accent text-uppercase" id="contact-submit">Send Message</button>
 </form>
 
 <div id="contact-feedback" style="display: none; margin-top: 20px;"></div>
