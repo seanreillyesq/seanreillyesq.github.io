@@ -1,0 +1,17 @@
+<div class="hp-card h-100">
+    <a href="{{ include.post.url }}">
+        {% if include.post.header-img %}
+        <img src="/{{ include.post.header-img }}" alt="{{ include.post.title }}" class="hp-card-img">
+        {% endif %}
+        <div class="hp-card-body p-4">
+            {% if include.post.categories.first %}
+            <p class="font-mono text-uppercase small mb-2" style="letter-spacing: 1.5px; color: var(--color-accent); font-size: 0.6875rem;">{{ include.post.categories.first }}</p>
+            {% endif %}
+            <h3 class="fw-bold mb-2" style="font-size: 1.25rem; line-height: 1.3;">{{ include.post.title }}</h3>
+            {% if include.post.meta-description %}
+            <p class="hp-card-excerpt mb-3" style="font-size: 0.9375rem; line-height: 1.5; color: var(--color-text-muted);">{{ include.post.meta-description }}</p>
+            {% endif %}
+            <p class="hp-card-date font-mono small mb-0" style="color: var(--color-text-muted); font-size: 0.75rem;">{{ include.post.date | date: "%d %b %Y" }}</p>
+        </div>
+    </a>
+</div>

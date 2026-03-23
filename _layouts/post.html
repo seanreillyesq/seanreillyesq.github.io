@@ -40,3 +40,19 @@ layout: default
         </div>
     </div>
 </article>
+
+<!-- Latest Writing -->
+<section class="py-5 border-top" style="background-color: var(--color-surface);">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4" style="font-size: 1.75rem;">Latest Writing</h2>
+        <div class="row g-4">
+            {% assign card_count = 0 %}
+            {% for post in site.posts %}{% unless post.hidden or post.url == page.url or card_count >= 3 %}
+            <div class="col-md-6 col-lg-4">
+                {% include post-card.html post=post %}
+            </div>
+            {% assign card_count = card_count | plus: 1 %}
+            {% endunless %}{% endfor %}
+        </div>
+    </div>
+</section>
