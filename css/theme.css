@@ -112,12 +112,19 @@ img::-moz-selection {
 .navbar-transparent .navbar-brand,
 .navbar-transparent .nav-link {
     color: white !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 .navbar-transparent .navbar-brand:hover,
 .navbar-transparent .nav-link:hover {
     color: rgba(255, 255, 255, 0.8) !important;
 }
-/* Light hamburger icon on transparent navbar */
+/* Ensure hamburger visible on transparent navbar */
+.navbar-transparent .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
 .navbar-transparent .navbar-toggler-icon {
     filter: invert(1);
 }
@@ -133,8 +140,18 @@ img::-moz-selection {
 .navbar-transparent.scrolled .nav-link:hover {
     color: var(--color-accent) !important;
 }
+.navbar-transparent.scrolled .navbar-toggler {
+    border-color: rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
 .navbar-transparent.scrolled .navbar-toggler-icon {
     filter: none;
+}
+.navbar-transparent.scrolled .navbar-brand,
+.navbar-transparent.scrolled .nav-link {
+    text-shadow: none;
 }
 /* When collapsed menu is open on transparent navbar, add background */
 .navbar-transparent .navbar-collapse.show,
