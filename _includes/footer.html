@@ -4,23 +4,23 @@
         <div class="d-flex justify-content-center gap-3 mb-3">
             <a href="{{ "/feed.xml" | prepend: site.baseurl }}">
                 <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                    <i class="fa-solid fa-circle fa-stack-2x"></i>
+                    <i class="fa-solid fa-rss fa-stack-1x fa-inverse"></i>
                 </span>
             </a>
             {% if site.linkedin_username %}
             <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}" rel="nofollow" target="_blank">
                 <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                    <i class="fa-solid fa-circle fa-stack-2x"></i>
+                    <i class="fa-brands fa-linkedin-in fa-stack-1x fa-inverse"></i>
                 </span>
             </a>
             {% endif %}
             {% if site.github_username %}
             <a href="https://github.com/{{ site.github_username }}" rel="nofollow" target="_blank">
                 <span class="fa-stack fa-lg">
-                    <i class="fa fa-circle fa-stack-2x"></i>
-                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                    <i class="fa-solid fa-circle fa-stack-2x"></i>
+                    <i class="fa-brands fa-github fa-stack-1x fa-inverse"></i>
                 </span>
             </a>
             {% endif %}

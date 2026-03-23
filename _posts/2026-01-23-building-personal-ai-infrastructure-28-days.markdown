@@ -113,7 +113,7 @@ I prefer open source where possible. [Ollama](https://ollama.ai/){:target="_blan
 
 I need to be honest here, I invested time and money upfront to get SAI going using top-tier Claude MAX, which is £150/month.
 
-<div class="well">
+<div class="card card-body">
 <strong>28 days from zero to production:</strong>
 <ul>
 <li><strong>204 commits</strong> tracking evolution of thinking</li>

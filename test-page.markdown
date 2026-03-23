@@ -234,14 +234,16 @@ ___
 
 ---
 
-## Wells
+## Cards (highlight boxes)
 
-<div class="well">
-This is a well - a simple container with a light grey background and rounded borders. Useful for highlighting content sections.
+<div class="card card-body">
+This is a card body - a simple container with a light grey background and rounded borders. Useful for highlighting content sections.
 </div>
 
-<div class="well well-sm">
-Small well with less padding.
+<br>
+
+<div class="card card-body p-2">
+Compact card with less padding.
 </div>
 
 ---

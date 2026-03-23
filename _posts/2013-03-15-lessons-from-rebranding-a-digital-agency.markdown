@@ -42,7 +42,7 @@ I'd assumed that anyone who needed to know about the rebrand would find out thro
 
 **The actual lesson**
 
-<div class="well">
+<div class="card card-body">
 When you're changing something fundamental about your business, your stakeholder list is longer than you think. It's not just the people you have direct relationships with; it's the people connected to those relationships who have their own reasons to pay attention.
 </div>
 

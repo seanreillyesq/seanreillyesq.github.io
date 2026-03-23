@@ -362,15 +362,6 @@ article :not(pre) > code {
     color: var(--color-text-muted);
 }
 
-/* Well -> card-like compat shim */
-.well {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    padding: 1.25rem;
-    margin: 1.5rem 0;
-}
-
 /* Section heading */
 .section-heading {
     font-size: 2rem;

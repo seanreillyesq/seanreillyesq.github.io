@@ -20,7 +20,7 @@ The 2View Group, owner of 21 online city guides including <a href="https://web.a
 
 ![Sean Reilly - New Media Age Moves](/img/sean-reilly-newmediaage-moves.png)
 
-<div class="well">
+<div class="card card-body">
 <strong>Archive source:</strong><br>
 <a href="https://web.archive.org/web/20110703111030/https://www.nma.co.uk/news/people-moves/moves-160910/3018195.article" target="_blank" rel="noopener">NMA Moves - 16.09.10</a> (via Wayback Machine)
 </div>

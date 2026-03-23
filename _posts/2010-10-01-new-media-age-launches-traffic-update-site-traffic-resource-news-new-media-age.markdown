@@ -47,7 +47,7 @@ ABC Electronic MD Richard Foan felt that although Traffic Update could educate t
 
 Justin Pearse, editor of new media age, said, “Traffic Update is complementary to existing sources of data on website traffic. The manually compiled resource is in its early stages of development and we hope the industry will welcome its arrival and support its expansion. Please get in touch to give me your thoughts on how we can develop it into a useful tool for your business."
 
-<div class="well">
+<div class="card card-body">
 <strong>Archive sources:</strong><br>
 <a href="https://web.archive.org/web/20110607164112/http://www.nma.co.uk/news/new-media-age-launches-traffic-update-site-traffic-resource/3018865.article" target="_blank" rel="noopener">Original article on NMA</a> (via Wayback Machine)<br>
 <a href="https://web.archive.org/web/20110909034456/http://www.nma.co.uk/data/traffic-update" target="_blank" rel="noopener">Traffic Update tool</a> (via Wayback Machine)
