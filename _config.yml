@@ -12,7 +12,7 @@ linkedin_username: seanreillyesq
 markdown: kramdown
 highlighter: rouge
 encoding: utf-8
-exclude: ["less","node_modules","README.md","Gemfile","Gemfile.lock"]
+exclude: ["node_modules","README.md","Gemfile","Gemfile.lock","seo"]
 permalink: /:title-:year:month:day
 
 # Plugins

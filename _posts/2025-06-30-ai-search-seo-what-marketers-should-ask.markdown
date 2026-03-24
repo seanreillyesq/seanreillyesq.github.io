@@ -4,7 +4,7 @@ comments: true
 date: 2025-06-30 09:00:00+01:00
 layout: post
 title: "AI Search & SEO - What Marketers Should Really Be Asking"
-header-img: "img/ai-search-seo-what-marketers-should-ask.png"
+header-img: "img/ai-search-seo-what-marketers-should-ask.jpg"
 header_overlay: true
 meta-description: Understand how to respond when stakeholders ask why a brand isn't appearing in ChatGPT, Gemini, or other AI search tools - and what marketers should be asking in return.
 categories:

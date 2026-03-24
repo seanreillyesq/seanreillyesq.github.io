@@ -14,6 +14,22 @@
     --color-border: #E5E7EB;
 }
 
+/* ---- Skip Link (accessibility) ---- */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    padding: 0.5rem 1rem;
+    background: var(--color-accent);
+    color: #fff;
+    z-index: 9999;
+    transition: top 0.2s;
+}
+.skip-link:focus {
+    top: 0;
+    color: #fff;
+}
+
 /* ---- Base Typography ---- */
 body {
     font-family: 'Lora', 'Times New Roman', serif;
@@ -489,6 +505,14 @@ hr.small {
 .reveal-stagger > .reveal:nth-child(2) { transition-delay: 0.08s; }
 .reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.16s; }
 
+@media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.visible {
+        transition: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
 /* ---- Footer ---- */
 
 /* ---- Mono Utility ---- */
@@ -836,6 +860,11 @@ hr.small {
 .site-footer-enhanced .footer-bottom a:hover {
     color: rgba(255, 255, 255, 0.7);
 }
-.site-footer-enhanced .fa-stack {
-    font-size: 1em;
+.site-footer-enhanced .social-icon svg {
+    width: 40px;
+    height: 40px;
+    transition: opacity 0.2s ease;
+}
+.site-footer-enhanced .social-icon:hover svg {
+    opacity: 0.8;
 }
