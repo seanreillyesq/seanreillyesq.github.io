@@ -35,11 +35,13 @@ layout: null
 {%- assign post_slug = post.url | split: '/' | last | split: '-20' | first -%}
 {%- assign asset_path = '/assets/' | append: post_slug | append: '/' -%}
 {%- for static_file in site.static_files -%}
-{%- if static_file.path contains asset_path and static_file.extname == '.jpg' or static_file.extname == '.png' or static_file.extname == '.webp' %}
+{%- if static_file.path contains asset_path -%}
+{%- if static_file.extname == '.jpg' or static_file.extname == '.png' or static_file.extname == '.webp' %}
     <image:image>
       <image:loc>{{ site.url }}{{ static_file.path }}</image:loc>
       <image:title>{{ static_file.basename | replace: '-', ' ' | capitalize }}</image:title>
     </image:image>
+{%- endif -%}
 {%- endif -%}
 {%- endfor -%}
   </url>

@@ -5,12 +5,13 @@
 
 <body>
 {% include gtm-body.html %}
+<a href="#main-content" class="skip-link">Skip to main content</a>
 
 {% include nav.html %}
 
-<div class="hp-wrapper">
+<main id="main-content" class="hp-wrapper">
     {{ content }}
-</div>
+</main>
 
 {% include footer.html %}
 

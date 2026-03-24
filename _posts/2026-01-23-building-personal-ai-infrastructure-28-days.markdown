@@ -4,7 +4,7 @@ comments: true
 date: 2026-01-23 12:00:00+00:00
 layout: post
 title: "Building a Personal AI Infrastructure in 28 Days"
-header-img: "img/building-personal-ai-infrastructure.png"
+header-img: "img/building-personal-ai-infrastructure.jpg"
 meta-description: I built a personal AI infrastructure in 28 days using Daniel Miessler's PAI concept. Here's what I learned and why it matters for business.
 categories:
 - Technology
