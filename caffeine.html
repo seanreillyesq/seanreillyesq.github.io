@@ -116,16 +116,7 @@ sitemap: false
 }
 
 /* Methodology */
-.methodology .accordion-button {
-    font-size: 0.9375rem;
-    color: var(--color-text-muted, #6B7280);
-}
-.methodology .accordion-button:not(.collapsed) {
-    color: var(--color-text, #2D2D2D);
-    background: transparent;
-    box-shadow: none;
-}
-.methodology .accordion-body {
+.methodology p {
     font-size: 0.875rem;
     color: var(--color-text-muted, #6B7280);
     line-height: 1.7;
@@ -185,6 +176,16 @@ sitemap: false
             </select>
         </div>
     </div>
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-12 col-md-4">
+            <label class="form-label" for="drink-order">Drink order</label>
+            <select class="form-select form-select-sm" id="drink-order">
+                <option value="coffee-first" selected>Coffee first, tea later</option>
+                <option value="tea-first">Tea first, coffee later</option>
+                <option value="interleave">Interleave</option>
+            </select>
+        </div>
+    </div>
 </div>
 
 <!-- Results summary -->
@@ -227,26 +228,14 @@ sitemap: false
 <!-- Schedule -->
 <div id="schedule"></div>
 
-<!-- Methodology -->
+<!-- How this works -->
 <div class="methodology mb-4">
-    <div class="accordion" id="method-accordion">
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#method-body">
-                    How this works
-                </button>
-            </h2>
-            <div id="method-body" class="accordion-collapse collapse" data-bs-parent="#method-accordion">
-                <div class="accordion-body">
-                    <p><strong>Cortisol rhythm:</strong> Your body produces cortisol in peaks throughout the day, starting with the cortisol awakening response about 30-45 minutes after you wake up, with smaller peaks in the late morning and mid-afternoon. Caffeine is most effective between these peaks, when cortisol is naturally low.</p>
-                    <p><strong>Caffeine half-life:</strong> The average adult eliminates half the caffeine in their system every 5 hours. Fast metabolisers (including smokers) clear it in about 3 hours; slow metabolisers (including those on oral contraceptives) may take 7 hours. This affects how late you can safely drink.</p>
-                    <p><strong>The 25mg threshold:</strong> The "last safe drink" calculation works backwards from your bedtime to find the latest time you can drink so that less than 25mg of caffeine remains in your system when you want to sleep. Below 25mg, most people experience minimal sleep disruption.</p>
-                    <p><strong>Drink placement:</strong> Coffees are placed in earlier optimal windows (higher caffeine, more time to clear) and teas in later windows (lower caffeine, needs less clearance time). Both are distributed evenly within their available windows.</p>
-                    <p>This is a simplified model. Individual responses to caffeine vary based on genetics, tolerance, medications, and other factors. Use it as a guide, not gospel.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
+    <p><strong>Cortisol rhythm:</strong> Your body produces cortisol in peaks throughout the day, starting with the cortisol awakening response about 30-45 minutes after you wake up, with smaller peaks in the late morning and mid-afternoon. Caffeine is most effective between these peaks, when cortisol is naturally low.</p>
+    <p><strong>Caffeine half-life:</strong> The average adult eliminates half the caffeine in their system every 5 hours. Fast metabolisers (including smokers) clear it in about 3 hours; slow metabolisers (including those on oral contraceptives) may take 7 hours. This affects how late you can safely drink.</p>
+    <p><strong>The 25mg threshold:</strong> The "last safe drink" calculation works backwards from your bedtime to find the latest time you can drink so that less than 25mg of caffeine remains in your system when you want to sleep. Below 25mg, most people experience minimal sleep disruption.</p>
+    <p><strong>Drink placement:</strong> By default, coffees are placed in earlier optimal windows (higher caffeine, more time to clear) and teas in later windows (lower caffeine, needs less clearance time). Use the drink order selector to change this if you prefer tea in the morning.</p>
+    <p>This is a simplified model. Individual responses to caffeine vary based on genetics, tolerance, medications, and other factors. Use it as a guide, not gospel.</p>
 </div>
 
 <script>
@@ -286,7 +275,8 @@ sitemap: false
         sleep: 1350,    // 22:30
         coffees: 2,
         teas: 2,
-        halfLife: 5
+        halfLife: 5,
+        drinkOrder: 'coffee-first'
     };
 
     // SVG namespace
@@ -399,8 +389,44 @@ sitemap: false
         var teaWins = clampWindows(windows, teaCutoff);
 
         var drinks = [];
-        distribute(drinks, 'coffee', coffees, COFFEE_MG, coffeeWins);
-        distribute(drinks, 'tea', teas, TEA_MG, teaWins.slice().reverse());
+        if (state.drinkOrder === 'tea-first') {
+            // Tea in early windows, coffee in later windows
+            distribute(drinks, 'tea', teas, TEA_MG, teaWins);
+            distribute(drinks, 'coffee', coffees, COFFEE_MG, coffeeWins.slice().reverse());
+        } else if (state.drinkOrder === 'interleave') {
+            // Merge all drinks and distribute evenly across all windows
+            var allWins = clampWindows(windows, Math.max(coffeeCutoff, teaCutoff));
+            var allDrinks = [];
+            for (var ci = 0; ci < coffees; ci++) allDrinks.push({ type: 'coffee', mg: COFFEE_MG });
+            for (var ti = 0; ti < teas; ti++) allDrinks.push({ type: 'tea', mg: TEA_MG });
+            // Alternate coffee/tea
+            allDrinks.sort(function(a, b) {
+                if (a.type === b.type) return 0;
+                return a.type === 'coffee' ? -1 : 1;
+            });
+            var interleaved = [];
+            var coffeeQueue = allDrinks.filter(function(d) { return d.type === 'coffee'; });
+            var teaQueue = allDrinks.filter(function(d) { return d.type === 'tea'; });
+            while (coffeeQueue.length || teaQueue.length) {
+                if (coffeeQueue.length) interleaved.push(coffeeQueue.shift());
+                if (teaQueue.length) interleaved.push(teaQueue.shift());
+            }
+            // Distribute positions across windows
+            var placeholders = [];
+            distribute(placeholders, 'placeholder', interleaved.length, 0, allWins);
+            for (var pi = 0; pi < placeholders.length && pi < interleaved.length; pi++) {
+                var cutoff = interleaved[pi].type === 'coffee' ? coffeeCutoff : teaCutoff;
+                drinks.push({
+                    type: interleaved[pi].type,
+                    time: Math.min(placeholders[pi].time, Math.floor(cutoff)),
+                    mg: interleaved[pi].mg
+                });
+            }
+        } else {
+            // Default: coffee first, tea later
+            distribute(drinks, 'coffee', coffees, COFFEE_MG, coffeeWins);
+            distribute(drinks, 'tea', teas, TEA_MG, teaWins.slice().reverse());
+        }
 
         drinks.sort(function(a, b) { return a.time - b.time; });
         return drinks;
@@ -708,6 +734,7 @@ sitemap: false
         state.coffees = clamp(parseInt(document.getElementById('coffee-count').value, 10) || 0, 0, 8);
         state.teas = clamp(parseInt(document.getElementById('tea-count').value, 10) || 0, 0, 8);
         state.halfLife = parseFloat(document.getElementById('metabolism').value) || 5;
+        state.drinkOrder = document.getElementById('drink-order').value;
 
         // Handle sleep before wake (next day)
         if (state.sleep <= state.wake) {
@@ -721,6 +748,7 @@ sitemap: false
         document.getElementById('coffee-count').value = state.coffees;
         document.getElementById('tea-count').value = state.teas;
         document.getElementById('metabolism').value = state.halfLife;
+        document.getElementById('drink-order').value = state.drinkOrder;
     }
 
     function updateURL() {
@@ -730,6 +758,7 @@ sitemap: false
         params.set('coffee', state.coffees);
         params.set('tea', state.teas);
         if (state.halfLife !== 5) params.set('metabolism', state.halfLife);
+        if (state.drinkOrder !== 'coffee-first') params.set('order', state.drinkOrder);
 
         var url = window.location.pathname + '?' + params.toString();
         history.replaceState(null, '', url);
@@ -757,6 +786,10 @@ sitemap: false
             var m = parseFloat(params.get('metabolism'));
             if (m === 3 || m === 5 || m === 7) state.halfLife = m;
         }
+        if (params.has('order')) {
+            var o = params.get('order');
+            if (o === 'coffee-first' || o === 'tea-first' || o === 'interleave') state.drinkOrder = o;
+        }
 
         // Handle sleep before wake
         if (state.sleep <= state.wake) state.sleep += 1440;
@@ -783,8 +816,12 @@ sitemap: false
             recalculate();
         });
 
-        // Metabolism
+        // Dropdowns
         document.getElementById('metabolism').addEventListener('change', function() {
+            readInputs();
+            recalculate();
+        });
+        document.getElementById('drink-order').addEventListener('change', function() {
             readInputs();
             recalculate();
         });
@@ -819,3 +856,19 @@ sitemap: false
     }
 })();
 </script>
+
+<!-- Latest Writing -->
+<section class="py-5 border-top" style="background-color: var(--color-surface);">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4" style="font-size: 1.75rem;">Latest Writing</h2>
+        <div class="row g-4">
+            {% assign card_count = 0 %}
+            {% for post in site.posts %}{% unless post.hidden or card_count >= 3 %}
+            <div class="col-md-6 col-lg-4">
+                {% include post-card.html post=post %}
+            </div>
+            {% assign card_count = card_count | plus: 1 %}
+            {% endunless %}{% endfor %}
+        </div>
+    </div>
+</section>
