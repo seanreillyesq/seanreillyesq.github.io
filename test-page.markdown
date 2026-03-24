@@ -107,9 +107,18 @@ The `.section-heading` class gives a larger, bolder treatment (2rem) with extra 
 
 ## Blockquotes
 
-> This is a standard blockquote. Styled with a left border in `--color-border` and italic text in `--color-text-muted`.
+> This is a standard markdown blockquote. Styled with a left border in `--color-border` and italic text in `--color-text-muted`.
 >
 > Multiple paragraphs work within blockquotes.
+
+Bootstrap 5's `.blockquote` with `.blockquote-footer` adds proper attribution:
+
+<figure>
+<blockquote class="blockquote">
+<p>The best time to plant a tree was 20 years ago. The second best time is now.</p>
+</blockquote>
+<figcaption class="blockquote-footer">Chinese proverb, as cited in <cite>every LinkedIn post ever</cite></figcaption>
+</figure>
 
 ---
 
@@ -274,7 +283,16 @@ Inline image with `img-fluid`:
 
 <img src="/img/sean-reilly-sq.jpg" alt="Example image" class="img-fluid" style="max-height: 300px;">
 
-<p class="caption">Image caption using the .caption class - centred, italicised, and muted. Use for credits or descriptions.</p>
+<p class="caption">Image caption using the theme's .caption class - centred, italicised, and muted.</p>
+
+### Figure (Bootstrap 5)
+
+The semantic `<figure>` element with `.figure-caption` is the proper BS5 way to pair images with captions:
+
+<figure class="figure">
+<img src="/img/sean-reilly-sq.jpg" alt="Example figure" class="figure-img img-fluid rounded shadow-sm" style="max-height: 250px;">
+<figcaption class="figure-caption text-center">Bootstrap 5 figure with <code>.rounded</code> and <code>.shadow-sm</code> utilities.</figcaption>
+</figure>
 
 Standard markdown image syntax also works but renders full-width, which can be overwhelming for large header images. For inline images in posts, prefer `<img>` with `img-fluid` and an explicit `max-height`.
 
@@ -340,9 +358,11 @@ Links within article content are automatically underlined. Links outside article
 
 ## Scroll Reveal
 
+Scroll down to see these elements fade in. The `.reveal` class starts elements at opacity 0 with a 20px downward offset, then animates to visible when they enter the viewport.
+
 <div class="reveal">
 <div class="alert alert-info mb-0">
-This box uses the <code>.reveal</code> class. It fades in and slides up when it enters the viewport. Opacity 0 to 1, translateY 20px to 0, over 0.6s ease.
+This box uses the <code>.reveal</code> class. It fades in and slides up (opacity 0 to 1, translateY 20px to 0, over 0.6s ease).
 </div>
 </div>
 
@@ -360,7 +380,22 @@ For staggered reveals (multiple items appearing in sequence), wrap items in `.re
 </div>
 </div>
 
-Note: Reveal requires the IntersectionObserver JavaScript from the homepage. On standard post/page layouts, the `.reveal` class will apply initial styles but may not animate without the JS. Best used on custom pages that include the observer script.
+Note: Reveal requires an IntersectionObserver script. The homepage includes this automatically. For other pages, add the script below or include it in your layout.
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(function(el) {
+        observer.observe(el);
+    });
+});
+</script>
 
 ---
 
@@ -460,6 +495,149 @@ Danger background
 
 ---
 
+## Border Accent Callouts
+
+A lighter alternative to full alert boxes. Combine `border-start`, `border-4`, and a colour class with left padding:
+
+<div class="border-start border-4 border-primary ps-3 mb-3">
+<strong>Pro tip:</strong> This pattern works well for editorial asides and tips without the heavy background colour of an alert.
+</div>
+
+<div class="border-start border-4 border-warning ps-3 mb-3">
+<strong>Note:</strong> Warning-coloured variant for caveats that don't need the full alert treatment.
+</div>
+
+<div class="border-start border-4 border-success ps-3 mb-3">
+<strong>Result:</strong> Success variant for positive outcomes or recommendations.
+</div>
+
+---
+
+## List Group
+
+Use `.list-group` for structured lists like key takeaways or checklists. `.list-group-flush` removes outer borders:
+
+<ul class="list-group list-group-flush mb-3">
+<li class="list-group-item"><i class="fa-solid fa-check" style="color: var(--color-accent);"></i>&nbsp; First key takeaway from this post</li>
+<li class="list-group-item"><i class="fa-solid fa-check" style="color: var(--color-accent);"></i>&nbsp; Second point to remember</li>
+<li class="list-group-item"><i class="fa-solid fa-check" style="color: var(--color-accent);"></i>&nbsp; Third and final takeaway</li>
+</ul>
+
+With colour variants:
+
+<ul class="list-group mb-3">
+<li class="list-group-item list-group-item-success">Success item</li>
+<li class="list-group-item list-group-item-info">Info item</li>
+<li class="list-group-item list-group-item-warning">Warning item</li>
+<li class="list-group-item list-group-item-danger">Danger item</li>
+</ul>
+
+---
+
+## List Utilities
+
+### Unstyled List
+
+<ul class="list-unstyled">
+<li>No bullets on this list</li>
+<li>Clean and minimal</li>
+<li>Use <code>.list-unstyled</code></li>
+</ul>
+
+### Inline List
+
+<ul class="list-inline">
+<li class="list-inline-item"><span class="badge bg-secondary">SEO</span></li>
+<li class="list-inline-item"><span class="badge bg-secondary">PPC</span></li>
+<li class="list-inline-item"><span class="badge bg-secondary">Analytics</span></li>
+<li class="list-inline-item"><span class="badge bg-secondary">CRO</span></li>
+<li class="list-inline-item"><span class="badge bg-secondary">Email</span></li>
+</ul>
+
+Use `.list-inline` with `.list-inline-item` for horizontal tag lists, skill badges, or category labels.
+
+---
+
+## Flexbox Utilities
+
+### Icon + Label Pairs
+
+<div class="d-flex align-items-center gap-3 mb-3">
+<div class="d-flex align-items-center gap-2"><i class="fa-solid fa-clock" style="color: var(--color-accent);"></i> <span>5 min read</span></div>
+<div class="d-flex align-items-center gap-2"><i class="fa-solid fa-calendar" style="color: var(--color-accent);"></i> <span>24 Mar 2026</span></div>
+<div class="d-flex align-items-center gap-2"><i class="fa-solid fa-tag" style="color: var(--color-accent);"></i> <span>Technical SEO</span></div>
+</div>
+
+Use `.d-flex`, `.align-items-center`, and `.gap-*` for inline metadata rows and icon+text pairs.
+
+### Stat Row
+
+<div class="d-flex justify-content-around text-center py-3 mb-3" style="background-color: var(--color-surface); border-radius: 0.5rem;">
+<div><div class="fw-bold fs-3">18+</div><small class="text-muted">Years experience</small></div>
+<div><div class="fw-bold fs-3">9</div><small class="text-muted">Brands</small></div>
+<div><div class="fw-bold fs-3">5</div><small class="text-muted">TLDs</small></div>
+</div>
+
+---
+
+## Responsive Visibility
+
+Use `.d-none` and `.d-{breakpoint}-block` to show/hide content by screen size:
+
+<div class="d-none d-md-block">
+<div class="alert alert-info mb-0">This is only visible on <strong>medium screens and above</strong> (768px+). Hidden on mobile.</div>
+</div>
+
+<div class="d-md-none">
+<div class="alert alert-warning mb-0">This is only visible on <strong>mobile</strong> (below 768px). Hidden on desktop.</div>
+</div>
+
+Useful for showing simplified content on mobile and detailed tables or diagrams on desktop.
+
+---
+
+## Text Utilities
+
+<p class="text-truncate" style="max-width: 300px;">This is a very long URL or text that will be truncated with an ellipsis when it overflows its container: https://www.seanreilly.net/some-very-long-slug-that-goes-on-forever-20260324</p>
+
+Use `.text-truncate` with a max-width constraint to prevent long URLs or text from breaking layouts.
+
+<p><small class="text-muted">The <code>&lt;small&gt;</code> tag with <code>.text-muted</code> for fine print, disclaimers, or secondary notes.</small></p>
+
+---
+
+## Ratio (Native BS5 Embed)
+
+Bootstrap 5's `.ratio` class provides responsive aspect ratio containers. The theme's `.video-embed` does the same thing for videos, but `.ratio` works for any embedded content:
+
+<div class="ratio ratio-16x9 mb-3" style="max-width: 400px; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem;">
+<div class="d-flex align-items-center justify-content-center text-muted">
+16:9 ratio container
+</div>
+</div>
+
+Available ratios: `.ratio-1x1`, `.ratio-4x3`, `.ratio-16x9`, `.ratio-21x9`.
+
+---
+
+## Shadows
+
+<div class="row g-3 mb-3">
+<div class="col-md-4">
+<div class="p-3 bg-white rounded shadow-sm text-center"><code>.shadow-sm</code><br>Subtle</div>
+</div>
+<div class="col-md-4">
+<div class="p-3 bg-white rounded shadow text-center"><code>.shadow</code><br>Regular</div>
+</div>
+<div class="col-md-4">
+<div class="p-3 bg-white rounded shadow-lg text-center"><code>.shadow-lg</code><br>Large</div>
+</div>
+</div>
+
+Use `.shadow-sm` on images and cards to lift them off the page. Avoid `.shadow-lg` in most cases - it's heavy.
+
+---
+
 ## Summary
 
-This theme is built on **Bootstrap 5.3** with a custom design system defined in `theme.css`. The colour palette uses 7 CSS custom properties, typography pairs Inter (headings/UI) with Lora (body), and JetBrains Mono handles code and labels. Custom components include venture cards, bio cards, contact cards, timelines, scroll reveal animations, and responsive video embeds. Icons are Font Awesome 6.
+This theme is built on **Bootstrap 5.3** with a custom design system defined in `theme.css`. The colour palette uses 7 CSS custom properties, typography pairs Inter (headings/UI) with Lora (body), and JetBrains Mono handles code and labels. Custom components include venture cards, bio cards, contact cards, timelines, scroll reveal animations, and responsive video embeds. Bootstrap 5 utilities (flexbox, visibility, shadows, ratios, list groups) are all available for use in posts and pages. Icons are Font Awesome 6.
