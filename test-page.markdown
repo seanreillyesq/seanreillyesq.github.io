@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Theme Formatting Test Page"
+title: "Theme Test Page"
 description: "Complete reference for all available styling and components"
 header-img: "img/home-bg.jpg"
 header_overlay: true
