@@ -1,5 +1,5 @@
 export async function onRequestGet(context) {
-  const { request } = context;
+  const { request, env } = context;
 
   const corsHeaders = {
     'Content-Type': 'application/json',
@@ -116,6 +116,47 @@ export async function onRequestGet(context) {
     }
 
     meta.fetchedUrl = parsed.href;
+
+    // Store unique fetches in D1 (fire-and-forget, don't block response)
+    if (env.DB) {
+      try {
+        await env.DB.prepare(`
+          CREATE TABLE IF NOT EXISTS serp_fetches (
+            url TEXT PRIMARY KEY,
+            title TEXT,
+            description TEXT,
+            og_image TEXT,
+            site_name TEXT,
+            favicon TEXT,
+            first_fetched TEXT NOT NULL DEFAULT (datetime('now')),
+            last_fetched TEXT NOT NULL DEFAULT (datetime('now')),
+            fetch_count INTEGER NOT NULL DEFAULT 1
+          )
+        `).run();
+
+        await env.DB.prepare(`
+          INSERT INTO serp_fetches (url, title, description, og_image, site_name, favicon)
+          VALUES (?, ?, ?, ?, ?, ?)
+          ON CONFLICT(url) DO UPDATE SET
+            title = excluded.title,
+            description = excluded.description,
+            og_image = excluded.og_image,
+            site_name = excluded.site_name,
+            favicon = excluded.favicon,
+            last_fetched = datetime('now'),
+            fetch_count = fetch_count + 1
+        `).bind(
+          parsed.href,
+          meta.title || null,
+          meta.description || null,
+          meta.ogImage || null,
+          meta.siteName || null,
+          meta.favicon || null
+        ).run();
+      } catch (e) {
+        // Don't fail the response if logging fails
+      }
+    }
 
     return new Response(
       JSON.stringify(meta),
