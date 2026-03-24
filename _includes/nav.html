@@ -10,7 +10,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ site.baseurl }}/">Home</a>
                 </li>
-                {% for p in site.pages %}{% if p.title %}{% unless p.hidden or p.layout == 'archive' or p.url contains '/page/' or p.url == '/' or p.url == '/index.html' %}
+                {% assign sorted_pages = site.pages | sort: "nav_order" %}{% for p in sorted_pages %}{% if p.title %}{% unless p.hidden or p.layout == 'archive' or p.url contains '/page/' or p.url == '/' or p.url == '/index.html' %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ p.url | prepend: site.baseurl }}">{{ p.menu | default: p.title }}</a>
                 </li>
