@@ -270,11 +270,13 @@ The timeline uses a vertical line on the left with accent-coloured dots at each 
 
 ## Images
 
-Standard image:
+Inline image with `img-fluid`:
 
-![Example header image](/img/home-bg.jpg)
+<img src="/img/sean-reilly-sq.jpg" alt="Example image" class="img-fluid" style="max-height: 300px;">
 
 <p class="caption">Image caption using the .caption class - centred, italicised, and muted. Use for credits or descriptions.</p>
+
+Standard markdown image syntax also works but renders full-width, which can be overwhelming for large header images. For inline images in posts, prefer `<img>` with `img-fluid` and an explicit `max-height`.
 
 Images within articles are automatically set to `max-width: 100%`. Links wrapping images get a `cursor: zoom-in` on hover.
 
