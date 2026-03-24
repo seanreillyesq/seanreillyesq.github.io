@@ -2,7 +2,7 @@
 layout: home
 title: "Sean Reilly"
 description: "Digital leader, founder & occasional adventurer"
-meta-description: Sean Reilly - digital marketing consultant with 18+ years scaling digital revenues for luxury, hospitality and consumer brands. Writes about digital strategy, ecommerce, and adventure.
+meta-description: "Digital marketing consultant with 18+ years across agency, in-house, start-ups and scale-ups. Sean Reilly's blog and portfolio."
 ---
 
 <!-- ==================== HERO ==================== -->
@@ -20,7 +20,7 @@ meta-description: Sean Reilly - digital marketing consultant with 18+ years scal
                 <h1 class="hp-name mb-2 reveal">Sean Reilly</h1>
                 <p class="hp-tagline mb-4 reveal">Digital leader, founder & occasional adventurer</p>
                 <div class="hp-bio mb-4 reveal">
-                    <p class="mb-3">I'm a digital marketing leader, entrepreneur, and investor with over 18 years' experience building and scaling digital businesses across luxury hospitality, ecommerce, and SaaS.</p>
+                    {% include career-years.html %}<p class="mb-3">I'm a digital marketing leader, entrepreneur, and investor with over {{ career_years }} years' experience building and scaling digital businesses across luxury hospitality, ecommerce, and SaaS.</p>
                     <p class="mb-0">Currently working as a digital marketing consultant, helping brands with digital strategy, performance marketing, and martech.</p>
                 </div>
                 <div class="d-flex gap-3 flex-wrap align-items-center reveal">
@@ -95,7 +95,7 @@ meta-description: Sean Reilly - digital marketing consultant with 18+ years scal
     <div class="container">
         <div class="row gy-4">
             <div class="col-lg-6 reveal">
-                <h2 class="fw-bold mb-3" style="font-size: 1.75rem; line-height: 1.3;">18+ years building digital businesses</h2>
+                <h2 class="fw-bold mb-3" style="font-size: 1.75rem; line-height: 1.3;">{{ career_years }}+ years building digital businesses</h2>
                 <div style="color: var(--color-text-muted); font-size: 1.0625rem; line-height: 1.6;">
                     <p class="mb-3">From scaling Watchfinder's ecommerce to leading digital marketing for Hand Picked Hotels, I've spent my career at the intersection of strategy, technology, and commercial growth.</p>
                     <p class="mb-4">I run CanMarket, a marketing consultancy, alongside several other ventures in hosting, running, and investment.</p>

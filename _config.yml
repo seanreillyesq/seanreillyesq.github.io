@@ -53,6 +53,9 @@ jekyll-archives:
 # Cloudflare Turnstile (public site key - safe to commit)
 turnstile_site_key: "0x4AAAAAACvA8L5dkTm4ydnB"
 
+# Career start (used to compute "X+ years" dynamically - ticks over each January)
+career_start_year: 2008
+
 # hreflang domains
 hreflang_domains:
   default: "https://www.seanreilly.net"

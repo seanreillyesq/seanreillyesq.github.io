@@ -38,12 +38,12 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% if page.meta-description %}<meta name="description" content="{{ page.meta-description }}">{% endif %}
+    {% include career-years.html %}{% capture _years_plus %}{{ career_years }}+{% endcapture %}{% if page.meta-description %}{% assign _meta_desc = page.meta-description | replace: '18+', _years_plus %}<meta name="description" content="{{ _meta_desc }}">{% endif %}
     {% if page.robots %}<meta name="robots" content="{{ page.robots }}">{% endif %}
 
     <!-- Open Graph -->
     <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
-    <meta property="og:description" content="{% if page.meta-description %}{{ page.meta-description }}{% else %}{{ site.description }}{% endif %}">
+    <meta property="og:description" content="{% if page.meta-description %}{{ _meta_desc }}{% else %}{{ site.description }}{% endif %}">
     <meta property="og:url" content="{{ page.url | prepend: site.url }}">
     <meta property="og:site_name" content="{{ site.title }}">
     {% if page.header-img %}<meta property="og:image" content="{{ site.url }}/{{ page.header-img }}">{% endif %}
@@ -83,7 +83,7 @@
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         "headline": {{ page.title | jsonify }},
-        "description": {{ page.meta-description | default: site.description | jsonify }},
+        "description": {{ page.meta-description | default: site.description | replace: '18+', _years_plus | jsonify }},
         {% if page.header-img %}"image": "{{ site.url }}/{{ page.header-img }}",{% endif %}
         "datePublished": "{{ page.date | date_to_xmlschema }}",
         "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
