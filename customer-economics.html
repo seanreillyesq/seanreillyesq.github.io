@@ -294,18 +294,18 @@ hidden: true
 <!-- Section 2: Allowable Acquisition Cost -->
 <div class="ce-section" id="section-unit-economics">
     <h3>Allowable Acquisition Cost</h3>
-    <p class="ce-section-desc">Work backwards from your average booking value to find the maximum you can spend to acquire a customer while hitting your margin target.</p>
+    <p class="ce-section-desc">Work backwards from your average order value to find the maximum you can spend to acquire a customer while hitting your margin target.</p>
     <div class="ce-inputs">
         <div class="row g-2 g-md-3 mb-3">
             <div class="col-6 col-md-4">
-                <label class="form-label" for="avg-booking">Avg booking value</label>
+                <label class="form-label" for="avg-booking">Avg order value</label>
                 <div class="input-group input-group-sm">
                     <span class="input-group-text booking-currency">&pound;</span>
                     <input type="number" class="form-control" id="avg-booking" value="500" min="1" max="999999" step="10">
                 </div>
             </div>
             <div class="col-6 col-md-4">
-                <label class="form-label" for="cancel-rate">Cancellation rate</label>
+                <label class="form-label" for="cancel-rate">Cancel / return rate</label>
                 <div class="input-group input-group-sm">
                     <input type="number" class="form-control" id="cancel-rate" value="5" min="0" max="100" step="1">
                     <span class="input-group-text">%</span>
@@ -339,7 +339,7 @@ hidden: true
     <div id="cost-waterfall"></div>
 
     <!-- Warning -->
-    <div class="ce-warning" id="cost-warning">Your costs exceed 100% of booking value. There is nothing left for marketing.</div>
+    <div class="ce-warning" id="cost-warning">Your costs exceed 100% of order value. There is nothing left for marketing.</div>
 
     <!-- Unit economics results -->
     <div class="row g-2 g-md-3 mb-3" id="unit-results">
@@ -380,7 +380,7 @@ hidden: true
                     </select>
                 </div>
                 <div class="col-6">
-                    <label class="form-label" for="repeat-rate">Repeat booking rate</label>
+                    <label class="form-label" for="repeat-rate">Repeat purchase rate</label>
                     <div class="input-group input-group-sm">
                         <input type="number" class="form-control" id="repeat-rate" value="40" min="0" max="100" step="1">
                         <span class="input-group-text">%</span>
@@ -494,8 +494,8 @@ hidden: true
 <div class="methodology mb-4">
     <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
     <p><strong>Three-lever revenue model:</strong> Every business generates revenue from the same three levers: how many customers return (loyalty rate), how many new customers you acquire, and how much each customer spends. This model lets you see which lever has the most impact on your specific numbers.</p>
-    <p><strong>Allowable acquisition cost:</strong> This works backwards from your average booking value, subtracting cancellations, product costs, fulfilment costs, and your required margin to find the maximum you can spend on marketing per customer. The implied ROAS (return on ad spend) follows directly from this figure.</p>
-    <p><strong>Extended payback:</strong> When toggled on, the calculation factors in expected repeat purchases over the payback period. A customer who books again is worth more than their first transaction, so you can afford to spend more to acquire them. The model compounds the repeat rate annually.</p>
+    <p><strong>Allowable acquisition cost:</strong> This works backwards from your average order value, subtracting cancellations and returns, product costs, fulfilment costs, and your required margin to find the maximum you can spend on marketing per customer. The implied ROAS (return on ad spend) follows directly from this figure.</p>
+    <p><strong>Extended payback:</strong> When toggled on, the calculation factors in expected repeat purchases over the payback period. A customer who orders again is worth more than their first transaction, so you can afford to spend more to acquire them. The model compounds the repeat rate annually.</p>
     <p><strong>Growth scenario:</strong> The three sliders let you model "what if" changes to each lever independently. The lever breakdown shows how much of the total change comes from each adjustment. The contributions may not sum exactly to the total delta because the levers interact multiplicatively - more loyal customers spending more each creates a compounding effect.</p>
     <p>This is a simplified model. Real businesses have customer segments, seasonal variation, and non-linear cost structures. Use it to build intuition about where your growth leverage sits, not as a precise forecast.</p>
 </div>
@@ -856,7 +856,7 @@ hidden: true
         var scale = total > 0 ? WF_W / total : 0;
 
         var segments = [
-            { val: bd.cancel, col: COL.cancel, label: 'Cancellations' },
+            { val: bd.cancel, col: COL.cancel, label: 'Cancels / Returns' },
             { val: bd.cogs, col: COL.cogs, label: 'COGS' },
             { val: bd.fulfil, col: COL.fulfil, label: 'Fulfilment' },
             { val: bd.margin, col: COL.margin, label: 'Margin' },
