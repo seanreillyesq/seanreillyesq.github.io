@@ -325,6 +325,82 @@ hidden: true
     line-height: 1.7;
 }
 
+/* Fetch from URL */
+.serp-fetch-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+}
+.serp-fetch-row label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+.serp-fetch-row input[type="checkbox"] {
+    accent-color: var(--color-accent);
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+.serp-fetch-url {
+    flex: 1;
+    min-width: 0;
+}
+.serp-fetch-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.375rem 1rem;
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
+}
+.serp-fetch-btn:hover { background: var(--color-accent-hover); }
+.serp-fetch-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.serp-fetch-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    margin-top: 0.375rem;
+    min-height: 1rem;
+}
+.serp-fetch-status.loading { color: var(--color-accent); }
+.serp-fetch-status.success { color: #16a34a; }
+.serp-fetch-status.error { color: #dc2626; }
+.serp-fetch-fields {
+    display: none;
+}
+.serp-fetch-fields.visible {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+@media (max-width: 575.98px) {
+    .serp-fetch-row { flex-wrap: wrap; }
+    .serp-fetch-url { width: 100%; }
+}
+
 /* Mobile */
 @media (max-width: 575.98px) {
     .serp-tab { padding: 0.5rem 0.625rem; font-size: 0.6875rem; }
@@ -333,6 +409,19 @@ hidden: true
 </style>
 
 <p>Preview how your content appears across Google's search surfaces. Pixel widths use canvas text rendering for accuracy, not character counting.</p>
+
+<!-- Fetch from URL -->
+<div class="serp-fetch-row">
+    <label for="serp-fetch-toggle">
+        <input type="checkbox" id="serp-fetch-toggle">
+        Load from URL
+    </label>
+    <div class="serp-fetch-fields" id="serp-fetch-fields">
+        <input type="text" class="form-control form-control-sm serp-fetch-url" id="serp-fetch-url" placeholder="https://www.example.com/page/">
+        <button type="button" class="serp-fetch-btn" id="serp-fetch-btn">Fetch</button>
+    </div>
+</div>
+<div class="serp-fetch-status" id="serp-fetch-status"></div>
 
 <!-- Inputs -->
 <div class="serp-inputs">
@@ -751,6 +840,81 @@ hidden: true
             if (data.sitename) sitenameInput.value = data.sitename;
             if (data.image) imageInput.value = data.image;
         } catch(e) {}
+    }
+
+    // Fetch from URL
+    var fetchToggle = document.getElementById('serp-fetch-toggle');
+    var fetchFields = document.getElementById('serp-fetch-fields');
+    var fetchUrlInput = document.getElementById('serp-fetch-url');
+    var fetchBtn = document.getElementById('serp-fetch-btn');
+    var fetchStatus = document.getElementById('serp-fetch-status');
+
+    fetchToggle.addEventListener('change', function() {
+        fetchFields.classList.toggle('visible', fetchToggle.checked);
+        if (fetchToggle.checked) fetchUrlInput.focus();
+    });
+
+    fetchUrlInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); doFetch(); }
+    });
+
+    fetchBtn.addEventListener('click', doFetch);
+
+    function doFetch() {
+        var url = fetchUrlInput.value.trim();
+        if (!url) { setFetchStatus('Enter a URL first.', 'error'); return; }
+
+        // Auto-add protocol if missing
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+
+        try { new URL(url); } catch(e) {
+            setFetchStatus('Invalid URL.', 'error');
+            return;
+        }
+
+        fetchBtn.disabled = true;
+        setFetchStatus('Fetching metadata...', 'loading');
+
+        fetch('/api/fetch-meta?url=' + encodeURIComponent(url))
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                fetchBtn.disabled = false;
+                if (data.error) {
+                    setFetchStatus(data.error, 'error');
+                    return;
+                }
+
+                // Populate fields from fetched metadata
+                if (data.title) titleInput.value = data.title;
+                if (data.description) descInput.value = data.description;
+                if (data.ogImage) imageInput.value = data.ogImage;
+                if (data.siteName) sitenameInput.value = data.siteName;
+                if (data.fetchedUrl) urlInput.value = data.fetchedUrl;
+                if (data.publishedDate) {
+                    // Extract YYYY-MM-DD from ISO date
+                    var d = data.publishedDate.slice(0, 10);
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) dateInput.value = d;
+                }
+
+                var loaded = [];
+                if (data.title) loaded.push('title');
+                if (data.description) loaded.push('description');
+                if (data.ogImage) loaded.push('og:image');
+                if (data.siteName) loaded.push('site name');
+                if (data.publishedDate) loaded.push('date');
+                setFetchStatus('Loaded: ' + (loaded.length ? loaded.join(', ') : 'no metadata found'), loaded.length ? 'success' : 'error');
+
+                update();
+            })
+            .catch(function() {
+                fetchBtn.disabled = false;
+                setFetchStatus('Failed to fetch. Check the URL and try again.', 'error');
+            });
+    }
+
+    function setFetchStatus(msg, cls) {
+        fetchStatus.textContent = msg;
+        fetchStatus.className = 'serp-fetch-status ' + cls;
     }
 
     // Init
