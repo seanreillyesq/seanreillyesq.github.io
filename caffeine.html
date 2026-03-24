@@ -87,10 +87,12 @@ sitemap: false
 }
 .schedule-dot.coffee { background: #6F4E37; }
 .schedule-dot.tea { background: #4A7C59; }
-.schedule-time {
+.schedule-time-input {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.875rem;
-    min-width: 3.25rem;
+    width: 7rem;
+    padding: 0.25rem 0.5rem;
+    flex-shrink: 0;
 }
 .schedule-type { color: var(--color-text-muted, #6B7280); }
 
@@ -276,7 +278,8 @@ sitemap: false
         coffees: 2,
         teas: 2,
         halfLife: 5,
-        drinkOrder: 'coffee-first'
+        drinkOrder: 'coffee-first',
+        drinks: []
     };
 
     // Cookie
@@ -413,16 +416,23 @@ sitemap: false
         var coffeeCutoff = lastSafeDrinkTime(sleepMins, halfLife, COFFEE_MG) - wakeMins;
         var teaCutoff = lastSafeDrinkTime(sleepMins, halfLife, TEA_MG) - wakeMins;
 
-        // Clamp windows to waking period and cutoff
         function clampWindows(wins, cutoff) {
             var result = [];
             for (var i = 0; i < wins.length; i++) {
                 var w = wins[i];
                 if (w.start >= cutoff || w.start >= waking) continue;
-                result.push({
-                    start: w.start,
-                    end: Math.min(w.end, cutoff, waking)
-                });
+                result.push({ start: w.start, end: Math.min(w.end, cutoff, waking) });
+            }
+            return result;
+        }
+
+        // Trim window time that occurs before a given minute
+        function trimWindowsBefore(wins, afterMin) {
+            var result = [];
+            for (var i = 0; i < wins.length; i++) {
+                var w = wins[i];
+                var s = Math.max(w.start, afterMin);
+                if (s < w.end) result.push({ start: s, end: w.end });
             }
             return result;
         }
@@ -431,43 +441,48 @@ sitemap: false
         var teaWins = clampWindows(windows, teaCutoff);
 
         var drinks = [];
-        if (state.drinkOrder === 'tea-first') {
-            // Tea in early windows, coffee in later windows
-            distribute(drinks, 'tea', teas, TEA_MG, teaWins);
-            distribute(drinks, 'coffee', coffees, COFFEE_MG, coffeeWins.slice().reverse());
-        } else if (state.drinkOrder === 'interleave') {
-            // Merge all drinks and distribute evenly across all windows
-            var allWins = clampWindows(windows, Math.max(coffeeCutoff, teaCutoff));
-            var allDrinks = [];
-            for (var ci = 0; ci < coffees; ci++) allDrinks.push({ type: 'coffee', mg: COFFEE_MG });
-            for (var ti = 0; ti < teas; ti++) allDrinks.push({ type: 'tea', mg: TEA_MG });
-            // Alternate coffee/tea
-            allDrinks.sort(function(a, b) {
-                if (a.type === b.type) return 0;
-                return a.type === 'coffee' ? -1 : 1;
-            });
-            var interleaved = [];
-            var coffeeQueue = allDrinks.filter(function(d) { return d.type === 'coffee'; });
-            var teaQueue = allDrinks.filter(function(d) { return d.type === 'tea'; });
-            while (coffeeQueue.length || teaQueue.length) {
-                if (coffeeQueue.length) interleaved.push(coffeeQueue.shift());
-                if (teaQueue.length) interleaved.push(teaQueue.shift());
-            }
-            // Distribute positions across windows
-            var placeholders = [];
-            distribute(placeholders, 'placeholder', interleaved.length, 0, allWins);
-            for (var pi = 0; pi < placeholders.length && pi < interleaved.length; pi++) {
-                var cutoff = interleaved[pi].type === 'coffee' ? coffeeCutoff : teaCutoff;
-                drinks.push({
-                    type: interleaved[pi].type,
-                    time: Math.min(placeholders[pi].time, Math.floor(cutoff)),
-                    mg: interleaved[pi].mg
-                });
-            }
-        } else {
-            // Default: coffee first, tea later
+        if (state.drinkOrder === 'coffee-first') {
             distribute(drinks, 'coffee', coffees, COFFEE_MG, coffeeWins);
-            distribute(drinks, 'tea', teas, TEA_MG, teaWins.slice().reverse());
+            // Teas only in time after the last coffee
+            var lastCoffeeTime = 0;
+            for (var i = 0; i < drinks.length; i++) {
+                if (drinks[i].time > lastCoffeeTime) lastCoffeeTime = drinks[i].time;
+            }
+            var remainingWins = trimWindowsBefore(teaWins, lastCoffeeTime + 1);
+            if (remainingWins.length === 0 && teaWins.length > 0) remainingWins = teaWins;
+            distribute(drinks, 'tea', teas, TEA_MG, remainingWins);
+        } else if (state.drinkOrder === 'tea-first') {
+            distribute(drinks, 'tea', teas, TEA_MG, teaWins);
+            var lastTeaTime = 0;
+            for (var i = 0; i < drinks.length; i++) {
+                if (drinks[i].time > lastTeaTime) lastTeaTime = drinks[i].time;
+            }
+            var remainingWins = trimWindowsBefore(coffeeWins, lastTeaTime + 1);
+            if (remainingWins.length === 0 && coffeeWins.length > 0) remainingWins = coffeeWins;
+            distribute(drinks, 'coffee', coffees, COFFEE_MG, remainingWins);
+        } else {
+            // Interleave: all drinks spread evenly, alternating types
+            var totalCount = coffees + teas;
+            var maxCutoff = Math.max(coffeeCutoff, teaCutoff);
+            var allWins = clampWindows(windows, maxCutoff);
+            var slots = [];
+            distribute(slots, '_', totalCount, 0, allWins);
+            // Build alternating sequence
+            var cRemain = coffees, tRemain = teas;
+            var useCoffeeNext = true;
+            for (var i = 0; i < slots.length; i++) {
+                var type, mg;
+                if (useCoffeeNext && cRemain > 0) {
+                    type = 'coffee'; mg = COFFEE_MG; cRemain--;
+                } else if (tRemain > 0) {
+                    type = 'tea'; mg = TEA_MG; tRemain--;
+                } else {
+                    type = 'coffee'; mg = COFFEE_MG; cRemain--;
+                }
+                useCoffeeNext = !useCoffeeNext;
+                var cutoff = type === 'coffee' ? coffeeCutoff : teaCutoff;
+                drinks.push({ type: type, time: Math.min(slots[i].time, Math.floor(cutoff)), mg: mg });
+            }
         }
 
         drinks.sort(function(a, b) { return a.time - b.time; });
@@ -498,7 +513,6 @@ sitemap: false
                     drinks.push({ type: type, time: Math.round(w.start + posInWindow), mg: mg });
                     placed++;
                 } else if (posInWindow <= 0) {
-                    // Should not happen but safety
                     placed++;
                 } else {
                     break;
@@ -507,7 +521,6 @@ sitemap: false
             accumulated += wLen;
         }
 
-        // If some drinks not placed (not enough window space), squeeze them in
         while (placed < count) {
             var lastWin = windows[windows.length - 1];
             var t = Math.round(lastWin.start + (lastWin.end - lastWin.start) * (placed + 1) / (count + 1));
@@ -741,12 +754,35 @@ sitemap: false
             var time = formatTime(state.wake + d.time);
             html += '<li class="schedule-item">';
             html += '<span class="schedule-dot ' + d.type + '"></span>';
-            html += '<span class="schedule-time">' + time + '</span>';
+            html += '<input type="time" class="form-control schedule-time-input" data-drink-index="' + i + '" value="' + time + '">';
             html += '<span class="schedule-type">' + label + ' (' + mg + ')</span>';
             html += '</li>';
         }
         html += '</ul>';
         container.innerHTML = html;
+
+        // Bind change events on schedule time inputs
+        var inputs = container.querySelectorAll('.schedule-time-input');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener('change', function() {
+                var idx = parseInt(this.getAttribute('data-drink-index'), 10);
+                var newAbsMinutes = timeToMinutes(this.value);
+                var newRelMinutes = newAbsMinutes - state.wake;
+                if (newRelMinutes < 0) newRelMinutes += 1440;
+                state.drinks[idx].time = newRelMinutes;
+                state.drinks.sort(function(a, b) { return a.time - b.time; });
+                refreshFromSchedule();
+            });
+        }
+    }
+
+    // Re-render graph and results from current state.drinks without recalculating schedule
+    function refreshFromSchedule() {
+        renderGraph(state.drinks);
+        renderSchedule(state.drinks);
+        updateResults(state.drinks);
+        updateURL();
+        savePrefs();
     }
 
     function updateResults(drinks) {
@@ -840,10 +876,10 @@ sitemap: false
     }
 
     function recalculate() {
-        var drinks = scheduleDrinks(state.coffees, state.teas, state.wake, state.sleep, state.halfLife);
-        renderGraph(drinks);
-        renderSchedule(drinks);
-        updateResults(drinks);
+        state.drinks = scheduleDrinks(state.coffees, state.teas, state.wake, state.sleep, state.halfLife);
+        renderGraph(state.drinks);
+        renderSchedule(state.drinks);
+        updateResults(state.drinks);
         updateURL();
         savePrefs();
     }
