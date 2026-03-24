@@ -242,10 +242,10 @@ sitemap: false
 <div class="graph-legend">
     <div class="legend-item"><div class="legend-swatch" style="background:#C4A265;"></div> Cortisol</div>
     <div class="legend-item"><div class="legend-swatch" style="background:#4A7BA7;"></div> Caffeine in system</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#6F4E37;"></div> Coffee</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#4A7C59;"></div> Tea</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#6F4E37;"></div> Coffee / cutoff</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#4A7C59;"></div> Tea / cutoff</div>
     <div class="legend-item"><div class="legend-swatch" style="background:rgba(74,124,89,0.25);"></div> Optimal window</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:rgba(180,60,60,0.2);"></div> Avoid</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(180,60,60,0.2);"></div> Too late</div>
 </div>
 
 <!-- SVG Graph -->
@@ -329,6 +329,13 @@ sitemap: false
             halfLife: state.halfLife,
             drinkOrder: state.drinkOrder
         };
+        // Save pinned drink times if any are pinned
+        var hasPinned = state.drinks.some(function(d) { return d.pinned; });
+        if (hasPinned) {
+            data.pins = state.drinks.map(function(d) {
+                return { type: d.type, time: d.time, mg: d.mg, pinned: !!d.pinned };
+            });
+        }
         var expires = new Date(Date.now() + COOKIE_DAYS * 864e5).toUTCString();
         document.cookie = COOKIE_NAME + '=' + encodeURIComponent(JSON.stringify(data))
             + ';expires=' + expires + ';path=/caffeine/;SameSite=Lax;Secure';
@@ -347,6 +354,16 @@ sitemap: false
             if (data.halfLife === 3 || data.halfLife === 5 || data.halfLife === 7) state.halfLife = data.halfLife;
             if (data.drinkOrder === 'coffee-first' || data.drinkOrder === 'tea-first' || data.drinkOrder === 'interleave') state.drinkOrder = data.drinkOrder;
             if (state.sleep <= state.wake) state.sleep += 1440;
+            // Restore pinned drinks if saved and counts still match
+            if (data.pins && Array.isArray(data.pins)) {
+                var savedCoffees = data.pins.filter(function(d) { return d.type === 'coffee'; }).length;
+                var savedTeas = data.pins.filter(function(d) { return d.type === 'tea'; }).length;
+                if (savedCoffees === state.coffees && savedTeas === state.teas) {
+                    state.drinks = data.pins.map(function(d) {
+                        return { type: d.type, time: d.time, mg: d.mg, pinned: !!d.pinned };
+                    });
+                }
+            }
             return true;
         } catch (e) {
             return false;
@@ -631,26 +648,46 @@ sitemap: false
             }));
         }
 
-        // Sleep cutoff zone
+        // Per-drink-type cutoff lines and zones
         var coffeeCutoffSinceWake = lastSafeDrinkTime(state.sleep, state.halfLife, COFFEE_MG) - state.wake;
         if (coffeeCutoffSinceWake < 0) coffeeCutoffSinceWake += 1440;
-        if (coffeeCutoffSinceWake < waking) {
+        var teaCutoffSinceWake = lastSafeDrinkTime(state.sleep, state.halfLife, TEA_MG) - state.wake;
+        if (teaCutoffSinceWake < 0) teaCutoffSinceWake += 1440;
+
+        // Red zone starts at whichever cutoff comes later (tea, since lower mg)
+        var latestCutoff = Math.max(coffeeCutoffSinceWake, teaCutoffSinceWake);
+        if (latestCutoff < waking) {
             svg.appendChild(el('rect', {
-                x: xScale(coffeeCutoffSinceWake, waking), y: M.top,
-                width: xScale(waking, waking) - xScale(coffeeCutoffSinceWake, waking),
+                x: xScale(latestCutoff, waking), y: M.top,
+                width: xScale(waking, waking) - xScale(latestCutoff, waking),
                 height: PH, fill: COL.zoneBad
             }));
+        }
 
-            // Cutoff line
-            var cx = xScale(coffeeCutoffSinceWake, waking);
+        // Coffee cutoff line (if there are coffees)
+        if (state.coffees > 0 && coffeeCutoffSinceWake < waking) {
+            var ccx = xScale(coffeeCutoffSinceWake, waking);
             svg.appendChild(el('line', {
-                x1: cx, y1: M.top, x2: cx, y2: M.top + PH,
-                stroke: COL.cutoff, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
+                x1: ccx, y1: M.top, x2: ccx, y2: M.top + PH,
+                stroke: COL.coffee, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
             }));
             svg.appendChild(el('text', {
-                x: cx + 4, y: M.top + 12,
-                fill: COL.cutoff, 'font-size': '9', 'font-family': 'Inter, sans-serif'
-            }, 'Cutoff'));
+                x: ccx + 4, y: M.top + 12,
+                fill: COL.coffee, 'font-size': '9', 'font-family': 'Inter, sans-serif'
+            }, 'Last coffee'));
+        }
+
+        // Tea cutoff line (if there are teas and it differs from coffee cutoff)
+        if (state.teas > 0 && teaCutoffSinceWake < waking) {
+            var tcx = xScale(teaCutoffSinceWake, waking);
+            svg.appendChild(el('line', {
+                x1: tcx, y1: M.top, x2: tcx, y2: M.top + PH,
+                stroke: COL.tea, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
+            }));
+            svg.appendChild(el('text', {
+                x: tcx + 4, y: state.coffees > 0 ? M.top + 22 : M.top + 12,
+                fill: COL.tea, 'font-size': '9', 'font-family': 'Inter, sans-serif'
+            }, 'Last tea'));
         }
 
         // Cortisol curve
@@ -801,10 +838,10 @@ sitemap: false
         html += '</ul>';
         container.innerHTML = html;
 
-        // Bind blur events on time inputs (update on blur, not change, to avoid mid-edit re-render)
+        // Bind Enter key on time inputs (only apply on Enter, not mid-edit)
         var inputs = container.querySelectorAll('.schedule-time-input');
         for (var i = 0; i < inputs.length; i++) {
-            inputs[i].addEventListener('change', onScheduleTimeChange);
+            inputs[i].addEventListener('keydown', onScheduleTimeKeydown);
         }
 
         // Bind pin toggle buttons
@@ -814,13 +851,17 @@ sitemap: false
         }
     }
 
-    function onScheduleTimeChange() {
+    function onScheduleTimeKeydown(e) {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
         var idx = parseInt(this.getAttribute('data-drink-index'), 10);
         var newAbsMinutes = timeToMinutes(this.value);
+        if (isNaN(newAbsMinutes)) return;
         var newRelMinutes = newAbsMinutes - state.wake;
         if (newRelMinutes < 0) newRelMinutes += 1440;
         state.drinks[idx].time = newRelMinutes;
         state.drinks[idx].pinned = true;
+        this.blur();
         recalculateUnpinned();
     }
 
@@ -1098,7 +1139,15 @@ sitemap: false
         if (!hasUrlParams) loadPrefs();
         syncInputs();
         bindEvents();
-        recalculate();
+        // If drinks were restored from cookie with pins, render them directly
+        if (state.drinks.length > 0 && state.drinks.some(function(d) { return d.pinned; })) {
+            renderGraph(state.drinks);
+            renderSchedule(state.drinks);
+            updateResults(state.drinks);
+            updateURL();
+        } else {
+            recalculate();
+        }
     }
 
     if (document.readyState === 'loading') {
