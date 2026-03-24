@@ -631,13 +631,7 @@ hidden: true
 
     function faviconHtml() {
         if (!faviconUrl) return globeSvg;
-        // Use Google's favicon service (same as actual SERPs) with direct URL as fallback
-        var domain = '';
-        try { domain = new URL(urlInput.value || '').hostname; } catch(e) {}
-        var src = domain
-            ? 'https://www.google.com/s2/favicons?domain=' + encodeURIComponent(domain) + '&sz=32'
-            : faviconUrl;
-        return '<img src="' + escapeHtml(src) + '" width="18" height="18" alt="" style="display:block;border-radius:2px;" onerror="this.src=\'' + escapeHtml(faviconUrl) + '\';this.onerror=null;">';
+        return '<img src="' + escapeHtml(faviconUrl) + '" width="18" height="18" alt="" style="display:block;border-radius:2px;" onerror="this.parentNode.innerHTML=\'' + globeSvg.replace(/'/g, "\\'") + '\'">';
     }
 
     // Sparkle icon SVG (AI Overview)

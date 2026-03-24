@@ -96,23 +96,37 @@ export async function onRequestGet(context) {
       || html.match(/<meta[^>]+content=["']([^"']*)["'][^>]+property=["']article:published_time["']/i);
     if (m) meta.publishedDate = m[1].trim();
 
-    // Favicon: try <link rel="icon">, then <link rel="shortcut icon">, then fallback to /favicon.ico
-    m = html.match(/<link[^>]+rel=["'](?:shortcut )?icon["'][^>]+href=["']([^"']*)["']/i)
-      || html.match(/<link[^>]+href=["']([^"']*)["'][^>]+rel=["'](?:shortcut )?icon["']/i);
+    // Favicon: prefer apple-touch-icon (high-res PNG), then PNG icons, then any icon, then /favicon.ico
+    function resolveHref(href) {
+      href = href.trim();
+      if (href.startsWith('//')) return parsed.protocol + href;
+      if (href.startsWith('/')) return parsed.origin + href;
+      if (!href.startsWith('http')) return parsed.origin + '/' + href;
+      return href;
+    }
+
+    // apple-touch-icon (almost always a 180x180 PNG)
+    m = html.match(/<link[^>]+rel=["']apple-touch-icon[^"']*["'][^>]+href=["']([^"']*)["']/i)
+      || html.match(/<link[^>]+href=["']([^"']*)["'][^>]+rel=["']apple-touch-icon[^"']*["']/i);
     if (m) {
-      var faviconHref = m[1].trim();
-      // Resolve relative URLs
-      if (faviconHref.startsWith('//')) {
-        faviconHref = parsed.protocol + faviconHref;
-      } else if (faviconHref.startsWith('/')) {
-        faviconHref = parsed.origin + faviconHref;
-      } else if (!faviconHref.startsWith('http')) {
-        faviconHref = parsed.origin + '/' + faviconHref;
-      }
-      meta.favicon = faviconHref;
+      meta.favicon = resolveHref(m[1]);
     } else {
-      // Fallback to /favicon.ico
-      meta.favicon = parsed.origin + '/favicon.ico';
+      // PNG icon (better than ICO at small sizes)
+      m = html.match(/<link[^>]+rel=["']icon["'][^>]+type=["']image\/png["'][^>]+href=["']([^"']*)["']/i)
+        || html.match(/<link[^>]+href=["']([^"']*)["'][^>]+rel=["']icon["'][^>]+type=["']image\/png["']/i)
+        || html.match(/<link[^>]+type=["']image\/png["'][^>]+rel=["']icon["'][^>]+href=["']([^"']*)["']/i);
+      if (m) {
+        meta.favicon = resolveHref(m[1] || m[2]);
+      } else {
+        // Any icon
+        m = html.match(/<link[^>]+rel=["'](?:shortcut )?icon["'][^>]+href=["']([^"']*)["']/i)
+          || html.match(/<link[^>]+href=["']([^"']*)["'][^>]+rel=["'](?:shortcut )?icon["']/i);
+        if (m) {
+          meta.favicon = resolveHref(m[1]);
+        } else {
+          meta.favicon = parsed.origin + '/favicon.ico';
+        }
+      }
     }
 
     meta.fetchedUrl = parsed.href;
