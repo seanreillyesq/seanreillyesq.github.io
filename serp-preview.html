@@ -1,0 +1,760 @@
+---
+layout: page
+title: "SERP Preview"
+header-title: "SERP Preview"
+description: "See how your content appears across Google's surfaces"
+header-img: "img/home-bg.jpg"
+header_overlay: true
+meta-description: "Preview page titles, meta descriptions and images across Google Search, AI Overviews and social cards. Pixel-accurate truncation detection."
+permalink: /serp-preview/
+hidden: true
+---
+
+<style>
+/* Input section */
+.serp-inputs .form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    margin-bottom: 0.25rem;
+}
+.serp-inputs .form-control,
+.serp-inputs .form-select {
+    font-size: 0.9375rem;
+}
+.serp-inputs textarea.form-control {
+    resize: vertical;
+    min-height: 4.5rem;
+}
+
+/* Counters */
+.serp-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    margin-top: 0.25rem;
+    display: flex;
+    gap: 1rem;
+}
+.serp-counter span { color: var(--color-text-muted); }
+.serp-counter .ok { color: #16a34a; }
+.serp-counter .warn { color: #d97706; }
+.serp-counter .over { color: #dc2626; }
+
+/* Pixel bar */
+.pixel-bar {
+    height: 3px;
+    background: var(--color-border);
+    border-radius: 2px;
+    margin-top: 0.375rem;
+    overflow: hidden;
+}
+.pixel-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.15s ease, background-color 0.15s ease;
+}
+
+/* Tabs */
+.serp-tabs {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 2px solid var(--color-border);
+    margin: 2rem 0 0;
+    overflow-x: auto;
+}
+.serp-tab {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+.serp-tab:hover { color: var(--color-text); }
+.serp-tab.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+}
+
+/* Panels */
+.serp-panel { display: none; padding: 1.5rem 0; }
+.serp-panel.active { display: block; }
+
+/* ========== Google SERP ========== */
+.google-result {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    padding: 1.25rem;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+}
+.google-result-mobile {
+    max-width: 375px;
+}
+.google-site-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.375rem;
+}
+.google-favicon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.google-favicon svg {
+    width: 16px;
+    height: 16px;
+}
+.google-site-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.google-site-name {
+    font-size: 14px;
+    color: #202124;
+    line-height: 1.3;
+}
+.google-breadcrumb {
+    font-size: 12px;
+    color: #4d5156;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.google-title {
+    font-size: 20px;
+    color: #1a0dab;
+    line-height: 1.3;
+    margin-bottom: 0.25rem;
+    cursor: pointer;
+    overflow-wrap: break-word;
+}
+.google-title:hover {
+    text-decoration: underline;
+}
+.google-description {
+    font-size: 14px;
+    color: #4d5156;
+    line-height: 1.58;
+}
+.google-date {
+    color: #70757a;
+}
+.google-truncated {
+    color: #70757a;
+}
+
+/* ========== AI Overview ========== */
+.ai-overview {
+    max-width: 600px;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+    border: 1px solid #d2e3fc;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    font-family: Arial, sans-serif;
+}
+.ai-overview-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 14px;
+    font-weight: 700;
+    color: #202124;
+}
+.ai-overview-body {
+    font-size: 14px;
+    color: #202124;
+    line-height: 1.58;
+    margin-bottom: 1rem;
+}
+.ai-overview-sources-label {
+    font-size: 12px;
+    color: #70757a;
+    margin-bottom: 0.5rem;
+}
+.ai-overview-sources {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+}
+.ai-source-card {
+    flex: 0 0 auto;
+    width: 175px;
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-size: 12px;
+}
+.ai-source-card.highlighted {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 1px #1a73e8;
+}
+.ai-source-site {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-bottom: 0.375rem;
+    color: #70757a;
+}
+.ai-source-favicon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e8eaed;
+    flex-shrink: 0;
+}
+.ai-source-title {
+    color: #1a0dab;
+    font-size: 13px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ========== Social Card ========== */
+.social-card {
+    max-width: 500px;
+    border: 1px solid #dadce0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #fff;
+}
+.social-card-image {
+    width: 100%;
+    aspect-ratio: 1.91 / 1;
+    background-color: var(--color-surface);
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+}
+.social-card-body {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #dadce0;
+}
+.social-card-domain {
+    font-size: 12px;
+    color: #65676b;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+.social-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1c1e21;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 0.25rem;
+}
+.social-card-desc {
+    font-size: 14px;
+    color: #65676b;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ========== Validation ========== */
+.serp-validation {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+}
+.serp-validation h3 {
+    font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+}
+.validation-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0;
+    font-size: 0.875rem;
+}
+.validation-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.validation-dot.green { background: #16a34a; }
+.validation-dot.amber { background: #d97706; }
+.validation-dot.red { background: #dc2626; }
+.validation-dot.grey { background: #9ca3af; }
+
+/* Methodology */
+.serp-methodology p {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+}
+
+/* Mobile */
+@media (max-width: 575.98px) {
+    .serp-tab { padding: 0.5rem 0.625rem; font-size: 0.6875rem; }
+    .google-result { padding: 1rem; }
+}
+</style>
+
+<p>Preview how your content appears across Google's search surfaces. Pixel widths use canvas text rendering for accuracy, not character counting.</p>
+
+<!-- Inputs -->
+<div class="serp-inputs">
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-12">
+            <label class="form-label" for="serp-title">Title Tag</label>
+            <input type="text" class="form-control" id="serp-title" placeholder="Your Page Title - Site Name">
+            <div class="pixel-bar"><div class="pixel-bar-fill" id="title-bar"></div></div>
+            <div class="serp-counter">
+                <span id="title-chars">0 chars</span>
+                <span id="title-pixels">0px / 580px</span>
+            </div>
+        </div>
+    </div>
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-md-8">
+            <label class="form-label" for="serp-url">URL</label>
+            <input type="text" class="form-control" id="serp-url" placeholder="https://www.seanreilly.net/your-page/">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="serp-date">Published Date</label>
+            <input type="date" class="form-control" id="serp-date">
+        </div>
+    </div>
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-12">
+            <label class="form-label" for="serp-desc">Meta Description</label>
+            <textarea class="form-control" id="serp-desc" rows="3" placeholder="A compelling summary of your page content..."></textarea>
+            <div class="pixel-bar"><div class="pixel-bar-fill" id="desc-bar"></div></div>
+            <div class="serp-counter">
+                <span id="desc-chars">0 chars</span>
+                <span id="desc-pixels">0px / 920px</span>
+            </div>
+        </div>
+    </div>
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-md-4">
+            <label class="form-label" for="serp-sitename">Site Name</label>
+            <input type="text" class="form-control" id="serp-sitename" value="seanreilly.net">
+        </div>
+        <div class="col-md-8">
+            <label class="form-label" for="serp-image">OG Image URL</label>
+            <input type="text" class="form-control" id="serp-image" placeholder="https://www.seanreilly.net/img/header.jpg">
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="serp-tabs" role="tablist">
+    <button class="serp-tab active" data-tab="desktop" role="tab">Desktop</button>
+    <button class="serp-tab" data-tab="mobile" role="tab">Mobile</button>
+    <button class="serp-tab" data-tab="ai-overview" role="tab">AI Overview</button>
+    <button class="serp-tab" data-tab="social" role="tab">Social Card</button>
+</div>
+
+<!-- Preview panels -->
+<div class="serp-panel active" id="panel-desktop">
+    <div class="google-result" id="preview-desktop"></div>
+</div>
+<div class="serp-panel" id="panel-mobile">
+    <div class="google-result google-result-mobile" id="preview-mobile"></div>
+</div>
+<div class="serp-panel" id="panel-ai-overview">
+    <div class="ai-overview" id="preview-ai"></div>
+</div>
+<div class="serp-panel" id="panel-social">
+    <div class="social-card" id="preview-social"></div>
+</div>
+
+<!-- Validation -->
+<div class="serp-validation" id="validation"></div>
+
+<!-- How this works -->
+<div class="serp-methodology mb-4">
+    <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
+    <p><strong>Pixel-width measurement:</strong> Google truncates titles and descriptions based on rendered pixel width, not character count. "WWWWW" takes far more space than "iiiii" at the same character count. This tool renders your text in Arial (Google's SERP font) on a hidden canvas and measures the actual pixel width.</p>
+    <p><strong>Title truncation:</strong> Desktop titles truncate at roughly 580px rendered in 20px Arial. Mobile is slightly narrower at around 550px. Titles beyond this get an ellipsis. The sweet spot is under 520px, which avoids truncation even with wider characters.</p>
+    <p><strong>Description truncation:</strong> Descriptions get roughly 920px across two lines on desktop (460px per line in 14px Arial). Google sometimes rewrites descriptions from page content if it thinks the meta description doesn't match the query, so this preview shows the best case.</p>
+    <p><strong>AI Overview citations:</strong> When Google's AI Overview cites your page, it appears as a small source card with your site name, favicon and title. The preview shows your card highlighted alongside placeholder competitors. Whether your content gets cited depends on authority, relevance and content structure, not anything you can control from metadata alone.</p>
+    <p><strong>Social cards:</strong> Facebook and LinkedIn use Open Graph tags (og:title, og:description, og:image) to render link previews. The recommended OG image ratio is 1.91:1 (1200x630px). Without an image, social shares look significantly less engaging.</p>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // Thresholds
+    var TITLE_MAX_PX = 580;
+    var TITLE_WARN_PX = 520;
+    var TITLE_MOBILE_MAX_PX = 550;
+    var DESC_MAX_PX = 920;
+    var DESC_WARN_PX = 830;
+    var DESC_MOBILE_MAX_PX = 780;
+    var TITLE_FONT = '20px Arial';
+    var DESC_FONT = '14px Arial';
+
+    // DOM refs
+    var titleInput = document.getElementById('serp-title');
+    var urlInput = document.getElementById('serp-url');
+    var descInput = document.getElementById('serp-desc');
+    var dateInput = document.getElementById('serp-date');
+    var sitenameInput = document.getElementById('serp-sitename');
+    var imageInput = document.getElementById('serp-image');
+
+    var titleChars = document.getElementById('title-chars');
+    var titlePixels = document.getElementById('title-pixels');
+    var titleBar = document.getElementById('title-bar');
+    var descChars = document.getElementById('desc-chars');
+    var descPixels = document.getElementById('desc-pixels');
+    var descBar = document.getElementById('desc-bar');
+
+    var previewDesktop = document.getElementById('preview-desktop');
+    var previewMobile = document.getElementById('preview-mobile');
+    var previewAI = document.getElementById('preview-ai');
+    var previewSocial = document.getElementById('preview-social');
+    var validationEl = document.getElementById('validation');
+
+    // Canvas for pixel measurement
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+
+    function measurePx(text, font) {
+        ctx.font = font;
+        return Math.round(ctx.measureText(text).width);
+    }
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function statusClass(value, warnAt, maxAt) {
+        if (value <= warnAt) return 'ok';
+        if (value <= maxAt) return 'warn';
+        return 'over';
+    }
+
+    function barColour(cls) {
+        if (cls === 'ok') return '#16a34a';
+        if (cls === 'warn') return '#d97706';
+        return '#dc2626';
+    }
+
+    function urlToBreadcrumb(url) {
+        try {
+            var parsed = new URL(url);
+            var parts = parsed.pathname.split('/').filter(Boolean);
+            if (parts.length === 0) return parsed.hostname;
+            return parsed.hostname + ' > ' + parts.map(function(p) {
+                return p.replace(/-/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+            }).join(' > ');
+        } catch (e) {
+            return url || 'example.com';
+        }
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+        try {
+            var d = new Date(dateStr + 'T00:00:00');
+            return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        } catch (e) {
+            return '';
+        }
+    }
+
+    function truncateAtPx(text, font, maxPx) {
+        if (measurePx(text, font) <= maxPx) return { text: text, truncated: false };
+        var lo = 0, hi = text.length;
+        while (lo < hi) {
+            var mid = Math.ceil((lo + hi) / 2);
+            if (measurePx(text.slice(0, mid) + '...', font) <= maxPx) {
+                lo = mid;
+            } else {
+                hi = mid - 1;
+            }
+        }
+        return { text: text.slice(0, lo) + '...', truncated: true };
+    }
+
+    // Globe icon SVG (favicon placeholder)
+    var globeSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="#70757a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>';
+
+    // Sparkle icon SVG (AI Overview)
+    var sparkleSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="#1a73e8"/></svg>';
+
+    function renderGoogleResult(container, titleMaxPx, descMaxPx) {
+        var title = titleInput.value || 'Page Title';
+        var url = urlInput.value || 'https://www.example.com/';
+        var desc = descInput.value || 'No meta description provided. Google will pull text from the page instead.';
+        var date = formatDate(dateInput.value);
+        var sitename = sitenameInput.value || 'example.com';
+
+        var truncTitle = truncateAtPx(title, TITLE_FONT, titleMaxPx);
+        var truncDesc = truncateAtPx(desc, DESC_FONT, descMaxPx);
+        var breadcrumb = urlToBreadcrumb(url);
+        var dateHtml = date ? '<span class="google-date">' + escapeHtml(date) + ' - </span>' : '';
+
+        container.innerHTML =
+            '<div class="google-site-row">' +
+                '<div class="google-favicon">' + globeSvg + '</div>' +
+                '<div class="google-site-info">' +
+                    '<div class="google-site-name">' + escapeHtml(sitename) + '</div>' +
+                    '<div class="google-breadcrumb">' + escapeHtml(breadcrumb) + '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="google-title">' + escapeHtml(truncTitle.text) + '</div>' +
+            '<div class="google-description">' + dateHtml + escapeHtml(truncDesc.text) + '</div>';
+    }
+
+    function renderAIOverview() {
+        var title = titleInput.value || 'Page Title';
+        var desc = descInput.value || '';
+        var sitename = sitenameInput.value || 'example.com';
+
+        // Build a summary from the description (or placeholder)
+        var summary = desc
+            ? desc.split(/[.!?]/).filter(Boolean).slice(0, 2).join('. ').trim()
+            : 'Based on the content of your page, Google would generate a summary here. The AI Overview synthesises information from multiple sources to answer the search query.';
+        if (summary && !/[.!?]$/.test(summary)) summary += '.';
+
+        previewAI.innerHTML =
+            '<div class="ai-overview-header">' + sparkleSvg + ' AI Overview</div>' +
+            '<div class="ai-overview-body">' + escapeHtml(summary) + '</div>' +
+            '<div class="ai-overview-sources-label">Sources</div>' +
+            '<div class="ai-overview-sources">' +
+                '<div class="ai-source-card highlighted">' +
+                    '<div class="ai-source-site">' +
+                        '<div class="ai-source-favicon"></div>' +
+                        '<span>' + escapeHtml(sitename) + '</span>' +
+                    '</div>' +
+                    '<div class="ai-source-title">' + escapeHtml(title) + '</div>' +
+                '</div>' +
+                '<div class="ai-source-card">' +
+                    '<div class="ai-source-site">' +
+                        '<div class="ai-source-favicon"></div>' +
+                        '<span>competitor.com</span>' +
+                    '</div>' +
+                    '<div class="ai-source-title">Related content from another site</div>' +
+                '</div>' +
+                '<div class="ai-source-card">' +
+                    '<div class="ai-source-site">' +
+                        '<div class="ai-source-favicon"></div>' +
+                        '<span>reference.org</span>' +
+                    '</div>' +
+                    '<div class="ai-source-title">Supporting reference material</div>' +
+                '</div>' +
+            '</div>';
+    }
+
+    function renderSocialCard() {
+        var title = titleInput.value || 'Page Title';
+        var desc = descInput.value || 'No description provided.';
+        var url = urlInput.value;
+        var image = imageInput.value;
+
+        var domain = sitenameInput.value || 'example.com';
+        try { domain = new URL(url).hostname; } catch(e) {}
+
+        var imageHtml = image
+            ? '<div class="social-card-image" style="background-image:url(' + escapeHtml(image) + ')"></div>'
+            : '<div class="social-card-image">No OG image set</div>';
+
+        previewSocial.innerHTML =
+            imageHtml +
+            '<div class="social-card-body">' +
+                '<div class="social-card-domain">' + escapeHtml(domain) + '</div>' +
+                '<div class="social-card-title">' + escapeHtml(title) + '</div>' +
+                '<div class="social-card-desc">' + escapeHtml(desc) + '</div>' +
+            '</div>';
+    }
+
+    function updateCounters() {
+        var title = titleInput.value;
+        var desc = descInput.value;
+
+        var titleLen = title.length;
+        var titlePx = measurePx(title, TITLE_FONT);
+        var tCls = statusClass(titlePx, TITLE_WARN_PX, TITLE_MAX_PX);
+        titleChars.textContent = titleLen + ' chars';
+        titleChars.className = tCls;
+        titlePixels.textContent = titlePx + 'px / ' + TITLE_MAX_PX + 'px';
+        titlePixels.className = tCls;
+        titleBar.style.width = Math.min(titlePx / TITLE_MAX_PX * 100, 100) + '%';
+        titleBar.style.backgroundColor = barColour(tCls);
+
+        var descLen = desc.length;
+        var descPx = measurePx(desc, DESC_FONT);
+        var dCls = statusClass(descPx, DESC_WARN_PX, DESC_MAX_PX);
+        descChars.textContent = descLen + ' chars';
+        descChars.className = dCls;
+        descPixels.textContent = descPx + 'px / ' + DESC_MAX_PX + 'px';
+        descPixels.className = dCls;
+        descBar.style.width = Math.min(descPx / DESC_MAX_PX * 100, 100) + '%';
+        descBar.style.backgroundColor = barColour(dCls);
+    }
+
+    function renderValidation() {
+        var title = titleInput.value;
+        var desc = descInput.value;
+        var url = urlInput.value;
+        var image = imageInput.value;
+        var titlePx = measurePx(title, TITLE_FONT);
+        var descPx = measurePx(desc, DESC_FONT);
+
+        var checks = [];
+
+        // Title
+        if (!title) {
+            checks.push({ s: 'red', t: 'Title tag is empty' });
+        } else if (titlePx > TITLE_MAX_PX) {
+            checks.push({ s: 'red', t: 'Title will truncate on desktop (' + titlePx + 'px exceeds ' + TITLE_MAX_PX + 'px)' });
+        } else if (titlePx > TITLE_WARN_PX) {
+            checks.push({ s: 'amber', t: 'Title is close to the truncation limit (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
+        } else {
+            checks.push({ s: 'green', t: 'Title length is good (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
+        }
+
+        // Mobile title
+        if (title && titlePx > TITLE_MOBILE_MAX_PX) {
+            checks.push({ s: 'amber', t: 'Title will truncate on mobile (' + titlePx + 'px exceeds ' + TITLE_MOBILE_MAX_PX + 'px)' });
+        }
+
+        // Description
+        if (!desc) {
+            checks.push({ s: 'red', t: 'Meta description is empty - Google will pull text from the page' });
+        } else if (descPx > DESC_MAX_PX) {
+            checks.push({ s: 'red', t: 'Description will truncate (' + descPx + 'px exceeds ' + DESC_MAX_PX + 'px)' });
+        } else if (desc.length < 70) {
+            checks.push({ s: 'amber', t: 'Description may be too short to fill the snippet' });
+        } else if (descPx > DESC_WARN_PX) {
+            checks.push({ s: 'amber', t: 'Description is close to truncation (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
+        } else {
+            checks.push({ s: 'green', t: 'Description length is good (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
+        }
+
+        // URL
+        if (!url) {
+            checks.push({ s: 'grey', t: 'No URL provided' });
+        } else {
+            try {
+                new URL(url);
+                checks.push({ s: 'green', t: 'URL format is valid' });
+            } catch(e) {
+                checks.push({ s: 'amber', t: 'URL does not appear to be valid' });
+            }
+        }
+
+        // Image
+        if (!image) {
+            checks.push({ s: 'amber', t: 'No OG image - social shares will lack a preview image' });
+        } else {
+            checks.push({ s: 'green', t: 'OG image is set' });
+        }
+
+        validationEl.innerHTML =
+            '<h3>Validation</h3>' +
+            checks.map(function(c) {
+                return '<div class="validation-item">' +
+                    '<span class="validation-dot ' + c.s + '"></span>' +
+                    '<span>' + c.t + '</span>' +
+                '</div>';
+            }).join('');
+    }
+
+    function update() {
+        updateCounters();
+        renderGoogleResult(previewDesktop, TITLE_MAX_PX, DESC_MAX_PX);
+        renderGoogleResult(previewMobile, TITLE_MOBILE_MAX_PX, DESC_MOBILE_MAX_PX);
+        renderAIOverview();
+        renderSocialCard();
+        renderValidation();
+        save();
+    }
+
+    // Tab switching
+    document.querySelectorAll('.serp-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.serp-tab').forEach(function(t) { t.classList.remove('active'); });
+            document.querySelectorAll('.serp-panel').forEach(function(p) { p.classList.remove('active'); });
+            tab.classList.add('active');
+            document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Input listeners
+    [titleInput, urlInput, descInput, dateInput, sitenameInput, imageInput].forEach(function(el) {
+        el.addEventListener('input', update);
+    });
+
+    // LocalStorage
+    var KEY = 'serp-preview-v1';
+
+    function save() {
+        try {
+            localStorage.setItem(KEY, JSON.stringify({
+                title: titleInput.value,
+                url: urlInput.value,
+                desc: descInput.value,
+                date: dateInput.value,
+                sitename: sitenameInput.value,
+                image: imageInput.value
+            }));
+        } catch(e) {}
+    }
+
+    function load() {
+        try {
+            var data = JSON.parse(localStorage.getItem(KEY));
+            if (!data) return;
+            if (data.title) titleInput.value = data.title;
+            if (data.url) urlInput.value = data.url;
+            if (data.desc) descInput.value = data.desc;
+            if (data.date) dateInput.value = data.date;
+            if (data.sitename) sitenameInput.value = data.sitename;
+            if (data.image) imageInput.value = data.image;
+        } catch(e) {}
+    }
+
+    // Init
+    load();
+    update();
+})();
+</script>
