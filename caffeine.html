@@ -838,10 +838,11 @@ sitemap: false
         html += '</ul>';
         container.innerHTML = html;
 
-        // Bind Enter key on time inputs (only apply on Enter, not mid-edit)
+        // Bind Enter key and blur on time inputs (apply on Enter or tab-out, not mid-edit)
         var inputs = container.querySelectorAll('.schedule-time-input');
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].addEventListener('keydown', onScheduleTimeKeydown);
+            inputs[i].addEventListener('blur', onScheduleTimeBlur);
         }
 
         // Bind pin toggle buttons
@@ -851,18 +852,28 @@ sitemap: false
         }
     }
 
-    function onScheduleTimeKeydown(e) {
-        if (e.key !== 'Enter') return;
-        e.preventDefault();
-        var idx = parseInt(this.getAttribute('data-drink-index'), 10);
-        var newAbsMinutes = timeToMinutes(this.value);
+    function applyScheduleTime(input) {
+        var idx = parseInt(input.getAttribute('data-drink-index'), 10);
+        var newAbsMinutes = timeToMinutes(input.value);
         if (isNaN(newAbsMinutes)) return;
         var newRelMinutes = newAbsMinutes - state.wake;
         if (newRelMinutes < 0) newRelMinutes += 1440;
+        // Only recalculate if the time actually changed
+        if (state.drinks[idx].time === newRelMinutes && state.drinks[idx].pinned) return;
         state.drinks[idx].time = newRelMinutes;
         state.drinks[idx].pinned = true;
-        this.blur();
         recalculateUnpinned();
+    }
+
+    function onScheduleTimeKeydown(e) {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        applyScheduleTime(this);
+        this.blur();
+    }
+
+    function onScheduleTimeBlur() {
+        applyScheduleTime(this);
     }
 
     function onPinToggle() {
