@@ -96,6 +96,25 @@ export async function onRequestGet(context) {
       || html.match(/<meta[^>]+content=["']([^"']*)["'][^>]+property=["']article:published_time["']/i);
     if (m) meta.publishedDate = m[1].trim();
 
+    // Favicon: try <link rel="icon">, then <link rel="shortcut icon">, then fallback to /favicon.ico
+    m = html.match(/<link[^>]+rel=["'](?:shortcut )?icon["'][^>]+href=["']([^"']*)["']/i)
+      || html.match(/<link[^>]+href=["']([^"']*)["'][^>]+rel=["'](?:shortcut )?icon["']/i);
+    if (m) {
+      var faviconHref = m[1].trim();
+      // Resolve relative URLs
+      if (faviconHref.startsWith('//')) {
+        faviconHref = parsed.protocol + faviconHref;
+      } else if (faviconHref.startsWith('/')) {
+        faviconHref = parsed.origin + faviconHref;
+      } else if (!faviconHref.startsWith('http')) {
+        faviconHref = parsed.origin + '/' + faviconHref;
+      }
+      meta.favicon = faviconHref;
+    } else {
+      // Fallback to /favicon.ico
+      meta.favicon = parsed.origin + '/favicon.ico';
+    }
+
     meta.fetchedUrl = parsed.href;
 
     return new Response(

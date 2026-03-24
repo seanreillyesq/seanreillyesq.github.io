@@ -427,6 +427,12 @@ hidden: true
 <div class="serp-inputs">
     <div class="row g-2 g-md-3 mb-3">
         <div class="col-12">
+            <label class="form-label" for="serp-keyphrase">Target Keyphrase</label>
+            <input type="text" class="form-control" id="serp-keyphrase" placeholder="e.g. caffeine calculator sleep">
+        </div>
+    </div>
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-12">
             <label class="form-label" for="serp-title">Title Tag</label>
             <input type="text" class="form-control" id="serp-title" placeholder="Your Page Title - Site Name">
             <div class="pixel-bar"><div class="pixel-bar-fill" id="title-bar"></div></div>
@@ -455,12 +461,6 @@ hidden: true
                 <span id="desc-chars">0 chars</span>
                 <span id="desc-pixels">0px / 920px</span>
             </div>
-        </div>
-    </div>
-    <div class="row g-2 g-md-3 mb-3">
-        <div class="col-12">
-            <label class="form-label" for="serp-keyphrase">Target Keyphrase</label>
-            <input type="text" class="form-control" id="serp-keyphrase" placeholder="e.g. caffeine calculator sleep">
         </div>
     </div>
     <div class="row g-2 g-md-3 mb-3">
@@ -623,8 +623,16 @@ hidden: true
         return { text: text.slice(0, lo) + '...', truncated: true };
     }
 
-    // Globe icon SVG (favicon placeholder)
+    // Favicon state
+    var faviconUrl = '';
+
+    // Globe icon SVG (favicon fallback)
     var globeSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="#70757a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>';
+
+    function faviconHtml() {
+        if (!faviconUrl) return globeSvg;
+        return '<img src="' + escapeHtml(faviconUrl) + '" width="18" height="18" alt="" style="display:block;" onerror="this.parentNode.innerHTML=\'' + globeSvg.replace(/'/g, "\\'") + '\'">';
+    }
 
     // Sparkle icon SVG (AI Overview)
     var sparkleSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="#1a73e8"/></svg>';
@@ -643,7 +651,7 @@ hidden: true
 
         container.innerHTML =
             '<div class="google-site-row">' +
-                '<div class="google-favicon">' + globeSvg + '</div>' +
+                '<div class="google-favicon">' + faviconHtml() + '</div>' +
                 '<div class="google-site-info">' +
                     '<div class="google-site-name">' + escapeHtml(sitename) + '</div>' +
                     '<div class="google-breadcrumb">' + escapeHtml(breadcrumb) + '</div>' +
@@ -845,7 +853,8 @@ hidden: true
                 date: dateInput.value,
                 sitename: sitenameInput.value,
                 image: imageInput.value,
-                keyphrase: keyphraseInput.value
+                keyphrase: keyphraseInput.value,
+                favicon: faviconUrl
             }));
         } catch(e) {}
     }
@@ -861,6 +870,7 @@ hidden: true
             if (data.sitename) sitenameInput.value = data.sitename;
             if (data.image) imageInput.value = data.image;
             if (data.keyphrase) keyphraseInput.value = data.keyphrase;
+            if (data.favicon) faviconUrl = data.favicon;
         } catch(e) {}
     }
 
@@ -917,6 +927,7 @@ hidden: true
                     var d = data.publishedDate.slice(0, 10);
                     if (/^\d{4}-\d{2}-\d{2}$/.test(d)) dateInput.value = d;
                 }
+                if (data.favicon) faviconUrl = data.favicon;
 
                 var loaded = [];
                 if (data.title) loaded.push('title');
@@ -924,6 +935,7 @@ hidden: true
                 if (data.ogImage) loaded.push('og:image');
                 if (data.siteName) loaded.push('site name');
                 if (data.publishedDate) loaded.push('date');
+                if (data.favicon) loaded.push('favicon');
                 setFetchStatus('Loaded: ' + (loaded.length ? loaded.join(', ') : 'no metadata found'), loaded.length ? 'success' : 'error');
 
                 update();
