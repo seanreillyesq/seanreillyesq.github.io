@@ -68,18 +68,22 @@ meta-description: Sean Reilly - digital marketing consultant with 18+ years scal
     </div>
 </section>
 
-<!-- Variant switcher (temporary - remove after choosing) -->
+<!-- Transparent navbar on desktop (sky hero background) -->
 <script>
 (function() {
-    var v = new URLSearchParams(window.location.search).get('v');
-    if (!v) return;
-    var hero = document.getElementById('hp-hero');
     var nav = document.getElementById('mainNav');
-    if (hero) hero.setAttribute('data-variant', v);
-    if (nav && (v === '1' || v === '2')) {
-        nav.classList.remove('bg-white', 'border-bottom');
-        nav.classList.add('navbar-transparent');
+    if (!nav) return;
+    function applyNav() {
+        if (window.innerWidth >= 992) {
+            nav.classList.remove('bg-white', 'border-bottom');
+            nav.classList.add('navbar-transparent');
+        } else {
+            nav.classList.remove('navbar-transparent');
+            nav.classList.add('bg-white', 'border-bottom');
+        }
     }
+    applyNav();
+    window.addEventListener('resize', applyNav, { passive: true });
 })();
 </script>
 
