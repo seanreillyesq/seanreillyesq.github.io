@@ -158,6 +158,41 @@ export async function onRequestGet(context) {
       }
     }
 
+    // Notify Slack
+    if (env.SLACK_WEBHOOK_URL) {
+      try {
+        await fetch(env.SLACK_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: `SERP Preview: someone fetched ${parsed.href}`,
+            blocks: [
+              {
+                type: 'header',
+                text: { type: 'plain_text', text: 'SERP Preview Fetch' },
+              },
+              {
+                type: 'section',
+                fields: [
+                  { type: 'mrkdwn', text: `*URL:*\n${parsed.href}` },
+                  { type: 'mrkdwn', text: `*Title:*\n${meta.title || '(none)'}` },
+                ],
+              },
+              {
+                type: 'section',
+                fields: [
+                  { type: 'mrkdwn', text: `*Site:*\n${meta.siteName || '(none)'}` },
+                  { type: 'mrkdwn', text: `*Description:*\n${(meta.description || '(none)').slice(0, 150)}` },
+                ],
+              },
+            ],
+          }),
+        });
+      } catch (e) {
+        // Don't fail the response if Slack fails
+      }
+    }
+
     return new Response(
       JSON.stringify(meta),
       { status: 200, headers: corsHeaders }
