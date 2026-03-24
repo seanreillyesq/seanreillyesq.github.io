@@ -1,0 +1,1539 @@
+---
+layout: page
+title: "ROAS Calculator"
+header-title: "ROAS Calculator"
+description: "Calculate true return on ad spend, check profitability, and understand the ROAS trap"
+header-img: "img/home-bg.jpg"
+meta-description: "Interactive ROAS calculator. Check if your ad spend is actually profitable, compare channels side by side, and learn why high ROAS can mean you are leaving money on the table."
+permalink: /roas-calculator/
+hidden: true
+robots: "noindex, nofollow"
+sitemap: false
+---
+
+<style>
+.roas-intro { margin-bottom: 1.5rem; }
+
+/* Currency selector */
+.roas-currency-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+.roas-currency-row select { width: auto; font-size: 0.875rem; }
+
+/* Inputs */
+.roas-inputs .form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    margin-bottom: 0.25rem;
+}
+.roas-inputs .input-group .form-control {
+    border-left: 0;
+    border-right: 0;
+}
+.roas-inputs .input-group-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    min-width: 1.75rem;
+    justify-content: center;
+}
+
+/* Section headings */
+.roas-section { margin-bottom: 1rem; }
+.roas-section h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+.roas-section-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted, #6B7280);
+    margin-bottom: 1rem;
+}
+
+/* Result cards */
+.result-card {
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.75rem;
+    padding: 0.875rem 0.5rem;
+    text-align: center;
+}
+.result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent, #4A7BA7);
+    margin-bottom: 0.125rem;
+}
+.result-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: var(--color-text, #2D2D2D);
+    line-height: 1.2;
+}
+
+/* Verdict banner */
+.roas-verdict {
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+.roas-verdict strong {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+.roas-verdict-profitable {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+}
+.roas-verdict-breakeven {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+.roas-verdict-unprofitable {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+/* Waterfall */
+#cost-waterfall { margin: 1rem 0; }
+#cost-waterfall svg { display: block; width: 100%; height: auto; }
+.waterfall-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #6B7280);
+    margin-top: 0.5rem;
+}
+.waterfall-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.waterfall-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* Input mode toggle */
+.roas-mode-toggle {
+    margin-bottom: 0.75rem;
+}
+.roas-mode-toggle .btn-check:checked + .btn {
+    background-color: var(--color-accent, #4A7BA7);
+    border-color: var(--color-accent, #4A7BA7);
+    color: #fff;
+}
+.roas-mode-toggle .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+}
+
+/* Channel comparison */
+.roas-channel {
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+}
+.roas-channel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+.roas-channel-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.875rem;
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: var(--color-text, #2D2D2D);
+    width: auto;
+}
+.roas-channel-name:focus {
+    outline: none;
+    border-bottom: 2px solid var(--color-accent, #4A7BA7);
+}
+.roas-remove-channel {
+    background: none;
+    border: none;
+    color: var(--color-text-muted, #6B7280);
+    cursor: pointer;
+    font-size: 1.25rem;
+    padding: 0 0.25rem;
+    line-height: 1;
+}
+.roas-remove-channel:hover { color: #dc2626; }
+.roas-add-channel {
+    font-size: 0.8125rem;
+    color: var(--color-accent, #4A7BA7);
+    background: none;
+    border: 1px dashed var(--color-border, #E5E7EB);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    width: 100%;
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+}
+.roas-add-channel:hover {
+    border-color: var(--color-accent, #4A7BA7);
+    background: var(--color-surface, #FAFAF9);
+}
+.roas-channel-results .result-card { padding: 0.625rem 0.375rem; }
+.roas-channel-results .result-value { font-size: 1.25rem; }
+.roas-channel-results .result-label { font-size: 0.5625rem; }
+
+/* Channel chart */
+#channel-chart-container { margin: 1rem 0; }
+#channel-chart { display: block; width: 100%; height: auto; }
+
+/* Slider groups */
+.roas-slider-group {
+    margin-bottom: 0.75rem;
+}
+.roas-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.roas-slider-row input[type="range"] {
+    flex: 1;
+    accent-color: var(--color-accent, #4A7BA7);
+}
+.roas-slider-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    width: 4.5rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* ROAS trap chart */
+#trap-chart-container { margin: 1.5rem 0; }
+#trap-chart { display: block; width: 100%; height: auto; }
+.roas-trap-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #6B7280);
+    margin-top: 0.5rem;
+}
+.roas-trap-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.roas-trap-legend-swatch {
+    width: 12px;
+    height: 3px;
+    flex-shrink: 0;
+}
+
+/* Explainer */
+.roas-explainer p {
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #6B7280);
+    line-height: 1.7;
+}
+
+/* Warning */
+.roas-warning {
+    color: #dc2626;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    display: none;
+}
+.roas-warning.visible { display: block; }
+
+/* Delta colours */
+.delta-positive { color: #16a34a; }
+.delta-negative { color: #dc2626; }
+.delta-neutral { color: var(--color-text-muted, #6B7280); }
+
+/* Methodology */
+.methodology p {
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #6B7280);
+    line-height: 1.7;
+}
+
+/* Dividers */
+.roas-divider {
+    border: 0;
+    border-top: 1px solid var(--color-border, #E5E7EB);
+    margin: 1.5rem 0;
+}
+
+/* Mobile */
+@media (max-width: 575.98px) {
+    .result-value { font-size: 1.375rem; }
+    .result-label { font-size: 0.5625rem; letter-spacing: 1px; }
+    .result-card { padding: 0.625rem 0.375rem; }
+    .roas-slider-row { flex-wrap: wrap; }
+    .roas-slider-value { width: 100%; text-align: left; }
+    .roas-channel-results .result-value { font-size: 1.125rem; }
+}
+</style>
+
+<p class="roas-intro">Check if your ad spend is actually profitable, compare channels side by side, and see why chasing high ROAS can leave money on the table. Adjust any input and everything recalculates instantly.</p>
+
+<!-- Currency selector -->
+<div class="roas-currency-row">
+    <select class="form-select form-select-sm" id="currency-select" style="width: auto;">
+        <option value="GBP" selected>&pound; GBP</option>
+        <option value="EUR">&euro; EUR</option>
+        <option value="USD">$ USD</option>
+        <option value="AUD">A$ AUD</option>
+    </select>
+</div>
+
+<!-- Section 1: ROAS & Profitability Check -->
+<div class="roas-section" id="section-profitability">
+    <h3>ROAS &amp; Profitability</h3>
+    <p class="roas-section-desc">Enter your ad spend and revenue to see your true ROAS, then add your cost structure to check whether you are actually making money.</p>
+
+    <!-- Input mode toggle -->
+    <div class="roas-mode-toggle btn-group" role="group">
+        <input type="radio" class="btn-check" name="inputMode" id="mode-revenue" value="revenue" checked>
+        <label class="btn btn-outline-secondary" for="mode-revenue">Total revenue</label>
+        <input type="radio" class="btn-check" name="inputMode" id="mode-orders" value="orders">
+        <label class="btn btn-outline-secondary" for="mode-orders">Orders + AOV</label>
+    </div>
+
+    <div class="roas-inputs">
+        <div class="row g-2 g-md-3 mb-3">
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="ad-spend">Ad spend</label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text roas-currency">&pound;</span>
+                    <input type="number" class="form-control" id="ad-spend" value="5000" min="0" max="9999999" step="100">
+                </div>
+            </div>
+            <!-- Revenue mode -->
+            <div class="col-6 col-md-4" id="revenue-input-group">
+                <label class="form-label" for="ad-revenue">Revenue generated</label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text roas-currency">&pound;</span>
+                    <input type="number" class="form-control" id="ad-revenue" value="25000" min="0" max="9999999" step="100">
+                </div>
+            </div>
+            <!-- Orders mode (hidden by default) -->
+            <div class="col-6 col-md-4" id="orders-input-group" style="display: none;">
+                <label class="form-label" for="order-count">Number of orders</label>
+                <input type="number" class="form-control form-control-sm" id="order-count" value="50" min="0" max="999999" step="1">
+            </div>
+            <div class="col-6 col-md-4" id="aov-input-group" style="display: none;">
+                <label class="form-label" for="aov">Avg order value</label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text roas-currency">&pound;</span>
+                    <input type="number" class="form-control" id="aov" value="500" min="0" max="999999" step="10">
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-2 g-md-3 mb-3">
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="cancel-rate">Cancel / return rate</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="cancel-rate" value="5" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="cogs-rate">Product / COGS</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="cogs-rate" value="30" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="fulfil-rate">Fulfilment cost</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="fulfil-rate" value="15" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="margin-rate">Required margin</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="margin-rate" value="20" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cost waterfall -->
+    <div id="cost-waterfall"></div>
+
+    <!-- Warning -->
+    <div class="roas-warning" id="cost-warning">Your costs exceed 100% of revenue. There is nothing left for profit.</div>
+
+    <!-- Results row 1 -->
+    <div class="row g-2 g-md-3 mb-2">
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Your ROAS</div>
+                <div class="result-value" id="res-roas">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Break-even ROAS</div>
+                <div class="result-value" id="res-breakeven">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Profit per Order</div>
+                <div class="result-value" id="res-profit-order">--</div>
+            </div>
+        </div>
+    </div>
+    <!-- Results row 2 -->
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Total Profit / Loss</div>
+                <div class="result-value" id="res-total-profit">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Effective CPA</div>
+                <div class="result-value" id="res-cpa">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Target ROAS</div>
+                <div class="result-value" id="res-target-roas">--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verdict -->
+    <div class="roas-verdict" id="verdict"></div>
+</div>
+
+<hr class="roas-divider">
+
+<!-- Section 2: Channel Comparison -->
+<div class="roas-section" id="section-channels">
+    <h3>Channel Comparison</h3>
+    <p class="roas-section-desc">Compare up to four channels using the same cost structure. Which ones are actually making you money?</p>
+
+    <div id="channel-list"></div>
+    <button type="button" class="roas-add-channel" id="add-channel">+ Add channel</button>
+
+    <!-- Channel chart -->
+    <div id="channel-chart-container">
+        <svg id="channel-chart" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+</div>
+
+<hr class="roas-divider">
+
+<!-- Section 3: The ROAS Trap -->
+<div class="roas-section" id="section-trap">
+    <h3>The ROAS Trap</h3>
+    <p class="roas-section-desc">High ROAS often means you are underspending, not that your ads are working brilliantly. Drag the slider to see what happens as you scale.</p>
+
+    <div class="roas-inputs">
+        <div class="roas-slider-group">
+            <label class="form-label">Scale ad spend</label>
+            <div class="roas-slider-row">
+                <input type="range" id="spend-scale" min="0.5" max="5" value="1" step="0.1">
+                <input type="number" class="form-control form-control-sm roas-slider-value" id="spend-scale-val" value="1.0" min="0.5" max="5" step="0.1">
+                <span class="input-group-text" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">x</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trap results -->
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Scaled ROAS</div>
+                <div class="result-value" id="res-scaled-roas">--</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Scaled Revenue</div>
+                <div class="result-value" id="res-scaled-revenue">--</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Scaled Profit</div>
+                <div class="result-value" id="res-scaled-profit">--</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Optimal Spend</div>
+                <div class="result-value" id="res-optimal-spend">--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trap chart -->
+    <div id="trap-chart-container">
+        <svg id="trap-chart" viewBox="0 0 800 360" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="roas-trap-legend">
+            <span class="roas-trap-legend-item"><span class="roas-trap-legend-swatch" style="background: #4A7BA7;"></span> ROAS</span>
+            <span class="roas-trap-legend-item"><span class="roas-trap-legend-swatch" style="background: #16a34a;"></span> Total Profit</span>
+            <span class="roas-trap-legend-item"><span class="roas-trap-legend-swatch" style="background: #9CA3AF; border-top: 1px dashed #9CA3AF;"></span> Current spend</span>
+            <span class="roas-trap-legend-item"><span class="roas-trap-legend-swatch" style="background: #f59e0b; border-top: 1px dashed #f59e0b;"></span> Optimal spend</span>
+        </div>
+    </div>
+
+    <!-- Explainer -->
+    <div class="roas-explainer mt-3">
+        <p>Most marketers treat ROAS as a measure of success: the higher, the better. But a very high ROAS usually means you are only reaching the easiest-to-convert customers - people who probably would have bought anyway. This is what Tom Roach calls the "selection effect". Your ads look efficient, but they are not doing much incremental work.</p>
+        <p>As you scale ad spend, you reach colder audiences. Conversion rates drop and ROAS falls. But total revenue and profit can keep rising because you are reaching genuinely new customers. The optimal point is where marginal acquisition cost equals your allowable cost - beyond that, each extra pound costs more than it makes.</p>
+        <p>Binet and Field's research for the IPA shows that brands which optimise purely for short-term efficiency (high ROAS) tend to underinvest in growth. Their 60:40 rule suggests balancing brand building (which looks "inefficient" on ROAS) with performance activation. The chart above illustrates why: total profit peaks at a ROAS that looks lower than your current one.</p>
+    </div>
+</div>
+
+<hr class="roas-divider">
+
+<!-- Methodology -->
+<div class="methodology mb-4">
+    <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
+    <p><strong>ROAS and profitability:</strong> ROAS (return on ad spend) is simply revenue divided by ad spend. But ROAS alone does not tell you if you are profitable. This calculator subtracts cancellations and returns, product costs, fulfilment costs, and your required margin to show what is actually left after you pay for your ads. Break-even ROAS is the minimum ROAS needed to cover all costs. Target ROAS adds your margin requirement on top.</p>
+    <p><strong>Channel comparison:</strong> Different channels typically have different ROAS because they reach customers at different stages of intent. The comparison uses the same cost structure across all channels so you are comparing like for like. A channel with lower ROAS may still be profitable and worth scaling.</p>
+    <p><strong>The ROAS trap model:</strong> The diminishing returns curve uses a logarithmic decay model where ROAS falls as spend scales. This is a simplification - real diminishing returns depend on audience saturation, creative fatigue, and competitive pressure - but it illustrates the core principle: optimising for ROAS alone leads to underspending. The optimal point is where marginal profit turns negative.</p>
+    <p>This is a simplified model. Real advertising has attribution challenges, cross-channel effects, and delayed conversions. Use it to build intuition about your unit economics, not as a precise forecast.</p>
+</div>
+
+<!-- Latest Writing -->
+<section class="py-5 border-top" style="background-color: var(--color-surface);">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4" style="font-size: 1.75rem;">Latest Writing</h2>
+        <div class="row g-4">
+            {% assign card_count = 0 %}
+            {% for post in site.posts %}{% unless post.hidden or card_count >= 3 %}
+            <div class="col-md-6 col-lg-4">
+                {% include post-card.html post=post %}
+            </div>
+            {% assign card_count = card_count | plus: 1 %}
+            {% endunless %}{% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    'use strict';
+
+    // ========== CONSTANTS ==========
+    var CURRENCIES = {
+        GBP: '\u00A3',
+        EUR: '\u20AC',
+        USD: '$',
+        AUD: 'A$'
+    };
+
+    var WF_W = 800, WF_H = 60;
+    var NS = 'http://www.w3.org/2000/svg';
+
+    // Chart dimensions
+    var CH_W = 800, CH_H = 320;
+    var CH_M = { top: 20, right: 20, bottom: 50, left: 70 };
+
+    // Trap chart dimensions
+    var TR_W = 800, TR_H = 360;
+    var TR_M = { top: 20, right: 70, bottom: 50, left: 70 };
+
+    var COL = {
+        revenue: '#4A7BA7',
+        adSpend: '#f59e0b',
+        profit: '#16a34a',
+        loss: '#dc2626',
+        cancel: '#dc2626',
+        cogs: '#f59e0b',
+        fulfil: '#8b5cf6',
+        margin: '#6366f1',
+        remaining: '#16a34a',
+        roas: '#4A7BA7',
+        grid: '#E5E7EB',
+        axis: '#9CA3AF',
+        text: '#6B7280',
+        optimal: '#f59e0b'
+    };
+
+    var CHANNEL_DEFAULTS = [
+        { name: 'Google Ads', spend: 3000, revenue: 15000 },
+        { name: 'Meta Ads', spend: 2000, revenue: 10000 },
+        { name: 'TikTok Ads', spend: 1500, revenue: 6000 },
+        { name: 'Email', spend: 500, revenue: 5000 }
+    ];
+
+    // ========== STATE ==========
+    var state = {
+        currency: 'GBP',
+        inputMode: 'revenue',
+        adSpend: 5000,
+        adRevenue: 25000,
+        orderCount: 50,
+        aov: 500,
+        cancelRate: 5,
+        cogsRate: 30,
+        fulfilRate: 15,
+        marginRate: 20,
+        spendScale: 1.0,
+        channels: [
+            { name: 'Google Ads', spend: 3000, revenue: 15000 },
+            { name: 'Meta Ads', spend: 2000, revenue: 10000 }
+        ]
+    };
+
+    // Cookie
+    var COOKIE_NAME = 'roas_prefs';
+    var COOKIE_DAYS = 365;
+
+    // ========== HELPERS ==========
+
+    function el(id) { return document.getElementById(id); }
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    function svgEl(tag, attrs) {
+        var e = document.createElementNS(NS, tag);
+        if (attrs) {
+            for (var k in attrs) {
+                if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
+            }
+        }
+        return e;
+    }
+
+    function sym() { return CURRENCIES[state.currency]; }
+
+    function fmtCurrency(v) {
+        var s = sym();
+        var abs = Math.abs(v);
+        var sign = v < 0 ? '-' : '';
+        if (abs >= 1000000) return sign + s + (abs / 1000000).toFixed(1) + 'M';
+        if (abs >= 1000) return sign + s + Math.round(abs).toLocaleString('en-GB');
+        return sign + s + Math.round(abs);
+    }
+
+    function fmtNumber(v) {
+        return Math.round(v).toLocaleString('en-GB');
+    }
+
+    function fmtDelta(v) {
+        var prefix = v >= 0 ? '+' : '';
+        return prefix + fmtCurrency(v);
+    }
+
+    function deltaClass(v) {
+        if (v > 0.005) return 'delta-positive';
+        if (v < -0.005) return 'delta-negative';
+        return 'delta-neutral';
+    }
+
+    // ========== REVENUE HELPER ==========
+
+    function getRevenue() {
+        if (state.inputMode === 'orders') {
+            return state.orderCount * state.aov;
+        }
+        return state.adRevenue;
+    }
+
+    function getOrders() {
+        if (state.inputMode === 'orders') {
+            return state.orderCount;
+        }
+        return state.aov > 0 ? state.adRevenue / state.aov : 0;
+    }
+
+    // ========== COOKIE ==========
+
+    function canUseCookie() {
+        return typeof CookieConsent !== 'undefined' && CookieConsent.acceptedCategory('functionality');
+    }
+
+    function savePrefs() {
+        if (!canUseCookie()) return;
+        var data = {
+            cur: state.currency,
+            mode: state.inputMode,
+            as: state.adSpend,
+            ar: state.adRevenue,
+            oc: state.orderCount,
+            aov: state.aov,
+            cr: state.cancelRate,
+            cg: state.cogsRate,
+            fr: state.fulfilRate,
+            mr: state.marginRate,
+            ch: state.channels.map(function(c) { return { n: c.name, s: c.spend, r: c.revenue }; })
+        };
+        var expires = new Date(Date.now() + COOKIE_DAYS * 864e5).toUTCString();
+        document.cookie = COOKIE_NAME + '=' + encodeURIComponent(JSON.stringify(data))
+            + ';expires=' + expires + ';path=/roas-calculator/;SameSite=Lax;Secure';
+    }
+
+    function loadPrefs() {
+        if (!canUseCookie()) return false;
+        var match = document.cookie.match('(?:^|; )' + COOKIE_NAME + '=([^;]*)');
+        if (!match) return false;
+        try {
+            var d = JSON.parse(decodeURIComponent(match[1]));
+            if (d.cur && CURRENCIES[d.cur]) state.currency = d.cur;
+            if (d.mode === 'revenue' || d.mode === 'orders') state.inputMode = d.mode;
+            if (d.as !== undefined) state.adSpend = clamp(d.as, 0, 9999999);
+            if (d.ar !== undefined) state.adRevenue = clamp(d.ar, 0, 9999999);
+            if (d.oc !== undefined) state.orderCount = clamp(d.oc, 0, 999999);
+            if (d.aov !== undefined) state.aov = clamp(d.aov, 0, 999999);
+            if (d.cr !== undefined) state.cancelRate = clamp(d.cr, 0, 100);
+            if (d.cg !== undefined) state.cogsRate = clamp(d.cg, 0, 100);
+            if (d.fr !== undefined) state.fulfilRate = clamp(d.fr, 0, 100);
+            if (d.mr !== undefined) state.marginRate = clamp(d.mr, 0, 100);
+            if (Array.isArray(d.ch) && d.ch.length >= 1 && d.ch.length <= 4) {
+                state.channels = d.ch.map(function(c, i) {
+                    return {
+                        name: c.n || CHANNEL_DEFAULTS[i].name,
+                        spend: clamp(c.s || 0, 0, 9999999),
+                        revenue: clamp(c.r || 0, 0, 9999999)
+                    };
+                });
+            }
+            return true;
+        } catch (e) { return false; }
+    }
+
+    // ========== URL PARAMS ==========
+
+    function readURL() {
+        var p = new URLSearchParams(window.location.search);
+        var found = false;
+        if (p.has('cur') && CURRENCIES[p.get('cur')]) { state.currency = p.get('cur'); found = true; }
+        if (p.has('mode') && (p.get('mode') === 'revenue' || p.get('mode') === 'orders')) { state.inputMode = p.get('mode'); found = true; }
+        if (p.has('spend')) { state.adSpend = clamp(+p.get('spend'), 0, 9999999); found = true; }
+        if (p.has('rev')) { state.adRevenue = clamp(+p.get('rev'), 0, 9999999); found = true; }
+        if (p.has('orders')) { state.orderCount = clamp(+p.get('orders'), 0, 999999); found = true; }
+        if (p.has('aov')) { state.aov = clamp(+p.get('aov'), 0, 999999); found = true; }
+        if (p.has('cancel')) { state.cancelRate = clamp(+p.get('cancel'), 0, 100); found = true; }
+        if (p.has('cogs')) { state.cogsRate = clamp(+p.get('cogs'), 0, 100); found = true; }
+        if (p.has('fulfil')) { state.fulfilRate = clamp(+p.get('fulfil'), 0, 100); found = true; }
+        if (p.has('margin')) { state.marginRate = clamp(+p.get('margin'), 0, 100); found = true; }
+        if (p.has('scale')) { state.spendScale = clamp(+p.get('scale'), 0.5, 5); found = true; }
+        return found;
+    }
+
+    function updateURL() {
+        var p = new URLSearchParams();
+        p.set('cur', state.currency);
+        if (state.inputMode !== 'revenue') p.set('mode', state.inputMode);
+        p.set('spend', state.adSpend);
+        p.set('rev', state.adRevenue);
+        if (state.inputMode === 'orders') {
+            p.set('orders', state.orderCount);
+            p.set('aov', state.aov);
+        }
+        p.set('cancel', state.cancelRate);
+        p.set('cogs', state.cogsRate);
+        p.set('fulfil', state.fulfilRate);
+        p.set('margin', state.marginRate);
+        if (state.spendScale !== 1) p.set('scale', state.spendScale);
+        history.replaceState(null, '', '?' + p.toString());
+    }
+
+    // ========== CALCULATIONS ==========
+
+    function calcProfitability() {
+        var revenue = getRevenue();
+        var orders = getOrders();
+        var adSpend = state.adSpend;
+
+        var roas = adSpend > 0 ? revenue / adSpend : Infinity;
+
+        var netRevenue = revenue * (1 - state.cancelRate / 100);
+        var cogsAmount = netRevenue * (state.cogsRate / 100);
+        var fulfilAmount = netRevenue * (state.fulfilRate / 100);
+        var marginAmount = netRevenue * (state.marginRate / 100);
+        var grossProfit = netRevenue - cogsAmount - fulfilAmount;
+        var profitAfterAds = grossProfit - adSpend;
+
+        var totalCostRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
+        var contributionRate = 1 - totalCostRate;
+        var breakEvenROAS = contributionRate > 0 ? 1 / contributionRate : Infinity;
+
+        var marginContrib = contributionRate - (1 - state.cancelRate / 100) * (state.marginRate / 100);
+        var targetROAS = marginContrib > 0 ? 1 / marginContrib : Infinity;
+
+        var profitPerOrder = orders > 0 ? profitAfterAds / orders : 0;
+        var cpa = orders > 0 ? adSpend / orders : 0;
+
+        var cancelAmount = revenue * (state.cancelRate / 100);
+        var overBudget = (state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100 + state.marginRate / 100)) > 1;
+
+        return {
+            revenue: revenue,
+            orders: orders,
+            roas: roas,
+            breakEvenROAS: breakEvenROAS,
+            targetROAS: targetROAS,
+            profitPerOrder: profitPerOrder,
+            totalProfit: profitAfterAds,
+            cpa: cpa,
+            overBudget: overBudget,
+            breakdown: {
+                cancel: cancelAmount,
+                cogs: cogsAmount,
+                fulfil: fulfilAmount,
+                margin: marginAmount,
+                adSpend: adSpend,
+                remaining: profitAfterAds
+            }
+        };
+    }
+
+    function calcChannelProfitability(channel) {
+        var revenue = channel.revenue;
+        var adSpend = channel.spend;
+        var roas = adSpend > 0 ? revenue / adSpend : Infinity;
+
+        var netRevenue = revenue * (1 - state.cancelRate / 100);
+        var grossProfit = netRevenue * (1 - state.cogsRate / 100 - state.fulfilRate / 100);
+        var profitAfterAds = grossProfit - adSpend;
+
+        var aov = state.inputMode === 'orders' ? state.aov : (state.adRevenue > 0 && state.adSpend > 0 ? state.adRevenue / (state.adRevenue / state.aov || 50) : 500);
+        // Use the AOV from Section 1 for CPA calculation
+        var effectiveAOV = state.inputMode === 'orders' ? state.aov : (getOrders() > 0 ? getRevenue() / getOrders() : 500);
+        var orders = effectiveAOV > 0 ? revenue / effectiveAOV : 0;
+        var cpa = orders > 0 ? adSpend / orders : 0;
+        var profitPerOrder = orders > 0 ? profitAfterAds / orders : 0;
+
+        return {
+            roas: roas,
+            profit: profitAfterAds,
+            cpa: cpa,
+            profitPerOrder: profitPerOrder,
+            revenue: revenue,
+            adSpend: adSpend,
+            orders: orders
+        };
+    }
+
+    function calcTrapCurve() {
+        var baseROAS = calcProfitability().roas;
+        var baseSpend = state.adSpend;
+        var revenue = getRevenue();
+        if (baseROAS === Infinity || baseSpend <= 0 || revenue <= 0) return null;
+
+        var costRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
+        var contributionRate = 1 - costRate;
+
+        var points = [];
+        var optimalMultiplier = 1;
+        var maxProfit = -Infinity;
+
+        // Generate curve from 0.5x to 5x
+        for (var m = 0.5; m <= 5.01; m += 0.05) {
+            var scaledSpend = baseSpend * m;
+            var scaledROAS = baseROAS * Math.pow(1 / m, 0.4);
+            var scaledRevenue = scaledSpend * scaledROAS;
+            var scaledProfit = (scaledRevenue * contributionRate) - scaledSpend;
+
+            points.push({
+                multiplier: m,
+                spend: scaledSpend,
+                roas: scaledROAS,
+                revenue: scaledRevenue,
+                profit: scaledProfit
+            });
+
+            if (scaledProfit > maxProfit) {
+                maxProfit = scaledProfit;
+                optimalMultiplier = m;
+            }
+        }
+
+        return {
+            points: points,
+            optimalMultiplier: optimalMultiplier,
+            maxProfit: maxProfit,
+            baseROAS: baseROAS
+        };
+    }
+
+    // ========== RENDERING ==========
+
+    function renderProfitability() {
+        var r = calcProfitability();
+
+        el('res-roas').textContent = r.roas === Infinity ? 'N/A' : r.roas.toFixed(1) + 'x';
+        el('res-breakeven').textContent = r.breakEvenROAS === Infinity ? 'N/A' : r.breakEvenROAS.toFixed(1) + 'x';
+
+        var ppoEl = el('res-profit-order');
+        ppoEl.textContent = fmtCurrency(r.profitPerOrder);
+        ppoEl.className = 'result-value ' + deltaClass(r.profitPerOrder);
+
+        var tpEl = el('res-total-profit');
+        tpEl.textContent = fmtCurrency(r.totalProfit);
+        tpEl.className = 'result-value ' + deltaClass(r.totalProfit);
+
+        el('res-cpa').textContent = fmtCurrency(r.cpa);
+        el('res-target-roas').textContent = r.targetROAS === Infinity ? 'N/A' : r.targetROAS.toFixed(1) + 'x';
+
+        // Warning
+        var warn = el('cost-warning');
+        if (r.overBudget) warn.classList.add('visible');
+        else warn.classList.remove('visible');
+
+        // Verdict
+        var verdict = el('verdict');
+        if (r.roas === Infinity) {
+            verdict.className = 'roas-verdict roas-verdict-breakeven';
+            verdict.innerHTML = '<strong>No ad spend entered</strong>Enter your ad spend to see profitability analysis.';
+        } else if (r.roas >= r.targetROAS && r.totalProfit > 0) {
+            verdict.className = 'roas-verdict roas-verdict-profitable';
+            verdict.innerHTML = '<strong>Profitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x exceeds the ' + r.targetROAS.toFixed(1) + 'x target. You are making ' + fmtCurrency(r.profitPerOrder) + ' per order after all costs including your ' + state.marginRate + '% margin.';
+        } else if (r.roas >= r.breakEvenROAS && r.totalProfit >= 0) {
+            verdict.className = 'roas-verdict roas-verdict-breakeven';
+            verdict.innerHTML = '<strong>Break-even zone</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x covers costs but falls short of your ' + state.marginRate + '% margin target (needs ' + r.targetROAS.toFixed(1) + 'x). You are making ' + fmtCurrency(r.profitPerOrder) + ' per order before margin.';
+        } else {
+            verdict.className = 'roas-verdict roas-verdict-unprofitable';
+            verdict.innerHTML = '<strong>Unprofitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x is below the ' + r.breakEvenROAS.toFixed(1) + 'x break-even. You are losing ' + fmtCurrency(Math.abs(r.profitPerOrder)) + ' per order. Either reduce costs, increase prices, or improve conversion.';
+        }
+
+        renderWaterfall(r);
+    }
+
+    function renderWaterfall(r) {
+        var container = el('cost-waterfall');
+        container.innerHTML = '';
+
+        var revenue = r.revenue;
+        if (revenue <= 0) return;
+
+        var svg = svgEl('svg', { viewBox: '0 0 ' + WF_W + ' ' + WF_H, preserveAspectRatio: 'xMidYMid meet' });
+        var barY = 5, barH = 30;
+
+        // Build segments from the revenue breakdown
+        var segments = [
+            { val: Math.max(0, r.breakdown.cancel), col: COL.cancel, label: 'Cancels / Returns' },
+            { val: Math.max(0, r.breakdown.cogs), col: COL.cogs, label: 'COGS' },
+            { val: Math.max(0, r.breakdown.fulfil), col: COL.fulfil, label: 'Fulfilment' },
+            { val: Math.max(0, r.breakdown.margin), col: COL.margin, label: 'Margin' },
+            { val: Math.max(0, r.breakdown.adSpend), col: COL.adSpend, label: 'Ad Spend' }
+        ];
+
+        if (r.breakdown.remaining > 0) {
+            segments.push({ val: r.breakdown.remaining, col: COL.remaining, label: 'Profit' });
+        } else if (r.breakdown.remaining < 0) {
+            segments.push({ val: Math.abs(r.breakdown.remaining), col: COL.loss, label: 'Loss' });
+        }
+
+        var total = 0;
+        segments.forEach(function(s) { total += s.val; });
+        var scale = total > 0 ? WF_W / total : 0;
+
+        var x = 0;
+        segments.forEach(function(seg) {
+            var w = seg.val * scale;
+            if (w < 1) return;
+            svg.appendChild(svgEl('rect', {
+                x: x, y: barY, width: w, height: barH,
+                fill: seg.col, rx: x === 0 ? 4 : 0
+            }));
+            if (w > 40) {
+                var txt = svgEl('text', {
+                    x: x + w / 2, y: barY + barH + 14,
+                    'text-anchor': 'middle',
+                    fill: COL.text,
+                    'font-size': '11',
+                    'font-family': "'JetBrains Mono', monospace"
+                });
+                txt.textContent = sym() + fmtNumber(Math.round(seg.val));
+                svg.appendChild(txt);
+            }
+            x += w;
+        });
+
+        container.appendChild(svg);
+
+        // Legend
+        var legend = document.createElement('div');
+        legend.className = 'waterfall-legend';
+        segments.forEach(function(seg) {
+            if (seg.val <= 0) return;
+            var item = document.createElement('span');
+            item.className = 'waterfall-legend-item';
+            item.innerHTML = '<span class="waterfall-legend-swatch" style="background:' + seg.col + '"></span> ' + seg.label;
+            legend.appendChild(item);
+        });
+        container.appendChild(legend);
+    }
+
+    // ========== CHANNELS ==========
+
+    function renderChannels() {
+        var list = el('channel-list');
+        list.innerHTML = '';
+
+        state.channels.forEach(function(ch, idx) {
+            var card = document.createElement('div');
+            card.className = 'roas-channel';
+
+            var r = calcChannelProfitability(ch);
+
+            card.innerHTML =
+                '<div class="roas-channel-header">' +
+                    '<input type="text" class="roas-channel-name" value="' + escapeHtml(ch.name) + '" data-idx="' + idx + '">' +
+                    (state.channels.length > 1 ? '<button type="button" class="roas-remove-channel" data-idx="' + idx + '">&times;</button>' : '') +
+                '</div>' +
+                '<div class="roas-inputs">' +
+                    '<div class="row g-2 mb-2">' +
+                        '<div class="col-6">' +
+                            '<label class="form-label">Ad spend</label>' +
+                            '<div class="input-group input-group-sm">' +
+                                '<span class="input-group-text roas-currency">' + sym() + '</span>' +
+                                '<input type="number" class="form-control ch-spend" data-idx="' + idx + '" value="' + ch.spend + '" min="0" max="9999999" step="100">' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-6">' +
+                            '<label class="form-label">Revenue</label>' +
+                            '<div class="input-group input-group-sm">' +
+                                '<span class="input-group-text roas-currency">' + sym() + '</span>' +
+                                '<input type="number" class="form-control ch-revenue" data-idx="' + idx + '" value="' + ch.revenue + '" min="0" max="9999999" step="100">' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="row g-2 roas-channel-results">' +
+                    '<div class="col-3"><div class="result-card"><div class="result-label">ROAS</div><div class="result-value">' + (r.roas === Infinity ? 'N/A' : r.roas.toFixed(1) + 'x') + '</div></div></div>' +
+                    '<div class="col-3"><div class="result-card"><div class="result-label">Profit / Loss</div><div class="result-value ' + deltaClass(r.profit) + '">' + fmtCurrency(r.profit) + '</div></div></div>' +
+                    '<div class="col-3"><div class="result-card"><div class="result-label">CPA</div><div class="result-value">' + fmtCurrency(r.cpa) + '</div></div></div>' +
+                    '<div class="col-3"><div class="result-card"><div class="result-label">Profit / Order</div><div class="result-value ' + deltaClass(r.profitPerOrder) + '">' + fmtCurrency(r.profitPerOrder) + '</div></div></div>' +
+                '</div>';
+
+            list.appendChild(card);
+        });
+
+        // Show/hide add button
+        el('add-channel').style.display = state.channels.length >= 4 ? 'none' : 'block';
+
+        // Bind channel events
+        bindChannelEvents();
+        renderChannelChart();
+    }
+
+    function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    function bindChannelEvents() {
+        // Name inputs
+        var names = document.querySelectorAll('.roas-channel-name');
+        for (var i = 0; i < names.length; i++) {
+            names[i].addEventListener('change', function() {
+                var idx = +this.getAttribute('data-idx');
+                state.channels[idx].name = this.value;
+                savePrefs();
+            });
+        }
+
+        // Spend inputs
+        var spends = document.querySelectorAll('.ch-spend');
+        for (var j = 0; j < spends.length; j++) {
+            spends[j].addEventListener('input', function() {
+                var idx = +this.getAttribute('data-idx');
+                state.channels[idx].spend = clamp(+this.value || 0, 0, 9999999);
+                renderChannels();
+                savePrefs();
+            });
+        }
+
+        // Revenue inputs
+        var revs = document.querySelectorAll('.ch-revenue');
+        for (var k = 0; k < revs.length; k++) {
+            revs[k].addEventListener('input', function() {
+                var idx = +this.getAttribute('data-idx');
+                state.channels[idx].revenue = clamp(+this.value || 0, 0, 9999999);
+                renderChannels();
+                savePrefs();
+            });
+        }
+
+        // Remove buttons
+        var removes = document.querySelectorAll('.roas-remove-channel');
+        for (var r = 0; r < removes.length; r++) {
+            removes[r].addEventListener('click', function() {
+                var idx = +this.getAttribute('data-idx');
+                state.channels.splice(idx, 1);
+                renderChannels();
+                savePrefs();
+            });
+        }
+    }
+
+    function renderChannelChart() {
+        var svg = el('channel-chart');
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+        if (state.channels.length === 0) return;
+
+        var data = state.channels.map(function(ch) {
+            var r = calcChannelProfitability(ch);
+            return { name: ch.name, revenue: ch.revenue, spend: ch.spend, profit: r.profit };
+        });
+
+        var maxVal = 0;
+        var minVal = 0;
+        data.forEach(function(d) {
+            maxVal = Math.max(maxVal, d.revenue, d.spend, d.profit);
+            minVal = Math.min(minVal, d.profit);
+        });
+        maxVal *= 1.15;
+        if (minVal < 0) minVal *= 1.15;
+        var range = maxVal - minVal;
+        if (range <= 0) return;
+
+        var pw = CH_W - CH_M.left - CH_M.right;
+        var ph = CH_H - CH_M.top - CH_M.bottom;
+
+        var yScale = function(v) { return CH_M.top + ph - ((v - minVal) / range) * ph; };
+        var zeroY = yScale(0);
+
+        // Grid lines
+        var gridCount = 5;
+        for (var i = 0; i <= gridCount; i++) {
+            var gv = minVal + (range / gridCount) * i;
+            var gy = yScale(gv);
+            svg.appendChild(svgEl('line', {
+                x1: CH_M.left, y1: gy, x2: CH_W - CH_M.right, y2: gy,
+                stroke: COL.grid, 'stroke-width': 1
+            }));
+            var label = svgEl('text', {
+                x: CH_M.left - 8, y: gy + 4,
+                'text-anchor': 'end', fill: COL.text,
+                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
+            });
+            label.textContent = fmtCurrency(gv);
+            svg.appendChild(label);
+        }
+
+        // Zero line if needed
+        if (minVal < 0) {
+            svg.appendChild(svgEl('line', {
+                x1: CH_M.left, y1: zeroY, x2: CH_W - CH_M.right, y2: zeroY,
+                stroke: COL.axis, 'stroke-width': 1.5
+            }));
+        }
+
+        // Grouped bars
+        var n = data.length;
+        var groupWidth = pw / n;
+        var barWidth = Math.min(groupWidth * 0.2, 60);
+        var barGap = barWidth * 0.15;
+
+        data.forEach(function(d, idx) {
+            var groupX = CH_M.left + groupWidth * idx + groupWidth / 2;
+            var bars = [
+                { val: d.revenue, col: COL.revenue, label: 'Revenue' },
+                { val: d.spend, col: COL.adSpend, label: 'Spend' },
+                { val: d.profit, col: d.profit >= 0 ? COL.profit : COL.loss, label: 'Profit' }
+            ];
+
+            var totalBarWidth = bars.length * barWidth + (bars.length - 1) * barGap;
+            var startX = groupX - totalBarWidth / 2;
+
+            bars.forEach(function(bar, bi) {
+                var bx = startX + bi * (barWidth + barGap);
+                var by, bh;
+                if (bar.val >= 0) {
+                    by = yScale(bar.val);
+                    bh = zeroY - by;
+                } else {
+                    by = zeroY;
+                    bh = yScale(bar.val) - zeroY;
+                }
+                if (bh < 1) bh = 1;
+
+                svg.appendChild(svgEl('rect', {
+                    x: bx, y: by, width: barWidth, height: bh,
+                    fill: bar.col, rx: 3
+                }));
+            });
+
+            // Channel name label
+            var nameLbl = svgEl('text', {
+                x: groupX, y: CH_H - CH_M.bottom + 20,
+                'text-anchor': 'middle', fill: COL.text,
+                'font-size': '12', 'font-family': "'Inter', sans-serif", 'font-weight': '600'
+            });
+            nameLbl.textContent = d.name.length > 12 ? d.name.substring(0, 11) + '\u2026' : d.name;
+            svg.appendChild(nameLbl);
+        });
+
+        // Legend
+        var legY = CH_H - 8;
+        var items = [
+            { col: COL.revenue, label: 'Revenue' },
+            { col: COL.adSpend, label: 'Ad Spend' },
+            { col: COL.profit, label: 'Profit' }
+        ];
+        var legX = CH_M.left;
+        items.forEach(function(item) {
+            svg.appendChild(svgEl('rect', {
+                x: legX, y: legY, width: 10, height: 10, fill: item.col, rx: 2
+            }));
+            var t = svgEl('text', {
+                x: legX + 14, y: legY + 9, fill: COL.text,
+                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
+            });
+            t.textContent = item.label;
+            svg.appendChild(t);
+            legX += 14 + item.label.length * 6.5 + 20;
+        });
+    }
+
+    // ========== ROAS TRAP ==========
+
+    function renderTrap() {
+        var curve = calcTrapCurve();
+        if (!curve) {
+            el('res-scaled-roas').textContent = '--';
+            el('res-scaled-revenue').textContent = '--';
+            el('res-scaled-profit').textContent = '--';
+            el('res-optimal-spend').textContent = '--';
+            return;
+        }
+
+        // Find current point on curve
+        var scale = state.spendScale;
+        var scaledROAS = curve.baseROAS * Math.pow(1 / scale, 0.4);
+        var scaledSpend = state.adSpend * scale;
+        var scaledRevenue = scaledSpend * scaledROAS;
+        var costRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
+        var contributionRate = 1 - costRate;
+        var scaledProfit = (scaledRevenue * contributionRate) - scaledSpend;
+
+        el('res-scaled-roas').textContent = scaledROAS.toFixed(1) + 'x';
+        el('res-scaled-revenue').textContent = fmtCurrency(scaledRevenue);
+
+        var spEl = el('res-scaled-profit');
+        spEl.textContent = fmtCurrency(scaledProfit);
+        spEl.className = 'result-value ' + deltaClass(scaledProfit);
+
+        el('res-optimal-spend').textContent = curve.optimalMultiplier.toFixed(1) + 'x';
+
+        renderTrapChart(curve);
+    }
+
+    function renderTrapChart(curve) {
+        var svg = el('trap-chart');
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+        var points = curve.points;
+        if (points.length < 2) return;
+
+        var pw = TR_W - TR_M.left - TR_M.right;
+        var ph = TR_H - TR_M.top - TR_M.bottom;
+
+        // Find ranges
+        var maxROAS = 0, minProfit = Infinity, maxProfit = -Infinity;
+        points.forEach(function(p) {
+            maxROAS = Math.max(maxROAS, p.roas);
+            minProfit = Math.min(minProfit, p.profit);
+            maxProfit = Math.max(maxProfit, p.profit);
+        });
+        maxROAS *= 1.1;
+        var profitRange = maxProfit - minProfit;
+        if (profitRange <= 0) profitRange = 1;
+        maxProfit += profitRange * 0.1;
+        minProfit -= profitRange * 0.1;
+        profitRange = maxProfit - minProfit;
+
+        var xScale = function(m) { return TR_M.left + ((m - 0.5) / 4.5) * pw; };
+        var yRoasScale = function(r) { return TR_M.top + ph - (r / maxROAS) * ph; };
+        var yProfitScale = function(p) { return TR_M.top + ph - ((p - minProfit) / profitRange) * ph; };
+
+        // Grid lines
+        var gridCount = 5;
+        for (var i = 0; i <= gridCount; i++) {
+            var gy = TR_M.top + (ph / gridCount) * i;
+            svg.appendChild(svgEl('line', {
+                x1: TR_M.left, y1: gy, x2: TR_W - TR_M.right, y2: gy,
+                stroke: COL.grid, 'stroke-width': 1
+            }));
+
+            // Left axis (ROAS)
+            var roasVal = maxROAS * (1 - i / gridCount);
+            var roasLbl = svgEl('text', {
+                x: TR_M.left - 8, y: gy + 4,
+                'text-anchor': 'end', fill: COL.roas,
+                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
+            });
+            roasLbl.textContent = roasVal.toFixed(1) + 'x';
+            svg.appendChild(roasLbl);
+
+            // Right axis (Profit)
+            var profitVal = maxProfit - (profitRange / gridCount) * i;
+            var profitLbl = svgEl('text', {
+                x: TR_W - TR_M.right + 8, y: gy + 4,
+                'text-anchor': 'start', fill: COL.profit,
+                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
+            });
+            profitLbl.textContent = fmtCurrency(profitVal);
+            svg.appendChild(profitLbl);
+        }
+
+        // X axis labels
+        for (var m = 0.5; m <= 5; m += 0.5) {
+            var xx = xScale(m);
+            var xlbl = svgEl('text', {
+                x: xx, y: TR_H - TR_M.bottom + 20,
+                'text-anchor': 'middle', fill: COL.text,
+                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
+            });
+            xlbl.textContent = m.toFixed(1) + 'x';
+            svg.appendChild(xlbl);
+        }
+
+        // X axis title
+        var xTitle = svgEl('text', {
+            x: TR_M.left + pw / 2, y: TR_H - 5,
+            'text-anchor': 'middle', fill: COL.text,
+            'font-size': '12', 'font-family': "'Inter', sans-serif", 'font-weight': '600'
+        });
+        xTitle.textContent = 'Spend multiplier';
+        svg.appendChild(xTitle);
+
+        // Zero profit line
+        if (minProfit < 0 && maxProfit > 0) {
+            var zeroY = yProfitScale(0);
+            svg.appendChild(svgEl('line', {
+                x1: TR_M.left, y1: zeroY, x2: TR_W - TR_M.right, y2: zeroY,
+                stroke: COL.loss, 'stroke-width': 1, 'stroke-dasharray': '2,4', opacity: 0.5
+            }));
+        }
+
+        // ROAS curve
+        var roasPath = '';
+        points.forEach(function(p, idx) {
+            var px = xScale(p.multiplier);
+            var py = yRoasScale(p.roas);
+            roasPath += (idx === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+        });
+        svg.appendChild(svgEl('path', {
+            d: roasPath, fill: 'none', stroke: COL.roas, 'stroke-width': 2.5
+        }));
+
+        // Profit curve
+        var profitPath = '';
+        points.forEach(function(p, idx) {
+            var px = xScale(p.multiplier);
+            var py = yProfitScale(p.profit);
+            profitPath += (idx === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+        });
+        svg.appendChild(svgEl('path', {
+            d: profitPath, fill: 'none', stroke: COL.profit, 'stroke-width': 2.5
+        }));
+
+        // Current spend marker
+        var currentX = xScale(state.spendScale);
+        svg.appendChild(svgEl('line', {
+            x1: currentX, y1: TR_M.top, x2: currentX, y2: TR_M.top + ph,
+            stroke: COL.axis, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
+        }));
+        var currentLbl = svgEl('text', {
+            x: currentX, y: TR_M.top - 5,
+            'text-anchor': 'middle', fill: COL.axis,
+            'font-size': '10', 'font-family': "'JetBrains Mono', monospace"
+        });
+        currentLbl.textContent = 'You: ' + state.spendScale.toFixed(1) + 'x';
+        svg.appendChild(currentLbl);
+
+        // Optimal spend marker
+        var optX = xScale(curve.optimalMultiplier);
+        svg.appendChild(svgEl('line', {
+            x1: optX, y1: TR_M.top, x2: optX, y2: TR_M.top + ph,
+            stroke: COL.optimal, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
+        }));
+        var optLbl = svgEl('text', {
+            x: optX, y: TR_M.top - 5,
+            'text-anchor': 'middle', fill: COL.optimal,
+            'font-size': '10', 'font-family': "'JetBrains Mono', monospace"
+        });
+        optLbl.textContent = 'Optimal: ' + curve.optimalMultiplier.toFixed(1) + 'x';
+        svg.appendChild(optLbl);
+
+        // Dots at current position
+        var curROAS = curve.baseROAS * Math.pow(1 / state.spendScale, 0.4);
+        var curCostRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
+        var curContrib = 1 - curCostRate;
+        var curSpend = state.adSpend * state.spendScale;
+        var curProfit = (curSpend * curROAS * curContrib) - curSpend;
+
+        svg.appendChild(svgEl('circle', {
+            cx: currentX, cy: yRoasScale(curROAS), r: 5,
+            fill: COL.roas, stroke: '#fff', 'stroke-width': 2
+        }));
+        svg.appendChild(svgEl('circle', {
+            cx: currentX, cy: yProfitScale(curProfit), r: 5,
+            fill: COL.profit, stroke: '#fff', 'stroke-width': 2
+        }));
+    }
+
+    // ========== STATE FROM DOM ==========
+
+    function readInputs() {
+        state.currency = el('currency-select').value;
+        state.inputMode = document.querySelector('input[name="inputMode"]:checked').value;
+        state.adSpend = clamp(+el('ad-spend').value || 0, 0, 9999999);
+        state.adRevenue = clamp(+el('ad-revenue').value || 0, 0, 9999999);
+        state.orderCount = clamp(+el('order-count').value || 0, 0, 999999);
+        state.aov = clamp(+el('aov').value || 0, 0, 999999);
+        state.cancelRate = clamp(+el('cancel-rate').value || 0, 0, 100);
+        state.cogsRate = clamp(+el('cogs-rate').value || 0, 0, 100);
+        state.fulfilRate = clamp(+el('fulfil-rate').value || 0, 0, 100);
+        state.marginRate = clamp(+el('margin-rate').value || 0, 0, 100);
+        state.spendScale = clamp(+el('spend-scale').value || 1, 0.5, 5);
+    }
+
+    function writeInputs() {
+        el('currency-select').value = state.currency;
+        if (state.inputMode === 'orders') {
+            el('mode-orders').checked = true;
+        } else {
+            el('mode-revenue').checked = true;
+        }
+        el('ad-spend').value = state.adSpend;
+        el('ad-revenue').value = state.adRevenue;
+        el('order-count').value = state.orderCount;
+        el('aov').value = state.aov;
+        el('cancel-rate').value = state.cancelRate;
+        el('cogs-rate').value = state.cogsRate;
+        el('fulfil-rate').value = state.fulfilRate;
+        el('margin-rate').value = state.marginRate;
+        el('spend-scale').value = state.spendScale;
+        el('spend-scale-val').value = state.spendScale;
+        updateCurrencySymbols();
+        toggleInputMode();
+    }
+
+    function updateCurrencySymbols() {
+        var s = sym();
+        var symbols = document.querySelectorAll('.roas-currency');
+        for (var i = 0; i < symbols.length; i++) {
+            symbols[i].textContent = s;
+        }
+    }
+
+    function toggleInputMode() {
+        var isOrders = state.inputMode === 'orders';
+        el('revenue-input-group').style.display = isOrders ? 'none' : '';
+        el('orders-input-group').style.display = isOrders ? '' : 'none';
+        el('aov-input-group').style.display = isOrders ? '' : 'none';
+    }
+
+    // ========== RECALCULATE ==========
+
+    function recalculate() {
+        readInputs();
+        renderProfitability();
+        renderChannels();
+        renderTrap();
+        updateURL();
+        savePrefs();
+    }
+
+    // ========== EVENT BINDING ==========
+
+    function bindEvents() {
+        // All inputs in section 1
+        var inputs = document.querySelectorAll('#section-profitability input[type="number"], #section-profitability select, #currency-select');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener('input', recalculate);
+        }
+
+        // Input mode toggle
+        var modes = document.querySelectorAll('input[name="inputMode"]');
+        for (var m = 0; m < modes.length; m++) {
+            modes[m].addEventListener('change', function() {
+                toggleInputMode();
+                recalculate();
+            });
+        }
+
+        // Currency selector
+        el('currency-select').addEventListener('change', function() {
+            updateCurrencySymbols();
+            recalculate();
+        });
+
+        // Add channel button
+        el('add-channel').addEventListener('click', function() {
+            if (state.channels.length >= 4) return;
+            var nextIdx = state.channels.length;
+            state.channels.push({
+                name: CHANNEL_DEFAULTS[nextIdx] ? CHANNEL_DEFAULTS[nextIdx].name : 'Channel ' + (nextIdx + 1),
+                spend: CHANNEL_DEFAULTS[nextIdx] ? CHANNEL_DEFAULTS[nextIdx].spend : 1000,
+                revenue: CHANNEL_DEFAULTS[nextIdx] ? CHANNEL_DEFAULTS[nextIdx].revenue : 5000
+            });
+            renderChannels();
+            savePrefs();
+        });
+
+        // Trap slider <-> number sync
+        el('spend-scale').addEventListener('input', function() {
+            el('spend-scale-val').value = (+this.value).toFixed(1);
+            recalculate();
+        });
+        el('spend-scale-val').addEventListener('input', function() {
+            el('spend-scale').value = this.value;
+            recalculate();
+        });
+    }
+
+    // ========== INIT ==========
+
+    function init() {
+        var fromURL = readURL();
+        if (!fromURL) loadPrefs();
+        writeInputs();
+        bindEvents();
+        recalculate();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
