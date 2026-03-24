@@ -94,7 +94,33 @@ sitemap: false
     padding: 0.25rem 0.5rem;
     flex-shrink: 0;
 }
+.schedule-time-input.pinned {
+    border-color: var(--color-accent, #4A7BA7);
+    background: #f0f6fb;
+}
+.schedule-pin {
+    background: none;
+    border: none;
+    padding: 0.125rem 0.25rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--color-border, #E5E7EB);
+    flex-shrink: 0;
+    line-height: 1;
+}
+.schedule-pin.pinned { color: var(--color-accent, #4A7BA7); }
 .schedule-type { color: var(--color-text-muted, #6B7280); }
+.schedule-reset {
+    font-size: 0.8125rem;
+    color: var(--color-accent, #4A7BA7);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    text-decoration: underline;
+    margin-bottom: 0.5rem;
+    display: none;
+}
 
 /* Legend */
 .graph-legend {
@@ -228,7 +254,10 @@ sitemap: false
 </div>
 
 <!-- Schedule -->
-<div id="schedule"></div>
+<div id="schedule-wrapper">
+    <button type="button" class="schedule-reset" id="schedule-reset">Reset to optimal times</button>
+    <div id="schedule"></div>
+</div>
 
 <!-- How this works -->
 <div class="methodology mb-4">
@@ -741,10 +770,17 @@ sitemap: false
 
     function renderSchedule(drinks) {
         var container = document.getElementById('schedule');
+        var resetBtn = document.getElementById('schedule-reset');
+
         if (drinks.length === 0) {
             container.innerHTML = '<div class="empty-message">Add some drinks to see your optimal schedule.</div>';
+            resetBtn.style.display = 'none';
             return;
         }
+
+        // Show reset button if any drink is pinned
+        var hasPinned = drinks.some(function(d) { return d.pinned; });
+        resetBtn.style.display = hasPinned ? 'inline' : 'none';
 
         var html = '<ul class="schedule-list">';
         for (var i = 0; i < drinks.length; i++) {
@@ -752,32 +788,165 @@ sitemap: false
             var label = d.type === 'coffee' ? 'Coffee' : 'Tea';
             var mg = d.mg + 'mg';
             var time = formatTime(state.wake + d.time);
+            var pinnedClass = d.pinned ? ' pinned' : '';
             html += '<li class="schedule-item">';
             html += '<span class="schedule-dot ' + d.type + '"></span>';
-            html += '<input type="time" class="form-control schedule-time-input" data-drink-index="' + i + '" value="' + time + '">';
+            html += '<input type="time" class="form-control schedule-time-input' + pinnedClass + '" data-drink-index="' + i + '" value="' + time + '">';
+            html += '<button type="button" class="schedule-pin' + pinnedClass + '" data-drink-index="' + i + '" title="' + (d.pinned ? 'Unpin (recalculate this time)' : 'Pinned when you edit') + '">';
+            html += d.pinned ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.24 2 7 4.24 7 7v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v3H9V7c0-1.66 1.34-3 3-3z"/></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.24 2 7 4.24 7 7H9c0-1.66 1.34-3 3-3s3 1.34 3 3v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2H17V7c0-2.76-2.24-5-5-5z"/></svg>';
+            html += '</button>';
             html += '<span class="schedule-type">' + label + ' (' + mg + ')</span>';
             html += '</li>';
         }
         html += '</ul>';
         container.innerHTML = html;
 
-        // Bind change events on schedule time inputs
+        // Bind blur events on time inputs (update on blur, not change, to avoid mid-edit re-render)
         var inputs = container.querySelectorAll('.schedule-time-input');
         for (var i = 0; i < inputs.length; i++) {
-            inputs[i].addEventListener('change', function() {
-                var idx = parseInt(this.getAttribute('data-drink-index'), 10);
-                var newAbsMinutes = timeToMinutes(this.value);
-                var newRelMinutes = newAbsMinutes - state.wake;
-                if (newRelMinutes < 0) newRelMinutes += 1440;
-                state.drinks[idx].time = newRelMinutes;
-                state.drinks.sort(function(a, b) { return a.time - b.time; });
-                refreshFromSchedule();
-            });
+            inputs[i].addEventListener('change', onScheduleTimeChange);
+        }
+
+        // Bind pin toggle buttons
+        var pins = container.querySelectorAll('.schedule-pin');
+        for (var i = 0; i < pins.length; i++) {
+            pins[i].addEventListener('click', onPinToggle);
         }
     }
 
-    // Re-render graph and results from current state.drinks without recalculating schedule
-    function refreshFromSchedule() {
+    function onScheduleTimeChange() {
+        var idx = parseInt(this.getAttribute('data-drink-index'), 10);
+        var newAbsMinutes = timeToMinutes(this.value);
+        var newRelMinutes = newAbsMinutes - state.wake;
+        if (newRelMinutes < 0) newRelMinutes += 1440;
+        state.drinks[idx].time = newRelMinutes;
+        state.drinks[idx].pinned = true;
+        recalculateUnpinned();
+    }
+
+    function onPinToggle() {
+        var idx = parseInt(this.getAttribute('data-drink-index'), 10);
+        state.drinks[idx].pinned = !state.drinks[idx].pinned;
+        if (!state.drinks[idx].pinned) {
+            recalculateUnpinned();
+        } else {
+            renderSchedule(state.drinks);
+        }
+    }
+
+    function onResetPins() {
+        recalculate();
+    }
+
+    // Recalculate only unpinned drinks, keeping pinned ones fixed
+    function recalculateUnpinned() {
+        var windows = getOptimalWindows();
+        var waking = state.sleep - state.wake;
+        if (waking <= 0) waking += 1440;
+
+        var coffeeCutoff = lastSafeDrinkTime(state.sleep, state.halfLife, COFFEE_MG) - state.wake;
+        var teaCutoff = lastSafeDrinkTime(state.sleep, state.halfLife, TEA_MG) - state.wake;
+
+        function clampWindows(wins, cutoff) {
+            var result = [];
+            for (var i = 0; i < wins.length; i++) {
+                var w = wins[i];
+                if (w.start >= cutoff || w.start >= waking) continue;
+                result.push({ start: w.start, end: Math.min(w.end, cutoff, waking) });
+            }
+            return result;
+        }
+
+        // Collect pinned drinks and count unpinned by type
+        var pinned = [];
+        var unpinnedCoffees = 0;
+        var unpinnedTeas = 0;
+        for (var i = 0; i < state.drinks.length; i++) {
+            if (state.drinks[i].pinned) {
+                pinned.push(state.drinks[i]);
+            } else {
+                if (state.drinks[i].type === 'coffee') unpinnedCoffees++;
+                else unpinnedTeas++;
+            }
+        }
+
+        // Remove time ranges occupied by pinned drinks (buffer of 15 min either side)
+        function subtractPinned(wins, pinnedList) {
+            var result = [];
+            for (var i = 0; i < wins.length; i++) {
+                var segments = [{ start: wins[i].start, end: wins[i].end }];
+                for (var p = 0; p < pinnedList.length; p++) {
+                    var pTime = pinnedList[p].time;
+                    var newSegments = [];
+                    for (var s = 0; s < segments.length; s++) {
+                        var seg = segments[s];
+                        if (pTime - 15 >= seg.end || pTime + 15 <= seg.start) {
+                            newSegments.push(seg);
+                        } else {
+                            if (seg.start < pTime - 15) newSegments.push({ start: seg.start, end: pTime - 15 });
+                            if (pTime + 15 < seg.end) newSegments.push({ start: pTime + 15, end: seg.end });
+                        }
+                    }
+                    segments = newSegments;
+                }
+                result = result.concat(segments);
+            }
+            return result;
+        }
+
+        var coffeeWins = subtractPinned(clampWindows(windows, coffeeCutoff), pinned);
+        var teaWins = subtractPinned(clampWindows(windows, teaCutoff), pinned);
+
+        // Distribute unpinned drinks
+        var newDrinks = [];
+        if (state.drinkOrder === 'coffee-first') {
+            distribute(newDrinks, 'coffee', unpinnedCoffees, COFFEE_MG, coffeeWins);
+            var lastCoffeeTime = 0;
+            for (var i = 0; i < newDrinks.length; i++) {
+                if (newDrinks[i].time > lastCoffeeTime) lastCoffeeTime = newDrinks[i].time;
+            }
+            for (var i = 0; i < pinned.length; i++) {
+                if (pinned[i].type === 'coffee' && pinned[i].time > lastCoffeeTime) lastCoffeeTime = pinned[i].time;
+            }
+            var remainingTeaWins = teaWins.filter(function(w) { return w.end > lastCoffeeTime + 1; }).map(function(w) {
+                return { start: Math.max(w.start, lastCoffeeTime + 1), end: w.end };
+            });
+            if (remainingTeaWins.length === 0 && teaWins.length > 0) remainingTeaWins = teaWins;
+            distribute(newDrinks, 'tea', unpinnedTeas, TEA_MG, remainingTeaWins);
+        } else if (state.drinkOrder === 'tea-first') {
+            distribute(newDrinks, 'tea', unpinnedTeas, TEA_MG, teaWins);
+            var lastTeaTime = 0;
+            for (var i = 0; i < newDrinks.length; i++) {
+                if (newDrinks[i].time > lastTeaTime) lastTeaTime = newDrinks[i].time;
+            }
+            for (var i = 0; i < pinned.length; i++) {
+                if (pinned[i].type === 'tea' && pinned[i].time > lastTeaTime) lastTeaTime = pinned[i].time;
+            }
+            var remainingCoffeeWins = coffeeWins.filter(function(w) { return w.end > lastTeaTime + 1; }).map(function(w) {
+                return { start: Math.max(w.start, lastTeaTime + 1), end: w.end };
+            });
+            if (remainingCoffeeWins.length === 0 && coffeeWins.length > 0) remainingCoffeeWins = coffeeWins;
+            distribute(newDrinks, 'coffee', unpinnedCoffees, COFFEE_MG, remainingCoffeeWins);
+        } else {
+            var allWins = subtractPinned(clampWindows(windows, Math.max(coffeeCutoff, teaCutoff)), pinned);
+            var totalUnpinned = unpinnedCoffees + unpinnedTeas;
+            var slots = [];
+            distribute(slots, '_', totalUnpinned, 0, allWins);
+            var cR = unpinnedCoffees, tR = unpinnedTeas, useC = true;
+            for (var i = 0; i < slots.length; i++) {
+                var type, mg;
+                if (useC && cR > 0) { type = 'coffee'; mg = COFFEE_MG; cR--; }
+                else if (tR > 0) { type = 'tea'; mg = TEA_MG; tR--; }
+                else { type = 'coffee'; mg = COFFEE_MG; cR--; }
+                useC = !useC;
+                newDrinks.push({ type: type, time: slots[i].time, mg: mg });
+            }
+        }
+
+        // Merge pinned + new unpinned
+        state.drinks = pinned.concat(newDrinks);
+        state.drinks.sort(function(a, b) { return a.time - b.time; });
+
         renderGraph(state.drinks);
         renderSchedule(state.drinks);
         updateResults(state.drinks);
@@ -918,6 +1087,9 @@ sitemap: false
                 recalculate();
             });
         }
+
+        // Reset pins
+        document.getElementById('schedule-reset').addEventListener('click', onResetPins);
     }
 
     // Init - URL params take priority over cookie, cookie over defaults
