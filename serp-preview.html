@@ -458,6 +458,12 @@ hidden: true
         </div>
     </div>
     <div class="row g-2 g-md-3 mb-3">
+        <div class="col-12">
+            <label class="form-label" for="serp-keyphrase">Target Keyphrase</label>
+            <input type="text" class="form-control" id="serp-keyphrase" placeholder="e.g. caffeine calculator sleep">
+        </div>
+    </div>
+    <div class="row g-2 g-md-3 mb-3">
         <div class="col-md-4">
             <label class="form-label" for="serp-sitename">Site Name</label>
             <input type="text" class="form-control" id="serp-sitename" value="seanreilly.net">
@@ -525,6 +531,7 @@ hidden: true
     var dateInput = document.getElementById('serp-date');
     var sitenameInput = document.getElementById('serp-sitename');
     var imageInput = document.getElementById('serp-image');
+    var keyphraseInput = document.getElementById('serp-keyphrase');
 
     var titleChars = document.getElementById('title-chars');
     var titlePixels = document.getElementById('title-pixels');
@@ -552,6 +559,19 @@ hidden: true
         var div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    function boldKeywords(html) {
+        var phrase = keyphraseInput.value.trim();
+        if (!phrase) return html;
+        // Split into unique words, filter short ones, escape for regex
+        var words = phrase.split(/\s+/).filter(function(w) { return w.length >= 2; });
+        if (!words.length) return html;
+        var escaped = words.map(function(w) {
+            return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        });
+        var pattern = new RegExp('\\b(' + escaped.join('|') + ')\\b', 'gi');
+        return html.replace(pattern, '<b>$1</b>');
     }
 
     function statusClass(value, warnAt, maxAt) {
@@ -629,8 +649,8 @@ hidden: true
                     '<div class="google-breadcrumb">' + escapeHtml(breadcrumb) + '</div>' +
                 '</div>' +
             '</div>' +
-            '<div class="google-title">' + escapeHtml(truncTitle.text) + '</div>' +
-            '<div class="google-description">' + dateHtml + escapeHtml(truncDesc.text) + '</div>';
+            '<div class="google-title">' + boldKeywords(escapeHtml(truncTitle.text)) + '</div>' +
+            '<div class="google-description">' + dateHtml + boldKeywords(escapeHtml(truncDesc.text)) + '</div>';
     }
 
     function renderAIOverview() {
@@ -809,7 +829,7 @@ hidden: true
     });
 
     // Input listeners
-    [titleInput, urlInput, descInput, dateInput, sitenameInput, imageInput].forEach(function(el) {
+    [titleInput, urlInput, descInput, dateInput, sitenameInput, imageInput, keyphraseInput].forEach(function(el) {
         el.addEventListener('input', update);
     });
 
@@ -824,7 +844,8 @@ hidden: true
                 desc: descInput.value,
                 date: dateInput.value,
                 sitename: sitenameInput.value,
-                image: imageInput.value
+                image: imageInput.value,
+                keyphrase: keyphraseInput.value
             }));
         } catch(e) {}
     }
@@ -839,6 +860,7 @@ hidden: true
             if (data.date) dateInput.value = data.date;
             if (data.sitename) sitenameInput.value = data.sitename;
             if (data.image) imageInput.value = data.image;
+            if (data.keyphrase) keyphraseInput.value = data.keyphrase;
         } catch(e) {}
     }
 
