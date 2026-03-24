@@ -1,0 +1,1178 @@
+---
+layout: page
+title: "Customer Economics Calculator"
+header-title: "Customer Economics"
+description: "Model your revenue levers, unit economics, and growth scenarios"
+header-img: "img/home-bg.jpg"
+meta-description: "Interactive customer economics calculator. Model revenue from loyalty, acquisition and average spend. Calculate allowable marketing cost per customer and plan growth scenarios."
+permalink: /customer-economics/
+hidden: true
+---
+
+<style>
+.ce-intro { margin-bottom: 1.5rem; }
+
+/* Currency selector */
+.ce-currency-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+.ce-currency-row select { width: auto; font-size: 0.875rem; }
+
+/* Inputs */
+.ce-inputs .form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    margin-bottom: 0.25rem;
+}
+.ce-inputs .input-group .form-control {
+    border-left: 0;
+    border-right: 0;
+}
+.ce-inputs .input-group .btn {
+    min-width: 2.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.375rem 0.5rem;
+}
+.ce-inputs .input-group-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    min-width: 1.75rem;
+    justify-content: center;
+}
+
+/* Section headings */
+.ce-section { margin-bottom: 1rem; }
+.ce-section h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+.ce-section-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted, #6B7280);
+    margin-bottom: 1rem;
+}
+
+/* Result cards */
+.result-card {
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.75rem;
+    padding: 0.875rem 0.5rem;
+    text-align: center;
+}
+.result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent, #4A7BA7);
+    margin-bottom: 0.125rem;
+}
+.result-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: var(--color-text, #2D2D2D);
+    line-height: 1.2;
+}
+
+/* Projection card */
+.ce-projection {
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+}
+.ce-projection-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent, #4A7BA7);
+    margin-bottom: 0.25rem;
+}
+.ce-projection-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-text, #2D2D2D);
+}
+.ce-projection-note {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted, #6B7280);
+    margin-top: 0.25rem;
+}
+
+/* Waterfall */
+#cost-waterfall { margin: 1rem 0; }
+#cost-waterfall svg { display: block; width: 100%; height: auto; }
+.waterfall-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #6B7280);
+    margin-top: 0.5rem;
+}
+.waterfall-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.waterfall-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* Extended payback toggle */
+.ce-toggle-group {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.5rem;
+}
+.ce-extended-inputs {
+    display: none;
+    margin-top: 0.75rem;
+}
+.ce-extended-inputs.visible { display: block; }
+
+/* Slider groups */
+.ce-slider-group {
+    margin-bottom: 0.75rem;
+}
+.ce-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.ce-slider-row input[type="range"] {
+    flex: 1;
+    accent-color: var(--color-accent, #4A7BA7);
+}
+.ce-slider-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    width: 5.5rem;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* Chart */
+#chart-container { margin: 1.5rem 0; width: 100%; }
+#revenue-chart { display: block; width: 100%; height: auto; }
+
+/* Lever breakdown */
+.lever-cards .result-card { padding: 0.75rem 0.5rem; }
+.delta-positive { color: #16a34a; }
+.delta-negative { color: #dc2626; }
+.delta-neutral { color: var(--color-text-muted, #6B7280); }
+
+/* Warning */
+.ce-warning {
+    color: #dc2626;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    display: none;
+}
+.ce-warning.visible { display: block; }
+
+/* Methodology */
+.methodology p {
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #6B7280);
+    line-height: 1.7;
+}
+
+/* Dividers */
+.ce-divider {
+    border: 0;
+    border-top: 1px solid var(--color-border, #E5E7EB);
+    margin: 1.5rem 0;
+}
+
+/* Mobile */
+@media (max-width: 575.98px) {
+    .result-value { font-size: 1.375rem; }
+    .result-label { font-size: 0.5625rem; letter-spacing: 1px; }
+    .result-card { padding: 0.625rem 0.375rem; }
+    .ce-projection-value { font-size: 1.125rem; }
+    .ce-slider-row { flex-wrap: wrap; }
+    .ce-slider-value { width: 100%; text-align: left; }
+}
+</style>
+
+<p class="ce-intro">Model the three levers that drive your revenue, calculate how much you can afford to acquire a customer, and plan growth scenarios. Adjust any input and everything recalculates instantly.</p>
+
+<!-- Currency selector -->
+<div class="ce-currency-row">
+    <select class="form-select form-select-sm" id="currency-select" style="width: auto;">
+        <option value="GBP" selected>&pound; GBP</option>
+        <option value="EUR">&euro; EUR</option>
+        <option value="USD">$ USD</option>
+        <option value="AUD">A$ AUD</option>
+    </select>
+</div>
+
+<!-- Section 1: Revenue Model -->
+<div class="ce-section" id="section-current">
+    <h3>Revenue Model</h3>
+    <p class="ce-section-desc">Every pound of revenue comes from three levers: how many customers return, how many new ones you acquire, and how much each one spends.</p>
+    <div class="ce-inputs">
+        <div class="row g-2 g-md-3 mb-3">
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="active-customers">Customers (last yr)</label>
+                <input type="number" class="form-control form-control-sm" id="active-customers" value="10000" min="0" max="999999" step="100">
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="loyalty-rate">Loyalty rate</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="loyalty-rate" value="60" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="new-customers">New customers / yr</label>
+                <input type="number" class="form-control form-control-sm" id="new-customers" value="5000" min="0" max="999999" step="100">
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="avg-spend">Avg spend</label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text" id="spend-currency">&pound;</span>
+                    <input type="number" class="form-control" id="avg-spend" value="500" min="0" max="999999" step="10">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current results -->
+    <div class="row g-2 g-md-3 mb-3" id="current-results">
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Returning</div>
+                <div class="result-value" id="res-returning">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Total Customers</div>
+                <div class="result-value" id="res-total">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Annual Revenue</div>
+                <div class="result-value" id="res-revenue">--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next year projection -->
+    <div class="ce-projection">
+        <div class="ce-projection-label">If nothing changes next year</div>
+        <div class="ce-projection-value" id="proj-revenue">--</div>
+        <div class="ce-projection-note" id="proj-note">Your starting customer base grows, so revenue increases even at the same rates.</div>
+    </div>
+</div>
+
+<hr class="ce-divider">
+
+<!-- Section 2: Allowable Acquisition Cost -->
+<div class="ce-section" id="section-unit-economics">
+    <h3>Allowable Acquisition Cost</h3>
+    <p class="ce-section-desc">Work backwards from your average booking value to find the maximum you can spend to acquire a customer while hitting your margin target.</p>
+    <div class="ce-inputs">
+        <div class="row g-2 g-md-3 mb-3">
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="avg-booking">Avg booking value</label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text booking-currency">&pound;</span>
+                    <input type="number" class="form-control" id="avg-booking" value="500" min="1" max="999999" step="10">
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="cancel-rate">Cancellation rate</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="cancel-rate" value="5" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="cogs-rate">Product / COGS</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="cogs-rate" value="30" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="fulfil-rate">Fulfilment cost</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="fulfil-rate" value="15" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="margin-rate">Required margin</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="margin-rate" value="20" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cost waterfall -->
+    <div id="cost-waterfall"></div>
+
+    <!-- Warning -->
+    <div class="ce-warning" id="cost-warning">Your costs exceed 100% of booking value. There is nothing left for marketing.</div>
+
+    <!-- Unit economics results -->
+    <div class="row g-2 g-md-3 mb-3" id="unit-results">
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Allowable Cost</div>
+                <div class="result-value" id="res-allowable">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Implied ROAS</div>
+                <div class="result-value" id="res-roas">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Cost as % of Rev</div>
+                <div class="result-value" id="res-cost-pct">--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extended payback toggle -->
+    <div class="ce-toggle-group">
+        <label class="form-check-label" style="cursor: pointer;">
+            <input type="checkbox" id="extended-payback" class="form-check-input" style="cursor: pointer;">
+            Factor in repeat purchases (increases allowable cost)
+        </label>
+        <div class="ce-extended-inputs" id="extended-inputs">
+            <div class="row g-2 g-md-3">
+                <div class="col-6">
+                    <label class="form-label" for="payback-months">Payback period</label>
+                    <select class="form-select form-select-sm" id="payback-months">
+                        <option value="12">12 months</option>
+                        <option value="24" selected>24 months</option>
+                        <option value="36">36 months</option>
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label" for="repeat-rate">Repeat booking rate</label>
+                    <div class="input-group input-group-sm">
+                        <input type="number" class="form-control" id="repeat-rate" value="40" min="0" max="100" step="1">
+                        <span class="input-group-text">%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-2 g-md-3 mt-2" id="extended-results">
+                <div class="col-6">
+                    <div class="result-card">
+                        <div class="result-label">Extended Allowable</div>
+                        <div class="result-value" id="res-extended-allowable">--</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="result-card">
+                        <div class="result-label">Extended ROAS</div>
+                        <div class="result-value" id="res-extended-roas">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="ce-divider">
+
+<!-- Section 3: Growth Scenario -->
+<div class="ce-section" id="section-growth">
+    <h3>Growth Scenario</h3>
+    <p class="ce-section-desc">Adjust the three levers to model a growth plan. See how each change contributes to projected revenue.</p>
+    <div class="ce-inputs">
+        <div class="ce-slider-group">
+            <label class="form-label">Loyalty rate change</label>
+            <div class="ce-slider-row">
+                <input type="range" id="loyalty-delta" min="-30" max="30" value="0" step="1">
+                <input type="number" class="form-control form-control-sm ce-slider-value" id="loyalty-delta-val" value="0" min="-30" max="30" step="1">
+                <span class="input-group-text" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">pp</span>
+            </div>
+        </div>
+        <div class="ce-slider-group">
+            <label class="form-label">New customer change</label>
+            <div class="ce-slider-row">
+                <input type="range" id="new-delta" min="-5000" max="5000" value="0" step="100">
+                <input type="number" class="form-control form-control-sm ce-slider-value" id="new-delta-val" value="0" min="-5000" max="5000" step="100">
+                <span class="input-group-text" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">/ yr</span>
+            </div>
+        </div>
+        <div class="ce-slider-group">
+            <label class="form-label">Spend per customer change</label>
+            <div class="ce-slider-row">
+                <input type="range" id="spend-delta" min="-50" max="50" value="0" step="1">
+                <input type="number" class="form-control form-control-sm ce-slider-value" id="spend-delta-val" value="0" min="-50" max="50" step="1">
+                <span class="input-group-text" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Growth results -->
+    <div class="row g-2 g-md-3 mb-3" id="growth-results">
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Projected Revenue</div>
+                <div class="result-value" id="res-projected">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Delta</div>
+                <div class="result-value" id="res-delta">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Growth</div>
+                <div class="result-value" id="res-growth-pct">--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div id="chart-container">
+        <svg id="revenue-chart" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+
+    <!-- Lever breakdown -->
+    <div class="row g-2 g-md-3 mb-3 lever-cards">
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Loyalty Effect</div>
+                <div class="result-value" id="lever-loyalty">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Acquisition Effect</div>
+                <div class="result-value" id="lever-new">--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Spend Effect</div>
+                <div class="result-value" id="lever-spend">--</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="ce-divider">
+
+<!-- Methodology -->
+<div class="methodology mb-4">
+    <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
+    <p><strong>Three-lever revenue model:</strong> Every business generates revenue from the same three levers: how many customers return (loyalty rate), how many new customers you acquire, and how much each customer spends. This model lets you see which lever has the most impact on your specific numbers.</p>
+    <p><strong>Allowable acquisition cost:</strong> This works backwards from your average booking value, subtracting cancellations, product costs, fulfilment costs, and your required margin to find the maximum you can spend on marketing per customer. The implied ROAS (return on ad spend) follows directly from this figure.</p>
+    <p><strong>Extended payback:</strong> When toggled on, the calculation factors in expected repeat purchases over the payback period. A customer who books again is worth more than their first transaction, so you can afford to spend more to acquire them. The model compounds the repeat rate annually.</p>
+    <p><strong>Growth scenario:</strong> The three sliders let you model "what if" changes to each lever independently. The lever breakdown shows how much of the total change comes from each adjustment. The contributions may not sum exactly to the total delta because the levers interact multiplicatively - more loyal customers spending more each creates a compounding effect.</p>
+    <p>This is a simplified model. Real businesses have customer segments, seasonal variation, and non-linear cost structures. Use it to build intuition about where your growth leverage sits, not as a precise forecast.</p>
+</div>
+
+<!-- Latest Writing -->
+<section class="py-5 border-top" style="background-color: var(--color-surface);">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4" style="font-size: 1.75rem;">Latest Writing</h2>
+        <div class="row g-4">
+            {% assign card_count = 0 %}
+            {% for post in site.posts %}{% unless post.hidden or card_count >= 3 %}
+            <div class="col-md-6 col-lg-4">
+                {% include post-card.html post=post %}
+            </div>
+            {% assign card_count = card_count | plus: 1 %}
+            {% endunless %}{% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    'use strict';
+
+    // ========== CONSTANTS ==========
+    var CURRENCIES = {
+        GBP: '\u00A3',
+        EUR: '\u20AC',
+        USD: '$',
+        AUD: 'A$'
+    };
+
+    // Chart dimensions (viewBox coords)
+    var W = 800, H = 320;
+    var M = { top: 20, right: 20, bottom: 40, left: 70 };
+    var PW = W - M.left - M.right;
+    var PH = H - M.top - M.bottom;
+
+    // Waterfall dimensions
+    var WF_W = 800, WF_H = 60;
+
+    var NS = 'http://www.w3.org/2000/svg';
+
+    var COL = {
+        returning: '#4A7BA7',
+        newCust: '#4A7C59',
+        projReturning: '#6A9BC7',
+        projNew: '#6A9C79',
+        cancel: '#dc2626',
+        cogs: '#f59e0b',
+        fulfil: '#8b5cf6',
+        margin: '#6366f1',
+        allowable: '#16a34a',
+        grid: '#E5E7EB',
+        axis: '#9CA3AF',
+        text: '#6B7280'
+    };
+
+    // ========== STATE ==========
+    var state = {
+        currency: 'GBP',
+        activeCustomers: 10000,
+        loyaltyRate: 60,
+        newCustomers: 5000,
+        avgSpend: 500,
+        avgBookingValue: 500,
+        cancellationRate: 5,
+        cogsRate: 30,
+        fulfilmentRate: 15,
+        requiredMargin: 20,
+        extendedPayback: false,
+        paybackMonths: 24,
+        repeatRate: 40,
+        loyaltyDelta: 0,
+        newCustDelta: 0,
+        spendDelta: 0
+    };
+
+    // Cookie
+    var COOKIE_NAME = 'ce_prefs';
+    var COOKIE_DAYS = 365;
+
+    // ========== HELPERS ==========
+
+    function el(id) { return document.getElementById(id); }
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    function svgEl(tag, attrs) {
+        var e = document.createElementNS(NS, tag);
+        if (attrs) {
+            for (var k in attrs) {
+                if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
+            }
+        }
+        return e;
+    }
+
+    function sym() { return CURRENCIES[state.currency]; }
+
+    function fmtCurrency(v) {
+        var s = sym();
+        var abs = Math.abs(v);
+        if (abs >= 1000000) return s + (v / 1000000).toFixed(1) + 'M';
+        if (abs >= 1000) return s + Math.round(v).toLocaleString('en-GB');
+        return s + Math.round(v);
+    }
+
+    function fmtNumber(v) {
+        return Math.round(v).toLocaleString('en-GB');
+    }
+
+    function fmtDelta(v) {
+        var prefix = v >= 0 ? '+' : '';
+        return prefix + fmtCurrency(v);
+    }
+
+    function deltaClass(v) {
+        if (v > 0) return 'delta-positive';
+        if (v < 0) return 'delta-negative';
+        return 'delta-neutral';
+    }
+
+    // ========== COOKIE ==========
+
+    function canUseCookie() {
+        return typeof CookieConsent !== 'undefined' && CookieConsent.acceptedCategory('functionality');
+    }
+
+    function savePrefs() {
+        if (!canUseCookie()) return;
+        var data = {
+            cur: state.currency,
+            ac: state.activeCustomers,
+            lr: state.loyaltyRate,
+            nc: state.newCustomers,
+            as: state.avgSpend,
+            bv: state.avgBookingValue,
+            cr: state.cancellationRate,
+            cg: state.cogsRate,
+            fr: state.fulfilmentRate,
+            mr: state.requiredMargin,
+            ep: state.extendedPayback,
+            pm: state.paybackMonths,
+            rr: state.repeatRate
+        };
+        var expires = new Date(Date.now() + COOKIE_DAYS * 864e5).toUTCString();
+        document.cookie = COOKIE_NAME + '=' + encodeURIComponent(JSON.stringify(data))
+            + ';expires=' + expires + ';path=/customer-economics/;SameSite=Lax;Secure';
+    }
+
+    function loadPrefs() {
+        if (!canUseCookie()) return false;
+        var match = document.cookie.match('(?:^|; )' + COOKIE_NAME + '=([^;]*)');
+        if (!match) return false;
+        try {
+            var d = JSON.parse(decodeURIComponent(match[1]));
+            if (d.cur && CURRENCIES[d.cur]) state.currency = d.cur;
+            if (d.ac !== undefined) state.activeCustomers = clamp(d.ac, 0, 999999);
+            if (d.lr !== undefined) state.loyaltyRate = clamp(d.lr, 0, 100);
+            if (d.nc !== undefined) state.newCustomers = clamp(d.nc, 0, 999999);
+            if (d.as !== undefined) state.avgSpend = clamp(d.as, 0, 999999);
+            if (d.bv !== undefined) state.avgBookingValue = clamp(d.bv, 1, 999999);
+            if (d.cr !== undefined) state.cancellationRate = clamp(d.cr, 0, 100);
+            if (d.cg !== undefined) state.cogsRate = clamp(d.cg, 0, 100);
+            if (d.fr !== undefined) state.fulfilmentRate = clamp(d.fr, 0, 100);
+            if (d.mr !== undefined) state.requiredMargin = clamp(d.mr, 0, 100);
+            if (d.ep !== undefined) state.extendedPayback = !!d.ep;
+            if (d.pm === 12 || d.pm === 24 || d.pm === 36) state.paybackMonths = d.pm;
+            if (d.rr !== undefined) state.repeatRate = clamp(d.rr, 0, 100);
+            return true;
+        } catch (e) { return false; }
+    }
+
+    // ========== URL PARAMS ==========
+
+    function readURL() {
+        var p = new URLSearchParams(window.location.search);
+        var found = false;
+        if (p.has('cur') && CURRENCIES[p.get('cur')]) { state.currency = p.get('cur'); found = true; }
+        if (p.has('cust')) { state.activeCustomers = clamp(+p.get('cust'), 0, 999999); found = true; }
+        if (p.has('loyalty')) { state.loyaltyRate = clamp(+p.get('loyalty'), 0, 100); found = true; }
+        if (p.has('new')) { state.newCustomers = clamp(+p.get('new'), 0, 999999); found = true; }
+        if (p.has('spend')) { state.avgSpend = clamp(+p.get('spend'), 0, 999999); found = true; }
+        if (p.has('bv')) { state.avgBookingValue = clamp(+p.get('bv'), 1, 999999); found = true; }
+        if (p.has('cancel')) { state.cancellationRate = clamp(+p.get('cancel'), 0, 100); found = true; }
+        if (p.has('cogs')) { state.cogsRate = clamp(+p.get('cogs'), 0, 100); found = true; }
+        if (p.has('fulfil')) { state.fulfilmentRate = clamp(+p.get('fulfil'), 0, 100); found = true; }
+        if (p.has('margin')) { state.requiredMargin = clamp(+p.get('margin'), 0, 100); found = true; }
+        if (p.has('ld')) { state.loyaltyDelta = clamp(+p.get('ld'), -30, 30); found = true; }
+        if (p.has('nd')) { state.newCustDelta = clamp(+p.get('nd'), -5000, 5000); found = true; }
+        if (p.has('sd')) { state.spendDelta = clamp(+p.get('sd'), -50, 50); found = true; }
+        return found;
+    }
+
+    function updateURL() {
+        var p = new URLSearchParams();
+        p.set('cur', state.currency);
+        p.set('cust', state.activeCustomers);
+        p.set('loyalty', state.loyaltyRate);
+        p.set('new', state.newCustomers);
+        p.set('spend', state.avgSpend);
+        p.set('bv', state.avgBookingValue);
+        p.set('cancel', state.cancellationRate);
+        p.set('cogs', state.cogsRate);
+        p.set('fulfil', state.fulfilmentRate);
+        p.set('margin', state.requiredMargin);
+        if (state.loyaltyDelta !== 0) p.set('ld', state.loyaltyDelta);
+        if (state.newCustDelta !== 0) p.set('nd', state.newCustDelta);
+        if (state.spendDelta !== 0) p.set('sd', state.spendDelta);
+        history.replaceState(null, '', '?' + p.toString());
+    }
+
+    // ========== CALCULATIONS ==========
+
+    function calcCurrentState() {
+        var returning = Math.round(state.activeCustomers * (state.loyaltyRate / 100));
+        var total = returning + state.newCustomers;
+        var revenue = total * state.avgSpend;
+        var nextReturning = Math.round(total * (state.loyaltyRate / 100));
+        var nextTotal = nextReturning + state.newCustomers;
+        var nextRevenue = nextTotal * state.avgSpend;
+        return {
+            returning: returning,
+            total: total,
+            revenue: revenue,
+            nextReturning: nextReturning,
+            nextTotal: nextTotal,
+            nextRevenue: nextRevenue,
+            nextDelta: nextRevenue - revenue
+        };
+    }
+
+    function calcUnitEconomics() {
+        var bv = state.avgBookingValue;
+        var netBooking = bv * (1 - state.cancellationRate / 100);
+        var cogsAmount = netBooking * (state.cogsRate / 100);
+        var afterCogs = netBooking - cogsAmount;
+        var fulfilAmount = afterCogs * (state.fulfilmentRate / 100);
+        var afterFulfil = afterCogs - fulfilAmount;
+        var marginAmount = netBooking * (state.requiredMargin / 100);
+        var allowable = afterFulfil - marginAmount;
+        allowable = Math.max(0, allowable);
+
+        var cancelAmount = bv * (state.cancellationRate / 100);
+        var totalCosts = cancelAmount + cogsAmount + fulfilAmount + marginAmount;
+        var overBudget = totalCosts > bv;
+
+        var impliedROAS = allowable > 0 ? bv / allowable : Infinity;
+        var costPct = bv > 0 ? (allowable / bv) * 100 : 0;
+
+        // Extended payback
+        var extAllowable = allowable;
+        if (state.extendedPayback) {
+            var cycles = state.paybackMonths / 12;
+            var repeatRevenue = 0;
+            var cumRate = state.repeatRate / 100;
+            for (var i = 1; i <= Math.floor(cycles); i++) {
+                repeatRevenue += bv * cumRate;
+                cumRate *= (state.repeatRate / 100);
+            }
+            var frac = cycles - Math.floor(cycles);
+            if (frac > 0) repeatRevenue += bv * cumRate * frac;
+
+            var repeatNet = repeatRevenue * (1 - state.cancellationRate / 100);
+            repeatNet = repeatNet * (1 - state.cogsRate / 100);
+            repeatNet = repeatNet * (1 - state.fulfilmentRate / 100);
+            repeatNet -= repeatRevenue * (state.requiredMargin / 100);
+            extAllowable = allowable + Math.max(0, repeatNet);
+        }
+        var extROAS = extAllowable > 0 ? bv / extAllowable : Infinity;
+
+        return {
+            allowable: allowable,
+            impliedROAS: impliedROAS,
+            costPct: costPct,
+            overBudget: overBudget,
+            extAllowable: extAllowable,
+            extROAS: extROAS,
+            breakdown: {
+                cancel: cancelAmount,
+                cogs: cogsAmount,
+                fulfil: fulfilAmount,
+                margin: marginAmount,
+                allowable: allowable
+            }
+        };
+    }
+
+    function calcGrowthScenario() {
+        var current = calcCurrentState();
+        var newLoyalty = clamp(state.loyaltyRate + state.loyaltyDelta, 0, 100);
+        var newNew = Math.max(0, state.newCustomers + state.newCustDelta);
+        var newSpend = state.avgSpend * (1 + state.spendDelta / 100);
+
+        var projReturning = Math.round(state.activeCustomers * (newLoyalty / 100));
+        var projTotal = projReturning + newNew;
+        var projRevenue = projTotal * newSpend;
+        var delta = projRevenue - current.revenue;
+        var growthPct = current.revenue > 0 ? (delta / current.revenue) * 100 : 0;
+
+        // Isolate lever contributions
+        var base = current.revenue;
+        var loyaltyOnly = (Math.round(state.activeCustomers * (newLoyalty / 100)) + state.newCustomers) * state.avgSpend - base;
+        var newOnly = (current.returning + newNew) * state.avgSpend - base;
+        var spendOnly = current.total * newSpend - base;
+
+        return {
+            currentRevenue: base,
+            currentReturning: current.returning,
+            currentNew: state.newCustomers,
+            projRevenue: projRevenue,
+            projReturning: projReturning,
+            projNew: newNew,
+            projSpend: newSpend,
+            delta: delta,
+            growthPct: growthPct,
+            levers: { loyalty: loyaltyOnly, newCust: newOnly, spend: spendOnly }
+        };
+    }
+
+    // ========== RENDERING ==========
+
+    function renderCurrentResults() {
+        var r = calcCurrentState();
+        el('res-returning').textContent = fmtNumber(r.returning);
+        el('res-total').textContent = fmtNumber(r.total);
+        el('res-revenue').textContent = fmtCurrency(r.revenue);
+        el('proj-revenue').textContent = fmtCurrency(r.nextRevenue) + ' (' + fmtDelta(r.nextDelta) + ')';
+    }
+
+    function renderUnitResults() {
+        var r = calcUnitEconomics();
+        el('res-allowable').textContent = r.allowable > 0 ? fmtCurrency(r.allowable) : sym() + '0';
+        el('res-roas').textContent = r.impliedROAS === Infinity ? 'N/A' : r.impliedROAS.toFixed(1) + 'x';
+        el('res-cost-pct').textContent = r.costPct.toFixed(1) + '%';
+
+        var warn = el('cost-warning');
+        if (r.overBudget) warn.classList.add('visible');
+        else warn.classList.remove('visible');
+
+        el('res-extended-allowable').textContent = fmtCurrency(r.extAllowable);
+        el('res-extended-roas').textContent = r.extROAS === Infinity ? 'N/A' : r.extROAS.toFixed(1) + 'x';
+
+        renderWaterfall(r.breakdown);
+    }
+
+    function renderWaterfall(bd) {
+        var container = el('cost-waterfall');
+        container.innerHTML = '';
+
+        var bv = state.avgBookingValue;
+        if (bv <= 0) return;
+
+        var svg = svgEl('svg', { viewBox: '0 0 ' + WF_W + ' ' + WF_H, preserveAspectRatio: 'xMidYMid meet' });
+        var barY = 5, barH = 30;
+        var total = bd.cancel + bd.cogs + bd.fulfil + bd.margin + bd.allowable;
+        var scale = total > 0 ? WF_W / total : 0;
+
+        var segments = [
+            { val: bd.cancel, col: COL.cancel, label: 'Cancellations' },
+            { val: bd.cogs, col: COL.cogs, label: 'COGS' },
+            { val: bd.fulfil, col: COL.fulfil, label: 'Fulfilment' },
+            { val: bd.margin, col: COL.margin, label: 'Margin' },
+            { val: bd.allowable, col: COL.allowable, label: 'Allowable' }
+        ];
+
+        var x = 0;
+        segments.forEach(function(seg) {
+            var w = seg.val * scale;
+            if (w < 1) return;
+            svg.appendChild(svgEl('rect', {
+                x: x, y: barY, width: w, height: barH,
+                fill: seg.col, rx: x === 0 ? 4 : 0
+            }));
+            if (w > 40) {
+                var txt = svgEl('text', {
+                    x: x + w / 2, y: barY + barH + 14,
+                    'text-anchor': 'middle',
+                    fill: COL.text,
+                    'font-size': '11',
+                    'font-family': "'JetBrains Mono', monospace"
+                });
+                txt.textContent = sym() + Math.round(seg.val);
+                svg.appendChild(txt);
+            }
+            x += w;
+        });
+
+        container.appendChild(svg);
+
+        // Legend
+        var legend = document.createElement('div');
+        legend.className = 'waterfall-legend';
+        segments.forEach(function(seg) {
+            if (seg.val <= 0) return;
+            var item = document.createElement('span');
+            item.className = 'waterfall-legend-item';
+            item.innerHTML = '<span class="waterfall-legend-swatch" style="background:' + seg.col + '"></span> ' + seg.label;
+            legend.appendChild(item);
+        });
+        container.appendChild(legend);
+    }
+
+    function renderGrowthResults() {
+        var r = calcGrowthScenario();
+        el('res-projected').textContent = fmtCurrency(r.projRevenue);
+        var deltaEl = el('res-delta');
+        deltaEl.textContent = fmtDelta(r.delta);
+        deltaEl.className = 'result-value ' + deltaClass(r.delta);
+        var growthEl = el('res-growth-pct');
+        growthEl.textContent = (r.growthPct >= 0 ? '+' : '') + r.growthPct.toFixed(1) + '%';
+        growthEl.className = 'result-value ' + deltaClass(r.growthPct);
+
+        // Lever cards
+        var ll = el('lever-loyalty');
+        ll.textContent = fmtDelta(r.levers.loyalty);
+        ll.className = 'result-value ' + deltaClass(r.levers.loyalty);
+        var ln = el('lever-new');
+        ln.textContent = fmtDelta(r.levers.newCust);
+        ln.className = 'result-value ' + deltaClass(r.levers.newCust);
+        var ls = el('lever-spend');
+        ls.textContent = fmtDelta(r.levers.spend);
+        ls.className = 'result-value ' + deltaClass(r.levers.spend);
+
+        renderChart(r);
+    }
+
+    function renderChart(data) {
+        var svg = el('revenue-chart');
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+        var maxVal = Math.max(data.currentRevenue, data.projRevenue) * 1.15;
+        if (maxVal <= 0) return;
+
+        var yScale = function(v) { return M.top + PH - (v / maxVal) * PH; };
+
+        // Grid lines
+        var gridCount = 5;
+        for (var i = 0; i <= gridCount; i++) {
+            var gv = (maxVal / gridCount) * i;
+            var gy = yScale(gv);
+            svg.appendChild(svgEl('line', {
+                x1: M.left, y1: gy, x2: W - M.right, y2: gy,
+                stroke: COL.grid, 'stroke-width': 1
+            }));
+            var label = svgEl('text', {
+                x: M.left - 8, y: gy + 4,
+                'text-anchor': 'end', fill: COL.text,
+                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
+            });
+            label.textContent = fmtCurrency(gv);
+            svg.appendChild(label);
+        }
+
+        // Bars
+        var barWidth = PW * 0.25;
+        var gap = PW * 0.1;
+        var cx = M.left + PW * 0.2;
+        var px = M.left + PW * 0.55;
+
+        // Current bar - stacked: new (bottom) + returning (top)
+        var cNewH = (data.currentNew * state.avgSpend / maxVal) * PH;
+        var cRetH = (data.currentReturning * state.avgSpend / maxVal) * PH;
+        var cBase = M.top + PH;
+
+        svg.appendChild(svgEl('rect', {
+            x: cx, y: cBase - cNewH, width: barWidth, height: cNewH,
+            fill: COL.newCust, rx: 0
+        }));
+        svg.appendChild(svgEl('rect', {
+            x: cx, y: cBase - cNewH - cRetH, width: barWidth, height: cRetH,
+            fill: COL.returning, rx: 4
+        }));
+
+        // Projected bar
+        var pNewH = (data.projNew * data.projSpend / maxVal) * PH;
+        var pRetH = (data.projReturning * data.projSpend / maxVal) * PH;
+
+        svg.appendChild(svgEl('rect', {
+            x: px, y: cBase - pNewH, width: barWidth, height: pNewH,
+            fill: COL.projNew, rx: 0
+        }));
+        svg.appendChild(svgEl('rect', {
+            x: px, y: cBase - pNewH - pRetH, width: barWidth, height: pRetH,
+            fill: COL.projReturning, rx: 4
+        }));
+
+        // Bar labels
+        var clbl = svgEl('text', {
+            x: cx + barWidth / 2, y: M.top + PH + 20,
+            'text-anchor': 'middle', fill: COL.text,
+            'font-size': '12', 'font-family': "'Inter', sans-serif", 'font-weight': '600'
+        });
+        clbl.textContent = 'Current';
+        svg.appendChild(clbl);
+
+        var plbl = svgEl('text', {
+            x: px + barWidth / 2, y: M.top + PH + 20,
+            'text-anchor': 'middle', fill: COL.text,
+            'font-size': '12', 'font-family': "'Inter', sans-serif", 'font-weight': '600'
+        });
+        plbl.textContent = 'Projected';
+        svg.appendChild(plbl);
+
+        // Revenue labels on top of bars
+        var cRevLbl = svgEl('text', {
+            x: cx + barWidth / 2, y: cBase - cNewH - cRetH - 6,
+            'text-anchor': 'middle', fill: COL.returning,
+            'font-size': '13', 'font-weight': '700', 'font-family': "'Inter', sans-serif"
+        });
+        cRevLbl.textContent = fmtCurrency(data.currentRevenue);
+        svg.appendChild(cRevLbl);
+
+        var pRevLbl = svgEl('text', {
+            x: px + barWidth / 2, y: cBase - pNewH - pRetH - 6,
+            'text-anchor': 'middle', fill: data.delta >= 0 ? '#16a34a' : '#dc2626',
+            'font-size': '13', 'font-weight': '700', 'font-family': "'Inter', sans-serif"
+        });
+        pRevLbl.textContent = fmtCurrency(data.projRevenue);
+        svg.appendChild(pRevLbl);
+
+        // Delta connector
+        var cTop = cBase - cNewH - cRetH;
+        var pTop = cBase - pNewH - pRetH;
+        var midY = Math.min(cTop, pTop) - 2;
+        svg.appendChild(svgEl('line', {
+            x1: cx + barWidth, y1: cTop,
+            x2: px, y2: pTop,
+            stroke: COL.axis, 'stroke-width': 1, 'stroke-dasharray': '4,3'
+        }));
+
+        // Legend below chart
+        var legY = M.top + PH + 34;
+        var items = [
+            { col: COL.returning, label: 'Returning' },
+            { col: COL.newCust, label: 'New / Reactivated' }
+        ];
+        var legX = M.left;
+        items.forEach(function(item) {
+            svg.appendChild(svgEl('rect', {
+                x: legX, y: legY, width: 10, height: 10, fill: item.col, rx: 2
+            }));
+            var t = svgEl('text', {
+                x: legX + 14, y: legY + 9, fill: COL.text,
+                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
+            });
+            t.textContent = item.label;
+            svg.appendChild(t);
+            legX += 14 + item.label.length * 6.5 + 20;
+        });
+    }
+
+    // ========== STATE FROM DOM ==========
+
+    function readInputs() {
+        state.currency = el('currency-select').value;
+        state.activeCustomers = clamp(+el('active-customers').value || 0, 0, 999999);
+        state.loyaltyRate = clamp(+el('loyalty-rate').value || 0, 0, 100);
+        state.newCustomers = clamp(+el('new-customers').value || 0, 0, 999999);
+        state.avgSpend = clamp(+el('avg-spend').value || 0, 0, 999999);
+        state.avgBookingValue = clamp(+el('avg-booking').value || 0, 1, 999999);
+        state.cancellationRate = clamp(+el('cancel-rate').value || 0, 0, 100);
+        state.cogsRate = clamp(+el('cogs-rate').value || 0, 0, 100);
+        state.fulfilmentRate = clamp(+el('fulfil-rate').value || 0, 0, 100);
+        state.requiredMargin = clamp(+el('margin-rate').value || 0, 0, 100);
+        state.extendedPayback = el('extended-payback').checked;
+        state.paybackMonths = +el('payback-months').value;
+        state.repeatRate = clamp(+el('repeat-rate').value || 0, 0, 100);
+        state.loyaltyDelta = clamp(+el('loyalty-delta').value || 0, -30, 30);
+        state.newCustDelta = clamp(+el('new-delta').value || 0, -5000, 5000);
+        state.spendDelta = clamp(+el('spend-delta').value || 0, -50, 50);
+    }
+
+    function writeInputs() {
+        el('currency-select').value = state.currency;
+        el('active-customers').value = state.activeCustomers;
+        el('loyalty-rate').value = state.loyaltyRate;
+        el('new-customers').value = state.newCustomers;
+        el('avg-spend').value = state.avgSpend;
+        el('avg-booking').value = state.avgBookingValue;
+        el('cancel-rate').value = state.cancellationRate;
+        el('cogs-rate').value = state.cogsRate;
+        el('fulfil-rate').value = state.fulfilmentRate;
+        el('margin-rate').value = state.requiredMargin;
+        el('extended-payback').checked = state.extendedPayback;
+        el('payback-months').value = state.paybackMonths;
+        el('repeat-rate').value = state.repeatRate;
+        el('loyalty-delta').value = state.loyaltyDelta;
+        el('loyalty-delta-val').value = state.loyaltyDelta;
+        el('new-delta').value = state.newCustDelta;
+        el('new-delta-val').value = state.newCustDelta;
+        el('spend-delta').value = state.spendDelta;
+        el('spend-delta-val').value = state.spendDelta;
+        updateCurrencySymbols();
+        toggleExtended();
+    }
+
+    function updateCurrencySymbols() {
+        var s = sym();
+        el('spend-currency').textContent = s;
+        var bookingSyms = document.querySelectorAll('.booking-currency');
+        for (var i = 0; i < bookingSyms.length; i++) {
+            bookingSyms[i].textContent = s;
+        }
+    }
+
+    function toggleExtended() {
+        var ext = el('extended-inputs');
+        if (state.extendedPayback) ext.classList.add('visible');
+        else ext.classList.remove('visible');
+    }
+
+    // ========== RECALCULATE ==========
+
+    function recalculate() {
+        readInputs();
+        renderCurrentResults();
+        renderUnitResults();
+        renderGrowthResults();
+        updateURL();
+        savePrefs();
+    }
+
+    // ========== EVENT BINDING ==========
+
+    function bindEvents() {
+        // All number inputs
+        var inputs = document.querySelectorAll('#section-current input, #section-unit-economics input, #section-unit-economics select, #currency-select, #payback-months, #repeat-rate');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener('input', recalculate);
+        }
+
+        // Extended payback toggle
+        el('extended-payback').addEventListener('change', function() {
+            toggleExtended();
+            recalculate();
+        });
+
+        // Slider <-> number sync
+        var sliders = [
+            { range: 'loyalty-delta', num: 'loyalty-delta-val' },
+            { range: 'new-delta', num: 'new-delta-val' },
+            { range: 'spend-delta', num: 'spend-delta-val' }
+        ];
+        sliders.forEach(function(pair) {
+            el(pair.range).addEventListener('input', function() {
+                el(pair.num).value = this.value;
+                recalculate();
+            });
+            el(pair.num).addEventListener('input', function() {
+                el(pair.range).value = this.value;
+                recalculate();
+            });
+        });
+
+        // Currency selector
+        el('currency-select').addEventListener('change', function() {
+            updateCurrencySymbols();
+            recalculate();
+        });
+    }
+
+    // ========== INIT ==========
+
+    function init() {
+        var fromURL = readURL();
+        if (!fromURL) loadPrefs();
+        writeInputs();
+        bindEvents();
+        recalculate();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
