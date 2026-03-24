@@ -279,6 +279,48 @@ sitemap: false
         drinkOrder: 'coffee-first'
     };
 
+    // Cookie
+    var COOKIE_NAME = 'caffeine_prefs';
+    var COOKIE_DAYS = 365;
+
+    function canUseCookie() {
+        return typeof CookieConsent !== 'undefined' && CookieConsent.acceptedCategory('functionality');
+    }
+
+    function savePrefs() {
+        if (!canUseCookie()) return;
+        var data = {
+            wake: state.wake,
+            sleep: state.sleep % 1440,
+            coffees: state.coffees,
+            teas: state.teas,
+            halfLife: state.halfLife,
+            drinkOrder: state.drinkOrder
+        };
+        var expires = new Date(Date.now() + COOKIE_DAYS * 864e5).toUTCString();
+        document.cookie = COOKIE_NAME + '=' + encodeURIComponent(JSON.stringify(data))
+            + ';expires=' + expires + ';path=/caffeine/;SameSite=Lax;Secure';
+    }
+
+    function loadPrefs() {
+        if (!canUseCookie()) return false;
+        var match = document.cookie.match('(?:^|; )' + COOKIE_NAME + '=([^;]*)');
+        if (!match) return false;
+        try {
+            var data = JSON.parse(decodeURIComponent(match[1]));
+            if (data.wake !== undefined) state.wake = clamp(data.wake, 0, 1439);
+            if (data.sleep !== undefined) state.sleep = clamp(data.sleep, 0, 1439);
+            if (data.coffees !== undefined) state.coffees = clamp(data.coffees, 0, 8);
+            if (data.teas !== undefined) state.teas = clamp(data.teas, 0, 8);
+            if (data.halfLife === 3 || data.halfLife === 5 || data.halfLife === 7) state.halfLife = data.halfLife;
+            if (data.drinkOrder === 'coffee-first' || data.drinkOrder === 'tea-first' || data.drinkOrder === 'interleave') state.drinkOrder = data.drinkOrder;
+            if (state.sleep <= state.wake) state.sleep += 1440;
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
     // SVG namespace
     var NS = 'http://www.w3.org/2000/svg';
 
@@ -803,6 +845,7 @@ sitemap: false
         renderSchedule(drinks);
         updateResults(drinks);
         updateURL();
+        savePrefs();
     }
 
     function bindEvents() {
@@ -841,9 +884,10 @@ sitemap: false
         }
     }
 
-    // Init
+    // Init - URL params take priority over cookie, cookie over defaults
     function init() {
-        readURL();
+        var hasUrlParams = readURL();
+        if (!hasUrlParams) loadPrefs();
         syncInputs();
         bindEvents();
         recalculate();

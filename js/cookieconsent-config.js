@@ -149,8 +149,24 @@ CookieConsent.run({
                         },
                         {
                             title: 'Functionality Cookies',
-                            description: 'These cookies enable enhanced functionality and personalisation.',
-                            linkedCategory: 'functionality'
+                            description: 'These cookies enable enhanced functionality and personalisation, such as remembering your preferences on interactive tools.',
+                            linkedCategory: 'functionality',
+                            cookieTable: {
+                                headers: {
+                                    name: 'Name',
+                                    domain: 'Service',
+                                    description: 'Description',
+                                    expiration: 'Expiration'
+                                },
+                                body: [
+                                    {
+                                        name: 'caffeine_prefs',
+                                        domain: 'Caffeine Calculator',
+                                        description: 'Remembers your wake/sleep times and drink preferences',
+                                        expiration: '1 year'
+                                    }
+                                ]
+                            }
                         },
                         {
                             title: 'More Information',
