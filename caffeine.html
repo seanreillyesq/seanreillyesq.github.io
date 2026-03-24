@@ -1,0 +1,821 @@
+---
+layout: page
+title: "Caffeine Calculator"
+header-title: "Caffeine Calculator"
+description: "Science-based timing for your coffee and tea"
+header-img: "img/home-bg.jpg"
+meta-description: "Calculate optimal coffee and tea timing based on your cortisol rhythm, caffeine half-life, and sleep schedule."
+permalink: /caffeine/
+hidden: true
+sitemap: false
+---
+
+<style>
+.caffeine-intro { margin-bottom: 1.5rem; }
+
+/* Input section */
+.caffeine-inputs .form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    margin-bottom: 0.25rem;
+}
+.caffeine-inputs .input-group .form-control {
+    border-left: 0;
+    border-right: 0;
+}
+.caffeine-inputs .input-group .btn {
+    min-width: 2.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.375rem 0.5rem;
+}
+
+/* Result cards */
+.result-card {
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.75rem;
+    padding: 0.875rem 0.5rem;
+    text-align: center;
+}
+.result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent, #4A7BA7);
+    margin-bottom: 0.125rem;
+}
+.result-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: var(--color-text, #2D2D2D);
+    line-height: 1.2;
+}
+
+/* Graph */
+#graph-container {
+    margin: 1.5rem 0;
+    width: 100%;
+}
+#caffeine-graph {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* Schedule */
+.schedule-list { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+.schedule-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border, #E5E7EB);
+    font-size: 0.9375rem;
+}
+.schedule-item:last-child { border-bottom: none; }
+.schedule-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.schedule-dot.coffee { background: #6F4E37; }
+.schedule-dot.tea { background: #4A7C59; }
+.schedule-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    min-width: 3.25rem;
+}
+.schedule-type { color: var(--color-text-muted, #6B7280); }
+
+/* Legend */
+.graph-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted, #6B7280);
+    margin-bottom: 0.5rem;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+.legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* Methodology */
+.methodology .accordion-button {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted, #6B7280);
+}
+.methodology .accordion-button:not(.collapsed) {
+    color: var(--color-text, #2D2D2D);
+    background: transparent;
+    box-shadow: none;
+}
+.methodology .accordion-body {
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #6B7280);
+    line-height: 1.7;
+}
+
+/* Empty state */
+.empty-message {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--color-text-muted, #6B7280);
+    font-size: 0.9375rem;
+}
+
+/* Mobile */
+@media (max-width: 575.98px) {
+    .result-value { font-size: 1.375rem; }
+    .result-label { font-size: 0.5625rem; letter-spacing: 1px; }
+    .result-card { padding: 0.625rem 0.375rem; }
+}
+</style>
+
+<p class="caffeine-intro">Work out when to drink your coffee and tea, based on your cortisol rhythm and caffeine half-life. Adjust the inputs and everything recalculates instantly.</p>
+
+<!-- Inputs -->
+<div class="caffeine-inputs">
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="wake-time">Wake time</label>
+            <input type="time" class="form-control" id="wake-time" value="07:00">
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="sleep-time">Sleep time</label>
+            <input type="time" class="form-control" id="sleep-time" value="22:30">
+        </div>
+        <div class="col-4 col-md-2">
+            <label class="form-label">Coffees</label>
+            <div class="input-group input-group-sm">
+                <button class="btn btn-outline-secondary" type="button" data-stepper="coffee" data-dir="-1">&minus;</button>
+                <input type="text" class="form-control text-center" id="coffee-count" value="2" readonly>
+                <button class="btn btn-outline-secondary" type="button" data-stepper="coffee" data-dir="1">+</button>
+            </div>
+        </div>
+        <div class="col-4 col-md-2">
+            <label class="form-label">Teas</label>
+            <div class="input-group input-group-sm">
+                <button class="btn btn-outline-secondary" type="button" data-stepper="tea" data-dir="-1">&minus;</button>
+                <input type="text" class="form-control text-center" id="tea-count" value="2" readonly>
+                <button class="btn btn-outline-secondary" type="button" data-stepper="tea" data-dir="1">+</button>
+            </div>
+        </div>
+        <div class="col-4 col-md-2">
+            <label class="form-label" for="metabolism">Metabolism</label>
+            <select class="form-select form-select-sm" id="metabolism">
+                <option value="3">Fast</option>
+                <option value="5" selected>Normal</option>
+                <option value="7">Slow</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Results summary -->
+<div class="row g-2 g-md-3 mb-3" id="results-summary">
+    <div class="col-4">
+        <div class="result-card">
+            <div class="result-label">Last Safe Coffee</div>
+            <div class="result-value" id="last-coffee">--:--</div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="result-card">
+            <div class="result-label">Last Safe Tea</div>
+            <div class="result-value" id="last-tea">--:--</div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="result-card">
+            <div class="result-label">At Bedtime</div>
+            <div class="result-value" id="bedtime-mg">-- mg</div>
+        </div>
+    </div>
+</div>
+
+<!-- Graph legend -->
+<div class="graph-legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:#C4A265;"></div> Cortisol</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#4A7BA7;"></div> Caffeine in system</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#6F4E37;"></div> Coffee</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#4A7C59;"></div> Tea</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(74,124,89,0.25);"></div> Optimal window</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(180,60,60,0.2);"></div> Avoid</div>
+</div>
+
+<!-- SVG Graph -->
+<div id="graph-container">
+    <svg id="caffeine-graph" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet"></svg>
+</div>
+
+<!-- Schedule -->
+<div id="schedule"></div>
+
+<!-- Methodology -->
+<div class="methodology mb-4">
+    <div class="accordion" id="method-accordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#method-body">
+                    How this works
+                </button>
+            </h2>
+            <div id="method-body" class="accordion-collapse collapse" data-bs-parent="#method-accordion">
+                <div class="accordion-body">
+                    <p><strong>Cortisol rhythm:</strong> Your body produces cortisol in peaks throughout the day, starting with the cortisol awakening response about 30-45 minutes after you wake up, with smaller peaks in the late morning and mid-afternoon. Caffeine is most effective between these peaks, when cortisol is naturally low.</p>
+                    <p><strong>Caffeine half-life:</strong> The average adult eliminates half the caffeine in their system every 5 hours. Fast metabolisers (including smokers) clear it in about 3 hours; slow metabolisers (including those on oral contraceptives) may take 7 hours. This affects how late you can safely drink.</p>
+                    <p><strong>The 25mg threshold:</strong> The "last safe drink" calculation works backwards from your bedtime to find the latest time you can drink so that less than 25mg of caffeine remains in your system when you want to sleep. Below 25mg, most people experience minimal sleep disruption.</p>
+                    <p><strong>Drink placement:</strong> Coffees are placed in earlier optimal windows (higher caffeine, more time to clear) and teas in later windows (lower caffeine, needs less clearance time). Both are distributed evenly within their available windows.</p>
+                    <p>This is a simplified model. Individual responses to caffeine vary based on genetics, tolerance, medications, and other factors. Use it as a guide, not gospel.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // Constants
+    var COFFEE_MG = 95;
+    var TEA_MG = 47;
+    var LN2 = Math.LN2;
+    var RESIDUAL_THRESHOLD = 25; // mg at bedtime considered safe
+
+    // Graph dimensions (viewBox coords)
+    var W = 800, H = 300;
+    var M = { top: 15, right: 50, bottom: 30, left: 40 };
+    var PW = W - M.left - M.right;
+    var PH = H - M.top - M.bottom;
+
+    // Colours
+    var COL = {
+        coffee: '#6F4E37',
+        tea: '#4A7C59',
+        cortisolFill: 'rgba(196, 162, 101, 0.2)',
+        cortisolLine: '#C4A265',
+        caffeine: '#4A7BA7',
+        zoneGood: 'rgba(74, 124, 89, 0.12)',
+        zoneBad: 'rgba(180, 60, 60, 0.10)',
+        cutoff: '#B43C3C',
+        grid: '#E5E7EB',
+        axis: '#9CA3AF',
+        text: '#6B7280'
+    };
+
+    // State
+    var state = {
+        wake: 420,      // 07:00 in minutes
+        sleep: 1350,    // 22:30
+        coffees: 2,
+        teas: 2,
+        halfLife: 5
+    };
+
+    // SVG namespace
+    var NS = 'http://www.w3.org/2000/svg';
+
+    // ========== HELPERS ==========
+
+    function el(tag, attrs, text) {
+        var e = document.createElementNS(NS, tag);
+        if (attrs) {
+            for (var k in attrs) {
+                if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
+            }
+        }
+        if (text !== undefined) e.textContent = text;
+        return e;
+    }
+
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+    function timeToMinutes(str) {
+        var parts = str.split(':');
+        return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    }
+
+    function formatTime(mins) {
+        mins = ((mins % 1440) + 1440) % 1440;
+        var h = Math.floor(mins / 60);
+        var m = Math.round(mins % 60);
+        if (m === 60) { h++; m = 0; }
+        return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+    }
+
+    function formatTimeCompact(mins) {
+        return formatTime(mins).replace(':', '');
+    }
+
+    function parseCompactTime(str) {
+        if (!str || str.length < 3) return NaN;
+        if (str.length === 3) str = '0' + str;
+        var h = parseInt(str.substring(0, 2), 10);
+        var m = parseInt(str.substring(2, 4), 10);
+        if (isNaN(h) || isNaN(m)) return NaN;
+        return h * 60 + m;
+    }
+
+    function wakingMinutes() {
+        var d = state.sleep - state.wake;
+        if (d <= 0) d += 1440;
+        return d;
+    }
+
+    // ========== SCIENCE ==========
+
+    function cortisolLevel(minsSinceWake) {
+        // Three Gaussian peaks modelling the circadian cortisol rhythm
+        var peaks = [
+            { c: 37,  s: 30, a: 1.0 },   // Cortisol awakening response
+            { c: 270, s: 60, a: 0.55 },   // Late morning
+            { c: 510, s: 60, a: 0.35 }    // Mid-afternoon
+        ];
+        var level = 0.12; // baseline
+        for (var i = 0; i < peaks.length; i++) {
+            var p = peaks[i];
+            var x = minsSinceWake - p.c;
+            level += p.a * Math.exp(-(x * x) / (2 * p.s * p.s));
+        }
+        return Math.min(level, 1.0);
+    }
+
+    function getOptimalWindows() {
+        // Windows between cortisol peaks (minutes since wake)
+        return [
+            { start: 90,  end: 210, quality: 'good' },   // Between CAR and late-morning peak
+            { start: 330, end: 450, quality: 'good' },   // Between late-morning and afternoon peak
+            { start: 570, end: 720, quality: 'good' }    // After afternoon peak decline
+        ];
+    }
+
+    function lastSafeDrinkTime(sleepMins, halfLifeHrs, mg) {
+        var halfLifeMin = halfLifeHrs * 60;
+        var k = LN2 / halfLifeMin;
+        var decayNeeded = Math.log(mg / RESIDUAL_THRESHOLD) / k;
+        return sleepMins - decayNeeded;
+    }
+
+    function scheduleDrinks(coffees, teas, wakeMins, sleepMins, halfLife) {
+        var windows = getOptimalWindows();
+        var waking = sleepMins - wakeMins;
+        if (waking <= 0) waking += 1440;
+
+        var coffeeCutoff = lastSafeDrinkTime(sleepMins, halfLife, COFFEE_MG) - wakeMins;
+        var teaCutoff = lastSafeDrinkTime(sleepMins, halfLife, TEA_MG) - wakeMins;
+
+        // Clamp windows to waking period and cutoff
+        function clampWindows(wins, cutoff) {
+            var result = [];
+            for (var i = 0; i < wins.length; i++) {
+                var w = wins[i];
+                if (w.start >= cutoff || w.start >= waking) continue;
+                result.push({
+                    start: w.start,
+                    end: Math.min(w.end, cutoff, waking)
+                });
+            }
+            return result;
+        }
+
+        var coffeeWins = clampWindows(windows, coffeeCutoff);
+        var teaWins = clampWindows(windows, teaCutoff);
+
+        var drinks = [];
+        distribute(drinks, 'coffee', coffees, COFFEE_MG, coffeeWins);
+        distribute(drinks, 'tea', teas, TEA_MG, teaWins.slice().reverse());
+
+        drinks.sort(function(a, b) { return a.time - b.time; });
+        return drinks;
+    }
+
+    function distribute(drinks, type, count, mg, windows) {
+        if (count === 0 || windows.length === 0) return;
+
+        var totalSpan = 0;
+        for (var i = 0; i < windows.length; i++) {
+            totalSpan += windows[i].end - windows[i].start;
+        }
+        if (totalSpan <= 0) return;
+
+        var spacing = totalSpan / (count + 1);
+        var placed = 0;
+        var accumulated = 0;
+
+        for (var wi = 0; wi < windows.length && placed < count; wi++) {
+            var w = windows[wi];
+            var wLen = w.end - w.start;
+
+            while (placed < count) {
+                var target = (placed + 1) * spacing;
+                var posInWindow = target - accumulated;
+                if (posInWindow > 0 && posInWindow <= wLen) {
+                    drinks.push({ type: type, time: Math.round(w.start + posInWindow), mg: mg });
+                    placed++;
+                } else if (posInWindow <= 0) {
+                    // Should not happen but safety
+                    placed++;
+                } else {
+                    break;
+                }
+            }
+            accumulated += wLen;
+        }
+
+        // If some drinks not placed (not enough window space), squeeze them in
+        while (placed < count) {
+            var lastWin = windows[windows.length - 1];
+            var t = Math.round(lastWin.start + (lastWin.end - lastWin.start) * (placed + 1) / (count + 1));
+            drinks.push({ type: type, time: t, mg: mg });
+            placed++;
+        }
+    }
+
+    function caffeineAtTime(drinks, minutesSinceWake, halfLifeHrs) {
+        var k = LN2 / (halfLifeHrs * 60);
+        var total = 0;
+        for (var i = 0; i < drinks.length; i++) {
+            var elapsed = minutesSinceWake - drinks[i].time;
+            if (elapsed < 0) continue;
+            total += drinks[i].mg * Math.exp(-k * elapsed);
+        }
+        return total;
+    }
+
+    // ========== RENDERING ==========
+
+    function xScale(minsSinceWake, totalWaking) {
+        return M.left + (minsSinceWake / totalWaking) * PW;
+    }
+
+    function yScale(val, maxVal) {
+        return M.top + PH - (val / maxVal) * PH;
+    }
+
+    function renderGraph(drinks) {
+        var svg = document.getElementById('caffeine-graph');
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+        var waking = wakingMinutes();
+        if (waking <= 0) return;
+
+        // Calculate max caffeine for y-axis
+        var maxCaffeine = 0;
+        var totalDrinks = state.coffees + state.teas;
+        if (totalDrinks > 0) {
+            // Sample the caffeine curve to find peak
+            for (var t = 0; t <= waking; t += 5) {
+                var c = caffeineAtTime(drinks, t, state.halfLife);
+                if (c > maxCaffeine) maxCaffeine = c;
+            }
+        }
+        maxCaffeine = Math.max(maxCaffeine, 50); // minimum scale
+        maxCaffeine = Math.ceil(maxCaffeine / 50) * 50; // round up to nearest 50
+
+        // Defs
+        var defs = el('defs');
+        svg.appendChild(defs);
+
+        // Background
+        svg.appendChild(el('rect', {
+            x: M.left, y: M.top, width: PW, height: PH,
+            fill: '#FAFAF9', rx: 4
+        }));
+
+        // Horizontal grid lines
+        for (var g = 0; g <= 4; g++) {
+            var gy = M.top + (PH / 4) * g;
+            svg.appendChild(el('line', {
+                x1: M.left, y1: gy, x2: M.left + PW, y2: gy,
+                stroke: COL.grid, 'stroke-width': 0.5
+            }));
+        }
+
+        // Zone backgrounds (optimal windows as green, cortisol peaks as red)
+        var windows = getOptimalWindows();
+        for (var wi = 0; wi < windows.length; wi++) {
+            var w = windows[wi];
+            if (w.start >= waking) continue;
+            var wEnd = Math.min(w.end, waking);
+            svg.appendChild(el('rect', {
+                x: xScale(w.start, waking), y: M.top,
+                width: xScale(wEnd, waking) - xScale(w.start, waking),
+                height: PH, fill: COL.zoneGood
+            }));
+        }
+
+        // Sleep cutoff zone
+        var coffeeCutoffSinceWake = lastSafeDrinkTime(state.sleep, state.halfLife, COFFEE_MG) - state.wake;
+        if (coffeeCutoffSinceWake < 0) coffeeCutoffSinceWake += 1440;
+        if (coffeeCutoffSinceWake < waking) {
+            svg.appendChild(el('rect', {
+                x: xScale(coffeeCutoffSinceWake, waking), y: M.top,
+                width: xScale(waking, waking) - xScale(coffeeCutoffSinceWake, waking),
+                height: PH, fill: COL.zoneBad
+            }));
+
+            // Cutoff line
+            var cx = xScale(coffeeCutoffSinceWake, waking);
+            svg.appendChild(el('line', {
+                x1: cx, y1: M.top, x2: cx, y2: M.top + PH,
+                stroke: COL.cutoff, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
+            }));
+            svg.appendChild(el('text', {
+                x: cx + 4, y: M.top + 12,
+                fill: COL.cutoff, 'font-size': '9', 'font-family': 'Inter, sans-serif'
+            }, 'Cutoff'));
+        }
+
+        // Cortisol curve
+        var cortisolPath = '';
+        var cortisolFillPath = '';
+        var maxCortisol = 1.0;
+        for (var t = 0; t <= waking; t += 3) {
+            var cv = cortisolLevel(t);
+            var px = xScale(t, waking);
+            var py = yScale(cv, maxCortisol);
+            cortisolPath += (t === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+            cortisolFillPath += (t === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+        }
+        // Close fill path
+        cortisolFillPath += 'L' + xScale(waking, waking).toFixed(1) + ',' + (M.top + PH);
+        cortisolFillPath += 'L' + xScale(0, waking).toFixed(1) + ',' + (M.top + PH) + 'Z';
+
+        svg.appendChild(el('path', {
+            d: cortisolFillPath, fill: COL.cortisolFill
+        }));
+        svg.appendChild(el('path', {
+            d: cortisolPath, fill: 'none',
+            stroke: COL.cortisolLine, 'stroke-width': 1.5
+        }));
+
+        // Caffeine decay curve
+        if (totalDrinks > 0 && drinks.length > 0) {
+            var caffPath = '';
+            for (var t = 0; t <= waking; t += 3) {
+                var cv = caffeineAtTime(drinks, t, state.halfLife);
+                var px = xScale(t, waking);
+                var py = yScale(cv, maxCaffeine);
+                caffPath += (t === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+            }
+            svg.appendChild(el('path', {
+                d: caffPath, fill: 'none',
+                stroke: COL.caffeine, 'stroke-width': 2, 'stroke-linejoin': 'round'
+            }));
+        }
+
+        // Drink markers
+        for (var di = 0; di < drinks.length; di++) {
+            var d = drinks[di];
+            var dx = xScale(d.time, waking);
+            var colour = d.type === 'coffee' ? COL.coffee : COL.tea;
+
+            svg.appendChild(el('line', {
+                x1: dx, y1: M.top, x2: dx, y2: M.top + PH,
+                stroke: colour, 'stroke-width': 1, 'stroke-dasharray': '3,3', opacity: 0.6
+            }));
+            svg.appendChild(el('circle', {
+                cx: dx, cy: M.top + 8, r: 5,
+                fill: colour
+            }));
+
+            // Time label - alternate above/below to avoid overlap
+            var labelY = (di % 2 === 0) ? M.top + 24 : M.top + 36;
+            svg.appendChild(el('text', {
+                x: dx, y: labelY, 'text-anchor': 'middle',
+                fill: colour, 'font-size': '9', 'font-family': 'JetBrains Mono, monospace',
+                'font-weight': '600'
+            }, formatTime(state.wake + d.time)));
+        }
+
+        // X-axis (time labels)
+        var hourStep = waking > 840 ? 120 : 60; // 2hr labels if waking >14h, else 1hr
+        svg.appendChild(el('line', {
+            x1: M.left, y1: M.top + PH, x2: M.left + PW, y2: M.top + PH,
+            stroke: COL.grid, 'stroke-width': 1
+        }));
+
+        for (var t = 0; t <= waking; t += hourStep) {
+            var tx = xScale(t, waking);
+            svg.appendChild(el('line', {
+                x1: tx, y1: M.top + PH, x2: tx, y2: M.top + PH + 4,
+                stroke: COL.axis, 'stroke-width': 1
+            }));
+            svg.appendChild(el('text', {
+                x: tx, y: M.top + PH + 16, 'text-anchor': 'middle',
+                fill: COL.text, 'font-size': '10', 'font-family': 'Inter, sans-serif'
+            }, formatTime(state.wake + t)));
+        }
+
+        // Y-axis right (caffeine mg)
+        if (totalDrinks > 0) {
+            for (var mg = 0; mg <= maxCaffeine; mg += 50) {
+                var my = yScale(mg, maxCaffeine);
+                svg.appendChild(el('text', {
+                    x: M.left + PW + 6, y: my + 3, 'text-anchor': 'start',
+                    fill: COL.caffeine, 'font-size': '9', 'font-family': 'Inter, sans-serif'
+                }, mg + 'mg'));
+            }
+        }
+
+        // Y-axis left (cortisol, relative)
+        svg.appendChild(el('text', {
+            x: M.left - 6, y: M.top + 4, 'text-anchor': 'end',
+            fill: COL.cortisolLine, 'font-size': '9', 'font-family': 'Inter, sans-serif'
+        }, 'High'));
+        svg.appendChild(el('text', {
+            x: M.left - 6, y: M.top + PH + 3, 'text-anchor': 'end',
+            fill: COL.cortisolLine, 'font-size': '9', 'font-family': 'Inter, sans-serif'
+        }, 'Low'));
+
+        // Wake/Sleep labels
+        svg.appendChild(el('text', {
+            x: M.left, y: M.top + PH + 27, 'text-anchor': 'middle',
+            fill: COL.text, 'font-size': '9', 'font-family': 'Inter, sans-serif',
+            'font-weight': '600'
+        }, 'Wake'));
+        svg.appendChild(el('text', {
+            x: M.left + PW, y: M.top + PH + 27, 'text-anchor': 'middle',
+            fill: COL.text, 'font-size': '9', 'font-family': 'Inter, sans-serif',
+            'font-weight': '600'
+        }, 'Sleep'));
+    }
+
+    function renderSchedule(drinks) {
+        var container = document.getElementById('schedule');
+        if (drinks.length === 0) {
+            container.innerHTML = '<div class="empty-message">Add some drinks to see your optimal schedule.</div>';
+            return;
+        }
+
+        var html = '<ul class="schedule-list">';
+        for (var i = 0; i < drinks.length; i++) {
+            var d = drinks[i];
+            var label = d.type === 'coffee' ? 'Coffee' : 'Tea';
+            var mg = d.mg + 'mg';
+            var time = formatTime(state.wake + d.time);
+            html += '<li class="schedule-item">';
+            html += '<span class="schedule-dot ' + d.type + '"></span>';
+            html += '<span class="schedule-time">' + time + '</span>';
+            html += '<span class="schedule-type">' + label + ' (' + mg + ')</span>';
+            html += '</li>';
+        }
+        html += '</ul>';
+        container.innerHTML = html;
+    }
+
+    function updateResults(drinks) {
+        var waking = wakingMinutes();
+
+        // Last safe coffee time (absolute)
+        var lastCoffee = lastSafeDrinkTime(state.sleep, state.halfLife, COFFEE_MG);
+        var lastTea = lastSafeDrinkTime(state.sleep, state.halfLife, TEA_MG);
+
+        document.getElementById('last-coffee').textContent = formatTime(lastCoffee);
+        document.getElementById('last-tea').textContent = formatTime(lastTea);
+
+        // Caffeine at bedtime
+        if (drinks.length > 0) {
+            var bedtimeMg = caffeineAtTime(drinks, waking, state.halfLife);
+            document.getElementById('bedtime-mg').textContent = Math.round(bedtimeMg) + ' mg';
+        } else {
+            document.getElementById('bedtime-mg').textContent = '0 mg';
+        }
+    }
+
+    // ========== UI ==========
+
+    function readInputs() {
+        state.wake = timeToMinutes(document.getElementById('wake-time').value);
+        state.sleep = timeToMinutes(document.getElementById('sleep-time').value);
+        state.coffees = clamp(parseInt(document.getElementById('coffee-count').value, 10) || 0, 0, 8);
+        state.teas = clamp(parseInt(document.getElementById('tea-count').value, 10) || 0, 0, 8);
+        state.halfLife = parseFloat(document.getElementById('metabolism').value) || 5;
+
+        // Handle sleep before wake (next day)
+        if (state.sleep <= state.wake) {
+            state.sleep += 1440;
+        }
+    }
+
+    function syncInputs() {
+        document.getElementById('wake-time').value = formatTime(state.wake);
+        document.getElementById('sleep-time').value = formatTime(state.sleep % 1440);
+        document.getElementById('coffee-count').value = state.coffees;
+        document.getElementById('tea-count').value = state.teas;
+        document.getElementById('metabolism').value = state.halfLife;
+    }
+
+    function updateURL() {
+        var params = new URLSearchParams();
+        params.set('wake', formatTimeCompact(state.wake));
+        params.set('sleep', formatTimeCompact(state.sleep % 1440));
+        params.set('coffee', state.coffees);
+        params.set('tea', state.teas);
+        if (state.halfLife !== 5) params.set('metabolism', state.halfLife);
+
+        var url = window.location.pathname + '?' + params.toString();
+        history.replaceState(null, '', url);
+    }
+
+    function readURL() {
+        var params = new URLSearchParams(window.location.search);
+        if (params.size === 0 && !window.location.search) return false;
+
+        if (params.has('wake')) {
+            var w = parseCompactTime(params.get('wake'));
+            if (!isNaN(w)) state.wake = clamp(w, 0, 1439);
+        }
+        if (params.has('sleep')) {
+            var s = parseCompactTime(params.get('sleep'));
+            if (!isNaN(s)) state.sleep = clamp(s, 0, 1439);
+        }
+        if (params.has('coffee')) {
+            state.coffees = clamp(parseInt(params.get('coffee'), 10) || 0, 0, 8);
+        }
+        if (params.has('tea')) {
+            state.teas = clamp(parseInt(params.get('tea'), 10) || 0, 0, 8);
+        }
+        if (params.has('metabolism')) {
+            var m = parseFloat(params.get('metabolism'));
+            if (m === 3 || m === 5 || m === 7) state.halfLife = m;
+        }
+
+        // Handle sleep before wake
+        if (state.sleep <= state.wake) state.sleep += 1440;
+
+        return true;
+    }
+
+    function recalculate() {
+        var drinks = scheduleDrinks(state.coffees, state.teas, state.wake, state.sleep, state.halfLife);
+        renderGraph(drinks);
+        renderSchedule(drinks);
+        updateResults(drinks);
+        updateURL();
+    }
+
+    function bindEvents() {
+        // Time inputs
+        document.getElementById('wake-time').addEventListener('change', function() {
+            readInputs();
+            recalculate();
+        });
+        document.getElementById('sleep-time').addEventListener('change', function() {
+            readInputs();
+            recalculate();
+        });
+
+        // Metabolism
+        document.getElementById('metabolism').addEventListener('change', function() {
+            readInputs();
+            recalculate();
+        });
+
+        // Stepper buttons
+        var buttons = document.querySelectorAll('[data-stepper]');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', function() {
+                var target = this.getAttribute('data-stepper');
+                var dir = parseInt(this.getAttribute('data-dir'), 10);
+                var input = document.getElementById(target + '-count');
+                var val = clamp((parseInt(input.value, 10) || 0) + dir, 0, 8);
+                input.value = val;
+                readInputs();
+                recalculate();
+            });
+        }
+    }
+
+    // Init
+    function init() {
+        readURL();
+        syncInputs();
+        bindEvents();
+        recalculate();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
