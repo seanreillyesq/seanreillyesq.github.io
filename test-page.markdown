@@ -321,6 +321,17 @@ The `.video-embed` wrapper creates a responsive 16:9 container. The iframe fills
 | Timeline | Available | Custom CSS |
 | Video embed | Available | Custom CSS |
 | Scroll reveal | Available | Custom CSS + JS |
+| Accordion | Available | Bootstrap 5 JS |
+| Tabs & pills | Available | Bootstrap 5 JS |
+| Modal | Available | Bootstrap 5 JS |
+| Tooltips | Available | Bootstrap 5 JS + Popper |
+| Offcanvas | Available | Bootstrap 5 JS |
+| Progress bars | Available | Bootstrap 5 |
+| Spinners | Available | Bootstrap 5 |
+| Toasts | Available | Bootstrap 5 JS |
+| Carousel | Available | Bootstrap 5 JS |
+| Dropdowns | Available | Bootstrap 5 JS + Popper |
+| Popovers | Available | Bootstrap 5 JS + Popper |
 
 ---
 
@@ -638,6 +649,337 @@ Use `.shadow-sm` on images and cards to lift them off the page. Avoid `.shadow-l
 
 ---
 
+## Accordion
+
+Collapsible content panels - useful for FAQs, step-by-step instructions, or hiding supplementary detail. Use `.accordion-flush` to remove the outer borders:
+
+<div class="accordion accordion-flush mb-3" id="accordionExample">
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">First section (open by default)</button>
+</h2>
+<div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+<div class="accordion-body">This panel is open by default because of the <code>.show</code> class. Only one panel opens at a time when using <code>data-bs-parent</code>.</div>
+</div>
+</div>
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Second section</button>
+</h2>
+<div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+<div class="accordion-body">Each item needs a unique <code>id</code> on the collapse div and a matching <code>data-bs-target</code> on the button. The <code>data-bs-parent</code> attribute ensures only one stays open.</div>
+</div>
+</div>
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Third section</button>
+</h2>
+<div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+<div class="accordion-body">Remove <code>data-bs-parent</code> if you want multiple panels open simultaneously. Add <code>.accordion-flush</code> to the wrapper to remove the outer border and rounded corners.</div>
+</div>
+</div>
+</div>
+
+---
+
+## Tabs
+
+Tabbed content panels for showing alternatives, language variants, or categorised information side by side:
+
+<ul class="nav nav-tabs mb-0" id="exampleTabs" role="tablist">
+<li class="nav-item" role="presentation">
+<button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview-pane" type="button" role="tab" aria-controls="overview-pane" aria-selected="true">Overview</button>
+</li>
+<li class="nav-item" role="presentation">
+<button class="nav-link" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-pane" type="button" role="tab" aria-controls="details-pane" aria-selected="false">Details</button>
+</li>
+<li class="nav-item" role="presentation">
+<button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code-pane" type="button" role="tab" aria-controls="code-pane" aria-selected="false">Code</button>
+</li>
+</ul>
+<div class="tab-content border border-top-0 rounded-bottom p-3 mb-3">
+<div class="tab-pane fade show active" id="overview-pane" role="tabpanel" aria-labelledby="overview-tab">
+<p class="mb-0">First tab content. Tabs are useful for showing the same concept from different angles - e.g. a feature overview, technical details, and code examples.</p>
+</div>
+<div class="tab-pane fade" id="details-pane" role="tabpanel" aria-labelledby="details-tab">
+<p class="mb-0">Second tab content. Each pane needs a unique <code>id</code> matching the button's <code>data-bs-target</code>. Use <code>.fade</code> for smooth transitions.</p>
+</div>
+<div class="tab-pane fade" id="code-pane" role="tabpanel" aria-labelledby="code-tab">
+<p class="mb-0">Third tab content. You can put any HTML inside a tab pane - code blocks, images, tables, even nested components.</p>
+</div>
+</div>
+
+For pill-style tabs, replace `.nav-tabs` with `.nav-pills`:
+
+<ul class="nav nav-pills mb-3" id="pillTabs" role="tablist">
+<li class="nav-item" role="presentation">
+<button class="nav-link active" id="pill-one-tab" data-bs-toggle="pill" data-bs-target="#pill-one" type="button" role="tab" aria-selected="true">Option A</button>
+</li>
+<li class="nav-item" role="presentation">
+<button class="nav-link" id="pill-two-tab" data-bs-toggle="pill" data-bs-target="#pill-two" type="button" role="tab" aria-selected="false">Option B</button>
+</li>
+</ul>
+<div class="tab-content mb-3">
+<div class="tab-pane fade show active" id="pill-one" role="tabpanel" aria-labelledby="pill-one-tab">
+<div class="alert alert-info mb-0">Pill tabs have rounded backgrounds instead of underlined tabs. Good for toggling between views or modes.</div>
+</div>
+<div class="tab-pane fade" id="pill-two" role="tabpanel" aria-labelledby="pill-two-tab">
+<div class="alert alert-success mb-0">Second pill content. Pills work exactly the same way as tabs - just a different visual style.</div>
+</div>
+</div>
+
+---
+
+## Modal
+
+A dialog overlay for confirmations, detail views, or any content that needs focused attention. Click the button to open:
+
+<button type="button" class="btn btn-accent" data-bs-toggle="modal" data-bs-target="#exampleModal">Open Modal</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="exampleModalLabel">Example Modal</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+Modal body content goes here. You can include any HTML - text, forms, images, even other components. The backdrop darkens the page behind to draw focus.
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-outline-accent" data-bs-dismiss="modal">Close</button>
+<button type="button" class="btn btn-accent">Save changes</button>
+</div>
+</div>
+</div>
+</div>
+
+For a larger modal, add `.modal-lg` or `.modal-xl` to `.modal-dialog`. For centred positioning, add `.modal-dialog-centered`.
+
+---
+
+## Tooltips
+
+Hover over these elements to see tooltips. Useful for abbreviations, icon-only buttons, or supplementary context:
+
+<p>
+<button type="button" class="btn btn-accent btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">Top</button>
+<button type="button" class="btn btn-accent btn-sm" data-bs-toggle="tooltip" data-bs-placement="right" title="Tooltip on right">Right</button>
+<button type="button" class="btn btn-accent btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tooltip on bottom">Bottom</button>
+<button type="button" class="btn btn-accent btn-sm" data-bs-toggle="tooltip" data-bs-placement="left" title="Tooltip on left">Left</button>
+</p>
+
+Inline example: <abbr data-bs-toggle="tooltip" title="Search Engine Optimisation">SEO</abbr> is a core discipline. Hover the abbreviation to see the tooltip.
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(el) { return new bootstrap.Tooltip(el); });
+});
+</script>
+
+Tooltips require JavaScript initialisation (see the script above). Use `data-bs-placement` to control direction. Works on any element with `data-bs-toggle="tooltip"` and a `title` attribute.
+
+---
+
+## Offcanvas
+
+A slide-out panel from the edge of the screen. Useful for supplementary content, filters, or navigation that shouldn't take up permanent space:
+
+<button class="btn btn-accent" type="button" data-bs-toggle="offcanvas" data-bs-target="#exampleOffcanvas" aria-controls="exampleOffcanvas">Open Offcanvas</button>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="exampleOffcanvas" aria-labelledby="offcanvasLabel">
+<div class="offcanvas-header">
+<h5 class="offcanvas-title" id="offcanvasLabel">Offcanvas Panel</h5>
+<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+</div>
+<div class="offcanvas-body">
+<p>This panel slides in from the right. You can put any content here - navigation links, filter controls, supplementary information.</p>
+<p>Use <code>.offcanvas-start</code> (left), <code>.offcanvas-end</code> (right), <code>.offcanvas-top</code>, or <code>.offcanvas-bottom</code> to control direction.</p>
+<p>The backdrop behind darkens the page. Add <code>data-bs-scroll="true"</code> to the offcanvas element to allow background scrolling.</p>
+</div>
+</div>
+
+---
+
+## Progress Bars
+
+Visual progress indicators. Useful for completion status, skill levels, or loading states:
+
+<div class="mb-2">
+<label class="form-label small fw-bold" style="font-family: 'Inter', sans-serif;">25% - Default</label>
+<div class="progress" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+<div class="progress-bar" style="width: 25%">25%</div>
+</div>
+</div>
+<div class="mb-2">
+<label class="form-label small fw-bold" style="font-family: 'Inter', sans-serif;">50% - Success</label>
+<div class="progress" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+<div class="progress-bar bg-success" style="width: 50%">50%</div>
+</div>
+</div>
+<div class="mb-2">
+<label class="form-label small fw-bold" style="font-family: 'Inter', sans-serif;">75% - Striped</label>
+<div class="progress" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+<div class="progress-bar progress-bar-striped" style="width: 75%">75%</div>
+</div>
+</div>
+<div class="mb-3">
+<label class="form-label small fw-bold" style="font-family: 'Inter', sans-serif;">90% - Animated</label>
+<div class="progress" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+<div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" style="width: 90%">90%</div>
+</div>
+</div>
+
+Variants: `.bg-success`, `.bg-info`, `.bg-warning`, `.bg-danger`. Add `.progress-bar-striped` for stripes and `.progress-bar-animated` for animation.
+
+---
+
+## Spinners
+
+Loading indicators for async content or processing states:
+
+<p>
+<span class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></span>
+<span class="spinner-border text-secondary" role="status"><span class="visually-hidden">Loading...</span></span>
+<span class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></span>
+<span class="spinner-grow text-danger" role="status"><span class="visually-hidden">Loading...</span></span>
+<span class="spinner-grow text-warning" role="status"><span class="visually-hidden">Loading...</span></span>
+<span class="spinner-grow text-info" role="status"><span class="visually-hidden">Loading...</span></span>
+</p>
+
+Small spinner inside a button:
+
+<button class="btn btn-accent" type="button" disabled>
+<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+<span role="status">Saving...</span>
+</button>
+
+Two styles: `.spinner-border` (circular) and `.spinner-grow` (pulsing). Use `.spinner-border-sm` or `.spinner-grow-sm` for smaller variants inside buttons or inline text.
+
+---
+
+## Toasts
+
+Lightweight notifications for transient messages. Click to trigger:
+
+<button type="button" class="btn btn-accent" id="showToastBtn">Show Toast</button>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+<div id="exampleToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+<div class="toast-header">
+<i class="fa-solid fa-circle-info me-2" style="color: var(--color-accent);"></i>
+<strong class="me-auto">Notification</strong>
+<small class="text-muted">just now</small>
+<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+</div>
+<div class="toast-body">
+This is a toast notification. It auto-dismisses after 5 seconds. Position with <code>.toast-container</code> utilities (bottom-right shown here).
+</div>
+</div>
+</div>
+
+<script>
+document.getElementById('showToastBtn').addEventListener('click', function() {
+    var toast = new bootstrap.Toast(document.getElementById('exampleToast'));
+    toast.show();
+});
+</script>
+
+Toasts are positioned with `.position-fixed` and directional utilities. They auto-hide by default (5 seconds). Add `data-bs-autohide="false"` to make them persistent.
+
+---
+
+## Carousel
+
+An image/content slideshow. Use sparingly - carousels have poor engagement rates, but they work for before/after comparisons or portfolio pieces:
+
+<div id="exampleCarousel" class="carousel slide mb-3" data-bs-ride="false" style="max-width: 600px;">
+<div class="carousel-indicators">
+<button type="button" data-bs-target="#exampleCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+<button type="button" data-bs-target="#exampleCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+<button type="button" data-bs-target="#exampleCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+</div>
+<div class="carousel-inner rounded">
+<div class="carousel-item active">
+<div class="d-flex align-items-center justify-content-center" style="height: 250px; background-color: var(--color-accent); color: #fff;">
+<div class="text-center"><h4>Slide One</h4><p class="mb-0">First slide content</p></div>
+</div>
+</div>
+<div class="carousel-item">
+<div class="d-flex align-items-center justify-content-center" style="height: 250px; background-color: var(--color-surface-dark); color: #fff;">
+<div class="text-center"><h4>Slide Two</h4><p class="mb-0">Second slide content</p></div>
+</div>
+</div>
+<div class="carousel-item">
+<div class="d-flex align-items-center justify-content-center" style="height: 250px; background-color: var(--color-text); color: #fff;">
+<div class="text-center"><h4>Slide Three</h4><p class="mb-0">Third slide content</p></div>
+</div>
+</div>
+</div>
+<button class="carousel-control-prev" type="button" data-bs-target="#exampleCarousel" data-bs-slide="prev">
+<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#exampleCarousel" data-bs-slide="next">
+<span class="carousel-control-next-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Next</span>
+</button>
+</div>
+
+Set `data-bs-ride="carousel"` for auto-play, or `"false"` for manual only. Add `data-bs-interval="3000"` to control timing. The carousel above is manual-only.
+
+---
+
+## Dropdowns
+
+Toggleable context menus for actions or navigation. Work on buttons or links:
+
+<div class="d-flex gap-2 mb-3">
+<div class="dropdown">
+<button class="btn btn-accent dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+<ul class="dropdown-menu">
+<li><a class="dropdown-item" href="#">Edit</a></li>
+<li><a class="dropdown-item" href="#">Duplicate</a></li>
+<li><hr class="dropdown-divider"></li>
+<li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+</ul>
+</div>
+<div class="dropdown">
+<button class="btn btn-outline-accent dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">With Header</button>
+<ul class="dropdown-menu">
+<li><h6 class="dropdown-header">Categories</h6></li>
+<li><a class="dropdown-item" href="#">SEO</a></li>
+<li><a class="dropdown-item" href="#">Analytics</a></li>
+<li><a class="dropdown-item" href="#">Development</a></li>
+</ul>
+</div>
+</div>
+
+Use `.dropdown-divider` for separators and `.dropdown-header` for section labels. Add `.dropup`, `.dropend`, or `.dropstart` to the wrapper to change direction.
+
+---
+
+## Popovers
+
+Richer than tooltips - popovers can contain a title and HTML body content. Click the buttons to toggle:
+
+<p>
+<button type="button" class="btn btn-accent btn-sm" data-bs-toggle="popover" data-bs-title="Popover Title" data-bs-content="This is the popover body. It can contain longer text than a tooltip and has a distinct title area." data-bs-trigger="click">Click Popover</button>
+<button type="button" class="btn btn-outline-accent btn-sm" data-bs-toggle="popover" data-bs-title="Hover Popover" data-bs-content="This one appears on hover and disappears when you move away." data-bs-trigger="hover focus">Hover Popover</button>
+</p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.map(function(el) { return new bootstrap.Popover(el); });
+});
+</script>
+
+Like tooltips, popovers require JS initialisation. Use `data-bs-trigger` to control behaviour: `click`, `hover`, `focus`, or combinations.
+
+---
+
 ## Summary
 
-This theme is built on **Bootstrap 5.3** with a custom design system defined in `theme.css`. The colour palette uses 7 CSS custom properties, typography pairs Inter (headings/UI) with Lora (body), and JetBrains Mono handles code and labels. Custom components include venture cards, bio cards, contact cards, timelines, scroll reveal animations, and responsive video embeds. Bootstrap 5 utilities (flexbox, visibility, shadows, ratios, list groups) are all available for use in posts and pages. Icons are Font Awesome 6.
+This theme is built on **Bootstrap 5.3** with a custom design system defined in `theme.css`. The colour palette uses 7 CSS custom properties, typography pairs Inter (headings/UI) with Lora (body), and JetBrains Mono handles code and labels. Custom components include venture cards, bio cards, contact cards, timelines, scroll reveal animations, and responsive video embeds. Bootstrap 5 utilities (flexbox, visibility, shadows, ratios, list groups) and interactive JS components (accordion, tabs, modals, tooltips, popovers, offcanvas, toasts, carousel, dropdowns, progress bars, spinners) are all available. Icons are Font Awesome 6.
