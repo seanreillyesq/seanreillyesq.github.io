@@ -111,7 +111,7 @@ hidden: true
 .google-favicon {
     width: 26px;
     height: 26px;
-    border-radius: 50%;
+    border-radius: 4px;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     display: flex;
@@ -589,11 +589,12 @@ hidden: true
     function urlToBreadcrumb(url) {
         try {
             var parsed = new URL(url);
-            var parts = parsed.pathname.split('/').filter(Boolean);
+            var parts = parsed.pathname.split('/').filter(Boolean).map(function(s) {
+                try { s = decodeURIComponent(s); } catch(e) {}
+                return s.replace(/-/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+            });
             if (parts.length === 0) return parsed.hostname;
-            return parsed.hostname + ' > ' + parts.map(function(p) {
-                return p.replace(/-/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
-            }).join(' > ');
+            return parsed.hostname + ' \u203A ' + parts.join(' \u203A ');
         } catch (e) {
             return url || 'example.com';
         }
@@ -625,13 +626,23 @@ hidden: true
 
     // Favicon state
     var faviconUrl = '';
+    var fetchedForUrl = '';
 
     // Globe icon SVG (favicon fallback)
     var globeSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="#70757a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>';
 
     function faviconHtml() {
         if (!faviconUrl) return globeSvg;
-        return '<img src="' + escapeHtml(faviconUrl) + '" width="18" height="18" alt="" style="display:block;border-radius:2px;" onerror="this.parentNode.innerHTML=\'' + globeSvg.replace(/'/g, "\\'") + '\'">';
+        return '<img src="' + escapeHtml(faviconUrl) + '" width="18" height="18" alt="" style="display:block;border-radius:2px;" class="favicon-img">';
+    }
+
+    function bindFaviconErrors() {
+        var favImgs = document.querySelectorAll('.favicon-img');
+        for (var i = 0; i < favImgs.length; i++) {
+            favImgs[i].onerror = function() {
+                this.parentNode.innerHTML = globeSvg;
+            };
+        }
     }
 
     // Sparkle icon SVG (AI Overview)
@@ -679,7 +690,7 @@ hidden: true
             '<div class="ai-overview-sources">' +
                 '<div class="ai-source-card highlighted">' +
                     '<div class="ai-source-site">' +
-                        '<div class="ai-source-favicon"></div>' +
+                        '<div class="ai-source-favicon">' + faviconHtml() + '</div>' +
                         '<span>' + escapeHtml(sitename) + '</span>' +
                     '</div>' +
                     '<div class="ai-source-title">' + escapeHtml(title) + '</div>' +
@@ -711,7 +722,7 @@ hidden: true
         try { domain = new URL(url).hostname; } catch(e) {}
 
         var imageHtml = image
-            ? '<div class="social-card-image" style="background-image:url(' + escapeHtml(image) + ')"></div>'
+            ? '<div class="social-card-image" style="background-image:url(\'' + escapeHtml(image).replace(/'/g, '%27') + '\')"></div>'
             : '<div class="social-card-image">No OG image set</div>';
 
         previewSocial.innerHTML =
@@ -779,7 +790,7 @@ hidden: true
             checks.push({ s: 'red', t: 'Meta description is empty - Google will pull text from the page' });
         } else if (descPx > DESC_MAX_PX) {
             checks.push({ s: 'red', t: 'Description will truncate (' + descPx + 'px exceeds ' + DESC_MAX_PX + 'px)' });
-        } else if (desc.length < 70) {
+        } else if (descPx < 200) {
             checks.push({ s: 'amber', t: 'Description may be too short to fill the snippet' });
         } else if (descPx > DESC_WARN_PX) {
             checks.push({ s: 'amber', t: 'Description is close to truncation (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
@@ -817,12 +828,14 @@ hidden: true
     }
 
     function update() {
+        if (urlInput.value !== fetchedForUrl) faviconUrl = '';
         updateCounters();
         renderGoogleResult(previewDesktop, TITLE_MAX_PX, DESC_MAX_PX);
         renderGoogleResult(previewMobile, TITLE_MOBILE_MAX_PX, DESC_MOBILE_MAX_PX);
         renderAIOverview();
         renderSocialCard();
         renderValidation();
+        bindFaviconErrors();
         save();
     }
 
@@ -870,7 +883,10 @@ hidden: true
             if (data.sitename) sitenameInput.value = data.sitename;
             if (data.image) imageInput.value = data.image;
             if (data.keyphrase) keyphraseInput.value = data.keyphrase;
-            if (data.favicon) faviconUrl = data.favicon;
+            if (data.favicon) {
+                faviconUrl = data.favicon;
+                fetchedForUrl = data.url || '';
+            }
         } catch(e) {}
     }
 
@@ -927,7 +943,14 @@ hidden: true
                     var d = data.publishedDate.slice(0, 10);
                     if (/^\d{4}-\d{2}-\d{2}$/.test(d)) dateInput.value = d;
                 }
-                if (data.favicon) faviconUrl = data.favicon;
+                if (data.favicon) {
+                    try {
+                        faviconUrl = new URL(data.favicon, url).href;
+                    } catch(e) {
+                        faviconUrl = data.favicon;
+                    }
+                }
+                fetchedForUrl = urlInput.value;
 
                 var loaded = [];
                 if (data.title) loaded.push('title');
