@@ -5,7 +5,7 @@ date: 2013-03-15 09:00:00+00:00
 layout: post
 title: "Lessons from Rebranding a Digital Agency"
 header-img: "img/post-bg-01.jpg"
-meta-description: "Agency rebrand gone wrong? How a Companies House name change triggered an unexpected visit from the Official Receiver - and what it taught me."
+meta-description: "How a Companies House name change triggered an unexpected visit from the Official Receiver - and what it taught me about agency rebrands."
 categories:
 - Career
 tags:

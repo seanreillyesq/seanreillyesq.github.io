@@ -12,7 +12,7 @@ tags:
 - Running
 - Spain
 header-img: "img/calamorro.jpg"
-meta-description: On a family holiday to Benalmádena I had the opportunity to have a quick run up Mount Calamorro, part of the coastal Sierra de Mijas mountain range.
+meta-description: A spontaneous run up Mount Calamorro in Benalmadena, Spain - part of the Sierra de Mijas coastal range.
 ---
 
 On a recent family holiday to Benalmádena I had the opportunity to have a quick run up Mount Calamorro, part of the coastal Sierra de Mijas mountain range in the Costa Del Sol region of southern Spain.

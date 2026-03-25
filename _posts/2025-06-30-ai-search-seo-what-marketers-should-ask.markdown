@@ -6,7 +6,7 @@ layout: post
 title: "AI Search & SEO - What Marketers Should Really Be Asking"
 header-img: "img/ai-search-seo-what-marketers-should-ask.jpg"
 header_overlay: true
-meta-description: Understand how to respond when stakeholders ask why a brand isn't appearing in ChatGPT, Gemini, or other AI search tools - and what marketers should be asking in return.
+meta-description: What to say when stakeholders ask why their brand isn't in ChatGPT or Gemini - and the questions marketers should ask instead.
 categories:
 - Digital Marketing
 tags:

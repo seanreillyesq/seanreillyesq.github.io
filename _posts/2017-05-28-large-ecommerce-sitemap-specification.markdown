@@ -5,7 +5,7 @@ date: 2017-05-28 17:51:57+00:00
 layout: post
 title: "Large Ecommerce Sitemap Specifications"
 header-img: "img/large-ecommerce-sitemap-specification.jpg"
-meta-description: "Here are the specifications I wrote for a bespoke sitemap set up for a large ecommerce website in February 2017 in an attempt to optimise the performance of the site"
+meta-description: "Sitemap specification for a large ecommerce site with high inventory churn, written in Agile Given/When/Then format."
 categories:
 - Digital Marketing
 tags:

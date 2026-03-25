@@ -10,7 +10,7 @@ categories:
 tags:
 - Security
 header-img: "img/what-to-do-if-email-hacked.jpg"
-meta-description: Four simple things you can do to help yourself if your email account has been hacked and how to alert yourself in the future if your email is hacked
+meta-description: Four steps to recover a hacked email account and set up alerts to catch future breaches early.
 ---
 
 1. Start with changing your password on your account. As with any scenario, the primary step is to stop any harm. This will resolve most issues, depending on how your account was compromised.

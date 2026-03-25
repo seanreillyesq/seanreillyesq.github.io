@@ -10,7 +10,7 @@ categories:
 tags:
 - WordPress
 header-img: "img/recommended-wordpress-plugins.jpg"
-meta-description: WordPress is one of the best content management systems, but what makes it so powerful are the plugins. Here is my list of recommended WordPress plugins.
+meta-description: My go-to WordPress plugins for SEO, security, performance, and content management (2014).
 ---
 
 WordPress has been one of the most powerful changes to the web since its inception. It offers people the chance to create easy to manage and update websites using only a few clicks.

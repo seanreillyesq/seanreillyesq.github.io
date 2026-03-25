@@ -5,7 +5,7 @@ date: 2015-01-08 07:30:59+00:00
 layout: post
 title: "Seven Steps to Successful Content Marketing"
 header-img: "img/content-marketing.jpg"
-meta-description: "Content marketing can take many forms. These strategies can help you make the most of them and allow you to keep your site content fresh"
+meta-description: "Seven practical steps to build a content marketing strategy that keeps your site fresh and drives organic growth."
 categories:
 - Digital Marketing
 tags:
