@@ -243,7 +243,7 @@ hidden: true
     <div class="legend-item"><div class="legend-swatch" style="background:#4A7BA7;"></div> Caffeine in system</div>
     <div class="legend-item"><div class="legend-swatch" style="background:#6F4E37;"></div> Coffee / cutoff</div>
     <div class="legend-item"><div class="legend-swatch" style="background:#4A7C59;"></div> Tea / cutoff</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:rgba(74,124,89,0.25);"></div> Optimal window</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(74,124,89,0.12);"></div> Optimal window</div>
     <div class="legend-item"><div class="legend-swatch" style="background:rgba(180,60,60,0.2);"></div> Too late</div>
 </div>
 
@@ -359,7 +359,8 @@ hidden: true
                 var savedTeas = data.pins.filter(function(d) { return d.type === 'tea'; }).length;
                 if (savedCoffees === state.coffees && savedTeas === state.teas) {
                     state.drinks = data.pins.map(function(d) {
-                        return { type: d.type, time: d.time, mg: d.mg, pinned: !!d.pinned };
+                        var validMg = d.type === 'coffee' ? COFFEE_MG : TEA_MG;
+                        return { type: d.type === 'coffee' ? 'coffee' : 'tea', time: clamp(+d.time || 0, 0, 1440), mg: validMg, pinned: !!d.pinned };
                     });
                 }
             }
@@ -394,9 +395,9 @@ hidden: true
 
     function formatTime(mins) {
         mins = ((mins % 1440) + 1440) % 1440;
-        var h = Math.floor(mins / 60);
+        var h = Math.floor(mins / 60) % 24;
         var m = Math.round(mins % 60);
-        if (m === 60) { h++; m = 0; }
+        if (m === 60) { h = (h + 1) % 24; m = 0; }
         return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
     }
 
@@ -450,6 +451,20 @@ hidden: true
         var halfLifeMin = halfLifeHrs * 60;
         var k = LN2 / halfLifeMin;
         var decayNeeded = Math.log(mg / RESIDUAL_THRESHOLD) / k;
+        return sleepMins - decayNeeded;
+    }
+
+    // Account for residual caffeine from scheduled drinks when computing cutoff
+    function lastSafeDrinkTimeWithResidual(drinks, sleepMins, wakeMins, halfLifeHrs, addMg) {
+        var waking = sleepMins - wakeMins;
+        if (waking <= 0) waking += 1440;
+        var residual = caffeineAtTime(drinks, waking, halfLifeHrs);
+        var allowance = RESIDUAL_THRESHOLD - residual;
+        if (allowance <= 0) return wakeMins; // already over threshold
+        if (addMg <= allowance) return sleepMins; // can drink right before bed
+        var halfLifeMin = halfLifeHrs * 60;
+        var k = LN2 / halfLifeMin;
+        var decayNeeded = Math.log(addMg / allowance) / k;
         return sleepMins - decayNeeded;
     }
 
@@ -521,8 +536,10 @@ hidden: true
                     type = 'coffee'; mg = COFFEE_MG; cRemain--;
                 } else if (tRemain > 0) {
                     type = 'tea'; mg = TEA_MG; tRemain--;
-                } else {
+                } else if (cRemain > 0) {
                     type = 'coffee'; mg = COFFEE_MG; cRemain--;
+                } else {
+                    continue;
                 }
                 useCoffeeNext = !useCoffeeNext;
                 var cutoff = type === 'coffee' ? coffeeCutoff : teaCutoff;
@@ -558,6 +575,8 @@ hidden: true
                     drinks.push({ type: type, time: Math.round(w.start + posInWindow), mg: mg });
                     placed++;
                 } else if (posInWindow <= 0) {
+                    // Target falls before this window; place at window start
+                    drinks.push({ type: type, time: Math.round(w.start), mg: mg });
                     placed++;
                 } else {
                     break;
@@ -857,6 +876,9 @@ hidden: true
         if (isNaN(newAbsMinutes)) return;
         var newRelMinutes = newAbsMinutes - state.wake;
         if (newRelMinutes < 0) newRelMinutes += 1440;
+        // Clamp to waking window
+        var waking = wakingMinutes();
+        if (newRelMinutes > waking) newRelMinutes = waking;
         // Only recalculate if the time actually changed
         if (state.drinks[idx].time === newRelMinutes && state.drinks[idx].pinned) return;
         state.drinks[idx].time = newRelMinutes;
@@ -988,7 +1010,8 @@ hidden: true
                 var type, mg;
                 if (useC && cR > 0) { type = 'coffee'; mg = COFFEE_MG; cR--; }
                 else if (tR > 0) { type = 'tea'; mg = TEA_MG; tR--; }
-                else { type = 'coffee'; mg = COFFEE_MG; cR--; }
+                else if (cR > 0) { type = 'coffee'; mg = COFFEE_MG; cR--; }
+                else { continue; }
                 useC = !useC;
                 newDrinks.push({ type: type, time: slots[i].time, mg: mg });
             }
@@ -1008,12 +1031,20 @@ hidden: true
     function updateResults(drinks) {
         var waking = wakingMinutes();
 
-        // Last safe coffee time (absolute)
-        var lastCoffee = lastSafeDrinkTime(state.sleep, state.halfLife, COFFEE_MG);
-        var lastTea = lastSafeDrinkTime(state.sleep, state.halfLife, TEA_MG);
+        // Last safe times accounting for residual caffeine from all scheduled drinks
+        if (state.coffees > 0) {
+            var lastCoffee = lastSafeDrinkTimeWithResidual(drinks, state.sleep, state.wake, state.halfLife, COFFEE_MG);
+            document.getElementById('last-coffee').textContent = formatTime(lastCoffee);
+        } else {
+            document.getElementById('last-coffee').textContent = '--:--';
+        }
 
-        document.getElementById('last-coffee').textContent = formatTime(lastCoffee);
-        document.getElementById('last-tea').textContent = formatTime(lastTea);
+        if (state.teas > 0) {
+            var lastTea = lastSafeDrinkTimeWithResidual(drinks, state.sleep, state.wake, state.halfLife, TEA_MG);
+            document.getElementById('last-tea').textContent = formatTime(lastTea);
+        } else {
+            document.getElementById('last-tea').textContent = '--:--';
+        }
 
         // Caffeine at bedtime
         if (drinks.length > 0) {
@@ -1027,8 +1058,8 @@ hidden: true
     // ========== UI ==========
 
     function readInputs() {
-        state.wake = timeToMinutes(document.getElementById('wake-time').value);
-        state.sleep = timeToMinutes(document.getElementById('sleep-time').value);
+        state.wake = timeToMinutes(document.getElementById('wake-time').value) || 0;
+        state.sleep = timeToMinutes(document.getElementById('sleep-time').value) || 0;
         state.coffees = clamp(parseInt(document.getElementById('coffee-count').value, 10) || 0, 0, 8);
         state.teas = clamp(parseInt(document.getElementById('tea-count').value, 10) || 0, 0, 8);
         state.halfLife = parseFloat(document.getElementById('metabolism').value) || 5;
@@ -1064,7 +1095,7 @@ hidden: true
 
     function readURL() {
         var params = new URLSearchParams(window.location.search);
-        if (params.size === 0 && !window.location.search) return false;
+        if (!window.location.search || window.location.search === '?') return false;
 
         if (params.has('wake')) {
             var w = parseCompactTime(params.get('wake'));
