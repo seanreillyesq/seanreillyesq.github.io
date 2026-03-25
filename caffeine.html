@@ -1031,17 +1031,16 @@ hidden: true
     function updateResults(drinks) {
         var waking = wakingMinutes();
 
-        // Last safe times accounting for residual caffeine from all scheduled drinks
+        // Last safe drink time (single-drink decay to 25mg threshold)
+        // This matches the cutoff the scheduling algorithm uses for placement
         if (state.coffees > 0) {
-            var lastCoffee = lastSafeDrinkTimeWithResidual(drinks, state.sleep, state.wake, state.halfLife, COFFEE_MG);
-            document.getElementById('last-coffee').textContent = formatTime(lastCoffee);
+            document.getElementById('last-coffee').textContent = formatTime(lastSafeDrinkTime(state.sleep, state.halfLife, COFFEE_MG));
         } else {
             document.getElementById('last-coffee').textContent = '--:--';
         }
 
         if (state.teas > 0) {
-            var lastTea = lastSafeDrinkTimeWithResidual(drinks, state.sleep, state.wake, state.halfLife, TEA_MG);
-            document.getElementById('last-tea').textContent = formatTime(lastTea);
+            document.getElementById('last-tea').textContent = formatTime(lastSafeDrinkTime(state.sleep, state.halfLife, TEA_MG));
         } else {
             document.getElementById('last-tea').textContent = '--:--';
         }
