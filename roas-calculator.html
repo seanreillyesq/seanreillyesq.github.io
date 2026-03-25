@@ -2,9 +2,9 @@
 layout: page
 title: "ROAS Calculator"
 header-title: "ROAS Calculator"
-description: "Calculate true return on ad spend, check profitability, and understand the ROAS trap"
+description: "Check if your ad spend is actually making money"
 header-img: "img/home-bg.jpg"
-meta-description: "Interactive ROAS calculator. Check if your ad spend is actually profitable, compare channels side by side, and learn why high ROAS can mean you are leaving money on the table."
+meta-description: "I built this because I got tired of clients celebrating high ROAS while losing money. Check real profitability, compare channels, and see why chasing ROAS can mean leaving money on the table."
 permalink: /roas-calculator/
 hidden: true
 ---
@@ -297,7 +297,7 @@ hidden: true
 }
 </style>
 
-<p class="roas-intro">Check if your ad spend is actually profitable, compare channels side by side, and see why chasing high ROAS can leave money on the table. Adjust any input and everything recalculates instantly.</p>
+<p class="roas-intro">I built this because I kept seeing the same thing: marketers celebrating a 6x ROAS while the business was barely breaking even once you stripped out VAT, returns, and fulfilment. Plug in your real numbers and find out what is actually left.</p>
 
 <!-- Currency selector -->
 <div class="roas-currency-row">
@@ -312,7 +312,7 @@ hidden: true
 <!-- Section 1: ROAS & Profitability Check -->
 <div class="roas-section" id="section-profitability">
     <h3>ROAS &amp; Profitability</h3>
-    <p class="roas-section-desc">Enter your ad spend and revenue to see your true ROAS, then add your cost structure to check whether you are actually making money.</p>
+    <p class="roas-section-desc">Enter your ad spend and revenue, then add your cost structure. The waterfall shows where every pound actually goes.</p>
 
     <!-- Input mode toggle -->
     <div class="roas-mode-toggle btn-group" role="group">
@@ -450,7 +450,7 @@ hidden: true
 <!-- Section 2: Channel Comparison -->
 <div class="roas-section" id="section-channels">
     <h3>Channel Comparison</h3>
-    <p class="roas-section-desc">Compare up to four channels using the same cost structure. Which ones are actually making you money?</p>
+    <p class="roas-section-desc">Same cost structure, different channels. You will often find that the channel with the "worst" ROAS is still making you money.</p>
 
     <div id="channel-list"></div>
     <button type="button" class="roas-add-channel" id="add-channel">+ Add channel</button>
@@ -466,7 +466,7 @@ hidden: true
 <!-- Section 3: The ROAS Trap -->
 <div class="roas-section" id="section-trap">
     <h3>The ROAS Trap</h3>
-    <p class="roas-section-desc">High ROAS often means you are underspending, not that your ads are working brilliantly. Drag the slider to see what happens as you scale.</p>
+    <p class="roas-section-desc">The thing most people get wrong: a very high ROAS usually means you are underspending, not that your ads are brilliant. Drag the slider and watch what happens.</p>
 
     <div class="roas-inputs">
         <div class="roas-slider-group">
@@ -520,9 +520,9 @@ hidden: true
 
     <!-- Explainer -->
     <div class="roas-explainer mt-3">
-        <p>Most marketers treat ROAS as a measure of success: the higher, the better. But a very high ROAS usually means you are only reaching the easiest-to-convert customers - people who probably would have bought anyway. This is what Tom Roach calls the "selection effect". Your ads look efficient, but they are not doing much incremental work.</p>
-        <p>As you scale ad spend, you reach colder audiences. Conversion rates drop and ROAS falls. But total revenue and profit can keep rising because you are reaching genuinely new customers. The optimal point is where marginal acquisition cost equals your allowable cost - beyond that, each extra pound costs more than it makes.</p>
-        <p>Binet and Field's research for the IPA shows that brands which optimise purely for short-term efficiency (high ROAS) tend to underinvest in growth. Their 60:40 rule suggests balancing brand building (which looks "inefficient" on ROAS) with performance activation. The chart above illustrates why: total profit peaks at a ROAS that looks lower than your current one.</p>
+        <p>I have had this conversation dozens of times. A client shows me a 7x ROAS and expects congratulations. The thing is, that 7x means they are only reaching people who were going to buy anyway. Tom Roach calls this the "selection effect" - your ads look efficient, but they are not doing much actual work.</p>
+        <p>As you scale spend, you reach colder audiences. Conversion rates drop and ROAS falls. But total revenue and profit can keep rising because you are reaching genuinely new customers. The sweet spot is where the cost of the next customer equals what that customer is worth to you. Beyond that, each extra pound costs more than it makes.</p>
+        <p>Binet and Field's IPA research backs this up: brands that optimise purely for short-term efficiency tend to underinvest in growth. Their 60:40 rule - balancing brand building with performance activation - is partly about this. Brand spend looks "inefficient" on ROAS, but it is doing the work that performance cannot. The chart above shows why total profit peaks at a ROAS that looks worse than your current one.</p>
     </div>
 </div>
 
@@ -531,10 +531,10 @@ hidden: true
 <!-- Methodology -->
 <div class="methodology mb-4">
     <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
-    <p><strong>ROAS and profitability:</strong> ROAS (return on ad spend) is calculated on gross revenue including VAT, matching what ad platforms report. But profitability is calculated on ex-VAT revenue since VAT is not yours to keep. The calculator strips VAT first, then subtracts cancellations and returns, product costs, fulfilment costs, and your required margin to show what is actually left after you pay for your ads. Break-even ROAS and target ROAS account for VAT in their thresholds.</p>
-    <p><strong>Channel comparison:</strong> Different channels typically have different ROAS because they reach customers at different stages of intent. The comparison uses the same cost structure across all channels so you are comparing like for like. A channel with lower ROAS may still be profitable and worth scaling.</p>
-    <p><strong>The ROAS trap model:</strong> The diminishing returns curve uses a logarithmic decay model where ROAS falls as spend scales. This is a simplification - real diminishing returns depend on audience saturation, creative fatigue, and competitive pressure - but it illustrates the core principle: optimising for ROAS alone leads to underspending. The optimal point is where marginal profit reaches zero.</p>
-    <p>This is a simplified model. Real advertising has attribution challenges, cross-channel effects, and delayed conversions. Use it to build intuition about your unit economics, not as a precise forecast.</p>
+    <p><strong>ROAS and profitability:</strong> ROAS is calculated on gross revenue including VAT; that matches what Google Ads and Meta report. But profitability uses ex-VAT revenue because VAT is not yours to keep. The calculator strips VAT first, then subtracts cancellations, product costs, fulfilment, and your margin target. Break-even ROAS and target ROAS both account for VAT in their thresholds.</p>
+    <p><strong>Channel comparison:</strong> Different channels reach customers at different stages of intent, so they naturally have different ROAS. The comparison applies the same cost structure everywhere so you are comparing like for like. A channel with lower ROAS can still be profitable and worth scaling - the numbers here make that obvious.</p>
+    <p><strong>The ROAS trap model:</strong> The diminishing returns curve is a simplification. Real diminishing returns depend on audience saturation, creative fatigue, and competitive pressure. But the core principle holds: optimising for ROAS alone leads to underspending. The optimal point is where marginal profit hits zero.</p>
+    <p>Real advertising has attribution problems, cross-channel effects, and delayed conversions. Use this to build intuition about your unit economics, not as a precise forecast.</p>
 </div>
 
 <!-- Latest Writing -->
@@ -596,8 +596,8 @@ hidden: true
 
     var CHANNEL_DEFAULTS = [
         { name: 'Google Ads', spend: 3000, revenue: 15000 },
-        { name: 'Meta Ads', spend: 2000, revenue: 10000 },
-        { name: 'TikTok Ads', spend: 1500, revenue: 6000 },
+        { name: 'Meta Ads', spend: 2000, revenue: 7000 },
+        { name: 'TikTok Ads', spend: 1500, revenue: 4500 },
         { name: 'Email', spend: 500, revenue: 5000 }
     ];
 
@@ -617,7 +617,7 @@ hidden: true
         spendScale: 1.0,
         channels: [
             { name: 'Google Ads', spend: 3000, revenue: 15000 },
-            { name: 'Meta Ads', spend: 2000, revenue: 10000 }
+            { name: 'Meta Ads', spend: 2000, revenue: 7000 }
         ]
     };
 
@@ -948,7 +948,7 @@ hidden: true
             verdict.innerHTML = '<strong>No ad spend entered</strong>Enter your ad spend to see profitability analysis.';
         } else if (r.roas >= r.targetROAS && r.totalProfit > 0) {
             verdict.className = 'roas-verdict roas-verdict-profitable';
-            verdict.innerHTML = '<strong>Profitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x exceeds the ' + r.targetROAS.toFixed(1) + 'x target. You are making ' + fmtCurrency(r.profitPerOrder) + ' per order after all costs before your ' + state.marginRate + '% margin target.';
+            verdict.innerHTML = '<strong>Profitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x exceeds the ' + r.targetROAS.toFixed(1) + 'x target. You are making ' + fmtCurrency(r.profitPerOrder) + ' per order after all costs, excluding your ' + state.marginRate + '% margin target.';
         } else if (r.roas >= r.breakEvenROAS && r.totalProfit >= 0) {
             verdict.className = 'roas-verdict roas-verdict-breakeven';
             verdict.innerHTML = '<strong>Break-even zone</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x covers costs but falls short of your ' + state.marginRate + '% margin target (needs ' + r.targetROAS.toFixed(1) + 'x). You are making ' + fmtCurrency(r.profitPerOrder) + ' per order before margin.';
@@ -1305,7 +1305,8 @@ hidden: true
         spEl.textContent = fmtCurrency(scaledProfit);
         spEl.className = 'result-value ' + deltaClass(scaledProfit);
 
-        el('res-optimal-spend').innerHTML = fmtCurrency(state.adSpend * curve.optimalMultiplier) + '<small style="display:block;font-size:0.7em;opacity:0.7;">(' + curve.optimalMultiplier.toFixed(1) + 'x current)</small>';
+        var optRounded = Math.round(curve.optimalMultiplier * 10) / 10;
+        el('res-optimal-spend').innerHTML = fmtCurrency(state.adSpend * optRounded) + '<small style="display:block;font-size:0.7em;opacity:0.7;">(' + optRounded.toFixed(1) + 'x current)</small>';
 
         renderTrapChart(curve);
     }
