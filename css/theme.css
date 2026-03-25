@@ -281,10 +281,10 @@ img::-moz-selection {
     display: block;
 }
 .intro-header .post-heading .meta {
-    font-family: 'Lora', 'Times New Roman', serif;
-    font-style: italic;
+    font-family: 'Inter', sans-serif;
     font-weight: 400;
-    font-size: 1.125rem;
+    font-size: 0.9375rem;
+    letter-spacing: 0.3px;
     line-height: 1.1;
     display: block;
     color: inherit;
@@ -359,10 +359,11 @@ article :not(pre) > code {
 }
 .post-preview > .post-meta {
     color: var(--color-text-muted);
-    font-size: 0.9375rem;
-    font-style: italic;
+    font-size: 0.875rem;
     margin-top: 0;
-    font-family: 'Lora', serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.3px;
 }
 @media (min-width: 768px) {
     .post-preview > a > .post-title {
@@ -402,9 +403,10 @@ article :not(pre) > code {
 /* Caption */
 .caption {
     text-align: center;
-    font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 400;
     padding: 0.5rem;
-    font-style: italic;
     margin: 0;
     display: block;
     color: var(--color-text-muted);
@@ -635,6 +637,10 @@ hr.small {
 }
 .hp-card-date {
     margin-top: auto;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    letter-spacing: 0.3px;
 }
 
 /* About teaser (homepage) */
@@ -651,6 +657,8 @@ hr.small {
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--color-border);
     color: var(--color-text-muted);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
 }
 .hp-about-list li:last-child {
     border-bottom: none;
@@ -765,7 +773,9 @@ hr.small {
 .timeline-item li {
     padding: 0.25rem 0;
     color: var(--color-text-muted);
-    font-size: 0.9375rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
 }
 
 /* ---- Venture Cards ---- */
@@ -829,7 +839,9 @@ hr.small {
     background-color: var(--color-surface-dark);
     color: rgba(255, 255, 255, 0.7);
     padding: 3rem 0 2rem;
+    font-family: 'Inter', sans-serif;
     font-size: 0.9375rem;
+    font-weight: 400;
 }
 .site-footer-enhanced a {
     color: rgba(255, 255, 255, 0.7);
