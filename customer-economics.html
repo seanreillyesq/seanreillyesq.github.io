@@ -498,7 +498,7 @@ sitemap: false
     <p><strong>Three-lever revenue model:</strong> Every business generates revenue from the same three levers: how many customers return (loyalty rate), how many new customers you acquire, and how much each customer spends. This model lets you see which lever has the most impact on your specific numbers.</p>
     <p><strong>Allowable acquisition cost:</strong> This works backwards from your average order value, subtracting cancellations and returns, product costs, fulfilment costs, and your required margin to find the maximum you can spend on marketing per customer. The implied ROAS (return on ad spend) follows directly from this figure.</p>
     <p><strong>Extended payback:</strong> When toggled on, the calculation factors in expected repeat purchases over the payback period. A customer who orders again is worth more than their first transaction, so you can afford to spend more to acquire them. The model compounds the repeat rate annually.</p>
-    <p><strong>Growth scenario:</strong> The three sliders let you model "what if" changes to each lever independently. The lever breakdown shows how much of the total change comes from each adjustment. The contributions may not sum exactly to the total delta because the levers interact multiplicatively - more loyal customers spending more each creates a compounding effect.</p>
+    <p><strong>Growth scenario:</strong> The three sliders let you model "what if" changes to each lever independently. The lever breakdown shows how much of the total change comes from each adjustment. The contributions will not sum to the total delta because the levers interact multiplicatively - the gap grows when multiple levers change together.</p>
     <p>This is a simplified model. Real businesses have customer segments, seasonal variation, and non-linear cost structures. Use it to build intuition about where your growth leverage sits, not as a precise forecast.</p>
 </div>
 
@@ -687,6 +687,9 @@ sitemap: false
         if (p.has('cogs')) { state.cogsRate = clamp(+p.get('cogs'), 0, 100); found = true; }
         if (p.has('fulfil')) { state.fulfilmentRate = clamp(+p.get('fulfil'), 0, 100); found = true; }
         if (p.has('margin')) { state.requiredMargin = clamp(+p.get('margin'), 0, 100); found = true; }
+        if (p.has('ep')) { state.extendedPayback = p.get('ep') === '1'; found = true; }
+        if (p.has('pm') && (+p.get('pm') === 12 || +p.get('pm') === 24 || +p.get('pm') === 36)) { state.paybackMonths = +p.get('pm'); found = true; }
+        if (p.has('rr')) { state.repeatRate = clamp(+p.get('rr') || 0, 0, 100); found = true; }
         if (p.has('ld')) { state.loyaltyDelta = clamp(+p.get('ld'), -30, 30); found = true; }
         if (p.has('nd')) { state.newCustDelta = clamp(+p.get('nd'), -5000, 5000); found = true; }
         if (p.has('sd')) { state.spendDelta = clamp(+p.get('sd'), -50, 50); found = true; }
@@ -708,6 +711,11 @@ sitemap: false
         if (state.loyaltyDelta !== 0) p.set('ld', state.loyaltyDelta);
         if (state.newCustDelta !== 0) p.set('nd', state.newCustDelta);
         if (state.spendDelta !== 0) p.set('sd', state.spendDelta);
+        if (state.extendedPayback) {
+            p.set('ep', '1');
+            p.set('pm', state.paybackMonths);
+            p.set('rr', state.repeatRate);
+        }
         history.replaceState(null, '', '?' + p.toString());
     }
 
@@ -735,25 +743,22 @@ sitemap: false
         var bv = state.avgBookingValue;
         var netBooking = bv * (1 - state.cancellationRate / 100);
         var cogsAmount = netBooking * (state.cogsRate / 100);
-        var afterCogs = netBooking - cogsAmount;
-        var fulfilAmount = afterCogs * (state.fulfilmentRate / 100);
-        var afterFulfil = afterCogs - fulfilAmount;
+        var fulfilAmount = netBooking * (state.fulfilmentRate / 100);
         var marginAmount = netBooking * (state.requiredMargin / 100);
-        var allowable = afterFulfil - marginAmount;
-        allowable = Math.max(0, allowable);
+        var rawAllowable = netBooking - cogsAmount - fulfilAmount - marginAmount;
+        var overBudget = rawAllowable < 0;
+        var allowable = Math.max(0, rawAllowable);
 
         var cancelAmount = bv * (state.cancellationRate / 100);
-        var totalCosts = cancelAmount + cogsAmount + fulfilAmount + marginAmount;
-        var overBudget = totalCosts > bv;
 
         var impliedROAS = allowable > 0 ? bv / allowable : Infinity;
         var costPct = bv > 0 ? (allowable / bv) * 100 : 0;
 
         // Extended payback
         var extAllowable = allowable;
+        var repeatRevenue = 0;
         if (state.extendedPayback) {
             var cycles = state.paybackMonths / 12;
-            var repeatRevenue = 0;
             var cumRate = state.repeatRate / 100;
             for (var i = 1; i <= Math.floor(cycles); i++) {
                 repeatRevenue += bv * cumRate;
@@ -762,13 +767,11 @@ sitemap: false
             var frac = cycles - Math.floor(cycles);
             if (frac > 0) repeatRevenue += bv * cumRate * frac;
 
-            var repeatNet = repeatRevenue * (1 - state.cancellationRate / 100);
-            repeatNet = repeatNet * (1 - state.cogsRate / 100);
-            repeatNet = repeatNet * (1 - state.fulfilmentRate / 100);
-            repeatNet -= repeatRevenue * (state.requiredMargin / 100);
+            var repeatNetBooking = repeatRevenue * (1 - state.cancellationRate / 100);
+            var repeatNet = repeatNetBooking - repeatNetBooking * (state.cogsRate / 100) - repeatNetBooking * (state.fulfilmentRate / 100) - repeatNetBooking * (state.requiredMargin / 100);
             extAllowable = allowable + Math.max(0, repeatNet);
         }
-        var extROAS = extAllowable > 0 ? bv / extAllowable : Infinity;
+        var extROAS = extAllowable > 0 ? (bv + repeatRevenue) / extAllowable : Infinity;
 
         return {
             allowable: allowable,
@@ -827,6 +830,14 @@ sitemap: false
         el('res-total').textContent = fmtNumber(r.total);
         el('res-revenue').textContent = fmtCurrency(r.revenue);
         el('proj-revenue').textContent = fmtCurrency(r.nextRevenue) + ' (' + fmtDelta(r.nextDelta) + ')';
+        var noteEl = el('proj-note');
+        if (r.nextDelta > 0) {
+            noteEl.textContent = 'Your starting customer base grows, so revenue increases even at the same rates.';
+        } else if (r.nextDelta < 0) {
+            noteEl.textContent = 'Churn exceeds new acquisition, so revenue declines even at the same rates.';
+        } else {
+            noteEl.textContent = 'Revenue stays flat at the same rates.';
+        }
     }
 
     function renderUnitResults() {
@@ -955,7 +966,6 @@ sitemap: false
 
         // Bars
         var barWidth = PW * 0.25;
-        var gap = PW * 0.1;
         var cx = M.left + PW * 0.2;
         var px = M.left + PW * 0.55;
 
@@ -1126,7 +1136,7 @@ sitemap: false
 
     function bindEvents() {
         // All number inputs
-        var inputs = document.querySelectorAll('#section-current input, #section-unit-economics input, #section-unit-economics select, #currency-select, #payback-months, #repeat-rate');
+        var inputs = document.querySelectorAll('#section-current input, #section-unit-economics input[type="number"], #section-unit-economics select, #currency-select, #payback-months, #repeat-rate');
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].addEventListener('input', recalculate);
         }
@@ -1149,7 +1159,9 @@ sitemap: false
                 recalculate();
             });
             el(pair.num).addEventListener('input', function() {
-                el(pair.range).value = this.value;
+                var clamped = clamp(+this.value || 0, +el(pair.range).min, +el(pair.range).max);
+                el(pair.range).value = clamped;
+                this.value = clamped;
                 recalculate();
             });
         });
