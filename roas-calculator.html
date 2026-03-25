@@ -356,29 +356,36 @@ sitemap: false
         </div>
 
         <div class="row g-2 g-md-3 mb-3">
-            <div class="col-6 col-md-3">
-                <label class="form-label" for="cancel-rate">Cancel / return rate</label>
+            <div class="col-6 col-md">
+                <label class="form-label" for="vat-rate">VAT (incl.)</label>
+                <div class="input-group input-group-sm">
+                    <input type="number" class="form-control" id="vat-rate" value="20" min="0" max="100" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-6 col-md">
+                <label class="form-label" for="cancel-rate">Cancel / returns</label>
                 <div class="input-group input-group-sm">
                     <input type="number" class="form-control" id="cancel-rate" value="5" min="0" max="100" step="1">
                     <span class="input-group-text">%</span>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-md">
                 <label class="form-label" for="cogs-rate">Product / COGS</label>
                 <div class="input-group input-group-sm">
                     <input type="number" class="form-control" id="cogs-rate" value="30" min="0" max="100" step="1">
                     <span class="input-group-text">%</span>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <label class="form-label" for="fulfil-rate">Fulfilment cost</label>
+            <div class="col-6 col-md">
+                <label class="form-label" for="fulfil-rate">Fulfilment</label>
                 <div class="input-group input-group-sm">
                     <input type="number" class="form-control" id="fulfil-rate" value="15" min="0" max="100" step="1">
                     <span class="input-group-text">%</span>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <label class="form-label" for="margin-rate">Required margin</label>
+            <div class="col-6 col-md">
+                <label class="form-label" for="margin-rate">Req. margin</label>
                 <div class="input-group input-group-sm">
                     <input type="number" class="form-control" id="margin-rate" value="20" min="0" max="100" step="1">
                     <span class="input-group-text">%</span>
@@ -526,7 +533,7 @@ sitemap: false
 <!-- Methodology -->
 <div class="methodology mb-4">
     <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
-    <p><strong>ROAS and profitability:</strong> ROAS (return on ad spend) is simply revenue divided by ad spend. But ROAS alone does not tell you if you are profitable. This calculator subtracts cancellations and returns, product costs, fulfilment costs, and your required margin to show what is actually left after you pay for your ads. Break-even ROAS is the minimum ROAS needed to cover all costs. Target ROAS adds your margin requirement on top.</p>
+    <p><strong>ROAS and profitability:</strong> ROAS (return on ad spend) is calculated on gross revenue including VAT, matching what ad platforms report. But profitability is calculated on ex-VAT revenue since VAT is not yours to keep. The calculator strips VAT first, then subtracts cancellations and returns, product costs, fulfilment costs, and your required margin to show what is actually left after you pay for your ads. Break-even ROAS and target ROAS account for VAT in their thresholds.</p>
     <p><strong>Channel comparison:</strong> Different channels typically have different ROAS because they reach customers at different stages of intent. The comparison uses the same cost structure across all channels so you are comparing like for like. A channel with lower ROAS may still be profitable and worth scaling.</p>
     <p><strong>The ROAS trap model:</strong> The diminishing returns curve uses a logarithmic decay model where ROAS falls as spend scales. This is a simplification - real diminishing returns depend on audience saturation, creative fatigue, and competitive pressure - but it illustrates the core principle: optimising for ROAS alone leads to underspending. The optimal point is where marginal profit turns negative.</p>
     <p>This is a simplified model. Real advertising has attribution challenges, cross-channel effects, and delayed conversions. Use it to build intuition about your unit economics, not as a precise forecast.</p>
@@ -580,6 +587,7 @@ sitemap: false
         cogs: '#f59e0b',
         fulfil: '#8b5cf6',
         margin: '#6366f1',
+        vat: '#94a3b8',
         remaining: '#16a34a',
         roas: '#4A7BA7',
         grid: '#E5E7EB',
@@ -603,6 +611,7 @@ sitemap: false
         adRevenue: 25000,
         orderCount: 50,
         aov: 500,
+        vatRate: 20,
         cancelRate: 5,
         cogsRate: 30,
         fulfilRate: 15,
@@ -662,11 +671,19 @@ sitemap: false
 
     // ========== REVENUE HELPER ==========
 
-    function getRevenue() {
+    function getGrossRevenue() {
         if (state.inputMode === 'orders') {
             return state.orderCount * state.aov;
         }
         return state.adRevenue;
+    }
+
+    function getRevenue() {
+        var gross = getGrossRevenue();
+        if (state.vatRate > 0) {
+            return gross / (1 + state.vatRate / 100);
+        }
+        return gross;
     }
 
     function getOrders() {
@@ -691,6 +708,7 @@ sitemap: false
             ar: state.adRevenue,
             oc: state.orderCount,
             aov: state.aov,
+            vr: state.vatRate,
             cr: state.cancelRate,
             cg: state.cogsRate,
             fr: state.fulfilRate,
@@ -714,6 +732,7 @@ sitemap: false
             if (d.ar !== undefined) state.adRevenue = clamp(d.ar, 0, 9999999);
             if (d.oc !== undefined) state.orderCount = clamp(d.oc, 0, 999999);
             if (d.aov !== undefined) state.aov = clamp(d.aov, 0, 999999);
+            if (d.vr !== undefined) state.vatRate = clamp(d.vr, 0, 100);
             if (d.cr !== undefined) state.cancelRate = clamp(d.cr, 0, 100);
             if (d.cg !== undefined) state.cogsRate = clamp(d.cg, 0, 100);
             if (d.fr !== undefined) state.fulfilRate = clamp(d.fr, 0, 100);
@@ -742,6 +761,7 @@ sitemap: false
         if (p.has('rev')) { state.adRevenue = clamp(+p.get('rev'), 0, 9999999); found = true; }
         if (p.has('orders')) { state.orderCount = clamp(+p.get('orders'), 0, 999999); found = true; }
         if (p.has('aov')) { state.aov = clamp(+p.get('aov'), 0, 999999); found = true; }
+        if (p.has('vat')) { state.vatRate = clamp(+p.get('vat'), 0, 100); found = true; }
         if (p.has('cancel')) { state.cancelRate = clamp(+p.get('cancel'), 0, 100); found = true; }
         if (p.has('cogs')) { state.cogsRate = clamp(+p.get('cogs'), 0, 100); found = true; }
         if (p.has('fulfil')) { state.fulfilRate = clamp(+p.get('fulfil'), 0, 100); found = true; }
@@ -760,6 +780,7 @@ sitemap: false
             p.set('orders', state.orderCount);
             p.set('aov', state.aov);
         }
+        p.set('vat', state.vatRate);
         p.set('cancel', state.cancelRate);
         p.set('cogs', state.cogsRate);
         p.set('fulfil', state.fulfilRate);
@@ -771,34 +792,41 @@ sitemap: false
     // ========== CALCULATIONS ==========
 
     function calcProfitability() {
-        var revenue = getRevenue();
+        var grossRevenue = getGrossRevenue();
+        var exVatRevenue = getRevenue();
+        var vatAmount = grossRevenue - exVatRevenue;
         var orders = getOrders();
         var adSpend = state.adSpend;
 
-        var roas = adSpend > 0 ? revenue / adSpend : Infinity;
+        // ROAS uses gross revenue (matches ad platform reporting)
+        var roas = adSpend > 0 ? grossRevenue / adSpend : Infinity;
 
-        var netRevenue = revenue * (1 - state.cancelRate / 100);
+        // Profitability uses ex-VAT revenue
+        var netRevenue = exVatRevenue * (1 - state.cancelRate / 100);
         var cogsAmount = netRevenue * (state.cogsRate / 100);
         var fulfilAmount = netRevenue * (state.fulfilRate / 100);
         var marginAmount = netRevenue * (state.marginRate / 100);
         var grossProfit = netRevenue - cogsAmount - fulfilAmount;
         var profitAfterAds = grossProfit - adSpend;
 
+        // Break-even and target ROAS based on ex-VAT contribution
+        var vatFactor = grossRevenue > 0 ? exVatRevenue / grossRevenue : 1;
         var totalCostRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
-        var contributionRate = 1 - totalCostRate;
+        var contributionRate = vatFactor * (1 - totalCostRate);
         var breakEvenROAS = contributionRate > 0 ? 1 / contributionRate : Infinity;
 
-        var marginContrib = contributionRate - (1 - state.cancelRate / 100) * (state.marginRate / 100);
+        var marginContrib = contributionRate - vatFactor * (1 - state.cancelRate / 100) * (state.marginRate / 100);
         var targetROAS = marginContrib > 0 ? 1 / marginContrib : Infinity;
 
         var profitPerOrder = orders > 0 ? profitAfterAds / orders : 0;
         var cpa = orders > 0 ? adSpend / orders : 0;
 
-        var cancelAmount = revenue * (state.cancelRate / 100);
+        var cancelAmount = exVatRevenue * (state.cancelRate / 100);
         var overBudget = (state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100 + state.marginRate / 100)) > 1;
 
         return {
-            revenue: revenue,
+            grossRevenue: grossRevenue,
+            revenue: exVatRevenue,
             orders: orders,
             roas: roas,
             breakEvenROAS: breakEvenROAS,
@@ -808,6 +836,7 @@ sitemap: false
             cpa: cpa,
             overBudget: overBudget,
             breakdown: {
+                vat: vatAmount,
                 cancel: cancelAmount,
                 cogs: cogsAmount,
                 fulfil: fulfilAmount,
@@ -819,18 +848,20 @@ sitemap: false
     }
 
     function calcChannelProfitability(channel) {
-        var revenue = channel.revenue;
+        var grossRevenue = channel.revenue;
         var adSpend = channel.spend;
-        var roas = adSpend > 0 ? revenue / adSpend : Infinity;
+        var roas = adSpend > 0 ? grossRevenue / adSpend : Infinity;
 
-        var netRevenue = revenue * (1 - state.cancelRate / 100);
+        // Strip VAT for profit calculation
+        var exVatRevenue = state.vatRate > 0 ? grossRevenue / (1 + state.vatRate / 100) : grossRevenue;
+        var netRevenue = exVatRevenue * (1 - state.cancelRate / 100);
         var grossProfit = netRevenue * (1 - state.cogsRate / 100 - state.fulfilRate / 100);
         var profitAfterAds = grossProfit - adSpend;
 
         var aov = state.inputMode === 'orders' ? state.aov : (state.adRevenue > 0 && state.adSpend > 0 ? state.adRevenue / (state.adRevenue / state.aov || 50) : 500);
         // Use the AOV from Section 1 for CPA calculation
         var effectiveAOV = state.inputMode === 'orders' ? state.aov : (getOrders() > 0 ? getRevenue() / getOrders() : 500);
-        var orders = effectiveAOV > 0 ? revenue / effectiveAOV : 0;
+        var orders = effectiveAOV > 0 ? grossRevenue / effectiveAOV : 0;
         var cpa = orders > 0 ? adSpend / orders : 0;
         var profitPerOrder = orders > 0 ? profitAfterAds / orders : 0;
 
@@ -839,7 +870,7 @@ sitemap: false
             profit: profitAfterAds,
             cpa: cpa,
             profitPerOrder: profitPerOrder,
-            revenue: revenue,
+            revenue: grossRevenue,
             adSpend: adSpend,
             orders: orders
         };
@@ -851,8 +882,10 @@ sitemap: false
         var revenue = getRevenue();
         if (baseROAS === Infinity || baseSpend <= 0 || revenue <= 0) return null;
 
+        // Contribution rate on gross revenue (includes VAT deduction)
+        var vatFactor = state.vatRate > 0 ? 1 / (1 + state.vatRate / 100) : 1;
         var costRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
-        var contributionRate = 1 - costRate;
+        var contributionRate = vatFactor * (1 - costRate);
 
         var points = [];
         var optimalMultiplier = 1;
@@ -942,6 +975,7 @@ sitemap: false
 
         // Build segments from the revenue breakdown
         var segments = [
+            { val: Math.max(0, r.breakdown.vat), col: COL.vat, label: 'VAT' },
             { val: Math.max(0, r.breakdown.cancel), col: COL.cancel, label: 'Cancels / Returns' },
             { val: Math.max(0, r.breakdown.cogs), col: COL.cogs, label: 'COGS' },
             { val: Math.max(0, r.breakdown.fulfil), col: COL.fulfil, label: 'Fulfilment' },
@@ -1238,8 +1272,9 @@ sitemap: false
         var scaledROAS = curve.baseROAS * Math.pow(1 / scale, 0.4);
         var scaledSpend = state.adSpend * scale;
         var scaledRevenue = scaledSpend * scaledROAS;
+        var vatFactor = state.vatRate > 0 ? 1 / (1 + state.vatRate / 100) : 1;
         var costRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
-        var contributionRate = 1 - costRate;
+        var contributionRate = vatFactor * (1 - costRate);
         var scaledProfit = (scaledRevenue * contributionRate) - scaledSpend;
 
         el('res-scaled-roas').textContent = scaledROAS.toFixed(1) + 'x';
@@ -1394,8 +1429,9 @@ sitemap: false
 
         // Dots at current position
         var curROAS = curve.baseROAS * Math.pow(1 / state.spendScale, 0.4);
+        var curVatFactor = state.vatRate > 0 ? 1 / (1 + state.vatRate / 100) : 1;
         var curCostRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
-        var curContrib = 1 - curCostRate;
+        var curContrib = curVatFactor * (1 - curCostRate);
         var curSpend = state.adSpend * state.spendScale;
         var curProfit = (curSpend * curROAS * curContrib) - curSpend;
 
@@ -1418,6 +1454,7 @@ sitemap: false
         state.adRevenue = clamp(+el('ad-revenue').value || 0, 0, 9999999);
         state.orderCount = clamp(+el('order-count').value || 0, 0, 999999);
         state.aov = clamp(+el('aov').value || 0, 0, 999999);
+        state.vatRate = clamp(+el('vat-rate').value || 0, 0, 100);
         state.cancelRate = clamp(+el('cancel-rate').value || 0, 0, 100);
         state.cogsRate = clamp(+el('cogs-rate').value || 0, 0, 100);
         state.fulfilRate = clamp(+el('fulfil-rate').value || 0, 0, 100);
@@ -1436,6 +1473,7 @@ sitemap: false
         el('ad-revenue').value = state.adRevenue;
         el('order-count').value = state.orderCount;
         el('aov').value = state.aov;
+        el('vat-rate').value = state.vatRate;
         el('cancel-rate').value = state.cancelRate;
         el('cogs-rate').value = state.cogsRate;
         el('fulfil-rate').value = state.fulfilRate;
