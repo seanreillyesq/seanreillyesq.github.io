@@ -884,7 +884,7 @@ sitemap: false
         var costRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
         var contributionRate = vatFactor * (1 - costRate);
 
-        var analyticalOptimal = Math.pow(0.6 * baseROAS * contributionRate, 2.5);
+        var analyticalOptimal = Math.min(Math.pow(0.6 * baseROAS * contributionRate, 2.5), 50);
         var curveMax = Math.max(5, Math.ceil(analyticalOptimal * 1.5));
 
         var points = [];
@@ -971,13 +971,15 @@ sitemap: false
         var svg = svgEl('svg', { viewBox: '0 0 ' + WF_W + ' ' + WF_H, preserveAspectRatio: 'xMidYMid meet' });
         var barY = 5, barH = 30;
 
-        // Build segments from the revenue breakdown
+        // Build segments from the revenue breakdown.
+        // Note: margin is intentionally excluded here. profitAfterAds already contains
+        // the margin amount - including both would overstate gross revenue by marginAmount.
+        // Margin target is shown via target ROAS and the verdict text instead.
         var segments = [
             { val: Math.max(0, r.breakdown.vat), col: COL.vat, label: 'VAT' },
             { val: Math.max(0, r.breakdown.cancel), col: COL.cancel, label: 'Cancels / Returns' },
             { val: Math.max(0, r.breakdown.cogs), col: COL.cogs, label: 'COGS' },
             { val: Math.max(0, r.breakdown.fulfil), col: COL.fulfil, label: 'Fulfilment' },
-            { val: Math.max(0, r.breakdown.margin), col: COL.margin, label: 'Margin' },
             { val: Math.max(0, r.breakdown.adSpend), col: COL.adSpend, label: 'Ad Spend' }
         ];
 
