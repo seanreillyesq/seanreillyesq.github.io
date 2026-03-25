@@ -398,7 +398,7 @@ sitemap: false
     <div id="cost-waterfall"></div>
 
     <!-- Warning -->
-    <div class="roas-warning" id="cost-warning">Your costs exceed 100% of revenue. There is nothing left for profit.</div>
+    <div class="roas-warning" id="cost-warning">Your costs exceed 100% of revenue. There is nothing left to cover ad spend or profit.</div>
 
     <!-- Results row 1 -->
     <div class="row g-2 g-md-3 mb-2">
@@ -535,7 +535,7 @@ sitemap: false
     <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
     <p><strong>ROAS and profitability:</strong> ROAS (return on ad spend) is calculated on gross revenue including VAT, matching what ad platforms report. But profitability is calculated on ex-VAT revenue since VAT is not yours to keep. The calculator strips VAT first, then subtracts cancellations and returns, product costs, fulfilment costs, and your required margin to show what is actually left after you pay for your ads. Break-even ROAS and target ROAS account for VAT in their thresholds.</p>
     <p><strong>Channel comparison:</strong> Different channels typically have different ROAS because they reach customers at different stages of intent. The comparison uses the same cost structure across all channels so you are comparing like for like. A channel with lower ROAS may still be profitable and worth scaling.</p>
-    <p><strong>The ROAS trap model:</strong> The diminishing returns curve uses a logarithmic decay model where ROAS falls as spend scales. This is a simplification - real diminishing returns depend on audience saturation, creative fatigue, and competitive pressure - but it illustrates the core principle: optimising for ROAS alone leads to underspending. The optimal point is where marginal profit turns negative.</p>
+    <p><strong>The ROAS trap model:</strong> The diminishing returns curve uses a logarithmic decay model where ROAS falls as spend scales. This is a simplification - real diminishing returns depend on audience saturation, creative fatigue, and competitive pressure - but it illustrates the core principle: optimising for ROAS alone leads to underspending. The optimal point is where marginal profit reaches zero.</p>
     <p>This is a simplified model. Real advertising has attribution challenges, cross-channel effects, and delayed conversions. Use it to build intuition about your unit economics, not as a precise forecast.</p>
 </div>
 
@@ -757,16 +757,16 @@ sitemap: false
         var found = false;
         if (p.has('cur') && CURRENCIES[p.get('cur')]) { state.currency = p.get('cur'); found = true; }
         if (p.has('mode') && (p.get('mode') === 'revenue' || p.get('mode') === 'orders')) { state.inputMode = p.get('mode'); found = true; }
-        if (p.has('spend')) { state.adSpend = clamp(+p.get('spend'), 0, 9999999); found = true; }
-        if (p.has('rev')) { state.adRevenue = clamp(+p.get('rev'), 0, 9999999); found = true; }
-        if (p.has('orders')) { state.orderCount = clamp(+p.get('orders'), 0, 999999); found = true; }
-        if (p.has('aov')) { state.aov = clamp(+p.get('aov'), 0, 999999); found = true; }
-        if (p.has('vat')) { state.vatRate = clamp(+p.get('vat'), 0, 100); found = true; }
-        if (p.has('cancel')) { state.cancelRate = clamp(+p.get('cancel'), 0, 100); found = true; }
-        if (p.has('cogs')) { state.cogsRate = clamp(+p.get('cogs'), 0, 100); found = true; }
-        if (p.has('fulfil')) { state.fulfilRate = clamp(+p.get('fulfil'), 0, 100); found = true; }
-        if (p.has('margin')) { state.marginRate = clamp(+p.get('margin'), 0, 100); found = true; }
-        if (p.has('scale')) { state.spendScale = clamp(+p.get('scale'), 0.5, 5); found = true; }
+        if (p.has('spend')) { state.adSpend = clamp(+p.get('spend') || 0, 0, 9999999); found = true; }
+        if (p.has('rev')) { state.adRevenue = clamp(+p.get('rev') || 0, 0, 9999999); found = true; }
+        if (p.has('orders')) { state.orderCount = clamp(+p.get('orders') || 0, 0, 999999); found = true; }
+        if (p.has('aov')) { state.aov = clamp(+p.get('aov') || 0, 0, 999999); found = true; }
+        if (p.has('vat')) { state.vatRate = clamp(+p.get('vat') || 0, 0, 100); found = true; }
+        if (p.has('cancel')) { state.cancelRate = clamp(+p.get('cancel') || 0, 0, 100); found = true; }
+        if (p.has('cogs')) { state.cogsRate = clamp(+p.get('cogs') || 0, 0, 100); found = true; }
+        if (p.has('fulfil')) { state.fulfilRate = clamp(+p.get('fulfil') || 0, 0, 100); found = true; }
+        if (p.has('margin')) { state.marginRate = clamp(+p.get('margin') || 0, 0, 100); found = true; }
+        if (p.has('scale')) { state.spendScale = clamp(+p.get('scale') || 1, 0.5, 100); found = true; }
         return found;
     }
 
@@ -819,7 +819,7 @@ sitemap: false
         var targetROAS = marginContrib > 0 ? 1 / marginContrib : Infinity;
 
         var profitPerOrder = orders > 0 ? profitAfterAds / orders : 0;
-        var cpa = orders > 0 ? adSpend / orders : 0;
+        var cpa = orders > 0 ? adSpend / orders : Infinity;
 
         var cancelAmount = exVatRevenue * (state.cancelRate / 100);
         var overBudget = (state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100 + state.marginRate / 100)) > 1;
@@ -858,11 +858,8 @@ sitemap: false
         var grossProfit = netRevenue * (1 - state.cogsRate / 100 - state.fulfilRate / 100);
         var profitAfterAds = grossProfit - adSpend;
 
-        var aov = state.inputMode === 'orders' ? state.aov : (state.adRevenue > 0 && state.adSpend > 0 ? state.adRevenue / (state.adRevenue / state.aov || 50) : 500);
-        // Use the AOV from Section 1 for CPA calculation
-        var effectiveAOV = state.inputMode === 'orders' ? state.aov : (getOrders() > 0 ? getRevenue() / getOrders() : 500);
-        var orders = effectiveAOV > 0 ? grossRevenue / effectiveAOV : 0;
-        var cpa = orders > 0 ? adSpend / orders : 0;
+        var orders = state.aov > 0 ? grossRevenue / state.aov : 0;
+        var cpa = orders > 0 ? adSpend / orders : Infinity;
         var profitPerOrder = orders > 0 ? profitAfterAds / orders : 0;
 
         return {
@@ -887,12 +884,14 @@ sitemap: false
         var costRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
         var contributionRate = vatFactor * (1 - costRate);
 
+        var analyticalOptimal = Math.pow(0.6 * baseROAS * contributionRate, 2.5);
+        var curveMax = Math.max(5, Math.ceil(analyticalOptimal * 1.5));
+
         var points = [];
         var optimalMultiplier = 1;
         var maxProfit = -Infinity;
 
-        // Generate curve from 0.5x to 5x
-        for (var m = 0.5; m <= 5.01; m += 0.05) {
+        for (var m = 0.5; m <= curveMax + 0.01; m += curveMax / 100) {
             var scaledSpend = baseSpend * m;
             var scaledROAS = baseROAS * Math.pow(1 / m, 0.4);
             var scaledRevenue = scaledSpend * scaledROAS;
@@ -936,7 +935,7 @@ sitemap: false
         tpEl.textContent = fmtCurrency(r.totalProfit);
         tpEl.className = 'result-value ' + deltaClass(r.totalProfit);
 
-        el('res-cpa').textContent = fmtCurrency(r.cpa);
+        el('res-cpa').textContent = r.cpa === Infinity ? 'N/A' : fmtCurrency(r.cpa);
         el('res-target-roas').textContent = r.targetROAS === Infinity ? 'N/A' : r.targetROAS.toFixed(1) + 'x';
 
         // Warning
@@ -951,7 +950,7 @@ sitemap: false
             verdict.innerHTML = '<strong>No ad spend entered</strong>Enter your ad spend to see profitability analysis.';
         } else if (r.roas >= r.targetROAS && r.totalProfit > 0) {
             verdict.className = 'roas-verdict roas-verdict-profitable';
-            verdict.innerHTML = '<strong>Profitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x exceeds the ' + r.targetROAS.toFixed(1) + 'x target. You are making ' + fmtCurrency(r.profitPerOrder) + ' per order after all costs including your ' + state.marginRate + '% margin.';
+            verdict.innerHTML = '<strong>Profitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x exceeds the ' + r.targetROAS.toFixed(1) + 'x target. You are making ' + fmtCurrency(r.profitPerOrder) + ' per order after all costs before your ' + state.marginRate + '% margin target.';
         } else if (r.roas >= r.breakEvenROAS && r.totalProfit >= 0) {
             verdict.className = 'roas-verdict roas-verdict-breakeven';
             verdict.innerHTML = '<strong>Break-even zone</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x covers costs but falls short of your ' + state.marginRate + '% margin target (needs ' + r.targetROAS.toFixed(1) + 'x). You are making ' + fmtCurrency(r.profitPerOrder) + ' per order before margin.';
@@ -967,8 +966,7 @@ sitemap: false
         var container = el('cost-waterfall');
         container.innerHTML = '';
 
-        var revenue = r.revenue;
-        if (revenue <= 0) return;
+        if (r.grossRevenue <= 0) return;
 
         var svg = svgEl('svg', { viewBox: '0 0 ' + WF_W + ' ' + WF_H, preserveAspectRatio: 'xMidYMid meet' });
         var barY = 5, barH = 30;
@@ -991,6 +989,7 @@ sitemap: false
 
         var total = 0;
         segments.forEach(function(s) { total += s.val; });
+        total = Math.max(total, r.grossRevenue);
         var scale = total > 0 ? WF_W / total : 0;
 
         var x = 0;
@@ -1034,6 +1033,14 @@ sitemap: false
 
     function renderChannels() {
         var list = el('channel-list');
+        var focusClass = null, focusIdx = null, focusSel = null;
+        if (document.activeElement && document.activeElement.getAttribute('data-idx') !== null) {
+            focusIdx = document.activeElement.getAttribute('data-idx');
+            focusClass = document.activeElement.className.split(' ').filter(function(c) { return c.indexOf('ch-') === 0 || c === 'roas-channel-name'; })[0] || null;
+            if (document.activeElement.selectionStart !== undefined) {
+                focusSel = { start: document.activeElement.selectionStart, end: document.activeElement.selectionEnd };
+            }
+        }
         list.innerHTML = '';
 
         state.channels.forEach(function(ch, idx) {
@@ -1068,7 +1075,7 @@ sitemap: false
                 '<div class="row g-2 roas-channel-results">' +
                     '<div class="col-3"><div class="result-card"><div class="result-label">ROAS</div><div class="result-value">' + (r.roas === Infinity ? 'N/A' : r.roas.toFixed(1) + 'x') + '</div></div></div>' +
                     '<div class="col-3"><div class="result-card"><div class="result-label">Profit / Loss</div><div class="result-value ' + deltaClass(r.profit) + '">' + fmtCurrency(r.profit) + '</div></div></div>' +
-                    '<div class="col-3"><div class="result-card"><div class="result-label">CPA</div><div class="result-value">' + fmtCurrency(r.cpa) + '</div></div></div>' +
+                    '<div class="col-3"><div class="result-card"><div class="result-label">CPA</div><div class="result-value">' + (r.cpa === Infinity ? 'N/A' : fmtCurrency(r.cpa)) + '</div></div></div>' +
                     '<div class="col-3"><div class="result-card"><div class="result-label">Profit / Order</div><div class="result-value ' + deltaClass(r.profitPerOrder) + '">' + fmtCurrency(r.profitPerOrder) + '</div></div></div>' +
                 '</div>';
 
@@ -1080,6 +1087,15 @@ sitemap: false
 
         // Bind channel events
         bindChannelEvents();
+        if (focusClass && focusIdx !== null) {
+            var refocus = list.querySelector('.' + focusClass + '[data-idx="' + focusIdx + '"]');
+            if (refocus) {
+                refocus.focus();
+                if (focusSel && refocus.setSelectionRange) {
+                    try { refocus.setSelectionRange(focusSel.start, focusSel.end); } catch(e) {}
+                }
+            }
+        }
         renderChannelChart();
     }
 
@@ -1267,6 +1283,11 @@ sitemap: false
             return;
         }
 
+        var sliderMax = Math.max(5, Math.ceil(curve.optimalMultiplier * 1.5));
+        el('spend-scale').setAttribute('max', sliderMax);
+        el('spend-scale-val').setAttribute('max', sliderMax);
+        state.spendScale = clamp(state.spendScale, 0.5, sliderMax);
+
         // Find current point on curve
         var scale = state.spendScale;
         var scaledROAS = curve.baseROAS * Math.pow(1 / scale, 0.4);
@@ -1284,7 +1305,7 @@ sitemap: false
         spEl.textContent = fmtCurrency(scaledProfit);
         spEl.className = 'result-value ' + deltaClass(scaledProfit);
 
-        el('res-optimal-spend').textContent = curve.optimalMultiplier.toFixed(1) + 'x';
+        el('res-optimal-spend').innerHTML = fmtCurrency(state.adSpend * curve.optimalMultiplier) + '<small style="display:block;font-size:0.7em;opacity:0.7;">(' + curve.optimalMultiplier.toFixed(1) + 'x current)</small>';
 
         renderTrapChart(curve);
     }
@@ -1313,7 +1334,8 @@ sitemap: false
         minProfit -= profitRange * 0.1;
         profitRange = maxProfit - minProfit;
 
-        var xScale = function(m) { return TR_M.left + ((m - 0.5) / 4.5) * pw; };
+        var xMax = points[points.length - 1].multiplier;
+        var xScale = function(m) { return TR_M.left + ((m - 0.5) / (xMax - 0.5)) * pw; };
         var yRoasScale = function(r) { return TR_M.top + ph - (r / maxROAS) * ph; };
         var yProfitScale = function(p) { return TR_M.top + ph - ((p - minProfit) / profitRange) * ph; };
 
@@ -1348,7 +1370,8 @@ sitemap: false
         }
 
         // X axis labels
-        for (var m = 0.5; m <= 5; m += 0.5) {
+        var xStep = Math.max(0.5, Math.ceil((xMax - 0.5) / 10 * 2) / 2);
+        for (var m = 0.5; m <= xMax; m += xStep) {
             var xx = xScale(m);
             var xlbl = svgEl('text', {
                 x: xx, y: TR_H - TR_M.bottom + 20,
@@ -1459,7 +1482,7 @@ sitemap: false
         state.cogsRate = clamp(+el('cogs-rate').value || 0, 0, 100);
         state.fulfilRate = clamp(+el('fulfil-rate').value || 0, 0, 100);
         state.marginRate = clamp(+el('margin-rate').value || 0, 0, 100);
-        state.spendScale = clamp(+el('spend-scale').value || 1, 0.5, 5);
+        state.spendScale = clamp(+el('spend-scale').value || 1, 0.5, +el('spend-scale').getAttribute('max') || 5);
     }
 
     function writeInputs() {
@@ -1514,7 +1537,7 @@ sitemap: false
 
     function bindEvents() {
         // All inputs in section 1
-        var inputs = document.querySelectorAll('#section-profitability input[type="number"], #section-profitability select, #currency-select');
+        var inputs = document.querySelectorAll('#section-profitability input[type="number"], #section-profitability select');
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].addEventListener('input', recalculate);
         }
@@ -1523,7 +1546,7 @@ sitemap: false
         var modes = document.querySelectorAll('input[name="inputMode"]');
         for (var m = 0; m < modes.length; m++) {
             modes[m].addEventListener('change', function() {
-                readInputs();
+                state.inputMode = document.querySelector('input[name="inputMode"]:checked').value;
                 toggleInputMode();
                 recalculate();
             });
@@ -1555,6 +1578,7 @@ sitemap: false
         });
         el('spend-scale-val').addEventListener('input', function() {
             el('spend-scale').value = this.value;
+            this.value = el('spend-scale').value;
             recalculate();
         });
     }
