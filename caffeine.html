@@ -204,13 +204,19 @@ hidden: true
         </div>
     </div>
     <div class="row g-2 g-md-3 mb-3">
-        <div class="col-12 col-md-4">
+        <div class="col-7 col-md-4">
             <label class="form-label" for="drink-order">Drink order</label>
             <select class="form-select form-select-sm" id="drink-order">
                 <option value="coffee-first" selected>Coffee first, tea later</option>
                 <option value="tea-first">Tea first, coffee later</option>
                 <option value="interleave">Interleave</option>
             </select>
+        </div>
+        <div class="col-5 col-md-3 d-flex align-items-end">
+            <div class="form-check form-switch mb-1">
+                <input class="form-check-input" type="checkbox" id="carry-over">
+                <label class="form-check-label" for="carry-over" style="font-size:0.8125rem;">Yesterday's carry-over</label>
+            </div>
         </div>
     </div>
 </div>
@@ -265,6 +271,7 @@ hidden: true
     <p><strong>Caffeine half-life:</strong> The average adult eliminates half the caffeine in their system every 5 hours. Fast metabolisers (including smokers) clear it in about 3 hours; slow metabolisers (including those on oral contraceptives) may take 7 hours. This affects how late you can safely drink.</p>
     <p><strong>The 25mg threshold:</strong> The "last safe drink" calculation works backwards from your bedtime to find the latest time you can drink so that less than 25mg of caffeine remains in your system when you want to sleep. Below 25mg, most people experience minimal sleep disruption.</p>
     <p><strong>Drink placement:</strong> By default, coffees are placed in earlier optimal windows (higher caffeine, more time to clear) and teas in later windows (lower caffeine, needs less clearance time). Use the drink order selector to change this if you prefer tea in the morning.</p>
+    <p><strong>Yesterday's carry-over:</strong> Caffeine doesn't fully clear overnight. With a 5-hour half-life, a drink at 2pm still leaves a few milligrams in your system 17 hours later at 7am. Toggle this on to see the residual from an identical previous day's schedule layered into the curve. It's usually small (10-15mg) but adds up for slow metabolisers or heavy drinkers.</p>
     <p>This is a simplified model. Individual responses to caffeine vary based on genetics, tolerance, medications, and other factors. Use it as a guide, not gospel.</p>
 </div>
 
@@ -307,6 +314,7 @@ hidden: true
         teas: 2,
         halfLife: 5,
         drinkOrder: 'coffee-first',
+        carryOver: false,
         drinks: []
     };
 
@@ -326,7 +334,8 @@ hidden: true
             coffees: state.coffees,
             teas: state.teas,
             halfLife: state.halfLife,
-            drinkOrder: state.drinkOrder
+            drinkOrder: state.drinkOrder,
+            carryOver: state.carryOver
         };
         // Save pinned drink times if any are pinned
         var hasPinned = state.drinks.some(function(d) { return d.pinned; });
@@ -352,6 +361,7 @@ hidden: true
             if (data.teas !== undefined) state.teas = clamp(data.teas, 0, 8);
             if (data.halfLife === 3 || data.halfLife === 5 || data.halfLife === 7) state.halfLife = data.halfLife;
             if (data.drinkOrder === 'coffee-first' || data.drinkOrder === 'tea-first' || data.drinkOrder === 'interleave') state.drinkOrder = data.drinkOrder;
+            if (data.carryOver !== undefined) state.carryOver = !!data.carryOver;
             if (state.sleep <= state.wake) state.sleep += 1440;
             // Restore pinned drinks if saved and counts still match
             if (data.pins && Array.isArray(data.pins)) {
@@ -604,6 +614,30 @@ hidden: true
         return total;
     }
 
+    // Compute carry-over: residual caffeine at wake from yesterday's identical schedule
+    function carryOverAtWake(drinks, halfLifeHrs) {
+        if (!state.carryOver || drinks.length === 0) return 0;
+        var k = LN2 / (halfLifeHrs * 60);
+        var total = 0;
+        for (var i = 0; i < drinks.length; i++) {
+            // Each drink at time t since yesterday's wake has decayed for (1440 - t) mins by today's wake
+            var elapsed = 1440 - drinks[i].time;
+            if (elapsed <= 0) continue;
+            total += drinks[i].mg * Math.exp(-k * elapsed);
+        }
+        return total;
+    }
+
+    // Total caffeine at a point including carry-over from previous day
+    function totalCaffeineAtTime(drinks, minutesSinceWake, halfLifeHrs) {
+        var todayCaffeine = caffeineAtTime(drinks, minutesSinceWake, halfLifeHrs);
+        var carryOver = carryOverAtWake(drinks, halfLifeHrs);
+        if (carryOver <= 0) return todayCaffeine;
+        // Carry-over decays from wake (t=0) onwards
+        var k = LN2 / (halfLifeHrs * 60);
+        return todayCaffeine + carryOver * Math.exp(-k * minutesSinceWake);
+    }
+
     // ========== RENDERING ==========
 
     function xScale(minsSinceWake, totalWaking) {
@@ -627,7 +661,7 @@ hidden: true
         if (totalDrinks > 0) {
             // Sample the caffeine curve to find peak
             for (var t = 0; t <= waking; t += 5) {
-                var c = caffeineAtTime(drinks, t, state.halfLife);
+                var c = totalCaffeineAtTime(drinks, t, state.halfLife);
                 if (c > maxCaffeine) maxCaffeine = c;
             }
         }
@@ -735,7 +769,7 @@ hidden: true
         if (totalDrinks > 0 && drinks.length > 0) {
             var caffPath = '';
             for (var t = 0; t <= waking; t += 3) {
-                var cv = caffeineAtTime(drinks, t, state.halfLife);
+                var cv = totalCaffeineAtTime(drinks, t, state.halfLife);
                 var px = xScale(t, waking);
                 var py = yScale(cv, maxCaffeine);
                 caffPath += (t === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
@@ -1045,9 +1079,9 @@ hidden: true
             document.getElementById('last-tea').textContent = '--:--';
         }
 
-        // Caffeine at bedtime
+        // Caffeine at bedtime (including carry-over)
         if (drinks.length > 0) {
-            var bedtimeMg = caffeineAtTime(drinks, waking, state.halfLife);
+            var bedtimeMg = totalCaffeineAtTime(drinks, waking, state.halfLife);
             document.getElementById('bedtime-mg').textContent = Math.round(bedtimeMg) + ' mg';
         } else {
             document.getElementById('bedtime-mg').textContent = '0 mg';
@@ -1063,6 +1097,7 @@ hidden: true
         state.teas = clamp(parseInt(document.getElementById('tea-count').value, 10) || 0, 0, 8);
         state.halfLife = parseFloat(document.getElementById('metabolism').value) || 5;
         state.drinkOrder = document.getElementById('drink-order').value;
+        state.carryOver = document.getElementById('carry-over').checked;
 
         // Handle sleep before wake (next day)
         if (state.sleep <= state.wake) {
@@ -1077,6 +1112,7 @@ hidden: true
         document.getElementById('tea-count').value = state.teas;
         document.getElementById('metabolism').value = state.halfLife;
         document.getElementById('drink-order').value = state.drinkOrder;
+        document.getElementById('carry-over').checked = state.carryOver;
     }
 
     function updateURL() {
@@ -1087,6 +1123,7 @@ hidden: true
         params.set('tea', state.teas);
         if (state.halfLife !== 5) params.set('metabolism', state.halfLife);
         if (state.drinkOrder !== 'coffee-first') params.set('order', state.drinkOrder);
+        if (state.carryOver) params.set('carry', '1');
 
         var url = window.location.pathname + '?' + params.toString();
         history.replaceState(null, '', url);
@@ -1118,6 +1155,7 @@ hidden: true
             var o = params.get('order');
             if (o === 'coffee-first' || o === 'tea-first' || o === 'interleave') state.drinkOrder = o;
         }
+        if (params.has('carry')) state.carryOver = params.get('carry') === '1';
 
         // Handle sleep before wake
         if (state.sleep <= state.wake) state.sleep += 1440;
@@ -1151,6 +1189,10 @@ hidden: true
             recalculate();
         });
         document.getElementById('drink-order').addEventListener('change', function() {
+            readInputs();
+            recalculate();
+        });
+        document.getElementById('carry-over').addEventListener('change', function() {
             readInputs();
             recalculate();
         });
