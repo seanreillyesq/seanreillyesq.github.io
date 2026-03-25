@@ -1523,6 +1523,7 @@ sitemap: false
         var modes = document.querySelectorAll('input[name="inputMode"]');
         for (var m = 0; m < modes.length; m++) {
             modes[m].addEventListener('change', function() {
+                readInputs();
                 toggleInputMode();
                 recalculate();
             });
