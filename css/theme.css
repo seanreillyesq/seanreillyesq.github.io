@@ -32,7 +32,7 @@
 
 /* ---- Base Typography ---- */
 body {
-    font-family: 'Lora', 'Times New Roman', serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 1.125rem;
     color: var(--color-text);
     -webkit-tap-highlight-color: var(--color-accent);
@@ -44,7 +44,6 @@ p {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', 'Helvetica Neue', sans-serif;
     font-weight: 800;
 }
 
@@ -93,7 +92,6 @@ img::-moz-selection {
 
 /* ---- Navbar ---- */
 .navbar {
-    font-family: 'Inter', sans-serif;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 .navbar .navbar-brand {
@@ -246,7 +244,6 @@ img::-moz-selection {
     font-size: 1.25rem;
     line-height: 1.1;
     display: block;
-    font-family: 'Lora', serif;
     font-weight: 400;
     font-style: italic;
     margin: 0.75rem 0 0;
@@ -272,7 +269,6 @@ img::-moz-selection {
     color: inherit;
 }
 .intro-header .post-heading .subheading {
-    font-family: 'Lora', serif;
     font-size: 1.25rem;
     margin: 0.75rem 0 1.5rem;
     font-weight: 400;
@@ -281,7 +277,6 @@ img::-moz-selection {
     display: block;
 }
 .intro-header .post-heading .meta {
-    font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-size: 0.9375rem;
     letter-spacing: 0.3px;
@@ -353,7 +348,6 @@ article :not(pre) > code {
 .post-preview > a > .post-subtitle {
     margin: 0 0 0.5rem;
     font-weight: 400;
-    font-family: 'Lora', serif;
     color: var(--color-text-muted);
     font-size: 1rem;
 }
@@ -361,9 +355,6 @@ article :not(pre) > code {
     color: var(--color-text-muted);
     font-size: 0.875rem;
     margin-top: 0;
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    letter-spacing: 0.3px;
 }
 @media (min-width: 768px) {
     .post-preview > a > .post-title {
@@ -381,7 +372,6 @@ article :not(pre) > code {
     border-top: 1px solid var(--color-border);
 }
 .post-nav a {
-    font-family: 'Inter', sans-serif;
     font-size: 0.8125rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -403,7 +393,6 @@ article :not(pre) > code {
 /* Caption */
 .caption {
     text-align: center;
-    font-family: 'Inter', sans-serif;
     font-size: 0.8125rem;
     font-weight: 400;
     padding: 0.5rem;
@@ -429,7 +418,6 @@ hr.small {
 
 /* ---- Buttons ---- */
 .btn {
-    font-family: 'Inter', sans-serif;
     font-weight: 700;
     letter-spacing: 0.5px;
     transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -539,7 +527,6 @@ hr.small {
     line-height: 1.1;
 }
 .hp-tagline {
-    font-family: 'Lora', serif;
     font-style: italic;
     font-size: 1.375rem;
     color: var(--color-text-muted);
@@ -637,10 +624,6 @@ hr.small {
 }
 .hp-card-date {
     margin-top: auto;
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    font-size: 0.8125rem;
-    letter-spacing: 0.3px;
 }
 
 /* About teaser (homepage) */
@@ -657,8 +640,6 @@ hr.small {
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--color-border);
     color: var(--color-text-muted);
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
 }
 .hp-about-list li:last-child {
     border-bottom: none;
@@ -666,7 +647,6 @@ hr.small {
 
 /* ---- Pagination ---- */
 .pagination .page-link {
-    font-family: 'Inter', sans-serif;
     font-size: 0.8125rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -759,7 +739,6 @@ hr.small {
     transform: translateX(-4px);
 }
 .timeline-year {
-    font-family: 'Inter', sans-serif;
     font-weight: 800;
     font-size: 1.125rem;
     color: var(--color-text);
@@ -773,9 +752,7 @@ hr.small {
 .timeline-item li {
     padding: 0.25rem 0;
     color: var(--color-text-muted);
-    font-family: 'Inter', sans-serif;
     font-size: 0.875rem;
-    font-weight: 400;
 }
 
 /* ---- Venture Cards ---- */
@@ -839,9 +816,7 @@ hr.small {
     background-color: var(--color-surface-dark);
     color: rgba(255, 255, 255, 0.7);
     padding: 3rem 0 2rem;
-    font-family: 'Inter', sans-serif;
     font-size: 0.9375rem;
-    font-weight: 400;
 }
 .site-footer-enhanced a {
     color: rgba(255, 255, 255, 0.7);
