@@ -567,17 +567,17 @@ hr.small {
 .hp-logos {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    gap: 1.5rem 1rem;
+    gap: 1rem 0;
     margin: 0 auto;
 }
 .hp-logo-cell {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 44px;
+    height: 52px;
 }
 .hp-logo-cell img {
-    max-height: 38px;
+    max-height: 46px;
     max-width: 100%;
     width: auto;
     height: auto;
