@@ -565,20 +565,24 @@ hr.small {
     background-color: var(--color-surface);
 }
 .hp-logos {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
-    gap: 1rem 0;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
     margin: 0 auto;
 }
 .hp-logo-cell {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 52px;
+    height: 60px;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0 0.5rem;
 }
 .hp-logo-cell img {
-    max-height: 46px;
-    max-width: 100%;
+    max-height: 56px;
+    max-width: 150px;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -591,11 +595,19 @@ hr.small {
 }
 @media (max-width: 767.98px) {
     .hp-logos {
-        grid-template-columns: repeat(3, 1fr);
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 1.5rem 0.75rem;
+    }
+    .hp-logo-cell {
+        flex: 0 0 30%;
+        height: auto;
+        min-width: auto;
+        padding: 0;
     }
     .hp-logo-cell img {
         max-height: 28px;
+        max-width: 100%;
     }
 }
 
