@@ -29,7 +29,7 @@ Also the following tools - bearing in mind their content will skew towards using
 
 The Official Google Webmaster Tools Blog is the source for many new updates:
 
-- <a href="https://webmasters.googleblog.com" target="_blank">Google Webmaster Central Blog</a>
+- <a href="https://developers.google.com/search/blog" target="_blank">Google Search Central Blog</a>
 
 Many official updates, plus things that are being widely noticed by the community but not being talked about officially by the search engines, will come out on these closely related sites:
 

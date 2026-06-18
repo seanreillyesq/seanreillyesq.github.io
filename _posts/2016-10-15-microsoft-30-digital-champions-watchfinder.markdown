@@ -58,6 +58,4 @@ Here's the finished piece:
 
 If you want the full written feature, Real Business published an accompanying article: <a href="https://realbusiness.co.uk/leaping-over-the-dot-com-crash-to-become-a-luxury-market-success" target="_blank" rel="noopener">Leaping over the dot.com crash to become a luxury market success</a>.
 
-You can also see the other companies in the series on their <a href="https://realbusiness.co.uk/digital-transformation/the-british-trailblazers-embracing-digital-techniques-to-grow/" target="_blank" rel="noopener">30 Digital Champions campaign page</a>.
-
 It's good to see Watchfinder recognised alongside some impressive companies. More importantly, it's a useful marker of where we are in the growth journey - and a reminder of how much further we want to go.

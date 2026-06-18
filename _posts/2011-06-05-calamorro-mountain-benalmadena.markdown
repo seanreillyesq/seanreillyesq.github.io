@@ -37,7 +37,7 @@ This is where the fun began. At the junction were two signs, the first I came to
 
 What should I do? My heart said to follow the small road surely this must be the access road mentioned on the map. My head said but surely they would mark this as the split in the paths and proclaim that this was the path to Monte Calamorro? Wouldn’t that make sense? Basically I forgot what country I was in… and followed the Route board. Mistake 1.
 
-![IMG_0429.JPG](/assets/calamorro/IMG_0429.jpg)
+![IMG_0429.JPG](/assets/calamorro/IMG_0429.JPG)
 
 Following up the residential street I came about a third of a mile I came to another trail map, turned right up a dusty track and felt vindicated, yes my head was right. A few minutes on I came to another reddish wooden route sign. But wait this one was broken and what was left of it was clearly pointing me to go through a track blocked with barbed wire. Hmmm. Maybe its round the back of this big white building I thought and thus began a 10 minute waste of time rounding the building and walking through the scrub to no avail. Mistake 2.
 
