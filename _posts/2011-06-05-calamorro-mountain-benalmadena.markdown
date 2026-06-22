@@ -73,6 +73,6 @@ Actual Route from Tivoli World
 
 Time 01:12:53     Distance 4.21 mi     Alt 2,831 ft
 
-Calamorro Route One from Tivoli World <a href="http://seanreilly.org/wp-content/blogs.dir/11/files/maps/Calamorro-Benalmádena.kml" target="_blank" rel="noopener">Google Earth KML</a>
+Calamorro Route One from Tivoli World <a href="/assets/calamorro/calamorro-benalmadena-route.kml" target="_blank" rel="noopener">Google Earth KML</a>
 
 
