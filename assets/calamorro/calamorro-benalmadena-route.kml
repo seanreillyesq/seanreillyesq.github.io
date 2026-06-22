@@ -2,7 +2,7 @@
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
     <name>Calamorro Mountain, Benalmadena</name>
-    <description>Ascent of Monte Calamorro from Tivoli World, Benalmadena, 25 May 2011. Recorded on Garmin. 9.4 km, ~660 m climb. Recovered from Garmin Connect (activity 472257121) after the original KML was lost in the WordPress-to-Jekyll migration.</description>
+    <description>Ascent of Monte Calamorro from Tivoli World, Benalmadena, 25 May 2011. Recorded on Garmin. 9.4 km, ~660 m climb.</description>
     <Style id="track">
       <LineStyle><color>ff0000ff</color><width>4</width></LineStyle>
     </Style>
