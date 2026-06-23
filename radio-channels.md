@@ -139,9 +139,11 @@ the North Downs makes a real difference on 2m and 70cm.
 **Listen for** the Dover Strait, the world's busiest shipping lane, plus the Thames
 Estuary. Ch 16 is distress and calling - a short call, then both parties move to a working
 channel. Ch 67 is small-craft safety with the coastguard, Ch 70 is digital DSC (data
-bleeps, no voice), Ch 73 carries coastguard Maritime Safety Information (weather and
-navigation warnings), and Ch 80 is the UK marina channel. Dover Coastguard and the Channel
-Navigation Information Service run traffic for the Strait. **Best** marine sits low to the
+bleeps, no voice), and Ch 73 (plus 62, 63 and 64) carries coastguard Maritime Safety
+Information - weather and navigation warnings, announced first on Ch 16. Ch 80 is the UK
+marina channel. The Strait is run by the Channel Navigation Information Service (CNIS):
+Dover Coastguard broadcasts traffic and weather on Ch 11 at 40 minutes past every hour, and
+again at 55 past in poor visibility. **Best** marine sits low to the
 water and is line-of-sight, so it is patchy from the city; head to the coast at Whitstable
 or Herne Bay, or up onto the North Downs, and it opens right up. Coastguard shore stations
 sit high and reach inland fine. Traffic is round the clock.
