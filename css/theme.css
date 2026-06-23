@@ -335,6 +335,44 @@ article :not(pre) > code {
     border-radius: 0.25rem;
 }
 
+/* ---- Content tables (reference pages) ---- */
+.page-content table,
+article table {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+.page-content thead th,
+article thead th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid var(--color-border);
+    white-space: nowrap;
+}
+.page-content tbody td,
+article tbody td {
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+.page-content tbody tr:nth-child(odd),
+article tbody tr:nth-child(odd) {
+    background-color: var(--color-surface);
+}
+
+/* Horizontal scroll on narrow screens - keeps every column readable */
+@media (max-width: 768px) {
+    .page-content table,
+    article table {
+        display: block;
+        width: max-content;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
 /* ---- Post Previews (blog listing) ---- */
 .post-preview > a {
     color: var(--color-text);
