@@ -15,9 +15,9 @@ meta-description: Four steps to recover a hacked email account and set up alerts
 
 1. Start with changing your password on your account. As with any scenario, the primary step is to stop any harm. This will resolve most issues, depending on how your account was compromised.
 
-2. Add a fake email address to your list of contacts: 1111@aaaaa.co.uk. This email address will probably be the first contact alphabetically in your address book, therefore will become the primary recipient of a spam email from a hacker. You will receive a mail failure notice as soon as any e-mail to this address isn't delivered. This is often also a fast means of checking whether or not ever-changing your password on your email account worked.
+2. Add a fake email address to your list of contacts: `1111@aaaaa.co.uk`. This email address will probably be the first contact alphabetically in your address book, therefore will become the primary recipient of a spam email from a hacker. You will receive a mail failure notice as soon as any e-mail to this address isn't delivered. This is often also a fast means of checking whether or not ever-changing your password on your email account worked.
 
-3. Update and run your antivirus program on your PC such as <a href="http://free.avg.com/" target="_blank" rel="noopener">AVG</a>, <a href="http://www.kaspersky.co.uk/" target="_blank" rel="noopener">Kaspersky</a>, Norton, etc. (I do not recommend McAfee due to past experience) to make sure your PC isn’t infected.
+3. Update and run your antivirus program on your PC such as <a href="http://free.avg.com/" target="_blank" rel="noopener">AVG</a>, <a href="https://www.kaspersky.co.uk/" target="_blank" rel="noopener">Kaspersky</a>, Norton, etc. (I do not recommend McAfee due to past experience) to make sure your PC isn’t infected.
 
 4. Write to everybody in your contact list and make them aware that your email was hacked and warn them to not click on the link of the previous email:
 

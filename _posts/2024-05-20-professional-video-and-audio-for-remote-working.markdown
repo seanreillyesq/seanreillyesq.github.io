@@ -12,7 +12,7 @@ tags:
 - Remote Working
 - Kit
 ---
-# A Complete Guide to Setting Up Your Home Studio for Professional Video Recording
+## A Complete Guide to Setting Up Your Home Studio for Professional Video Recording
 
 In today's digital age, appearing professional on video calls and recordings is essential. Whether you're creating content, conducting business meetings, or simply want to look your best on Zoom, having the right equipment can make a significant difference. While I don't publish videos of myself, I use podcast/streaming-quality equipment for my Zoom calls, which helps me appear more professional than using a laptop's built-in microphone and camera. Here's a detailed look at my setup, balancing cost and quality.
 

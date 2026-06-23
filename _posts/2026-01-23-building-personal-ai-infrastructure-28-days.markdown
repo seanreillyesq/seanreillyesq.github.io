@@ -67,7 +67,7 @@ The technical setup breaks down into a few key pieces:
 
 **Storage:** A ZFS dataset on my server, mounted to my AI workstation. ZFS gives me snapshots (I can roll back if something goes wrong), compression (saves space), and checksums (catches corruption before it causes problems).
 
-Honestly, the MCP server setup was harder than expected. OAuth troubleshooting ate most of a day, and the [Todoist MCP server is still very buggy](https://github.com/Doist/todoist-ai/issues/273){:target="_blank"} - it works, but not perfectly. But once it worked, having my task manager and notes system directly accessible to SAI changed how I work.
+Honestly, the MCP server setup was harder than expected. OAuth troubleshooting ate most of a day, and the [Todoist MCP server is still very buggy](https://github.com/Doist/todoist-mcp){:target="_blank"} - it works, but not perfectly. But once it worked, having my task manager and notes system directly accessible to SAI changed how I work.
 
 ## How I'm Using It
 

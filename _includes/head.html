@@ -41,20 +41,20 @@
     {% include career-years.html %}{% capture _years_plus %}{{ career_years }}+{% endcapture %}{% if page.meta-description %}{% assign _meta_desc = page.meta-description | replace: '18+', _years_plus %}<meta name="description" content="{{ _meta_desc }}">{% endif %}
     {% if page.robots %}<meta name="robots" content="{{ page.robots }}">{% endif %}
 
+    {% assign defined_url = page.url | replace: '/index.html', '/' %}
     <!-- Open Graph -->
     <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
     <meta property="og:description" content="{% if page.meta-description %}{{ _meta_desc }}{% else %}{{ site.description }}{% endif %}">
-    <meta property="og:url" content="{{ page.url | prepend: site.url }}">
+    <meta property="og:url" content="{{ defined_url | prepend: site.url }}">
     <meta property="og:site_name" content="{{ site.title }}">
     {% if page.header-img %}<meta property="og:image" content="{{ site.url }}/{{ page.header-img }}">{% endif %}
     <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
 
     <title>{% if page.title and page.title != site.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
-    <link rel="canonical" href="{{ page.url | prepend: site.url }}">
+    <link rel="canonical" href="{{ defined_url | prepend: site.url }}">
     <link rel="author" href="/humans.txt" type="text/plain">
 
     <!-- hreflang for regional variants -->
-    {% assign defined_url = page.url | replace: '/index.html', '/' %}
     <link rel="alternate" hreflang="x-default" href="https://www.seanreilly.net{{ defined_url }}" />
     <link rel="alternate" hreflang="en" href="https://www.seanreilly.net{{ defined_url }}" />
     <link rel="alternate" hreflang="en-GB" href="https://www.seanreilly.uk{{ defined_url }}" />

@@ -23,7 +23,7 @@ At only 771 metres high, it was far lower that most of the Tour du Mont Blanc th
 
 ![Red de Senderos Map](/assets/calamorro/red-de-senderos-map.jpg)
 
-The trail map to Mount Calamorro, Cerro del Morro and a few other treks in the municipality can be seen on a board just by the start of the cable car, <a href="http://www.telefericobenalmadena.com/" target="_blank" rel="noopener">Teleférico Benalmádena</a>, which is where I left my the family and set off.
+The trail map to Mount Calamorro, Cerro del Morro and a few other treks in the municipality can be seen on a board just by the start of the cable car, <a href="https://www.telefericobenalmadena.com/" target="_blank" rel="noopener">Teleférico Benalmádena</a>, which is where I left my the family and set off.
 
 After deciding to do Route One direct to Calamorro, I initially found two slightly baffling things. First that Route One was actually two trails to different destinations and second that it was a couple unmarked kilometres through the streets on Benalmádena to the trail head; fortunately I had my <a href="http://www.dealson3.co.uk/manufacturer/apple/" target="_blank" rel="noopener">iPhone</a> with me.
 
