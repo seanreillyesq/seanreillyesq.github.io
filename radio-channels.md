@@ -25,8 +25,22 @@ UK AIP before relying on any of them.
 
 _Last updated: 23 June 2026._
 
+**How to listen, and from where.** Receiving any of this is legal without a licence;
+only transmitting needs one. Reception is line-of-sight, so where you stand matters more
+than the radio. From my place in Canterbury (about 6 miles inland, on low ground) airband
+is the star turn, with aircraft at cruising height audible for 200 miles or more. Marine
+and coastguard traffic is best from the coast at Whitstable or Herne Bay, or up on the
+North Downs above the city. The biggest single limit is the stock rubber-duck antenna - a
+cheap quarter-wave whip or a roll-up J-pole is the first upgrade worth making. Each section
+below notes what to expect and when.
+
 
 ## PMR446 - licence-free
+
+**Listen for** licence-free walkie-talkie chatter - families on days out, dog walkers,
+event and site crews, the odd shop or taxi - at short range, a few hundred metres to a
+couple of miles. **Best** daytime at weekends, anywhere busy with people: town centre,
+parks, the seafront, an event.
 
 | Ch | Name | Freq (MHz) | Mode | TX | What it is |
 |---|---|---|---|---|---|
@@ -49,12 +63,21 @@ _Last updated: 23 June 2026._
 
 ## Alpine PMR emergency convention
 
+**Listen for** nothing at home. Canal 7-7 (France/Spain) and Rete Radio Montana (Italy)
+only carry traffic in the Alps, where they are an emergency and meeting-up convention.
+These are programmed for when I am out there, not for Kent.
+
 | Ch | Name | Freq (MHz) | Mode | TX | What it is |
 |---|---|---|---|---|---|
 | 17 | ALP7-FR | 446.0813 | NFM | 500&nbsp;mW | Alpine Canal 7-7 FR/ES TXtone 85.4 |
 | 18 | ALP8-IT | 446.0938 | NFM | 500&nbsp;mW | Alpine Rete Radio Montana IT TXtone 114.8 |
 
 ## Airband - common
+
+**Listen for** 121.5 (Guard), the aviation emergency channel - mostly silent, with the
+occasional ELT crash-beacon warble or a controller relaying. 123.45 is informal air-to-air
+pilot chat, busier at weekends and out over the Channel. **Best** daytime; airband is the
+strongest performer from here, with aircraft at height audible right across the South East.
 
 | Ch | Name | Freq (MHz) | Mode | TX | What it is |
 |---|---|---|---|---|---|
@@ -64,6 +87,11 @@ _Last updated: 23 June 2026._
 
 ## VOLMET - aviation weather
 
+**Listen for** continuous robotic weather broadcasts for the major airports - a rolling
+loop of wind, visibility, cloud and pressure. It never stops, which makes it the best test
+that the radio and squelch are set up correctly. London Main covers the big hubs; South,
+North and Scottish split the rest. **Best** any time.
+
 | Ch | Name | Freq (MHz) | Mode | TX | What it is |
 |---|---|---|---|---|---|
 | 32 | VOL-LDN | 135.3750 | AM | RX only | London VOLMET Main wx |
@@ -71,7 +99,16 @@ _Last updated: 23 June 2026._
 | 34 | VOL-NTH | 126.6000 | AM | RX only | London VOLMET North wx |
 | 35 | VOL-SCO | 125.7250 | AM | RX only | Scottish VOLMET wx |
 
-## Weather satellites (NOAA APT)
+## Weather satellites (NOAA APT - now off-air)
+
+**Listen for** nothing any more. NOAA switched off the last APT weather satellites in 2025
+- NOAA-18 in June, then NOAA-15 and NOAA-19 that August - so all three channels are now
+silent. I have left them programmed as a record. The only 137 MHz imagery still on the air
+comes from the Russian Meteor-M satellites, and decoding those (LRPT, not APT) realistically
+needs an SDR and a proper antenna such as a turnstile or V-dipole, not a handheld. A pass
+sounds like a fast warbling buzz that software like SatDump turns into a picture. **Best**
+pass-dependent: predict with an app like Look4Sat and aim for a high overhead pass with
+clear sky to the north.
 
 | Ch | Name | Freq (MHz) | Mode | TX | What it is |
 |---|---|---|---|---|---|
@@ -80,6 +117,14 @@ _Last updated: 23 June 2026._
 | 38 | WX-N18 | 137.9125 | FM | RX only | NOAA-18 APT weather sat |
 
 ## Amateur bands
+
+**Listen for** quiet calling channels these days - on 2m (145.500) and 70cm (433.500) a
+station calling CQ now and then, usually moving off to a repeater or working frequency.
+144.800 (APRS) is constant data bursts: position beacons you decode with software, not by
+ear. 145.800 is the ISS, in voice only during scheduled school contacts (ARISS) or the
+occasional SSTV image event. 70.450 (4m) is a quiet UK band that comes alive on summer
+sporadic-E. **Best** evenings and weekends for voice; summer afternoons for 4m; a spot on
+the North Downs makes a real difference on 2m and 70cm.
 
 | Ch | Name | Freq (MHz) | Mode | TX | What it is |
 |---|---|---|---|---|---|
@@ -90,6 +135,16 @@ _Last updated: 23 June 2026._
 | 43 | ISS | 145.8000 | FM | RX only | ISS voice/SSTV downlink |
 
 ## Marine VHF - ship / simplex
+
+**Listen for** the Dover Strait, the world's busiest shipping lane, plus the Thames
+Estuary. Ch 16 is distress and calling - a short call, then both parties move to a working
+channel. Ch 67 is small-craft safety with the coastguard, Ch 70 is digital DSC (data
+bleeps, no voice), Ch 73 carries coastguard Maritime Safety Information (weather and
+navigation warnings), and Ch 80 is the UK marina channel. Dover Coastguard and the Channel
+Navigation Information Service run traffic for the Strait. **Best** marine sits low to the
+water and is line-of-sight, so it is patchy from the city; head to the coast at Whitstable
+or Herne Bay, or up onto the North Downs, and it opens right up. Coastguard shore stations
+sit high and reach inland fine. Traffic is round the clock.
 
 | Ch | Name | Freq (MHz) | Mode | TX | What it is |
 |---|---|---|---|---|---|
@@ -153,6 +208,10 @@ _Last updated: 23 June 2026._
 
 ## Marine VHF - coast / shore station
 
+**Listen for** the shore half of the duplex marine channels - port operations, marinas and
+coast stations answering ships on the matching ship-side channel. Same locations and timing
+as the ship side above.
+
 | Ch | Name | Freq (MHz) | Mode | TX | What it is |
 |---|---|---|---|---|---|
 | 201 | MAR01-C | 160.6500 | FM | RX only | Marine ch 1 (coast/shore station) - Port operations / working |
@@ -190,6 +249,14 @@ _Last updated: 23 June 2026._
 | 286 | MAR86-C | 161.9250 | FM | RX only | Marine ch 86 (coast/shore station) - Port operations / working |
 
 ## Airband - airfields & services
+
+**Listen for** ATIS frequencies, which are continuous recorded loops of runway-in-use and
+weather (easy catches); Tower and Approach, which are live controllers working aircraft,
+with Approach (traffic 20 to 80 miles out being lined up) the most listenable. Nearby
+fields like Lydd, Headcorn and Rochester come through, and aircraft into the big London
+airports are audible at height even when their ground stations are not. SAFETYCOM (135.475)
+is the shared frequency for small uncontrolled airfields. **Best** daytime, during airline
+hours.
 
 | Ch | Name | Freq (MHz) | Mode | TX | What it is |
 |---|---|---|---|---|---|
