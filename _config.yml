@@ -13,7 +13,7 @@ markdown: kramdown
 highlighter: rouge
 encoding: utf-8
 exclude: ["node_modules","README.md","Gemfile","Gemfile.lock","seo"]
-permalink: /:title-:year:month:day
+permalink: /:title-:year:month:day/
 
 # Plugins
 # Note: jekyll-sitemap removed - using custom sitemap templates for full control
