@@ -14,9 +14,8 @@ permalink: /radio-channels/
 The channel plan programmed into my pair of Quansheng UV-K5 handhelds (running F4HWN
 firmware). It is mostly a **receive / scanner** setup: the only channels the radios can
 transmit on are licence-free **PMR446** and the two **Alpine** convention channels, both
-at 500&nbsp;mW. Everything else - marine, airband, aviation weather, amateur and weather
-satellites - is **receive-only** and hardware TX-locked, since I hold no licence for those
-bands.
+at 500&nbsp;mW. Everything else - marine, airband, aviation weather and amateur - is
+**receive-only** and hardware TX-locked, since I hold no licence for those bands.
 
 Frequencies in MHz. Marine channels use mnemonic memory numbers (100&nbsp;+&nbsp;channel for
 the ship side, 200&nbsp;+&nbsp;channel for the coast/shore side). Airband frequencies were
@@ -98,23 +97,6 @@ North and Scottish split the rest. **Best** any time.
 | 33 | VOL-STH | 128.6000 | AM | RX only | London VOLMET South wx |
 | 34 | VOL-NTH | 126.6000 | AM | RX only | London VOLMET North wx |
 | 35 | VOL-SCO | 125.7250 | AM | RX only | Scottish VOLMET wx |
-
-## Weather satellites (NOAA APT - now off-air)
-
-**Listen for** nothing any more. NOAA switched off the last APT weather satellites in 2025
-- NOAA-18 in June, then NOAA-15 and NOAA-19 that August - so all three channels are now
-silent. I have left them programmed as a record. The only 137 MHz imagery still on the air
-comes from the Russian Meteor-M satellites, and decoding those (LRPT, not APT) realistically
-needs an SDR and a proper antenna such as a turnstile or V-dipole, not a handheld. A pass
-sounds like a fast warbling buzz that software like SatDump turns into a picture. **Best**
-pass-dependent: predict with an app like Look4Sat and aim for a high overhead pass with
-clear sky to the north.
-
-| Ch | Name | Freq (MHz) | Mode | TX | What it is |
-|---|---|---|---|---|---|
-| 36 | WX-N19 | 137.1000 | FM | RX only | NOAA-19 APT weather sat |
-| 37 | WX-N15 | 137.6200 | FM | RX only | NOAA-15 APT weather sat |
-| 38 | WX-N18 | 137.9125 | FM | RX only | NOAA-18 APT weather sat |
 
 ## Amateur bands
 
