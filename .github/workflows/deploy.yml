@@ -35,3 +35,44 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy _site --project-name=seanreilly-blog --branch=${{ github.head_ref || github.ref_name }}
+
+      # Notify Google of the new sitemaps across all 5 regional TLDs.
+      # Replaces the dead google.com/ping endpoint (deprecated 2023) with the
+      # authenticated Search Console API. Only runs on push to master, and
+      # no-ops until GSC_SA_JSON is set (use a DEDICATED Search-Console-only
+      # service account key - this is a public repo, never the broad SA).
+      - name: Submit sitemaps to Search Console
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        env:
+          GSC_SA_JSON: ${{ secrets.GSC_SA_JSON }}
+        run: |
+          if [ -z "$GSC_SA_JSON" ]; then
+            echo "GSC_SA_JSON not set - skipping sitemap submit (provision a Search-Console-only SA to enable)."
+            exit 0
+          fi
+          python3 -m pip install --quiet google-auth requests
+          python3 - <<'PY'
+          import os, json, urllib.parse, requests
+          from google.oauth2 import service_account
+          from google.auth.transport.requests import Request
+          creds = service_account.Credentials.from_service_account_info(
+              json.loads(os.environ['GSC_SA_JSON']),
+              scopes=['https://www.googleapis.com/auth/webmasters'])
+          creds.refresh(Request())
+          H = {'Authorization': f'Bearer {creds.token}'}
+          props = {
+              'sc-domain:seanreilly.net': 'https://www.seanreilly.net/sitemap_index.xml',
+              'sc-domain:seanreilly.uk': 'https://www.seanreilly.uk/sitemap_index.xml',
+              'sc-domain:seanreilly.ie': 'https://www.seanreilly.ie/sitemap_index.xml',
+              'sc-domain:seanreilly.eu': 'https://www.seanreilly.eu/sitemap_index.xml',
+              'sc-domain:powergenitalia.it': 'https://www.powergenitalia.it/sitemap_index.xml',
+          }
+          failed = False
+          for site, feed in props.items():
+              se = urllib.parse.quote(site, safe=''); fe = urllib.parse.quote(feed, safe='')
+              r = requests.put(f'https://www.googleapis.com/webmasters/v3/sites/{se}/sitemaps/{fe}', headers=H)
+              ok = r.status_code in (200, 204)
+              print(f'{"OK " if ok else "ERR"} {r.status_code}  {site}')
+              failed = failed or not ok
+          raise SystemExit(1 if failed else 0)
+          PY
