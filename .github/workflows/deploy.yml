@@ -41,6 +41,7 @@ jobs:
       # authenticated Search Console API. Only runs on push to master, and
       # no-ops until GSC_SA_JSON is set (use a DEDICATED Search-Console-only
       # service account key - this is a public repo, never the broad SA).
+      # Live since 2026-06-24 (gsc-sitemap-submit SA, Full user on all 5 props).
       - name: Submit sitemaps to Search Console
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         env:
