@@ -1,0 +1,248 @@
+---
+layout: page
+title: "Tour du Mont Blanc 2026"
+header-title: "Tour du Mont Blanc 2026"
+description: "Sean & Alex walk it. Nicole drives it. 28 July - 8 August 2026."
+header-img: "img/home-bg.jpg"
+header_overlay: true
+meta-description: "Private trip plan"
+robots: "noindex, nofollow"
+hidden: true
+sitemap: false
+permalink: /tmb-2026-plans/
+---
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{{ site.baseurl }}/assets/tmb-2026/tmb-data.js"></script>
+
+<style>
+.tmb-map { height: 340px; border-radius: 8px; margin-bottom: 0.5rem; }
+.tmb-map-lg { height: 480px; }
+.tmb-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 6px; vertical-align: -2px; }
+.tmb-day-card { border-left: 6px solid #ccc; padding-left: 1rem; margin: 2.5rem 0; }
+.tmb-day-card.tmb-today { background: #fff8e6; border-radius: 0 8px 8px 0; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.tmb-chip { display: inline-block; font-size: .78rem; font-weight: 600; padding: 2px 10px; border-radius: 12px; }
+.tmb-chip-ok { background: #d4edda; color: #155724; }
+.tmb-chip-wait { background: #fff3cd; color: #856404; }
+.tmb-chip-turnup { background: #e2e3e5; color: #383d41; }
+.tmb-meta { font-size: .9rem; color: #555; }
+.tmb-legend { font-size: .85rem; }
+.tmb-dl a { margin: 0 6px 6px 0; }
+</style>
+
+<p class="lead">The whole trip on one page: Sean and Alex walk the full 166 km loop over nine days while Nicole leapfrogs the campervan between valley bases and shuttles the walkers to and from the trailheads. Walking maps are on terrain; driving maps on satellite.</p>
+
+<div class="alert alert-warning">
+  <strong>Emergency numbers.</strong> <strong>112</strong> works in all three countries.
+  France: PGHM Chamonix mountain rescue +33&nbsp;4&nbsp;50&nbsp;53&nbsp;16&nbsp;89.
+  Italy: 112 (single number, covers mountain rescue).
+  Switzerland: 144 (rescue) / 1414 (Rega helicopter).
+  Sean's mobile: +44&nbsp;7957&nbsp;247666. If separated with no signal: carry on to that day's van base - they are listed on every day card below.
+</div>
+
+<h2 id="overview">Overview</h2>
+
+<div class="tmb-map tmb-map-lg" id="map-overview"></div>
+<p class="tmb-legend">
+  Walking, one colour per day:
+  <span class="tmb-swatch" style="background:#ff0000"></span>1
+  <span class="tmb-swatch" style="background:#ff8000"></span>2
+  <span class="tmb-swatch" style="background:#e6c200"></span>3
+  <span class="tmb-swatch" style="background:#00b300"></span>4
+  <span class="tmb-swatch" style="background:#00b3b3"></span>5
+  <span class="tmb-swatch" style="background:#0000ff"></span>6
+  <span class="tmb-swatch" style="background:#8000ff"></span>7
+  <span class="tmb-swatch" style="background:#ff00ff"></span>8
+  <span class="tmb-swatch" style="background:#8b4513"></span>9
+  &nbsp;|&nbsp; <span class="tmb-swatch" style="background:#f28c28"></span>Nicole's van (relocations)
+  &nbsp; <span class="tmb-swatch" style="background:#333; height:4px; vertical-align:2px"></span> daily shuttles
+</p>
+
+<div class="card card-body">
+  <strong>The numbers.</strong> Walking: 166 km over 9 days (longest day 25.4 km, D4). Driving: about 310 km of relocations plus shuttle runs at Val Veny and La Fouly - roughly 420 km all in. Direction: anti-clockwise from Les Houches. Dates: arrive Tue 28 July, Day 1 on Thu 30 July, finish Fri 7 August, depart Sat 8 August.
+</div>
+
+<h2 id="bookings">Bookings, contacts and rules</h2>
+
+<table class="table table-sm">
+  <thead><tr><th>Night</th><th>Base</th><th>Status</th><th>Contact</th></tr></thead>
+  <tbody>
+    <tr><td>Tue 28 Jul</td><td>Bellevue, Les Houches</td><td><span class="tmb-chip tmb-chip-wait">extension asked</span></td><td>Cathy +33 6 33 50 34 12</td></tr>
+    <tr><td>Wed 29 Jul</td><td>Bellevue, Les Houches</td><td><span class="tmb-chip tmb-chip-ok">confirmed</span></td><td>Cathy +33 6 33 50 34 12</td></tr>
+    <tr><td>Thu 30 Jul</td><td>Le Pontet, Les Contamines</td><td><span class="tmb-chip tmb-chip-ok">booked ref 6458</span></td><td>+33 4 50 47 04 04</td></tr>
+    <tr><td>Fri 31 Jul</td><td>Bivouac aire, Les Chapieux</td><td><span class="tmb-chip tmb-chip-turnup">turn up (free)</span></td><td>-</td></tr>
+    <tr><td>Sat 1 + Sun 2 Aug</td><td>Val Veny: Aiguille Noire, fallback La Sorgente</td><td><span class="tmb-chip tmb-chip-wait">enquiry sent</span></td><td>+39 392 1966170</td></tr>
+    <tr><td>Mon 3 + Tue 4 Aug</td><td>Val d'Arpette, Champex</td><td><span class="tmb-chip tmb-chip-wait">booking requested</span></td><td>Nour +41 27 783 12 21</td></tr>
+    <tr><td>Wed 5 Aug</td><td>l'Arpille, Col de la Forclaz</td><td><span class="tmb-chip tmb-chip-wait">enquiry sent</span></td><td>+41 27 722 26 88</td></tr>
+    <tr><td>Thu 6 Aug</td><td>Camping du Glacier, Argentière</td><td><span class="tmb-chip tmb-chip-turnup">turn up from 14:00</span></td><td>+33 4 50 54 17 36</td></tr>
+    <tr><td>Fri 7 Aug</td><td>Bellevue, Les Houches</td><td><span class="tmb-chip tmb-chip-ok">confirmed</span></td><td>Cathy +33 6 33 50 34 12</td></tr>
+  </tbody>
+</table>
+
+<div class="alert alert-info">
+  <strong>The rules that bite.</strong>
+  Bellevue: gate locks at <strong>19:30</strong>, arrivals from 16:00, passports for all three at check-in, hard-standing pitches, no water or waste-dump on site (free borne at Carrefour Market, Chamonix entrance).
+  Le Pontet: &euro;22.18 balance due on arrival.
+  Italian Val Ferret road: cars only as far as <strong>Lavachey</strong>, 260 paid spaces, 09:00-19:00.
+  Switzerland: motorway <strong>vignette (~CHF 40)</strong> before Grand St Bernard; buy groceries in Italy (Swiss prices roughly double).
+  Argentière: no bookings - Nicole arrives at 14:00 sharp when reception opens.
+</div>
+
+<h2 id="downloads">Offline maps (GPX / KMZ)</h2>
+<p>Google-style maps need signal; the cols mostly don't have it. Load the day's GPX into OsmAnd / Organic Maps / a Garmin before setting out.</p>
+<p class="tmb-dl">
+<a class="btn btn-accent btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-full-loop.gpx">Full loop GPX</a>
+<a class="btn btn-accent btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-9day.kmz">KMZ (Google Earth)</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d1-leshouches-contamines.gpx">D1</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d2-contamines-chapieux.gpx">D2</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d3-chapieux-valveny.gpx">D3</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d4-valveny-valferret.gpx">D4</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d5-valferret-lafouly.gpx">D5</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d6-lafouly-champex.gpx">D6</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d7-champex-trient.gpx">D7</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d8-trient-argentiere.gpx">D8</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d9-argentiere-leshouches.gpx">D9</a>
+</p>
+
+<h2 id="days">Day by day</h2>
+
+<div id="tmb-days"></div>
+
+<script>
+const DAYS = [
+ {n:1, date:"2026-07-30", label:"Thu 30 July", stage:"Les Houches to Les Contamines", km:19.0, col:"#ff0000",
+  base:"Le Pontet, Les Contamines", chip:["ok","booked ref 6458"],
+  driver:"Short 30-minute hop down-valley. Stock up on French groceries (Super U, Les Houches). Arrive from 15:00; pay the &euro;22.18 balance.",
+  drive:{idx:0, km:27.6, note:"Les Houches to Le Pontet"},
+  gmap:"https://www.google.com/maps/dir/?api=1&origin=45.89124,6.78756&destination=45.80303,6.72234&travelmode=driving",
+  escape:"Gentle warm-up over the Col de Voza. The valley road and Les Contamines bus are never far if anything niggles."},
+ {n:2, date:"2026-07-31", label:"Fri 31 July", stage:"Les Contamines to Les Chapieux", km:16.7, col:"#ff8000",
+  base:"Free bivouac aire, Les Chapieux", chip:["turnup","turn up"],
+  driver:"The scenic one: Beaufort then the Cormet de Roselend pass (fine for the Transit). About 90 km. No water or dump at the aire - fill at Le Pontet before leaving.",
+  drive:{idx:1, km:89.8, note:"Le Pontet to Les Chapieux via Cormet de Roselend"},
+  gmap:"https://www.google.com/maps/dir/?api=1&origin=45.80303,6.72234&destination=45.69661,6.73381&travelmode=driving&waypoints=45.6797,6.6739",
+  escape:"First real alpine day (Col du Bonhomme, 2,329 m). Refuge de la Croix du Bonhomme is staffed at the top; retreat line is back to Les Contamines."},
+ {n:3, date:"2026-08-01", label:"Sat 1 August", stage:"Les Chapieux to Val Veny (Col de la Seigne)", km:24.2, col:"#e6c200",
+  base:"Val Veny: Aiguille Noire (or La Sorgente)", chip:["wait","enquiry sent"],
+  driver:"Big day: Petit St Bernard pass into Italy, Carrefour Courmayeur for groceries, then up Val Veny to the campsite. Arrive EARLY afternoon - peak Saturday and the fallback is first-come. The walkers finish at the campsite door.",
+  drive:{idx:2, km:76.8, note:"Les Chapieux to Val Veny via Petit St Bernard"},
+  gmap:"https://www.google.com/maps/dir/?api=1&origin=45.69661,6.73381&destination=45.80632,6.92484&travelmode=driving&waypoints=45.6809,6.8836",
+  escape:"Road access at Ville des Glaciers and Mottets before the col; after it, descend to the Lac Combal road head. Border crossing on foot at 2,516 m."},
+ {n:4, date:"2026-08-02", label:"Sun 2 August", stage:"Val Veny to Val Ferret (via Courmayeur)", km:25.4, col:"#00b300",
+  base:"Val Veny base (second night)", chip:["wait","same base"],
+  driver:"Lazy morning at the base. Evening: collect the walkers at Lavachey in Val Ferret (~30 min each way; cars allowed to Lavachey 09:00-19:00, 260 paid spaces).",
+  drive:{shuttle:0, km:14.1, note:"Val Veny base to Lavachey (evening pickup)"},
+  gmap:"https://www.google.com/maps/dir/?api=1&origin=45.80632,6.92484&destination=45.8556,7.0297&travelmode=driving",
+  escape:"Longest day but Courmayeur sits mid-route with every service going. The Val Ferret road parallels the afternoon leg - easy to cut short at Planpincieux."},
+ {n:5, date:"2026-08-03", label:"Mon 3 August", stage:"Val Ferret to La Fouly (Grand Col Ferret, 2,537 m)", km:15, col:"#00b3b3",
+  base:"Val d'Arpette, Champex-Lac", chip:["wait","booking requested - CHF 125.60 for 2 nights"],
+  driver:"Morning: drop the walkers back at Lavachey. Then the big relocation: Grand St Bernard tunnel, vignette BEFORE the Swiss motorway, Orsi&egrave;res, up to Champex. Evening: nip down to La Fouly (~20 min) to collect the walkers.",
+  drive:{idx:3, km:76.7, note:"Val Veny to Champex via Grand St Bernard"},
+  gmap:"https://www.google.com/maps/dir/?api=1&origin=45.80632,6.92484&destination=46.0243,7.1093&travelmode=driving",
+  escape:"The crux col and the remotest stretch. Alpage de la Peule is the first building on the Swiss side; the road starts at Ferret village, 4 km before La Fouly."},
+ {n:6, date:"2026-08-04", label:"Tue 4 August", stage:"La Fouly to Champex-Lac", km:13.6, col:"#0000ff",
+  base:"Val d'Arpette, Champex (second night)", chip:["wait","same base"],
+  driver:"Morning: drop the walkers at La Fouly (~20 min). They walk back INTO the base - no evening shuttle. Rest day for the van.",
+  drive:{shuttle:1, km:21.1, note:"Champex to La Fouly (morning drop)"},
+  gmap:"https://www.google.com/maps/dir/?api=1&origin=46.0243,7.1093&destination=45.9344,7.0937&travelmode=driving",
+  escape:"Easy valley-floor day through Praz de Fort and Issert; the road is alongside the whole way."},
+ {n:7, date:"2026-08-05", label:"Wed 5 August", stage:"Champex to Trient (Bovine route)", km:18.0, col:"#8000ff",
+  base:"l'Arpille, Col de la Forclaz", chip:["wait","enquiry sent - free cancel to 72h"],
+  driver:"Short hop over the Col de la Forclaz (~25 min). The campsite is at the top of the pass, ON the walking route about 2 km before Trient - the walkers can stop at the door.",
+  drive:{idx:4, km:25.2, note:"Champex to Col de la Forclaz"},
+  gmap:"https://www.google.com/maps/dir/?api=1&origin=46.0243,7.1093&destination=46.05848,7.00137&travelmode=driving",
+  escape:"Bovine mid-section is remote-ish; the alternative bad-weather line is the valley road path via Martigny side. Day ends at a road pass."},
+ {n:8, date:"2026-08-06", label:"Thu 6 August", stage:"Trient to Argenti&egrave;re (Col de Balme)", km:14.7, col:"#ff00ff",
+  base:"Camping du Glacier, Argenti&egrave;re", chip:["turnup","turn up - reception opens 14:00"],
+  driver:"Back into France over the Col des Montets (~20 min). Be at reception for 14:00 to claim pitches - they keep space for TMB walk-ins but it is first-come.",
+  drive:{idx:5, km:19.7, note:"Forclaz to Argenti&egrave;re via Col des Montets"},
+  gmap:"https://www.google.com/maps/dir/?api=1&origin=46.05848,7.00137&destination=45.97477,6.92482&travelmode=driving",
+  escape:"Col de Balme (2,191 m) is the border. Le Tour chairlift on the French side shortcuts the descent if legs are done; the Col des Montets road is just north."},
+ {n:9, date:"2026-08-07", label:"Fri 7 August", stage:"Argenti&egrave;re to Les Houches (finish)", km:21.8, col:"#8b4513",
+  base:"Bellevue, Les Houches", chip:["ok","confirmed"],
+  driver:"Short drive to Bellevue (gate 16:00-19:30!). Champagne duty. The walkers come in along the Fl&eacute;g&egrave;re balcony with the full massif on their left.",
+  drive:{idx:6, km:16.5, note:"Argenti&egrave;re to Les Houches"},
+  gmap:"https://www.google.com/maps/dir/?api=1&origin=45.97477,6.92482&destination=45.89124,6.78756&travelmode=driving",
+  escape:"Balcony path with multiple bail-outs: Fl&eacute;g&egrave;re cable car, Brevent lifts, or any descent track to the valley bus."}
+];
+
+const CHIPCLS = {ok:"tmb-chip-ok", wait:"tmb-chip-wait", turnup:"tmb-chip-turnup"};
+const BASES = [
+ [45.89124,6.78756,"Bellevue, Les Houches"],[45.80303,6.72234,"Le Pontet"],
+ [45.69661,6.73381,"Les Chapieux aire"],[45.80632,6.92484,"Val Veny base"],
+ [46.02430,7.10930,"Val d'Arpette, Champex"],[46.05848,7.00137,"l'Arpille, Forclaz"],
+ [45.97477,6.92482,"Camping du Glacier, Argenti&egrave;re"]];
+
+function terrain(){ return L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:16, attribution:'&copy; OpenStreetMap, SRTM | &copy; OpenTopoMap (CC-BY-SA)'}); }
+function hybrid(){
+  const img=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18, attribution:'&copy; Esri'});
+  const lbl=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:18});
+  return L.layerGroup([img,lbl]);
+}
+function drawDrive(map,g,heavy){
+  L.polyline(g,{color:'#666',weight:heavy?7:6,opacity:.9}).addTo(map);
+  return L.polyline(g,{color:'#f28c28',weight:heavy?4:3,opacity:1}).addTo(map);
+}
+function baseMarkers(map){ BASES.forEach(b=>L.circleMarker([b[0],b[1]],{radius:6,color:'#000',weight:1.5,fillColor:'#ffe14d',fillOpacity:1}).bindPopup(b[2]).addTo(map)); }
+
+// overview
+(function(){
+  const m=L.map('map-overview',{scrollWheelZoom:false});
+  const t=terrain().addTo(m), h=hybrid();
+  L.control.layers({"Terrain":t,"Satellite":h}).addTo(m);
+  TMB.drive.forEach(g=>drawDrive(m,g,false));
+  TMB.shuttle.forEach(g=>L.polyline(g,{color:'#333',weight:2.5,dashArray:'6 5',opacity:.95}).addTo(m));
+  const all=[];
+  TMB.walk.forEach((g,i)=>{ L.polyline(g,{color:DAYS[i].col,weight:5,opacity:.95}).addTo(m); all.push(...g); });
+  baseMarkers(m);
+  m.fitBounds(L.latLngBounds(all).pad(0.06));
+})();
+
+// day cards
+const wrap=document.getElementById('tmb-days');
+const today=new Date().toISOString().slice(0,10);
+DAYS.forEach((d,i)=>{
+  const isToday=(d.date===today);
+  const card=document.createElement('div');
+  card.className='tmb-day-card'+(isToday?' tmb-today':'');
+  card.style.borderLeftColor=d.col;
+  card.id='day'+d.n;
+  card.innerHTML=`
+    <h3><span class="tmb-swatch" style="background:${d.col}"></span>Day ${d.n} - ${d.label}${isToday?' <span class="tmb-chip tmb-chip-ok">TODAY</span>':''}</h3>
+    <p class="tmb-meta"><strong>${d.stage}</strong> &middot; ${d.km} km on foot</p>
+    <p class="tmb-meta"><strong>Van base:</strong> ${d.base} <span class="tmb-chip ${CHIPCLS[d.chip[0]]}">${d.chip[1]}</span></p>
+    <p><strong>Nicole's day:</strong> ${d.driver}</p>
+    <p class="tmb-meta"><strong>Bail-out / notes:</strong> ${d.escape}</p>
+    <div class="row">
+      <div class="col-md-6"><div class="tmb-map" id="walk${i}"></div><p class="caption">Walk - Day ${d.n} (terrain)</p></div>
+      <div class="col-md-6"><div class="tmb-map" id="drive${i}"></div><p class="caption">Drive - ${d.drive.note}, ${d.drive.km} km (satellite)</p></div>
+    </div>
+    <p><a class="btn btn-accent btn-sm" target="_blank" href="${d.gmap}">Open drive in Google Maps</a></p>`;
+  wrap.appendChild(card);
+});
+
+// lazy-init day maps as they scroll into view
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting||e.target.dataset.done) return;
+    e.target.dataset.done=1;
+    const i=+e.target.dataset.i, d=DAYS[i];
+    const wm=L.map('walk'+i,{scrollWheelZoom:false}); terrain().addTo(wm);
+    const wl=L.polyline(TMB.walk[i],{color:d.col,weight:5}).addTo(wm);
+    baseMarkers(wm); wm.fitBounds(wl.getBounds().pad(0.1));
+    const dm=L.map('drive'+i,{scrollWheelZoom:false}); hybrid().addTo(dm);
+    const g=('shuttle' in d.drive)?TMB.shuttle[d.drive.shuttle]:TMB.drive[d.drive.idx];
+    const dl=drawDrive(dm,g,true);
+    L.polyline(TMB.walk[i],{color:d.col,weight:2,opacity:.6,dashArray:'4 4'}).addTo(dm);
+    baseMarkers(dm); dm.fitBounds(dl.getBounds().pad(0.1));
+  });
+},{rootMargin:'200px'});
+DAYS.forEach((d,i)=>{ const el=document.getElementById('day'+d.n); el.dataset.i=i; io.observe(el); });
+
+// today auto-scroll
+(function(){
+  const t=DAYS.find(d=>d.date===today);
+  if(t) setTimeout(()=>document.getElementById('day'+t.n).scrollIntoView({behavior:'smooth',block:'start'}),600);
+})();
+</script>
