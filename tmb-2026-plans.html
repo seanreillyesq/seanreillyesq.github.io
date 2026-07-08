@@ -56,7 +56,8 @@ permalink: /tmb-2026-plans/
   <span class="tmb-swatch" style="background:#ff00ff"></span>8
   <span class="tmb-swatch" style="background:#8b4513"></span>9
   &nbsp;|&nbsp; <span class="tmb-swatch" style="background:#f28c28"></span>Nicole's van (relocations)
-  &nbsp; <span class="tmb-swatch" style="background:#333; height:4px; vertical-align:2px"></span> daily shuttles
+  &nbsp; <span class="tmb-swatch" style="background:#333; height:4px; vertical-align:2px"></span> daily shuttles.
+  Dashed lines in the day's colour are the hard options - tap one for its name.
 </p>
 
 <div class="card card-body">
@@ -104,6 +105,15 @@ permalink: /tmb-2026-plans/
 <a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d8-trient-argentiere.gpx">D8</a>
 <a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-d9-argentiere-leshouches.gpx">D9</a>
 </p>
+<p class="tmb-dl"><em>Hard-option GPX:</em>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-variant-tricot.gpx">Tricot</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-variant-pyramides.gpx">Pyramides</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-variant-bernarda.gpx">Bernarda</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-variant-petitferret.gpx">Petit Ferret</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-variant-arpette.gpx">Arpette</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-variant-posettes.gpx">Posettes</a>
+<a class="btn btn-outline-secondary btn-sm" href="{{ site.baseurl }}/assets/tmb-2026/tmb-variant-lacblanc.gpx">Lac Blanc</a>
+</p>
 
 <h2 id="days">Day by day</h2>
 
@@ -137,6 +147,7 @@ const DAYS = [
   escape:"Road access at Ville des Glaciers and Mottets before the col; after it, descend to the Lac Combal road head. Border crossing on foot at 2,516 m."},
  {n:4, date:"2026-08-02", label:"Sun 2 August", stage:"Val Veny to Val Ferret (via Courmayeur)", km:25.4, col:"#00b300",
   walkers:"The longest day, and a game of two halves. Morning: the balcony trail high above Val Veny (some of the best views of the trip) then down into Courmayeur - the biggest town on the route, so a proper lunch, gelato, whatever. Afternoon: the relentless 800 m forest climb to Rifugio Bertone, then the glorious balcony path along the Val Ferret flank with the Grandes Jorasses across the valley. Roughly 1,700 m of ascent all told - pace the morning accordingly. Bertone and Bonatti both do refreshments.",
+  variant:{name:"T&ecirc;te Bernarda crest (~2,500 m)",text:"From the Bertone climb, the high crest line over the Mont de la Saxe and T&ecirc;te Bernarda instead of the balcony path - a grassy ridge walk with the Grandes Jorasses filling the view the whole way, rejoining before the descent to Val Ferret. Adds around 350 m of climb to what is already the biggest day; only take it if the morning went fast."},
   base:"Val Veny base (second night)", url:"https://www.aiguillenoire.com/en/home-2/", chip:["wait","same base"],
   driver:"Lazy day at the base - pool, book, coffee. The one job: collect the walkers at Lavachey in Val Ferret late afternoon, about 30 minutes each way. Cars are allowed as far as Lavachey between 09:00 and 19:00; 260 spaces and they close the road when full, so don't leave it too late.",
   drive:{shuttle:0, km:14.1, note:"Val Veny base to Lavachey (evening pickup)"},
@@ -211,6 +222,7 @@ function baseMarkers(map){ BASES.forEach(b=>L.circleMarker([b[0],b[1]],{radius:6
   TMB.shuttle.forEach(g=>L.polyline(g,{color:'#333',weight:2.5,dashArray:'6 5',opacity:.95}).addTo(m));
   const all=[];
   TMB.walk.forEach((g,i)=>{ L.polyline(g,{color:DAYS[i].col,weight:5,opacity:.95}).addTo(m); all.push(...g); });
+  (TMB.variants||[]).forEach(v=>L.polyline(v.pts,{color:DAYS[v.day].col,weight:3,dashArray:'5 6',opacity:.9}).addTo(m).bindPopup('Hard option: '+v.name));
   baseMarkers(m);
   m.fitBounds(L.latLngBounds(all).pad(0.06));
 })();
@@ -248,7 +260,12 @@ const io=new IntersectionObserver(entries=>{
     const i=+e.target.dataset.i, d=DAYS[i];
     const wm=L.map('walk'+i,{scrollWheelZoom:false}); terrain().addTo(wm);
     const wl=L.polyline(TMB.walk[i],{color:d.col,weight:5}).addTo(wm);
-    baseMarkers(wm); wm.fitBounds(wl.getBounds().pad(0.1));
+    let wb=wl.getBounds();
+    (TMB.variants||[]).filter(v=>v.day===i).forEach(v=>{
+      const vl=L.polyline(v.pts,{color:d.col,weight:3,dashArray:'5 6',opacity:.9}).addTo(wm).bindPopup('Hard option: '+v.name);
+      wb=wb.extend(vl.getBounds());
+    });
+    baseMarkers(wm); wm.fitBounds(wb.pad(0.1));
     const dm=L.map('drive'+i,{scrollWheelZoom:false}); hybrid().addTo(dm);
     const g=('shuttle' in d.drive)?TMB.shuttle[d.drive.shuttle]:TMB.drive[d.drive.idx];
     const dl=drawDrive(dm,g,true);
