@@ -27,6 +27,7 @@ permalink: /tmb-2026-plans/
 .tmb-chip-wait { background: #fff3cd; color: #856404; }
 .tmb-chip-turnup { background: #e2e3e5; color: #383d41; }
 .tmb-meta { font-size: .9rem; color: #555; }
+.tmb-variant { background: #fdf3e0; border-left: 4px solid #e8a33d; border-radius: 0 6px 6px 0; padding: .6rem .9rem; font-size: .95rem; }
 .tmb-legend { font-size: .85rem; }
 .tmb-dl a { margin: 0 6px 6px 0; }
 </style>
@@ -112,6 +113,7 @@ permalink: /tmb-2026-plans/
 const DAYS = [
  {n:1, date:"2026-07-30", label:"Thu 30 July", stage:"Les Houches to Les Contamines", km:19.0, col:"#ff0000",
   walkers:"Warm-up day: roughly 700 m up, 600 m down. A steady pull to the Col de Voza (1,653 m) gets the legs going, then through the hamlet of Bionnassay - glacier views from the balcony path - and down the Montjoie valley into Les Contamines. Refreshments at the Col de Voza and in Bionnassay. Nothing technical; the job today is finding a rhythm.",
+  variant:{name:"Col de Tricot (2,120 m)",text:"Instead of dropping off the Col de Voza, climb on via the Bellevue plateau, cross the suspension bridge under the Bionnassay glacier snout, and go over the Col de Tricot - then a steep zigzag descent to the Chalets de Miage (buvette) and one more pull over Le Truc before Les Contamines. Turns a 700 m day into roughly 1,200 m and it's the finest Day 1 there is. Avoid in storms - the col is exposed."},
   base:"Le Pontet, Les Contamines", url:"https://www.campinglepontet.fr", chip:["ok","booked ref 6458"],
   driver:"A gentle 30-minute hop down the valley. Do the big French shop at the Super U in Les Houches first - it's the cheapest food for the next three days. Arrive from 15:00 and pay the &euro;22.18 balance.",
   drive:{idx:0, km:27.6, note:"Les Houches to Le Pontet"},
@@ -119,6 +121,7 @@ const DAYS = [
   escape:"Gentle warm-up over the Col de Voza. The valley road and Les Contamines bus are never far if anything niggles."},
  {n:2, date:"2026-07-31", label:"Fri 31 July", stage:"Les Contamines to Les Chapieux", km:16.7, col:"#ff8000",
   walkers:"First proper alpine day: about 1,300 m of ascent. The old Roman road past Notre Dame de la Gorge, then the long climb to the Col du Bonhomme (2,329 m) and on to the Col de la Croix du Bonhomme (2,479 m) - wild, open country with a real sense of remoteness. The refuge at the second col does lunch and cake. Steep, loose descent to Les Chapieux. Carry plenty of water; sources are thin between the cols.",
+  variant:{name:"Col des Fours (2,665 m) - not this trip",text:"From the Croix du Bonhomme the classic hard variant continues over the Col des Fours (joint-highest point of the TMB) and descends wild country to Ville des Glaciers - but it bypasses Les Chapieux entirely, and our bed is in Les Chapieux. It only works with a different overnight, so it's off the menu this year. Noted here so nobody wonders."},
   base:"Free bivouac aire, Les Chapieux", chip:["turnup","turn up"],
   driver:"The best drive of the trip: Beaufort (buy cheese, obviously) then over the Cormet de Roselend - a proper alpine pass, fine for the Transit. Fill the water tanks at Le Pontet before leaving; the Chapieux aire has toilets and precisely nothing else.",
   drive:{idx:1, km:89.8, note:"Le Pontet to Les Chapieux via Cormet de Roselend"},
@@ -126,6 +129,7 @@ const DAYS = [
   escape:"First real alpine day (Col du Bonhomme, 2,329 m). Refuge de la Croix du Bonhomme is staffed at the top; retreat line is back to Les Contamines."},
  {n:3, date:"2026-08-01", label:"Sat 1 August", stage:"Les Chapieux to Val Veny (Col de la Seigne)", km:24.2, col:"#e6c200",
   walkers:"Into Italy, on foot, over the Col de la Seigne (2,516 m) - around 1,050 m up and 1,000 m down over a long day. The view from the col is the best on the whole route: the entire Mont Blanc massif laid out down Val Veny and the Italian Val Ferret. Rifugio Elisabetta sits just below for a drink, then past Lac Combal and down the valley to the campsite. Long but never technical.",
+  variant:{name:"Pyramides Calcaires (~2,270 m)",text:"Just over the Col de la Seigne, a marked high loop swings round the flank of the Pyramides Calcaires - limestone towers in the middle of all that granite - before rejoining above Lac Combal. Adds about an hour on rougher ground, and puts you right under the Aiguille des Glaciers. Worth it on a clear day; the main path is no hardship if the col was windy."},
   base:"Val Veny: Aiguille Noire (or La Sorgente)", url:"https://www.aiguillenoire.com/en/home-2/", chip:["wait","enquiry sent"],
   driver:"The big one: over the Petit St Bernard into Italy (free, and better views than the tunnel), Carrefour Courmayeur for the Italian shop, then up Val Veny. Be there EARLY afternoon - it's peak-season Saturday and if the booking falls through the fallback site is strictly first-come. The walkers finish at the campsite door, which is the whole point of this base.",
   drive:{idx:2, km:76.8, note:"Les Chapieux to Val Veny via Petit St Bernard"},
@@ -140,6 +144,7 @@ const DAYS = [
   escape:"Longest day but Courmayeur sits mid-route with every service going. The Val Ferret road parallels the afternoon leg - easy to cut short at Planpincieux."},
  {n:5, date:"2026-08-03", label:"Mon 3 August", stage:"Val Ferret to La Fouly (Grand Col Ferret, 2,537 m)", km:15, col:"#00b3b3",
   walkers:"The crux col, on its own day - which is the whole reason this itinerary works. From the Lavachey drop it's a steady 800 m climb past Rifugio Elena to the Grand Col Ferret (2,537 m), the highest point of the trip and the border into Switzerland. Long grassy descent past the Alpage de la Peule (cheese, drinks) to the hamlet of Ferret and on to La Fouly. Short day by design; enjoy it.",
+  variant:{name:"Petit Col Ferret (2,490 m)",text:"The quieter, meaner sibling: splits off at Arnouvaz and crosses the Petit Col Ferret instead. Steeper, narrower, and the descent on the Swiss side has an eroded, slithery reputation - more mountain-path than trail in places. Rejoins near Ferret village. Good-weather-and-fresh-legs only; the Grand Col is the better walk for views anyway."},
   base:"Val d'Arpette, Champex-Lac", url:"https://arpette.ch/en/camping-2/", chip:["wait","booking requested - CHF 125.60 for 2 nights"],
   driver:"The longest driving day, so it's split: drop the walkers at Lavachey in the morning, then the relocation - Grand St Bernard tunnel, vignette BEFORE the Swiss motorway, Orsi&egrave;res, up the hairpins to Champex. Settle in, then nip down to La Fouly (about 20 minutes) for the evening pickup.",
   drive:{idx:3, km:76.7, note:"Val Veny to Champex via Grand St Bernard"},
@@ -154,6 +159,7 @@ const DAYS = [
   escape:"Easy valley-floor day through Praz de Fort and Issert; the road is alongside the whole way."},
  {n:7, date:"2026-08-05", label:"Wed 5 August", stage:"Champex to Trient (Bovine route)", km:18.0, col:"#8000ff",
   walkers:"Two ways to do this. The standard Bovine route: undulating forest and open alp, about 850 m up, with Alp Bovine itself the classic lunch stop and huge views down to Martigny and the Rhone valley. Or the Fenetre d'Arpette variant (2,665 m) - it starts literally at the campsite door, it's the hardest and best pass on the TMB, but it's a boulder-field grind and strictly a good-weather call. Decide over breakfast. Either way the day ends at the Col de la Forclaz, at the campsite.",
+  variant:{name:"Fenetre d'Arpette (2,665 m)",text:"THE hard variant of the whole TMB, and it starts at our campsite door: 1,400 m up the wild Val d'Arpette, boulder-hopping for the last hour, through the notch at 2,665 m (joint-highest point of the route), then 1,400 m straight back down past the Trient glacier to the buvette and the valley. Roughly 7 hours, no water high up, no escape routes, and strictly a settled-weather call - if there's any doubt at breakfast, Bovine is a lovely walk and nobody has failed the TMB by taking it."},
   base:"l'Arpille, Col de la Forclaz", url:"https://www.valleedutrient.ch/en/campsite-l-arpille-fp480", chip:["wait","enquiry sent - free cancel to 72h"],
   driver:"Twenty-five minutes over the Col de la Forclaz. The campsite sits at the top of the pass, on the walking route itself about 2 km before Trient - the walkers stop at the door rather than descending the extra bit.",
   drive:{idx:4, km:25.2, note:"Champex to Col de la Forclaz"},
@@ -161,6 +167,7 @@ const DAYS = [
   escape:"Bovine mid-section is remote-ish; the alternative bad-weather line is the valley road path via Martigny side. Day ends at a road pass."},
  {n:8, date:"2026-08-06", label:"Thu 6 August", stage:"Trient to Argenti&egrave;re (Col de Balme)", km:14.7, col:"#ff00ff",
   walkers:"Back into France the proper way: about 1,050 m of switchbacks up through forest from Trient - a head-down morning - rewarded at the Col de Balme (2,191 m) with the whole Chamonix valley and Mont Blanc suddenly in front of you. It's the classic 'welcome home' moment of the anti-clockwise TMB. Refuge at the col for lunch, then a kind descent via Le Tour to Argenti&egrave;re.",
+  variant:{name:"Aiguillette des Posettes (2,201 m)",text:"From the Col de Balme, instead of dropping straight to Le Tour, carry on over the Aiguillette des Posettes ridge - about 250 m more climbing for one of the best ridgelines of the trip, Mont Blanc ahead and the Aiguilles Rouges alongside. Descends towards Tre-le-Champ, then valley path to Argentiere. No technical difficulty, just more up; the obvious pick if the weather's clear."},
   base:"Camping du Glacier, Argenti&egrave;re", url:"https://www.campingchamonix.com/en/", chip:["turnup","turn up - reception opens 14:00"],
   driver:"Twenty minutes over the Col des Montets, back into France. One job that matters: be at reception for 14:00 sharp when it opens. No bookings taken, strictly first-come - they hold pitches for TMB walkers but August is August.",
   drive:{idx:5, km:19.7, note:"Forclaz to Argenti&egrave;re via Col des Montets"},
@@ -168,6 +175,7 @@ const DAYS = [
   escape:"Col de Balme (2,191 m) is the border. Le Tour chairlift on the French side shortcuts the descent if legs are done; the Col des Montets road is just north."},
  {n:9, date:"2026-08-07", label:"Fri 7 August", stage:"Argenti&egrave;re to Les Houches (finish)", km:21.8, col:"#8b4513",
   walkers:"The grand finale along the Grand Balcon Sud, facing Mont Blanc the entire way. Early on comes the famous ladders section near the Aiguillette d'Argenti&egrave;re - fixed ladders and rungs bolted to the rock, fine when dry, take it steady (there's a bypass via the Col des Montets path if it's wet). Then Fl&eacute;g&egrave;re, Planpraz, and the Br&eacute;vent shoulder before the brutal 1,600 m descent to Les Houches - the hardest thing about the last day is that it's mostly downhill. Lac Blanc is a worthwhile detour if the legs vote yes. Buvettes and lift stations all along for refuelling.",
+  variant:{name:"Lac Blanc (2,352 m) + Brevent summit (2,525 m)",text:"Two upgrades available on the finale. First: from Tre-le-Champ take the ladders up to Lac Blanc - the postcard shot of the massif reflected in the lake - then descend to Flegere; adds around 400 m and a couple of hours. Second: at the far end, climb over the Brevent summit rather than traversing below it - the single best viewpoint of the whole route, straight across at Mont Blanc. Doing BOTH plus the 1,600 m final descent is a huge day; pick by how the legs feel at Flegere."},
   base:"Bellevue, Les Houches", url:"http://www.camping-bellevue-leshouches.com/", chip:["ok","confirmed"],
   driver:"Fifteen minutes to Bellevue - remember the gate, 16:00-19:30. Then champagne duty. The walkers come in along the Fl&eacute;g&egrave;re balcony path with the whole massif on their left, which is a decent way to end nine days.",
   drive:{idx:6, km:16.5, note:"Argenti&egrave;re to Les Houches"},
@@ -221,6 +229,7 @@ DAYS.forEach((d,i)=>{
     <p class="tmb-meta"><strong>${d.stage}</strong> &middot; ${d.km} km on foot</p>
     <p class="tmb-meta"><strong>Van base:</strong> ${d.url?`<a href="${d.url}" target="_blank">${d.base}</a>`:d.base} <span class="tmb-chip ${CHIPCLS[d.chip[0]]}">${d.chip[1]}</span></p>
     <p><strong>The walking:</strong> ${d.walkers}</p>
+    ${d.variant?`<p class="tmb-variant"><strong>Hard option - ${d.variant.name}:</strong> ${d.variant.text}</p>`:''}
     <p><strong>Nicole's day:</strong> ${d.driver}</p>
     <p class="tmb-meta"><strong>Bail-out / notes:</strong> ${d.escape}</p>
     <div class="row">
