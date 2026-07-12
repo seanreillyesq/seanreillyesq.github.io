@@ -66,7 +66,6 @@ jobs:
               'sc-domain:seanreilly.uk': 'https://www.seanreilly.uk/sitemap_index.xml',
               'sc-domain:seanreilly.ie': 'https://www.seanreilly.ie/sitemap_index.xml',
               'sc-domain:seanreilly.eu': 'https://www.seanreilly.eu/sitemap_index.xml',
-              'sc-domain:powergenitalia.it': 'https://www.powergenitalia.it/sitemap_index.xml',
           }
           failed = False
           for site, feed in props.items():
