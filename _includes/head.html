@@ -54,12 +54,14 @@
     <link rel="canonical" href="{{ defined_url | prepend: site.url }}">
     <link rel="author" href="/humans.txt" type="text/plain">
 
-    <!-- hreflang for regional variants -->
-    <link rel="alternate" hreflang="x-default" href="https://www.seanreilly.net{{ defined_url }}" />
-    <link rel="alternate" hreflang="en" href="https://www.seanreilly.net{{ defined_url }}" />
-    <link rel="alternate" hreflang="en-GB" href="https://www.seanreilly.uk{{ defined_url }}" />
-    <link rel="alternate" hreflang="en-IE" href="https://www.seanreilly.ie{{ defined_url }}" />
-    <link rel="alternate" hreflang="en-EU" href="https://www.seanreilly.eu{{ defined_url }}" />
+    <!-- hreflang for regional variants (generated from _config.yml hreflang_domains; matches sitemap-content.xml) -->
+    <link rel="alternate" hreflang="x-default" href="{{ site.hreflang_domains.default }}{{ defined_url }}" />
+    <link rel="alternate" hreflang="en" href="{{ site.hreflang_domains.default }}{{ defined_url }}" />
+{%- for domain in site.hreflang_domains -%}
+{%- if domain[0] != 'default' %}
+    <link rel="alternate" hreflang="{{ domain[0] }}" href="{{ domain[1] }}{{ defined_url }}" />
+{%- endif -%}
+{%- endfor %}
 
     <!-- Article timestamps (for SEO freshness signals) -->
     {% if page.layout == 'post' %}
