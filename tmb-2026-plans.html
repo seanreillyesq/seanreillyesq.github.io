@@ -15,6 +15,7 @@ permalink: /tmb-2026-plans/
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="{{ site.baseurl }}/assets/tmb-2026/tmb-data.js"></script>
+<script src="{{ site.baseurl }}/assets/tmb-2026/tmb-weather.js"></script>
 
 <style>
 .tmb-map { height: 340px; border-radius: 8px; margin-bottom: 0.5rem; }
@@ -30,6 +31,17 @@ permalink: /tmb-2026-plans/
 .tmb-variant { background: #fdf3e0; border-left: 4px solid #e8a33d; border-radius: 0 6px 6px 0; padding: .6rem .9rem; font-size: .95rem; }
 .tmb-legend { font-size: .85rem; }
 .tmb-dl a { margin: 0 6px 6px 0; }
+.tmb-wx { background: #eef4fb; border: 1px solid #d5e3f2; border-radius: 8px; padding: .5rem .75rem; margin: .6rem 0; font-size: .9rem; }
+.tmb-wx-head { font-weight: 700; margin-bottom: .25rem; display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.tmb-wx-badge { font-size: .72rem; font-weight: 700; padding: 1px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: .02em; }
+.tmb-wx-badge.forecast { background: #cfe2ff; color: #084298; }
+.tmb-wx-badge.actual { background: #d4edda; color: #155724; }
+.tmb-wx-upd { font-weight: 400; font-size: .78rem; color: #667; margin-left: auto; }
+.tmb-wx-row { line-height: 1.5; }
+.tmb-wx-tier { display: inline-block; min-width: 4.6em; font-weight: 700; color: #345; }
+.tmb-wx-loc { color: #556; }
+.tmb-wx-hot { color: #b5480d; font-weight: 600; }
+.tmb-wx-cold { color: #0a56a8; font-weight: 600; }
 </style>
 
 <p class="lead">Nine days walking round Mont Blanc, eleven nights in a van - and one of them under canvas. Sean and Alex walk the full 179 km loop, bivouacking below the Col des Fours on night two; Nicole leapfrogs the van between valley campsites and shuttles the walkers to and from the trailheads. This page is the whole plan - maps, bookings, phone numbers, and what to do when it goes sideways.</p>
@@ -267,6 +279,26 @@ function baseMarkers(map){ BASES.forEach(b=>L.circleMarker([b[0],b[1]],{radius:6
   m.fitBounds(L.latLngBounds(all).pad(0.06));
 })();
 
+// per-day weather widget (data in tmb-weather.js, refreshed daily)
+function wxBlock(n){
+  if(typeof WX==='undefined' || !WX[String(n)]) return '';
+  const w=WX[String(n)];
+  const badge=`<span class="tmb-wx-badge ${w.status}">${w.status==='actual'?'recorded':'forecast'}</span>`;
+  const temp=(o,tier)=>{
+    let t=`${o.tmax}&deg;/${o.tmin}&deg;`;
+    if(tier==='high' && o.tmin!=null && o.tmin<=2) t=`<span class="tmb-wx-cold">${t}</span>`;
+    if(tier==='low'  && o.tmax!=null && o.tmax>=30) t=`<span class="tmb-wx-hot">${t}</span>`;
+    return t;
+  };
+  const wet=(o)=> o.snow>0.2 ? `, ${o.snow}&nbsp;cm snow` : (o.precip>0.5 ? `, ${o.precip}&nbsp;mm rain` : ', dry');
+  const row=(o,tier,label)=>`<div class="tmb-wx-row"><span class="tmb-wx-tier">${label}</span> <span class="tmb-wx-loc">${o.place}</span> - ${temp(o,tier)}, ${o.text}${wet(o)}, gusts ${o.gust}&nbsp;km/h</div>`;
+  return `<div class="tmb-wx">
+      <div class="tmb-wx-head">Weather ${badge}<span class="tmb-wx-upd">updated ${WX._updated}</span></div>
+      ${row(w.high,'high','Up high')}
+      ${row(w.low,'low','Down low')}
+    </div>`;
+}
+
 // day cards
 const wrap=document.getElementById('tmb-days');
 const today=new Date().toISOString().slice(0,10);
@@ -280,6 +312,7 @@ DAYS.forEach((d,i)=>{
     <h3><span class="tmb-swatch" style="background:${d.col}"></span>Day ${d.n} - ${d.label}${isToday?' <span class="tmb-chip tmb-chip-ok">TODAY</span>':''}</h3>
     <p class="tmb-meta"><strong>${d.stage}</strong> &middot; ${d.km} km &middot; ${d.up.toLocaleString('en-GB')}&nbsp;m up / ${d.down.toLocaleString('en-GB')}&nbsp;m down &middot; ~${d.hrs}</p>
     <p class="tmb-meta"><strong>Van base:</strong> ${d.url?`<a href="${d.url}" target="_blank">${d.base}</a>`:d.base} <span class="tmb-chip ${CHIPCLS[d.chip[0]]}">${d.chip[1]}</span></p>
+    ${wxBlock(d.n)}
     <p><strong>The walking:</strong> ${d.walkers}</p>
     ${d.variant?`<p class="tmb-variant"><strong>${d.variant.name}:</strong> ${d.variant.text}${d.variant.stats?`<br><span class="tmb-meta"><strong>Day with this option:</strong> ${d.variant.stats}</span>`:''}</p>`:''}
     <p><strong>Nicole's day:</strong> ${d.driver}</p>
