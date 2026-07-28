@@ -302,8 +302,23 @@ function wxBlock(n){
 // day cards
 const wrap=document.getElementById('tmb-days');
 const today=new Date().toISOString().slice(0,10);
+
+// role filter: ?walkers shows only the walking side, ?driver only Nicole's side
+const _q=location.search.toLowerCase();
+const MODE=_q.indexOf('driver')>-1?'driver':(_q.indexOf('walker')>-1?'walkers':'all');
+const modeNote=document.createElement('p');
+modeNote.className='tmb-meta';
+modeNote.innerHTML=MODE==='driver'
+  ?'Filtered: <strong>Nicole\'s instructions only</strong> &middot; <a href="?">show everything</a> &middot; <a href="?walkers">walkers only</a>'
+  :(MODE==='walkers'
+    ?'Filtered: <strong>walkers\' instructions only</strong> &middot; <a href="?">show everything</a> &middot; <a href="?driver">Nicole only</a>'
+    :'Filter these day cards: <a href="?walkers">walkers only</a> &middot; <a href="?driver">Nicole only</a>');
+wrap.appendChild(modeNote);
+
 DAYS.forEach((d,i)=>{
   const isToday=(d.date===today);
+  const showWalk=(MODE!=='driver');
+  const showDrive=(MODE!=='walkers')&&!!d.drive;
   const card=document.createElement('div');
   card.className='tmb-day-card'+(isToday?' tmb-today':'');
   card.style.borderLeftColor=d.col;
@@ -313,15 +328,15 @@ DAYS.forEach((d,i)=>{
     <p class="tmb-meta"><strong>${d.stage}</strong> &middot; ${d.km} km &middot; ${d.up.toLocaleString('en-GB')}&nbsp;m up / ${d.down.toLocaleString('en-GB')}&nbsp;m down &middot; ~${d.hrs}</p>
     <p class="tmb-meta"><strong>Van base:</strong> ${d.url?`<a href="${d.url}" target="_blank">${d.base}</a>`:d.base} <span class="tmb-chip ${CHIPCLS[d.chip[0]]}">${d.chip[1]}</span></p>
     ${wxBlock(d.n)}
-    <p><strong>The walking:</strong> ${d.walkers}</p>
-    ${d.variant?`<p class="tmb-variant"><strong>${d.variant.name}:</strong> ${d.variant.text}${d.variant.stats?`<br><span class="tmb-meta"><strong>Day with this option:</strong> ${d.variant.stats}</span>`:''}</p>`:''}
-    <p><strong>Nicole's day:</strong> ${d.driver}</p>
+    ${MODE!=='driver'?`<p><strong>The walking:</strong> ${d.walkers}</p>`:''}
+    ${d.variant&&MODE!=='driver'?`<p class="tmb-variant"><strong>${d.variant.name}:</strong> ${d.variant.text}${d.variant.stats?`<br><span class="tmb-meta"><strong>Day with this option:</strong> ${d.variant.stats}</span>`:''}</p>`:''}
+    ${MODE!=='walkers'?`<p><strong>Nicole's day:</strong> ${d.driver}</p>`:''}
     <p class="tmb-meta"><strong>Bail-out / notes:</strong> ${d.escape}</p>
     <div class="row">
-      <div class="${d.drive?'col-md-6':'col-md-12'}"><div class="tmb-map" id="walk${i}"></div><p class="caption">Walk - Day ${d.n} (terrain)</p></div>
-      ${d.drive?`<div class="col-md-6"><div class="tmb-map" id="drive${i}"></div><p class="caption">Drive - ${d.drive.note}, ${d.drive.km} km (satellite)</p></div>`:''}
+      ${showWalk?`<div class="${showDrive?'col-md-6':'col-md-12'}"><div class="tmb-map" id="walk${i}"></div><p class="caption">Walk - Day ${d.n} (terrain)</p></div>`:''}
+      ${showDrive?`<div class="${showWalk?'col-md-6':'col-md-12'}"><div class="tmb-map" id="drive${i}"></div><p class="caption">Drive - ${d.drive.note}, ${d.drive.km} km (satellite)</p></div>`:''}
     </div>
-    ${d.gmap?`<p><a class="btn btn-accent btn-sm" target="_blank" href="${d.gmap}">Open drive in Google Maps</a></p>`:''}`;
+    ${d.gmap&&MODE!=='walkers'?`<p><a class="btn btn-accent btn-sm" target="_blank" href="${d.gmap}">Open drive in Google Maps</a></p>`:''}`;
   wrap.appendChild(card);
 });
 
@@ -331,15 +346,17 @@ const io=new IntersectionObserver(entries=>{
     if(!e.isIntersecting||e.target.dataset.done) return;
     e.target.dataset.done=1;
     const i=+e.target.dataset.i, d=DAYS[i];
-    const wm=L.map('walk'+i,{scrollWheelZoom:false}); terrain().addTo(wm);
-    const wl=L.polyline(TMB.walk[i],{color:d.col,weight:5}).addTo(wm);
-    let wb=wl.getBounds();
-    (TMB.variants||[]).filter(v=>v.day===i).forEach(v=>{
-      const vl=L.polyline(v.pts,{color:d.col,weight:3,dashArray:'5 6',opacity:.9}).addTo(wm).bindPopup(v.name);
-      wb=wb.extend(vl.getBounds());
-    });
-    baseMarkers(wm); wm.fitBounds(wb.pad(0.1));
-    if(d.drive){
+    if(document.getElementById('walk'+i)){
+      const wm=L.map('walk'+i,{scrollWheelZoom:false}); terrain().addTo(wm);
+      const wl=L.polyline(TMB.walk[i],{color:d.col,weight:5}).addTo(wm);
+      let wb=wl.getBounds();
+      (TMB.variants||[]).filter(v=>v.day===i).forEach(v=>{
+        const vl=L.polyline(v.pts,{color:d.col,weight:3,dashArray:'5 6',opacity:.9}).addTo(wm).bindPopup(v.name);
+        wb=wb.extend(vl.getBounds());
+      });
+      baseMarkers(wm); wm.fitBounds(wb.pad(0.1));
+    }
+    if(d.drive&&document.getElementById('drive'+i)){
       const dm=L.map('drive'+i,{scrollWheelZoom:false}); hybrid().addTo(dm);
       const g=('shuttle' in d.drive)?TMB.shuttle[d.drive.shuttle]:TMB.drive[d.drive.idx];
       const dl=drawDrive(dm,g,true);
