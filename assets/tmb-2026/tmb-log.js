@@ -19,8 +19,8 @@ const LOG = {
       ],
       fixnote: "Two things for the route data: (1) the KMZ line is a little off the walked track between Les Aillouds and the Col de Voza; (2) the day followed the Col de Tricot variant after Voza, so Day 1 in the KMZ/GPX should be the Tricot line, not the standard descent. Flagged for a fix."
     },
-    { n: 2, date: "2026-07-31", label: "Fri 31 July", stage: "Les Contamines to Les Mottets (Col des Fours, 2,665 m)", col: "#ff8000", status: "coming" },
-    { n: 3, date: "2026-08-01", label: "Sat 1 August", stage: "Les Mottets to Val Veny (Col de la Seigne)", col: "#e6c200", status: "coming" },
+    { n: 2, date: "2026-07-31", label: "Fri 31 July", stage: "Les Contamines to Les Chapieux (Col du Bonhomme)", col: "#ff8000", status: "coming" },
+    { n: 3, date: "2026-08-01", label: "Sat 1 August", stage: "Les Chapieux to Val Veny (Col de la Seigne)", col: "#e6c200", status: "coming" },
     { n: 4, date: "2026-08-02", label: "Sun 2 August", stage: "Val Veny to Val Ferret (via Courmayeur)", col: "#00b300", status: "coming" },
     { n: 5, date: "2026-08-03", label: "Mon 3 August", stage: "Val Ferret to La Fouly (Grand Col Ferret, 2,537 m)", col: "#00b3b3", status: "coming" },
     { n: 6, date: "2026-08-04", label: "Tue 4 August", stage: "La Fouly to Champex-Lac", col: "#0000ff", status: "coming" },

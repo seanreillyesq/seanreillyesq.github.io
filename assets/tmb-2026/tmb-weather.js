@@ -27,22 +27,22 @@ const WX = {
   "status": "forecast",
   "date": "2026-07-31",
   "high": {
-   "place": "Col des Fours (2,665 m)",
-   "tmax": 17,
-   "tmin": 10,
-   "precip": 3.3,
+   "place": "Croix du Bonhomme (2,479 m)",
+   "tmax": 19,
+   "tmin": 12,
+   "precip": 0,
    "snow": 0,
-   "gust": 48,
-   "text": "thundery"
+   "gust": 57,
+   "text": "showers"
   },
   "low": {
    "place": "Val Veny",
    "tmax": 27,
-   "tmin": 14,
-   "precip": 1.0,
+   "tmin": 13,
+   "precip": 0.2,
    "snow": 0,
-   "gust": 28,
-   "text": "thundery"
+   "gust": 40,
+   "text": "showers"
   }
  },
  "3": {
@@ -50,21 +50,21 @@ const WX = {
   "date": "2026-08-01",
   "high": {
    "place": "Col de la Seigne (2,516 m)",
-   "tmax": 17,
-   "tmin": 10,
-   "precip": 1.0,
+   "tmax": 16,
+   "tmin": 11,
+   "precip": 0,
    "snow": 0,
-   "gust": 35,
-   "text": "showers"
+   "gust": 31,
+   "text": "part cloud"
   },
   "low": {
    "place": "Val Veny",
    "tmax": 26,
-   "tmin": 13,
-   "precip": 0.9,
+   "tmin": 14,
+   "precip": 0,
    "snow": 0,
-   "gust": 27,
-   "text": "showers"
+   "gust": 30,
+   "text": "part cloud"
   }
  },
  "4": {
