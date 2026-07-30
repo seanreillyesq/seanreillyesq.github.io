@@ -1,0 +1,140 @@
+---
+layout: page
+title: "Tour du Mont Blanc 2026 - Trek Log"
+header-title: "TMB 2026 - Trek Log"
+description: "Sean & Alex walk the Tour du Mont Blanc, day by day. 30 July - 7 August 2026."
+header-img: "img/tmb-2026-header.jpg"
+header_overlay: true
+meta-description: "Private trek log"
+robots: "noindex, nofollow"
+hidden: true
+sitemap: false
+permalink: /tmb-2026-log/
+---
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{{ site.baseurl }}/assets/tmb-2026/tmb-data.js"></script>
+<script src="{{ site.baseurl }}/assets/tmb-2026/tmb-weather.js"></script>
+<script src="{{ site.baseurl }}/assets/tmb-2026/tmb-log.js"></script>
+
+<style>
+.tmb-map { height: 360px; border-radius: 8px; margin-bottom: 0.5rem; }
+.tmb-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 6px; vertical-align: -2px; }
+.log-card { border-left: 6px solid #ccc; padding-left: 1rem; margin: 2.25rem 0; }
+.log-card.done { border-left-width: 6px; }
+.log-card.coming { opacity: .55; }
+.log-card.today { background: #fff8e6; border-radius: 0 8px 8px 0; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.log-chip { display: inline-block; font-size: .74rem; font-weight: 700; padding: 2px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: .02em; vertical-align: 2px; }
+.log-chip-done { background: #d4edda; color: #155724; }
+.log-chip-today { background: #ffe08a; color: #7a5b00; }
+.log-chip-coming { background: #e2e3e5; color: #55585c; }
+.log-stats { display: flex; flex-wrap: wrap; gap: .4rem .5rem; margin: .6rem 0; }
+.log-stat { background: #f2f5f8; border: 1px solid #e1e8ef; border-radius: 8px; padding: .3rem .7rem; font-size: .9rem; line-height: 1.2; }
+.log-stat b { display: block; font-size: 1.05rem; color: #1b2a3a; }
+.log-src { font-size: .78rem; color: #7a7f85; margin: -.2rem 0 .5rem; }
+.log-route { font-size: .92rem; color: #40474e; margin: .3rem 0 .5rem; }
+.log-hl { margin: .4rem 0 .2rem; padding-left: 1.1rem; }
+.log-hl li { margin: .15rem 0; }
+.log-fix { background: #fdf3e0; border-left: 4px solid #e8a33d; border-radius: 0 6px 6px 0; padding: .5rem .8rem; font-size: .88rem; margin: .6rem 0; }
+.log-wx { background: #eef4fb; border: 1px solid #d5e3f2; border-radius: 8px; padding: .4rem .7rem; margin: .5rem 0; font-size: .86rem; }
+.log-wx b { color: #345; }
+.log-wx .actual { color: #155724; font-weight: 700; }
+.log-wx .forecast { color: #084298; font-weight: 700; }
+</style>
+
+<p class="lead">The Tour du Mont Blanc as it actually happened - nine days on foot round the massif, one entry per day. Sean and Alex walk; Nicole drives the van between valleys. The <a href="{{ site.baseurl }}/tmb-2026-plans/">full plan is here</a>; this page is the diary.</p>
+
+<div id="log-progress" class="tmb-meta" style="font-size:.95rem;color:#556;margin-bottom:1rem;"></div>
+
+<h2 id="map">The loop</h2>
+<div class="tmb-map" id="map-overview"></div>
+<p style="font-size:.85rem;color:#667;">Days walked are drawn solid; days still to come are faded. One colour per day.</p>
+
+<div id="log-days"></div>
+
+<script>
+(function(){
+  var DAYS = (window.LOG && LOG.days) ? LOG.days : [];
+  var todayISO = new Date().toISOString().slice(0,10);
+
+  // Progress line
+  var done = DAYS.filter(function(d){ return d.status==='done'; }).length;
+  var pg = document.getElementById('log-progress');
+  if (pg) pg.innerHTML = '<strong>'+done+' of '+DAYS.length+' days walked.</strong>'+
+    (LOG.updated ? ' Last updated '+LOG.updated+'.' : '');
+
+  // Overview map (reuse tmb-data.js geometry; colour + fade by log status)
+  function terrain(){ return L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:16, attribution:'&copy; OpenStreetMap, SRTM | &copy; OpenTopoMap (CC-BY-SA)'}); }
+  var mapEl = document.getElementById('map-overview');
+  if (mapEl && window.TMB && TMB.walk) {
+    var m = L.map('map-overview',{scrollWheelZoom:false}); terrain().addTo(m);
+    var all = [];
+    TMB.walk.forEach(function(g,i){
+      var d = DAYS[i] || {};
+      var isDone = d.status==='done';
+      L.polyline(g,{color:d.col||'#888', weight:isDone?5:3, opacity:isDone?0.95:0.4,
+        dashArray:isDone?null:'4 6'}).addTo(m);
+      all = all.concat(g);
+    });
+    if (all.length) m.fitBounds(L.latLngBounds(all).pad(0.08));
+  }
+
+  // Weather line for a given day number
+  function wxLine(n){
+    if (!window.WX || !WX[String(n)]) return '';
+    var w = WX[String(n)];
+    var cls = w.status==='actual' ? 'actual' : 'forecast';
+    var lbl = w.status==='actual' ? 'Recorded' : 'Forecast';
+    function tier(t){ if(!t) return ''; return '<b>'+t.place+'</b>: '+t.tmax+'&deg; / '+t.tmin+'&deg;'+
+      (t.precip? ', '+t.precip+'mm':'')+(t.text? ', '+t.text:''); }
+    return '<div class="log-wx"><span class="'+cls+'">'+lbl+':</span> '+
+      'Up high - '+tier(w.high)+' &middot; Down low - '+tier(w.low)+'</div>';
+  }
+
+  function statBox(label,val){ return '<div class="log-stat">'+label+'<b>'+val+'</b></div>'; }
+
+  function statsBlock(d){
+    var s = d.stats; if(!s) return '';
+    var boxes = [];
+    if (s.km!=null) boxes.push(statBox('Distance', s.km+' km'));
+    if (s.up!=null) boxes.push(statBox('Ascent', '+'+s.up+' m'));
+    if (s.down!=null) boxes.push(statBox('Descent', '-'+s.down+' m'));
+    if (s.moving) boxes.push(statBox('Moving', s.moving));
+    if (s.elapsed) boxes.push(statBox('Elapsed', s.elapsed));
+    var src = s.source==='garmin'
+      ? 'Recorded on Garmin (running through breaks - elapsed reads long).'
+      : 'Planned figures - Garmin actuals to follow.';
+    return '<div class="log-stats">'+boxes.join('')+'</div><div class="log-src">'+src+'</div>';
+  }
+
+  var out = '';
+  DAYS.forEach(function(d){
+    var isToday = d.date===todayISO;
+    var cls = 'log-card '+d.status+(isToday?' today':'');
+    var chip = d.status==='done'
+      ? '<span class="log-chip log-chip-'+(isToday?'today':'done')+'">'+(isToday?'today':'walked')+'</span>'
+      : '<span class="log-chip log-chip-coming">to come</span>';
+    out += '<div class="'+cls+'" style="border-left-color:'+(d.col||'#ccc')+'">';
+    out += '<h3><span class="tmb-swatch" style="background:'+(d.col||'#ccc')+'"></span>Day '+d.n+
+           ' - '+d.label+' '+chip+'</h3>';
+    out += '<p class="tmb-meta" style="margin:.1rem 0 .3rem;color:#555;">'+d.stage+'</p>';
+    if (d.status==='done'){
+      out += statsBlock(d);
+      out += wxLine(d.n);
+      if (d.route) out += '<p class="log-route"><strong>Line taken:</strong> '+d.route+'</p>';
+      if (d.notes) out += '<p>'+d.notes+'</p>';
+      if (d.highlights && d.highlights.length){
+        out += '<ul class="log-hl">';
+        d.highlights.forEach(function(h){ out += '<li>'+h+'</li>'; });
+        out += '</ul>';
+      }
+      if (d.fixnote) out += '<div class="log-fix"><strong>Route-data note:</strong> '+d.fixnote+'</div>';
+    } else {
+      out += '<p style="color:#777;font-size:.9rem;">Not walked yet.</p>';
+    }
+    out += '</div>';
+  });
+  document.getElementById('log-days').innerHTML = out;
+})();
+</script>
