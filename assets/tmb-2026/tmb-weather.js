@@ -1,5 +1,5 @@
 const WX = {
- "_updated": "2026-07-31",
+ "_updated": "2026-08-01",
  "_note": "Up high = the hikers' high point that day; down low = Nicole's valley base. Forecast until the day passes, then the recorded value. Source: Open-Meteo.",
  "1": {
   "status": "actual",
@@ -24,24 +24,24 @@ const WX = {
   }
  },
  "2": {
-  "status": "forecast",
+  "status": "actual",
   "date": "2026-07-31",
   "high": {
    "place": "Croix du Bonhomme (2,479 m)",
    "tmax": 17,
    "tmin": 11,
-   "precip": 2.0,
+   "precip": 9.2,
    "snow": 0,
-   "gust": 44,
-   "text": "showers"
+   "gust": 53,
+   "text": "thundery"
   },
   "low": {
    "place": "Val Veny",
-   "tmax": 24,
+   "tmax": 25,
    "tmin": 14,
-   "precip": 1.5,
+   "precip": 9.0,
    "snow": 0,
-   "gust": 25,
+   "gust": 30,
    "text": "thundery"
   }
  },
@@ -50,20 +50,20 @@ const WX = {
   "date": "2026-08-01",
   "high": {
    "place": "Col de la Seigne (2,516 m)",
-   "tmax": 16,
+   "tmax": 17,
    "tmin": 11,
-   "precip": 0.2,
+   "precip": 0.4,
    "snow": 0,
-   "gust": 35,
+   "gust": 33,
    "text": "showers"
   },
   "low": {
    "place": "Val Veny",
-   "tmax": 26,
-   "tmin": 13,
+   "tmax": 27,
+   "tmin": 12,
    "precip": 0,
    "snow": 0,
-   "gust": 29,
+   "gust": 32,
    "text": "cloud"
   }
  },
@@ -72,7 +72,7 @@ const WX = {
   "date": "2026-08-02",
   "high": {
    "place": "Mont Favre balcony (2,430 m)",
-   "tmax": 18,
+   "tmax": 22,
    "tmin": 9,
    "precip": 0,
    "snow": 0,
@@ -81,12 +81,12 @@ const WX = {
   },
   "low": {
    "place": "Val Veny",
-   "tmax": 26,
-   "tmin": 13,
+   "tmax": 28,
+   "tmin": 11,
    "precip": 0,
    "snow": 0,
-   "gust": 35,
-   "text": "cloud"
+   "gust": 30,
+   "text": "part cloud"
   }
  },
  "5": {
@@ -94,21 +94,21 @@ const WX = {
   "date": "2026-08-03",
   "high": {
    "place": "Grand Col Ferret (2,537 m)",
-   "tmax": 18,
-   "tmin": 9,
-   "precip": 15.6,
+   "tmax": 17,
+   "tmin": 10,
+   "precip": 8.1,
    "snow": 0,
-   "gust": 25,
-   "text": "showers"
+   "gust": 37,
+   "text": "thundery + hail"
   },
   "low": {
    "place": "Champex",
-   "tmax": 24,
+   "tmax": 26,
    "tmin": 17,
-   "precip": 0.6,
+   "precip": 4.2,
    "snow": 0,
-   "gust": 37,
-   "text": "light rain"
+   "gust": 34,
+   "text": "thundery + hail"
   }
  },
  "6": {
@@ -118,18 +118,18 @@ const WX = {
    "place": "La Fouly valley (1,600 m)",
    "tmax": 24,
    "tmin": 16,
-   "precip": 2.7,
+   "precip": 0.6,
    "snow": 0,
-   "gust": 29,
-   "text": "thundery"
+   "gust": 38,
+   "text": "showers"
   },
   "low": {
    "place": "Champex",
-   "tmax": 26,
-   "tmin": 16,
+   "tmax": 27,
+   "tmin": 17,
    "precip": 0.9,
    "snow": 0,
-   "gust": 26,
+   "gust": 31,
    "text": "cloud"
   }
  },
@@ -138,21 +138,21 @@ const WX = {
   "date": "2026-08-05",
   "high": {
    "place": "Bovine / Portalo (2,049 m)",
-   "tmax": 21,
-   "tmin": 14,
-   "precip": 1.8,
+   "tmax": 18,
+   "tmin": 12,
+   "precip": 8.1,
    "snow": 0,
-   "gust": 37,
-   "text": "showers"
+   "gust": 24,
+   "text": "thundery + hail"
   },
   "low": {
    "place": "Col de la Forclaz",
-   "tmax": 25,
-   "tmin": 16,
-   "precip": 0,
+   "tmax": 21,
+   "tmin": 15,
+   "precip": 7.5,
    "snow": 0,
-   "gust": 25,
-   "text": "part cloud"
+   "gust": 26,
+   "text": "thundery + hail"
   }
  },
  "8": {
@@ -160,21 +160,21 @@ const WX = {
   "date": "2026-08-06",
   "high": {
    "place": "Col de Balme (2,191 m)",
-   "tmax": 22,
-   "tmin": 14,
-   "precip": 0.6,
+   "tmax": 16,
+   "tmin": 10,
+   "precip": 1.1,
    "snow": 0,
-   "gust": 35,
-   "text": "showers"
+   "gust": 40,
+   "text": "fog"
   },
   "low": {
    "place": "Chamonix / Les Praz",
-   "tmax": 29,
-   "tmin": 20,
-   "precip": 0.9,
+   "tmax": 23,
+   "tmin": 16,
+   "precip": 0.3,
    "snow": 0,
-   "gust": 29,
-   "text": "part cloud"
+   "gust": 28,
+   "text": "cloud"
   }
  },
  "9": {
@@ -182,21 +182,21 @@ const WX = {
   "date": "2026-08-07",
   "high": {
    "place": "Grand Balcon Sud (2,000 m)",
-   "tmax": 23,
-   "tmin": 15,
-   "precip": 0.8,
+   "tmax": 18,
+   "tmin": 8,
+   "precip": 0,
    "snow": 0,
-   "gust": 35,
-   "text": "drizzle"
+   "gust": 27,
+   "text": "fog"
   },
   "low": {
    "place": "Les Houches",
-   "tmax": 31,
-   "tmin": 20,
-   "precip": 1.6,
+   "tmax": 24,
+   "tmin": 16,
+   "precip": 0,
    "snow": 0,
-   "gust": 32,
-   "text": "showers"
+   "gust": 23,
+   "text": "part cloud"
   }
  }
 };
