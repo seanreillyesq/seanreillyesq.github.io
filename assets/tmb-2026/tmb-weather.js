@@ -72,21 +72,21 @@ const WX = {
   "date": "2026-08-02",
   "high": {
    "place": "Mont Favre balcony (2,430 m)",
-   "tmax": 22,
+   "tmax": 21,
    "tmin": 9,
    "precip": 0,
    "snow": 0,
-   "gust": 29,
+   "gust": 28,
    "text": "cloud"
   },
   "low": {
    "place": "Val Veny",
    "tmax": 28,
-   "tmin": 11,
+   "tmin": 10,
    "precip": 0,
    "snow": 0,
-   "gust": 30,
-   "text": "part cloud"
+   "gust": 31,
+   "text": "cloud"
   }
  },
  "5": {
@@ -96,19 +96,19 @@ const WX = {
    "place": "Grand Col Ferret (2,537 m)",
    "tmax": 17,
    "tmin": 10,
-   "precip": 8.1,
+   "precip": 5.4,
    "snow": 0,
-   "gust": 37,
-   "text": "thundery + hail"
+   "gust": 38,
+   "text": "thundery"
   },
   "low": {
    "place": "Champex",
    "tmax": 26,
-   "tmin": 17,
-   "precip": 4.2,
+   "tmin": 18,
+   "precip": 5.0,
    "snow": 0,
-   "gust": 34,
-   "text": "thundery + hail"
+   "gust": 46,
+   "text": "thundery"
   }
  },
  "6": {
