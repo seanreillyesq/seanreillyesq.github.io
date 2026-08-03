@@ -1,5 +1,5 @@
 const WX = {
- "_updated": "2026-08-02",
+ "_updated": "2026-08-03",
  "_note": "Up high = the hikers' high point that day; down low = Nicole's valley base. Forecast until the day passes, then the recorded value. Source: Open-Meteo.",
  "1": {
   "status": "actual",
@@ -68,7 +68,7 @@ const WX = {
   }
  },
  "4": {
-  "status": "forecast",
+  "status": "actual",
   "date": "2026-08-02",
   "high": {
    "place": "Mont Favre balcony (2,430 m)",
@@ -76,8 +76,8 @@ const WX = {
    "tmin": 9,
    "precip": 0,
    "snow": 0,
-   "gust": 27,
-   "text": "cloud"
+   "gust": 34,
+   "text": "part cloud"
   },
   "low": {
    "place": "Val Veny",
@@ -85,8 +85,8 @@ const WX = {
    "tmin": 12,
    "precip": 0,
    "snow": 0,
-   "gust": 28,
-   "text": "cloud"
+   "gust": 33,
+   "text": "part cloud"
   }
  },
  "5": {
@@ -96,18 +96,18 @@ const WX = {
    "place": "Grand Col Ferret (2,537 m)",
    "tmax": 17,
    "tmin": 10,
-   "precip": 9.9,
+   "precip": 15.5,
    "snow": 0,
-   "gust": 50,
-   "text": "thundery"
+   "gust": 30,
+   "text": "thundery + hail"
   },
   "low": {
    "place": "Champex",
-   "tmax": 26,
+   "tmax": 24,
    "tmin": 17,
-   "precip": 8.5,
+   "precip": 32.9,
    "snow": 0,
-   "gust": 39,
+   "gust": 57,
    "text": "thundery + hail"
   }
  },
@@ -117,20 +117,20 @@ const WX = {
   "high": {
    "place": "La Fouly valley (1,600 m)",
    "tmax": 23,
-   "tmin": 16,
-   "precip": 0.9,
+   "tmin": 14,
+   "precip": 61.0,
    "snow": 0,
-   "gust": 37,
-   "text": "cloud"
+   "gust": 57,
+   "text": "thundery + hail"
   },
   "low": {
    "place": "Champex",
-   "tmax": 26,
+   "tmax": 24,
    "tmin": 16,
-   "precip": 0.5,
+   "precip": 30.4,
    "snow": 0,
-   "gust": 27,
-   "text": "cloud"
+   "gust": 60,
+   "text": "thundery + hail"
   }
  },
  "7": {
@@ -139,20 +139,20 @@ const WX = {
   "high": {
    "place": "Bovine / Portalo (2,049 m)",
    "tmax": 19,
-   "tmin": 13,
-   "precip": 5.1,
+   "tmin": 12,
+   "precip": 9.5,
    "snow": 0,
-   "gust": 28,
-   "text": "showers"
+   "gust": 31,
+   "text": "thundery + hail"
   },
   "low": {
    "place": "Col de la Forclaz",
    "tmax": 22,
    "tmin": 15,
-   "precip": 6.0,
+   "precip": 9.0,
    "snow": 0,
-   "gust": 29,
-   "text": "showers"
+   "gust": 34,
+   "text": "thundery + hail"
   }
  },
  "8": {
@@ -161,19 +161,19 @@ const WX = {
   "high": {
    "place": "Col de Balme (2,191 m)",
    "tmax": 16,
-   "tmin": 11,
+   "tmin": 10,
    "precip": 0,
    "snow": 0,
-   "gust": 43,
-   "text": "fog"
+   "gust": 32,
+   "text": "cloud"
   },
   "low": {
    "place": "Chamonix / Les Praz",
-   "tmax": 22,
+   "tmax": 24,
    "tmin": 16,
-   "precip": 0.6,
+   "precip": 0,
    "snow": 0,
-   "gust": 35,
+   "gust": 29,
    "text": "cloud"
   }
  },
@@ -182,21 +182,21 @@ const WX = {
   "date": "2026-08-07",
   "high": {
    "place": "Grand Balcon Sud (2,000 m)",
-   "tmax": 16,
+   "tmax": 17,
    "tmin": 10,
    "precip": 0,
    "snow": 0,
-   "gust": 28,
-   "text": "fog"
+   "gust": 36,
+   "text": "part cloud"
   },
   "low": {
    "place": "Les Houches",
-   "tmax": 22,
-   "tmin": 16,
+   "tmax": 23,
+   "tmin": 14,
    "precip": 0,
    "snow": 0,
-   "gust": 26,
-   "text": "fog"
+   "gust": 24,
+   "text": "part cloud"
   }
  }
 };
