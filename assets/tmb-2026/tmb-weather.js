@@ -1,5 +1,5 @@
 const WX = {
- "_updated": "2026-08-05",
+ "_updated": "2026-08-06",
  "_note": "Up high = the hikers' high point that day; down low = Nicole's valley base. Forecast until the day passes, then the recorded value. Source: Open-Meteo.",
  "1": {
   "status": "actual",
@@ -134,25 +134,25 @@ const WX = {
   }
  },
  "7": {
-  "status": "forecast",
+  "status": "actual",
   "date": "2026-08-05",
   "high": {
    "place": "Bovine / Portalo (2,049 m)",
    "tmax": 19,
    "tmin": 13,
-   "precip": 16.8,
+   "precip": 6.7,
    "snow": 0,
-   "gust": 26,
+   "gust": 27,
    "text": "showers"
   },
   "low": {
    "place": "Col de la Forclaz",
-   "tmax": 22,
+   "tmax": 23,
    "tmin": 15,
-   "precip": 0,
+   "precip": 4.5,
    "snow": 0,
-   "gust": 37,
-   "text": "cloud"
+   "gust": 38,
+   "text": "thundery + hail"
   }
  },
  "8": {
@@ -161,20 +161,20 @@ const WX = {
   "high": {
    "place": "Col de Balme (2,191 m)",
    "tmax": 18,
-   "tmin": 10,
+   "tmin": 11,
    "precip": 0,
    "snow": 0,
-   "gust": 23,
-   "text": "cloud"
+   "gust": 31,
+   "text": "part cloud"
   },
   "low": {
    "place": "Chamonix / Les Praz",
    "tmax": 25,
-   "tmin": 17,
+   "tmin": 16,
    "precip": 0,
    "snow": 0,
-   "gust": 18,
-   "text": "cloud"
+   "gust": 19,
+   "text": "part cloud"
   }
  },
  "9": {
@@ -182,17 +182,17 @@ const WX = {
   "date": "2026-08-07",
   "high": {
    "place": "Grand Balcon Sud (2,000 m)",
-   "tmax": 19,
-   "tmin": 10,
+   "tmax": 20,
+   "tmin": 12,
    "precip": 0,
    "snow": 0,
-   "gust": 28,
+   "gust": 29,
    "text": "part cloud"
   },
   "low": {
    "place": "Les Houches",
-   "tmax": 25,
-   "tmin": 14,
+   "tmax": 27,
+   "tmin": 16,
    "precip": 0,
    "snow": 0,
    "gust": 20,
