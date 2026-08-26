@@ -21,7 +21,7 @@ sitemap: false
 
 <p class="lead">You can walk the North Downs Way all the way to the sea, and today we did the bit that gets you there: Canterbury to Dover.</p>
 
-We are taking the path in sections, a Sunday at a time, and this was the leg that ends at the coast. Five of us set off from Canterbury just before nine: Jimmy, my dad, Joe from Canterbury Harriers, a mate of theirs from work, and me.
+We are taking the path in sections, a Sunday at a time, and this was the leg that ends at the coast. Five of us set off from Canterbury just before nine: Jimmy, my dad, Joe from Canterbury Harriers, Fred who worked alongside both my dad and Jimmy, and me.
 
 It was hot. Properly hot for the middle of September, big blue sky, the fields all cut back to gold stubble. Jimmy walked a good chunk of it with his t-shirt knotted on top of his head like a legionnaire, which we gave him no end of grief for and which was, annoyingly, the sensible thing to do.
 
