@@ -25,7 +25,9 @@ We are taking the path in sections, a Sunday at a time, and this was the leg tha
 
 It was hot. Properly hot for the middle of September, big blue sky, the fields all cut back to gold stubble. Jimmy walked a good chunk of it with his t-shirt knotted on top of his head like a legionnaire, which we gave him no end of grief for and which was, annoyingly, the sensible thing to do.
 
-The first thing nobody warns you about this stretch is the A2. For the first couple of hours you are never quite out of earshot of it; the dual carriageway sits off to one side and hums away while you walk your ancient pilgrims' path, and the two facts refuse to reconcile. It only really lets go once you are past Aylesham and the cemetery there, after which the noise falls back and it starts to feel like proper countryside.
+The path here has grander ideas than a Sunday stroll to the coast. This is the old Via Francigena, the pilgrim road to Rome that Archbishop Sigeric came back along in 990, and it moonlights as the English end of the E2, which in theory carries on across the Channel and down to the Mediterranean. We were going to Dover.
+
+The first thing nobody warns you about this stretch is the A2. For the first couple of hours you are never quite out of earshot of it; the dual carriageway sits off to one side and hums away while you walk this ancient road, and the two facts refuse to reconcile. It only really lets go once you are past Aylesham and the cemetery there, after which the noise falls back and it starts to feel like proper countryside.
 
 We stopped for lunch at the pub in Shepherdswell, the far side of halfway, and had the first pint of the day. You know you shouldn't, with miles still to go. You have one anyway, and the afternoon is better for it.
 
