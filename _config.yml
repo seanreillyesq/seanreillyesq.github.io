@@ -62,3 +62,8 @@ hreflang_domains:
   en-GB: "https://www.seanreilly.uk"
   en-IE: "https://www.seanreilly.ie"
   en-EU: "https://www.seanreilly.eu"
+
+# OS Data Hub premium key for the Leisure (Landranger) route maps on adventure
+# posts. Must be referrer-locked to the blog domains (it ships in the public
+# page). Leave empty and the maps render the route on a blank basemap.
+os_maps_key: ""

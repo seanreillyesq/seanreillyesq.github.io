@@ -36,3 +36,19 @@ The kit was nothing clever. That Garmin, a pair of black Merrell Moab GTX mids I
 The best part came at the very end, which is not how these things normally go. We crested the road over the downs at St Augustine's, tired and gone quiet by then, straight into a sunset that stopped all three of us where we stood. It had stopped someone else too. Annabelle, a friend from the estate, had pulled her car onto the verge just to sit and watch it. We said hello as we went past; three knackered blokes on foot and someone who'd had the good sense to arrive by car.
 
 We got back in the near-dark. Forty-one kilometres, 738 metres of up, the best part of nine hours with the pub folded into the middle of it, and a map I'd creased straight through the one bit I needed most. It didn't feel like a hard day, which tells you most of what you need to know about who I walked it with.
+
+---
+
+### The walk
+
+| | |
+| --- | --- |
+| **Distance** | 41.3 km (25.7 miles) |
+| **Ascent** | 738 m |
+| **Route** | Canterbury -> Chartham -> Chilham -> Wye -> back |
+| **Part of** | North Downs Way (Canterbury Loop) &middot; Pilgrims' Way |
+| **Pub stops** | The Tickled Trout, Wye (lunch) |
+| **Terrain** | Chalk downs track, field paths |
+| **Of note** | Longest walk on record; passes the Petit France deer near Chartham Hatch |
+
+{% include route-map.html route="/assets/routes/north-downs-way-canterbury-wye-loop.geojson" %}
