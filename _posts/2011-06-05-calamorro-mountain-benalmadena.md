@@ -6,7 +6,7 @@ layout: post
 slug: calamorro-mountain-benalmadena
 title: Calamorro - A confusing run up a sunny mountain
 categories:
-- Lifestyle
+- Adventures
 tags:
 - Travel
 - Running
@@ -63,16 +63,18 @@ Calamorro is not a massive test or a hugely exciting trail by any stretch of the
 
 I was lucky enough to share these views with my wife and our three and five year old in the cable car on the way down; pointing out to them the downhill cyclist coming back up in the Teleférico for another go.
 
+---
 
+### The walk
 
-Total run from Tivoli World (including mistakes)
+| | |
+| --- | --- |
+| **Distance** | 9.4 km (5.8 miles) |
+| **Ascent** | 740 m |
+| **Summit** | Mount Calamorro, 771 m |
+| **Route** | Benalmádena up to the summit; cable car down |
+| **Part of** | Sierra de Mijas, Costa del Sol, Spain |
+| **Terrain** | Suburban streets, dusty mountain track, tarmac access road |
+| **Of note** | Run on my birthday; ~2 miles of detours from baffling Route One signage |
 
-Time 01:42:30     Distance 5.86 mi     Alt 3,044 ft
-
-Actual Route from Tivoli World
-
-Time 01:12:53     Distance 4.21 mi     Alt 2,831 ft
-
-Calamorro Route One from Tivoli World <a href="/assets/calamorro/calamorro-benalmadena-route.kml" target="_blank" rel="noopener">Google Earth KML</a>
-
-
+{% include route-map.html route="/assets/routes/calamorro-mountain-benalmadena.geojson" basemap="osm" %}
