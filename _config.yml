@@ -63,7 +63,7 @@ hreflang_domains:
   en-IE: "https://www.seanreilly.ie"
   en-EU: "https://www.seanreilly.eu"
 
-# OS Data Hub premium key for the Leisure (Landranger) route maps on adventure
-# posts. Must be referrer-locked to the blog domains (it ships in the public
-# page). Leave empty and the maps render the route on a blank basemap.
-os_maps_key: ""
+# OS Leisure (Landranger) route maps are served via the os-tiles Cloudflare
+# Worker, which holds the OS key server-side (never shipped to the browser) and
+# only serves seanreilly.* referrers. See personal/blog/os-tiles-worker/.
+os_tiles_url: "https://tiles.seanreilly.net"

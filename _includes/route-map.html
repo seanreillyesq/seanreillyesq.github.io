@@ -17,7 +17,7 @@ tiles stay blank (401). British National Grid (EPSG:27700), zoom 0-9.
     { resolutions: [896, 448, 224, 112, 56, 28, 14, 7, 3.5, 1.75], origin: [-238375, 1376256] });
   var map = L.map('routemap', { crs: crs, minZoom: 0, maxZoom: 9 });
   map.attributionControl.setPrefix(false); // drop the optional "Leaflet" credit; keep the required OS line
-  L.tileLayer('https://api.os.uk/maps/raster/v1/zxy/Leisure_27700/{z}/{x}/{y}.png?key={{ site.os_maps_key }}',
+  L.tileLayer('{{ site.os_tiles_url }}/{z}/{x}/{y}.png',
     { maxZoom: 9, attribution: 'Contains OS data &copy; Crown copyright and database right {{ site.time | date: "%Y" }}' }).addTo(map);
   fetch('{{ include.route }}')
     .then(function (r) { return r.json(); })

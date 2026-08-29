@@ -43,14 +43,14 @@ Nineteen miles, from a cathedral city to the sea, most of a bottle of sun cream 
 
 ### The walk
 
-| | |
-| --- | --- |
-| **Distance** | 31.3 km (19.4 miles) |
-| **Ascent** | 395 m |
-| **Route** | Canterbury -> Shepherdswell -> Dover |
-| **Part of** | North Downs Way &middot; Via Francigena &middot; E2 European path |
-| **Pub stops** | The pub at Shepherdswell (lunch); the White Horse, Dover (finish) |
-| **Terrain** | Chalk track, field paths, quiet lanes |
-| **Of note** | The White Horse is Dover's oldest pub; Channel swimmers sign the walls |
+|               |                                                                        |
+| ------------- | ---------------------------------------------------------------------- |
+| **Distance**  | 31.3 km (19.4 miles)                                                   |
+| **Ascent**    | 395 m                                                                  |
+| **Route**     | Canterbury -> Shepherdswell -> Dover                                   |
+| **Part of**   | North Downs Way &middot; Via Francigena &middot; E2 European path      |
+| **Pub stops** | The Bell Inn, Shepherdswell (lunch); the White Horse, Dover (finish)   |
+| **Terrain**   | Chalk track, field paths, quiet lanes                                  |
+| **Of note**   | The White Horse is Dover's oldest pub; Channel swimmers sign the walls |
 
 {% include route-map.html route="/assets/routes/north-downs-way-canterbury-to-dover.geojson" %}
