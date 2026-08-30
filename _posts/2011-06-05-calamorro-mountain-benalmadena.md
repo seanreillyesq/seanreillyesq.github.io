@@ -15,7 +15,7 @@ header-img: "img/calamorro.jpg"
 meta-description: A spontaneous run up Mount Calamorro in Benalmadena, Spain - part of the Sierra de Mijas coastal range.
 ---
 
-On a recent family holiday to Benalmádena I had the opportunity to have a quick run up Mount Calamorro, part of the coastal Sierra de Mijas mountain range in the Costa Del Sol region of southern Spain.
+On a recent family holiday to Benalmádena I had the opportunity to have a quick run up Mount Calamorro, part of the coastal Sierra de Mijas mountain range in the Costa del Sol region of southern Spain.
 
 <figure class="text-center my-4">
   <img src="/assets/calamorro/calamorro.jpg" alt="Mount Calamorro behind the park at Benalmádena" class="img-fluid rounded mx-auto d-block" style="max-height:520px">
@@ -63,7 +63,7 @@ After about a mile and another wasted ten minutes I returned to the junction to 
 </figure>
 From here the route was easier to find after nearly a mile of fairly boring, but well tarmaced road I came to a red arrow pointing up a trail, and a mountain biker hurtling down it towards me in a cloud of dust. He confirmed with a thumbs-up that I was, at last, on the right track, and was gone. I climbed on up the gorge, a little envious of the man going the other way.
 
-The path was well kept and clear to follow, apart from what looked like a small and relatively recent landslip, which I navigated around. The running was easy enough, if sandy in places, and I could feel my shoes slowly filling with the mountain.
+The path was well kept and clear to follow, apart from what looked like a small and relatively recent landslip, which I picked my way around. The running was easy enough, if sandy in places, and I could feel my shoes slowly filling with the mountain.
 
 <figure class="text-center my-4">
   <img src="/assets/calamorro/IMG_0434.JPG" alt="The trail opening towards the coast" class="img-fluid rounded mx-auto d-block" style="max-height:520px">
