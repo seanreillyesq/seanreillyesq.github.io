@@ -44,14 +44,14 @@ However I had noticed that both trails went past the cemetery which was sign pos
 
 This is where the fun began. At the junction were two signs, the first I came to was a route map exactly like that near the Benalmádena cable car and on a reasonably well made, but clearly small, tarmac road. The second was another reddish wooden route board, proudly proclaiming that Route One was straight up the hill on its suburban street.
 
-What should I do? My heart said to follow the small road surely this must be the access road mentioned on the map. My head said but surely they would mark this as the split in the paths and proclaim that this was the path to Monte Calamorro? Wouldn’t that make sense? Basically I forgot what country I was in… and followed the Route board. Mistake 1.
+What should I do? My heart said follow the small road; surely this was the access road the map had promised. My head said no, surely they would mark the split, would come right out and say this is the way to Monte Calamorro. Wouldn’t that make sense? I forgot, in short, what country I was in, and followed the wooden Route board. Mistake one.
 
 <figure class="text-center my-4">
   <img src="/assets/calamorro/IMG_0429.JPG" alt="A Route One marker on the track" class="img-fluid rounded mx-auto d-block" style="max-height:520px">
   <figcaption class="caption mt-2">One of the Route One markers that sent me the wrong way.</figcaption>
 </figure>
 
-Following the residential street up, after about a third of a mile I came to another trail map, turned right up a dusty track and felt vindicated, yes my head was right. A few minutes on I came to another reddish wooden route sign. But wait this one was broken and what was left of it was clearly pointing me to go through a track blocked with barbed wire. Hmmm. Maybe its round the back of this big white building I thought and thus began a 10 minute waste of time rounding the building and walking through the scrub to no avail. Mistake 2.
+Following the residential street up, after about a third of a mile I came to another trail map, turned right up a dusty track and felt vindicated, yes my head was right. A few minutes on I came to another reddish wooden route sign. But wait this one was broken and what was left of it was clearly pointing me to go through a track blocked with barbed wire. Hmmm. Maybe its round the back of this big white building I thought and thus began a 10 minute waste of time rounding the building and walking through the scrub to no avail. Mistake two.
 
 I eventually got back to the last route marker, realising why some fellow wanderer had attempted to dismantle it, then went back to the last trail map and turned right down the hill to find another way up. Final mistake.
 
@@ -61,9 +61,9 @@ After about a mile and another wasted ten minutes I returned to the junction to 
   <img src="/assets/calamorro/IMG_0431.JPG" alt="Back on the trail" class="img-fluid rounded mx-auto d-block" style="max-height:520px">
   <figcaption class="caption mt-2">Back on the right path at last.</figcaption>
 </figure>
-From here the route was easier to find after nearly a mile of fairly boring, but well tarmaced road I came to a red arrow pointing up a trail and a downhill mountain biker coming hurtling towards me. A little envious of him, I let him continue after he confirmed I was on the right track and I continued up the gorge.
+From here the route was easier to find after nearly a mile of fairly boring, but well tarmaced road I came to a red arrow pointing up a trail, and a mountain biker hurtling down it towards me in a cloud of dust. He confirmed with a thumbs-up that I was, at last, on the right track, and was gone. I climbed on up the gorge, a little envious of the man going the other way.
 
-The path was well kept and clear to follow, apart from what looked like a small and relatively recent landslip, which I navigated around. The running was fairly easy but a bit sandy in places and I could feel my shoes filling up.
+The path was well kept and clear to follow, apart from what looked like a small and relatively recent landslip, which I navigated around. The running was easy enough, if sandy in places, and I could feel my shoes slowly filling with the mountain.
 
 <figure class="text-center my-4">
   <img src="/assets/calamorro/IMG_0434.JPG" alt="The trail opening towards the coast" class="img-fluid rounded mx-auto d-block" style="max-height:520px">
@@ -78,9 +78,9 @@ Another quarter of a mile and this joined up again with the access road and was 
   <img src="/assets/calamorro/IMG_0438.JPG" alt="At the summit above the Costa del Sol" class="img-fluid rounded mx-auto d-block" style="max-height:520px">
   <figcaption class="caption mt-2">The summit, with the Costa del Sol laid out below.</figcaption>
 </figure>
-Although a bit annoyed at the unneeded diversion, I was happy have achieved a quick run up a mountain especially on my birthday.
+Diversions aside, I had run up a mountain on my birthday, which I was quietly pleased about.
 
-Calamorro is not a massive test or a hugely exciting trail by any stretch of the imagination, but the views along the Costa del Sol from the summit certainly make for it.
+Calamorro is not a massive test or a hugely exciting trail by any stretch of the imagination, but the views along the Costa del Sol from the summit certainly make up for it.
 
 I was lucky enough to share these views with my wife and our three and five year old in the cable car on the way down; pointing out to them the downhill cyclist coming back up in the Teleférico for another go.
 
