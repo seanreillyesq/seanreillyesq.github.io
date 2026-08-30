@@ -22,6 +22,8 @@ Between then and now there was a house, a couple of jobs, two children growing u
 
 There was a proper reason for going, beyond guilt. I've run this sort of distance before, years ago, grinding out the training miles for the London Marathon. But I'd never walked it, not on my own, and lately I've been dreaming about bigger things: proper multi-day routes, a tent or a bunkhouse, whole days in the hills with nobody to answer to. Before any of that, it seemed worth finding out whether I could actually enjoy a long day alone with only my own company. Wye to Folkestone was the test.
 
+There was a second reason for going alone, if I'm honest. The last time Jimmy and I walked a long one together I [took a wrong turn](/north-downs-way-canterbury-wye-loop-20111016/) near the end and added a good three miles to a day that was already quite long enough. I don't think he has ever entirely forgiven me. Some days you walk solo by design; some days you walk solo because your usual companions have wised up.
+
 The forecast looked kind, so I drove over to Wye first thing, left the car, and talked Nicole into fishing me out of the far end later on.
 
 The walk starts by going straight up. From Wye you haul yourself onto the escarpment past the Wye Crown cut white into the hillside, and out along the lip of the Devil's Kneading Trough - a great green scoop bitten out of the downs, far more dramatic than anything in Kent has much right to be. Then it settles into the thing the North Downs Way does best: mile after mile of high, open ground with half the county poured out below on one side.
