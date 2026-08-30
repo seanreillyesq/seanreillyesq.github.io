@@ -32,7 +32,7 @@ Here's the uncomfortable simplicity of it. Every pound of revenue you'll make ne
 
 Sitting underneath all three is a fourth number that isn't a lever at all: the base of customers you start the year with. That number is fixed. It's the sum of everything you did last year, and you can't touch it now. Worth sitting with for a second, because most planning conversations skip straight past it.
 
-If any of this feels familiar, it should. It's [Jay Abraham's "three ways to grow a business"](https://www.abraham.com/topic/three-ways-to-grow-your-business/){:target="_blank"}, which he was teaching decades ago: get more customers, get them to spend more, get them to come back more often. The maths hasn't changed. What's changed is that we now have enough data to be honest about it, and mostly choose not to be.
+If any of this feels familiar, it should. It's [Jay Abraham's "three ways to grow a business"](https://businesspartnermagazine.com/3-ways-grow-your-business-jay-abraham/){:target="_blank"}, which he was teaching decades ago: get more customers, get them to spend more, get them to come back more often. The maths hasn't changed. What's changed is that we now have enough data to be honest about it, and mostly choose not to be.
 
 <div class="alert alert-info">
 <strong>The discipline that's easy to miss:</strong> you can't move one lever in isolation. Double your prices and spend per customer jumps; your retention and your ability to win new customers fall off a cliff. Success isn't adding 5% to average order value. Success is adding 5% to average order value <em>without</em> denting acquisition or retention. Every project should be judged on all three at once.
