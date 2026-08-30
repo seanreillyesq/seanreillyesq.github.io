@@ -1,0 +1,32 @@
+---
+layout: default
+title: "Adventures"
+description: "Long walks, the odd run, and a mountain or two - told as they happened."
+permalink: /adventures/
+---
+
+<header class="intro-header has-overlay" style="background-image: url('{{ site.baseurl }}/img/north-downs-way-wye-to-folkestone.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                <div class="site-heading">
+                    <h1>Adventures</h1>
+                    <hr class="small">
+                    <span class="subheading">Long walks, the odd run, and a mountain or two - told as they happened.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    {% assign adventures = site.categories.Adventures | sort: 'date' | reverse %}
+    <p class="font-mono text-uppercase text-center mb-4 small" style="letter-spacing: 2px; color: var(--color-text-muted);">{{ adventures | size }} adventure{% if adventures.size != 1 %}s{% endif %}</p>
+    <div class="row g-4">
+        {% for post in adventures %}
+        <div class="col-md-6 col-lg-4">
+            {% include post-card.html post=post %}
+        </div>
+        {% endfor %}
+    </div>
+</div>

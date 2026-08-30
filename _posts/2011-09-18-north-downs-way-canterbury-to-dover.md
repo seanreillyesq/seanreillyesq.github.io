@@ -14,9 +14,6 @@ tags:
 header-img: "img/north-downs-way-canterbury-to-dover.jpg"
 header_overlay: true
 meta-description: "Section-hiking the North Downs Way from Canterbury to Dover: five of us, a hot September Sunday, the A2 for company, and a finish at the White Horse."
-robots: "noindex, nofollow"
-hidden: true
-sitemap: false
 ---
 
 <p class="lead">You can walk the North Downs Way all the way to the sea, and today we did the bit that gets you there: Canterbury to Dover.</p>

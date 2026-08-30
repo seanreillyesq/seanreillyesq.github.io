@@ -14,9 +14,6 @@ tags:
 header-img: "img/north-downs-way-canterbury-wye-loop.jpg"
 header_overlay: true
 meta-description: "Twenty-five miles on the North Downs Way from Canterbury to Wye and back: three mates, a pub lunch at the Tickled Trout, and a sunset that stopped the car."
-robots: "noindex, nofollow"
-hidden: true
-sitemap: false
 ---
 
 <p class="lead">The map was the first thing to go wrong today, and I only had myself to blame; I'd printed it.</p>

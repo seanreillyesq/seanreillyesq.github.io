@@ -14,9 +14,6 @@ tags:
 header-img: "img/north-downs-way-wye-to-folkestone.jpg"
 header_overlay: true
 meta-description: "Solo along the North Downs Way, Wye to Folkestone - eighteen miles over the downs, my longest walk alone, and out-paced by a retired Gurkha."
-robots: "noindex, nofollow"
-hidden: true
-sitemap: false
 ---
 
 <p class="lead">Ten years ago I decided I would walk the whole North Downs Way, a section at a time, whenever life let me. Life had other ideas, mostly involving other people.</p>
