@@ -11,3 +11,7 @@ Images requiring attribution under their respective licenses.
 | experiential-marketing-luxury.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Jaguar_E_Type_2013-07-21_14-36-57.JPG) | Berthold Werner | CC-BY-SA-3.0 |
 | accreditation-as-marketing.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Omega_Cal._1861_Chronograph_Movement.jpg) | Shane Lin | CC-BY-SA-2.0 |
 | fmbe-awards-judging.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Award_ceremony_2014_CEV_final_t223552.jpg) | Marie-Lan Nguyen | CC-BY-3.0 |
+| black-friday-luxury-paradox.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:London_Luxury.jpg) | Oxfordian Kissuth | CC-BY-SA-3.0 |
+| deleted-half-our-youtube-videos.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:RCA_Color_Broadcast_Camera_TK-41C.jpg) | Fletcher6 | CC-BY-SA-3.0 |
+| roas-calculator-launch.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Aurora_electronic_calculator_DT210_08.jpg) | Coyau | CC-BY-SA-3.0 |
+| mobile-tracking-gaps.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Hands-coffee-smartphone-technology_(23698591814).jpg) | Pixel.la Free Stock Photos | CC0 |
