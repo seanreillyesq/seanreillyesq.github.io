@@ -15,3 +15,9 @@ Images requiring attribution under their respective licenses.
 | deleted-half-our-youtube-videos.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:RCA_Color_Broadcast_Camera_TK-41C.jpg) | Fletcher6 | CC-BY-SA-3.0 |
 | roas-calculator-launch.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Aurora_electronic_calculator_DT210_08.jpg) | Coyau | CC-BY-SA-3.0 |
 | mobile-tracking-gaps.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Hands-coffee-smartphone-technology_(23698591814).jpg) | Pixel.la Free Stock Photos | CC0 |
+| tv-first-digital-second.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Vintage_television_(Unsplash).jpg) | Sven Scheuermeier | CC0 |
+| when-to-pause-everything.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sand_clock_Enschede.jpg) | Gianluca Miscione | CC-BY-SA-4.0 |
+| one-million-sessions.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:July_4th_fireworks,_Washington,_D.C._(LOC).jpg) | Carol M. Highsmith | Public domain |
+| launching-new-ecommerce-platform.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:CRS-9_mission_(28348649546).jpg) | SpaceX | CC0 |
+| content-marketing-roi-debate.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Writing_the_Moment_(Unsplash).jpg) | rawpixel.com | CC0 |
+| serp-preview-launch.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Magnifying_glass2.jpg) | Heptagon | Public domain |
