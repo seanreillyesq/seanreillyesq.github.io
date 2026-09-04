@@ -28,12 +28,28 @@ layout: default
                 {{ content }}
 
                 <div class="post-nav">
-                    {% if page.previous.url %}
-                    <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}">&larr; Previous Post</a>
+                    {% comment %} Walk only non-hidden posts so hidden drafts never appear as prev/next, and hidden pages get no nav at all. {% endcomment %}
+                    {% unless page.hidden %}
+                    {% assign visible_posts = site.posts | where_exp: "item", "item.hidden != true" %}
+                    {% assign prev_post = nil %}
+                    {% assign next_post = nil %}
+                    {% assign passed_current = false %}
+                    {% for item in visible_posts %}
+                        {% if item.url == page.url %}
+                            {% assign passed_current = true %}
+                        {% elsif passed_current and next_post == nil %}
+                            {% assign next_post = item %}
+                        {% elsif passed_current == false %}
+                            {% assign prev_post = item %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if prev_post %}
+                    <a href="{{ prev_post.url | prepend: site.baseurl | replace: '//', '/' }}">&larr; Previous Post</a>
                     {% endif %}
-                    {% if page.next.url %}
-                    <a href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}" class="post-nav-next">Next Post &rarr;</a>
+                    {% if next_post %}
+                    <a href="{{ next_post.url | prepend: site.baseurl | replace: '//', '/' }}" class="post-nav-next">Next Post &rarr;</a>
                     {% endif %}
+                    {% endunless %}
                 </div>
 
             </div>
