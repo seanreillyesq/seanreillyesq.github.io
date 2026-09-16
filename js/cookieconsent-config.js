@@ -24,11 +24,14 @@ CookieConsent.run({
     // GDPR requires opt-in
     mode: 'opt-in',
 
+    // Bump when consent terms materially change (re-collects consent)
+    revision: 1,
+
     // Auto-show the banner
     autoShow: true,
 
-    // Block page interaction until consent given
-    disablePageInteraction: true,
+    // Do not block page interaction (avoids a cookie-wall pattern)
+    disablePageInteraction: false,
 
     // Hide from bots
     hideFromBots: true,
@@ -66,7 +69,7 @@ CookieConsent.run({
             readOnly: true
         },
         analytics: {
-            enabled: true,
+            enabled: false,
             autoClear: {
                 cookies: [
                     { name: /^_ga/ },
@@ -97,12 +100,14 @@ CookieConsent.run({
                     title: 'We use cookies',
                     description: 'I use cookies to understand how visitors use this site and to improve your experience. You can choose which cookies you allow.',
                     acceptAllBtn: 'Accept all',
+                    acceptNecessaryBtn: 'Reject all',
                     showPreferencesBtn: 'Manage preferences',
                     footer: '<a href="/privacy">Privacy Policy</a>'
                 },
                 preferencesModal: {
                     title: 'Cookie Preferences',
                     acceptAllBtn: 'Accept all',
+                    acceptNecessaryBtn: 'Reject all',
                     savePreferencesBtn: 'Save preferences',
                     closeIconLabel: 'Close',
                     sections: [
@@ -134,10 +139,10 @@ CookieConsent.run({
                                         expiration: '2 years'
                                     },
                                     {
-                                        name: '_gid',
-                                        domain: 'Google Analytics',
-                                        description: 'Used to distinguish users',
-                                        expiration: '24 hours'
+                                        name: '_ga_<container-id>',
+                                        domain: 'Google Analytics 4',
+                                        description: 'Used to persist session state',
+                                        expiration: '2 years'
                                     }
                                 ]
                             }
@@ -164,6 +169,24 @@ CookieConsent.run({
                                         domain: 'Caffeine Calculator',
                                         description: 'Remembers your wake/sleep times and drink preferences',
                                         expiration: '1 year'
+                                    },
+                                    {
+                                        name: 'ce_prefs',
+                                        domain: 'Customer Economics Calculator',
+                                        description: 'Remembers your inputs on the customer economics tool',
+                                        expiration: '1 year'
+                                    },
+                                    {
+                                        name: 'roas_prefs',
+                                        domain: 'ROAS Calculator',
+                                        description: 'Remembers your inputs on the ROAS tool',
+                                        expiration: '1 year'
+                                    },
+                                    {
+                                        name: 'serp-preview-v1',
+                                        domain: 'SERP Preview Tool (local storage)',
+                                        description: 'Remembers your last SERP preview inputs in your browser',
+                                        expiration: 'Until cleared'
                                     }
                                 ]
                             }

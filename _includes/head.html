@@ -38,13 +38,13 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% include career-years.html %}{% capture _years_plus %}{{ career_years }}+{% endcapture %}{% if page.meta-description %}{% assign _meta_desc = page.meta-description | replace: '18+', _years_plus %}<meta name="description" content="{{ _meta_desc }}">{% endif %}
+    {% include career-years.html %}{% capture _years_plus %}{{ career_years }}+{% endcapture %}{% if page.meta-description %}{% assign _meta_desc = page.meta-description | replace: '18+', _years_plus %}<meta name="description" content="{{ _meta_desc | escape }}">{% endif %}
     {% if page.robots %}<meta name="robots" content="{{ page.robots }}">{% endif %}
 
     {% assign defined_url = page.url | replace: '/index.html', '/' %}
     <!-- Open Graph -->
-    <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
-    <meta property="og:description" content="{% if page.meta-description %}{{ _meta_desc }}{% else %}{{ site.description }}{% endif %}">
+    <meta property="og:title" content="{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}">
+    <meta property="og:description" content="{% if page.meta-description %}{{ _meta_desc | escape }}{% else %}{{ site.description | escape }}{% endif %}">
     <meta property="og:url" content="{{ defined_url | prepend: site.url }}">
     <meta property="og:site_name" content="{{ site.title }}">
     {% if page.header-img %}<meta property="og:image" content="{{ site.url }}/{{ page.header-img }}">{% endif %}

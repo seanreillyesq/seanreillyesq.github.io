@@ -51,7 +51,7 @@ That said, the Real Business team made it straightforward. They knew what story 
 Here's the finished piece:
 
 <div class="video-embed">
-<iframe src="https://www.youtube.com/embed/oJ4vAwpaqRs" frameborder="0" allowfullscreen></iframe>
+<iframe src="https://www.youtube-nocookie.com/embed/oJ4vAwpaqRs" frameborder="0" allowfullscreen></iframe>
 </div>
 
 ## Further reading
