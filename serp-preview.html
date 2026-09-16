@@ -557,8 +557,8 @@ hidden: true
 
     function escapeHtml(text) {
         var div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        div.textContent = text == null ? '' : text;
+        return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
     function boldKeywords(html) {
@@ -570,7 +570,7 @@ hidden: true
         var escaped = words.map(function(w) {
             return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         });
-        var pattern = new RegExp('\\b(' + escaped.join('|') + ')\\b', 'gi');
+        var pattern = new RegExp('(?<![&#\\w])(' + escaped.join('|') + ')\\b(?!;)', 'gi');
         return html.replace(pattern, '<b>$1</b>');
     }
 
@@ -656,7 +656,9 @@ hidden: true
         var sitename = sitenameInput.value || 'example.com';
 
         var truncTitle = truncateAtPx(title, TITLE_FONT, titleMaxPx);
-        var truncDesc = truncateAtPx(desc, DESC_FONT, descMaxPx);
+        var datePrefix = date ? date + ' - ' : '';
+        var dateWidth = datePrefix ? measurePx(datePrefix, DESC_FONT) : 0;
+        var truncDesc = truncateAtPx(desc, DESC_FONT, descMaxPx - dateWidth);
         var breadcrumb = urlToBreadcrumb(url);
         var dateHtml = date ? '<span class="google-date">' + escapeHtml(date) + ' - </span>' : '';
 
@@ -765,7 +767,8 @@ hidden: true
         var url = urlInput.value;
         var image = imageInput.value;
         var titlePx = measurePx(title, TITLE_FONT);
-        var descPx = measurePx(desc, DESC_FONT);
+        var datePrefix = formatDate(dateInput.value) ? formatDate(dateInput.value) + ' - ' : '';
+        var descPx = measurePx(desc, DESC_FONT) + (datePrefix ? measurePx(datePrefix, DESC_FONT) : 0);
 
         var checks = [];
 
@@ -857,7 +860,12 @@ hidden: true
     // LocalStorage
     var KEY = 'serp-preview-v1';
 
+    function canUseStorage() {
+        return typeof CookieConsent !== 'undefined' && CookieConsent.acceptedCategory('functionality');
+    }
+
     function save() {
+        if (!canUseStorage()) return;
         try {
             localStorage.setItem(KEY, JSON.stringify({
                 title: titleInput.value,
@@ -873,6 +881,7 @@ hidden: true
     }
 
     function load() {
+        if (!canUseStorage()) return;
         try {
             var data = JSON.parse(localStorage.getItem(KEY));
             if (!data) return;
@@ -909,6 +918,7 @@ hidden: true
     fetchBtn.addEventListener('click', doFetch);
 
     function doFetch() {
+        if (fetchBtn.disabled) return;
         var url = fetchUrlInput.value.trim();
         if (!url) { setFetchStatus('Enter a URL first.', 'error'); return; }
 
@@ -935,7 +945,7 @@ hidden: true
                 // Populate fields from fetched metadata
                 if (data.title) titleInput.value = data.title;
                 if (data.description) descInput.value = data.description;
-                if (data.ogImage) imageInput.value = data.ogImage;
+                if (data.ogImage) { try { imageInput.value = new URL(data.ogImage, url).href; } catch(e) { imageInput.value = data.ogImage; } }
                 if (data.siteName) sitenameInput.value = data.siteName;
                 if (data.fetchedUrl) urlInput.value = data.fetchedUrl;
                 if (data.publishedDate) {

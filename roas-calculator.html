@@ -344,8 +344,8 @@ hidden: true
                 <label class="form-label" for="order-count">Number of orders</label>
                 <input type="number" class="form-control form-control-sm" id="order-count" value="50" min="0" max="999999" step="1">
             </div>
-            <div class="col-6 col-md-4" id="aov-input-group" style="display: none;">
-                <label class="form-label" for="aov">Avg order value</label>
+            <div class="col-6 col-md-4" id="aov-input-group">
+                <label class="form-label" for="aov">Avg order value <span style="opacity:.6">(for per-order figures)</span></label>
                 <div class="input-group input-group-sm">
                     <span class="input-group-text roas-currency">&pound;</span>
                     <input type="number" class="form-control" id="aov" value="500" min="0" max="999999" step="10">
@@ -646,10 +646,10 @@ hidden: true
     function fmtCurrency(v) {
         var s = sym();
         var abs = Math.abs(v);
-        var sign = v < 0 ? '-' : '';
-        if (abs >= 1000000) return sign + s + (abs / 1000000).toFixed(1) + 'M';
-        if (abs >= 1000) return sign + s + Math.round(abs).toLocaleString('en-GB');
-        return sign + s + Math.round(abs);
+        if (abs >= 1000000) return (v < 0 ? '-' : '') + s + (abs / 1000000).toFixed(1) + 'M';
+        if (abs >= 1000) return (v < 0 ? '-' : '') + s + Math.round(abs).toLocaleString('en-GB');
+        var rounded = Math.round(abs);
+        return (v < 0 && rounded !== 0 ? '-' : '') + s + rounded;
     }
 
     function fmtNumber(v) {
@@ -808,7 +808,7 @@ hidden: true
         var profitAfterAds = grossProfit - adSpend;
 
         // Break-even and target ROAS based on ex-VAT contribution
-        var vatFactor = grossRevenue > 0 ? exVatRevenue / grossRevenue : 1;
+        var vatFactor = state.vatRate > 0 ? 1 / (1 + state.vatRate / 100) : 1;
         var totalCostRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
         var contributionRate = vatFactor * (1 - totalCostRate);
         var breakEvenROAS = contributionRate > 0 ? 1 / contributionRate : Infinity;
@@ -820,7 +820,7 @@ hidden: true
         var cpa = orders > 0 ? adSpend / orders : Infinity;
 
         var cancelAmount = exVatRevenue * (state.cancelRate / 100);
-        var overBudget = (state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100 + state.marginRate / 100)) > 1;
+        var overBudget = (state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100)) > 1;
 
         return {
             grossRevenue: grossRevenue,
@@ -882,14 +882,19 @@ hidden: true
         var costRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
         var contributionRate = vatFactor * (1 - costRate);
 
+        // No positive contribution per pound of revenue -> no meaningful curve
+        if (contributionRate <= 0) return null;
+
+        // Closed-form profit-maximising multiplier: d/dm [c*ROAS*m^0.6 - m]*spend = 0
+        // -> m = (0.6 * ROAS * c)^2.5. This is the true optimum; the grid below is only for drawing.
         var analyticalOptimal = Math.min(Math.pow(0.6 * baseROAS * contributionRate, 2.5), 50);
+        var optimalMultiplier = Math.max(0, analyticalOptimal);
+        var maxProfit = (baseSpend * optimalMultiplier) * (baseROAS * Math.pow(1 / optimalMultiplier, 0.4)) * contributionRate - (baseSpend * optimalMultiplier);
         var curveMax = Math.max(5, Math.ceil(analyticalOptimal * 1.5));
 
         var points = [];
-        var optimalMultiplier = 1;
-        var maxProfit = -Infinity;
-
-        for (var m = 0.5; m <= curveMax + 0.01; m += curveMax / 100) {
+        var start = Math.min(0.5, optimalMultiplier > 0 ? optimalMultiplier * 0.5 : 0.5);
+        for (var m = start; m <= curveMax + 0.01; m += (curveMax - start) / 100) {
             var scaledSpend = baseSpend * m;
             var scaledROAS = baseROAS * Math.pow(1 / m, 0.4);
             var scaledRevenue = scaledSpend * scaledROAS;
@@ -902,11 +907,6 @@ hidden: true
                 revenue: scaledRevenue,
                 profit: scaledProfit
             });
-
-            if (scaledProfit > maxProfit) {
-                maxProfit = scaledProfit;
-                optimalMultiplier = m;
-            }
         }
 
         return {
@@ -951,10 +951,10 @@ hidden: true
             verdict.innerHTML = '<strong>Profitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x exceeds the ' + r.targetROAS.toFixed(1) + 'x target. You are making ' + fmtCurrency(r.profitPerOrder) + ' per order after all costs, excluding your ' + state.marginRate + '% margin target.';
         } else if (r.roas >= r.breakEvenROAS && r.totalProfit >= 0) {
             verdict.className = 'roas-verdict roas-verdict-breakeven';
-            verdict.innerHTML = '<strong>Break-even zone</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x covers costs but falls short of your ' + state.marginRate + '% margin target (needs ' + r.targetROAS.toFixed(1) + 'x). You are making ' + fmtCurrency(r.profitPerOrder) + ' per order before margin.';
+            verdict.innerHTML = '<strong>Break-even zone</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x covers costs but falls short of your ' + state.marginRate + '% margin target (needs ' + (r.targetROAS === Infinity ? 'N/A' : r.targetROAS.toFixed(1) + 'x') + '). You are making ' + fmtCurrency(r.profitPerOrder) + ' per order before margin.';
         } else {
             verdict.className = 'roas-verdict roas-verdict-unprofitable';
-            verdict.innerHTML = '<strong>Unprofitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x is below the ' + r.breakEvenROAS.toFixed(1) + 'x break-even. You are losing ' + fmtCurrency(Math.abs(r.profitPerOrder)) + ' per order. Either reduce costs, increase prices, or improve conversion.';
+            verdict.innerHTML = '<strong>Unprofitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x is below the ' + (r.breakEvenROAS === Infinity ? 'N/A' : r.breakEvenROAS.toFixed(1) + 'x') + ' break-even. You are losing ' + fmtCurrency(Math.abs(r.profitPerOrder)) + ' per order. Either reduce costs, increase prices, or improve conversion.';
         }
 
         renderWaterfall(r);
@@ -983,9 +983,9 @@ hidden: true
 
         if (r.breakdown.remaining > 0) {
             segments.push({ val: r.breakdown.remaining, col: COL.remaining, label: 'Profit' });
-        } else if (r.breakdown.remaining < 0) {
-            segments.push({ val: Math.abs(r.breakdown.remaining), col: COL.loss, label: 'Loss' });
         }
+        // On a loss the cost segments already sum beyond gross revenue; adding a separate
+        // Loss segment would double-count it and misstate every segment's share of the bar.
 
         var total = 0;
         segments.forEach(function(s) { total += s.val; });
@@ -1102,7 +1102,7 @@ hidden: true
     function escapeHtml(str) {
         var div = document.createElement('div');
         div.appendChild(document.createTextNode(str));
-        return div.innerHTML;
+        return div.innerHTML.replace(/"/g, '&quot;');
     }
 
     function bindChannelEvents() {
@@ -1305,8 +1305,12 @@ hidden: true
         spEl.textContent = fmtCurrency(scaledProfit);
         spEl.className = 'result-value ' + deltaClass(scaledProfit);
 
-        var optRounded = Math.round(curve.optimalMultiplier * 10) / 10;
-        el('res-optimal-spend').innerHTML = fmtCurrency(state.adSpend * optRounded) + '<small style="display:block;font-size:0.7em;opacity:0.7;">(' + optRounded.toFixed(1) + 'x current)</small>';
+        if (curve.optimalMultiplier < 0.5) {
+            el('res-optimal-spend').innerHTML = 'Cut hard<small style="display:block;font-size:0.7em;opacity:0.7;">below 0.5x - this spend loses money</small>';
+        } else {
+            var optRounded = Math.round(curve.optimalMultiplier * 10) / 10;
+            el('res-optimal-spend').innerHTML = fmtCurrency(state.adSpend * optRounded) + '<small style="display:block;font-size:0.7em;opacity:0.7;">(' + optRounded.toFixed(1) + 'x current)</small>';
+        }
 
         renderTrapChart(curve);
     }
@@ -1520,7 +1524,7 @@ hidden: true
         var isOrders = state.inputMode === 'orders';
         el('revenue-input-group').style.display = isOrders ? 'none' : '';
         el('orders-input-group').style.display = isOrders ? '' : 'none';
-        el('aov-input-group').style.display = isOrders ? '' : 'none';
+        el('aov-input-group').style.display = '';  // always shown: per-order cards use it in both modes
     }
 
     // ========== RECALCULATE ==========

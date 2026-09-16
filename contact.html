@@ -24,13 +24,13 @@ meta-description: Get in touch with Sean Reilly - digital marketing consultant, 
         </div>
         <div class="mb-3">
             <label for="contact-message" class="form-label">Message</label>
-            <textarea class="form-control" id="contact-message" name="message" rows="6" required></textarea>
+            <textarea class="form-control" id="contact-message" name="message" rows="6" minlength="10" required></textarea>
         </div>
 
         <!-- Honeypot - hidden from humans, bots fill it in -->
         <div style="position: absolute; left: -9999px;" aria-hidden="true">
-            <label for="contact-website">Website</label>
-            <input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off">
+            <label for="contact-website">Leave this field empty</label>
+            <input type="text" id="contact-website" name="contact_time" tabindex="-1" autocomplete="off">
         </div>
 
         <div class="cf-turnstile mb-3" data-sitekey="{{ site.turnstile_site_key }}" data-theme="light"></div>
@@ -54,12 +54,22 @@ document.getElementById('contact-form').addEventListener('submit', async functio
     btn.textContent = 'Sending...';
     feedback.style.display = 'none';
 
+    var tokenEl = document.querySelector('[name="cf-turnstile-response"]');
+    if (!tokenEl || !tokenEl.value) {
+        feedback.className = 'alert alert-danger';
+        feedback.textContent = "Verification hasn't loaded yet - please wait a moment, or disable any ad blocker and reload.";
+        feedback.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+        return;
+    }
+
     var data = {
         name: document.getElementById('contact-name').value,
         email: document.getElementById('contact-email').value,
         message: document.getElementById('contact-message').value,
-        website: document.getElementById('contact-website').value,
-        token: document.querySelector('[name="cf-turnstile-response"]').value
+        contact_time: document.getElementById('contact-website').value,
+        token: tokenEl.value
     };
 
     try {
@@ -76,13 +86,16 @@ document.getElementById('contact-form').addEventListener('submit', async functio
             feedback.textContent = 'Message sent - thanks for getting in touch.';
             feedback.style.display = 'block';
             form.reset();
-            turnstile.reset();
+            btn.disabled = false;
+            btn.textContent = 'Send Message';
+            if (window.turnstile) turnstile.reset();
         } else {
             feedback.className = 'alert alert-danger';
             feedback.textContent = result.error || 'Something went wrong. Please try again.';
             feedback.style.display = 'block';
             btn.disabled = false;
             btn.textContent = 'Send Message';
+            if (window.turnstile) turnstile.reset();
         }
     } catch (err) {
         feedback.className = 'alert alert-danger';
@@ -90,6 +103,7 @@ document.getElementById('contact-form').addEventListener('submit', async functio
         feedback.style.display = 'block';
         btn.disabled = false;
         btn.textContent = 'Send Message';
+        if (window.turnstile) turnstile.reset();
     }
 });
 </script>

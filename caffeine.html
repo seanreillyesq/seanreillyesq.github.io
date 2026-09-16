@@ -554,7 +554,8 @@ hidden: true
                 }
                 useCoffeeNext = !useCoffeeNext;
                 var cutoff = type === 'coffee' ? coffeeCutoff : teaCutoff;
-                drinks.push({ type: type, time: Math.min(slots[i].time, Math.floor(cutoff)), mg: mg });
+                if (cutoff <= 0) continue;  // no safe slot for this type today - drop it rather than schedule before wake
+                drinks.push({ type: type, time: Math.max(0, Math.min(slots[i].time, Math.floor(cutoff))), mg: mg });
             }
         }
 
@@ -1048,7 +1049,9 @@ hidden: true
                 else if (cR > 0) { type = 'coffee'; mg = COFFEE_MG; cR--; }
                 else { continue; }
                 useC = !useC;
-                newDrinks.push({ type: type, time: slots[i].time, mg: mg });
+                var uCutoff = type === 'coffee' ? coffeeCutoff : teaCutoff;
+                if (uCutoff <= 0) continue;
+                newDrinks.push({ type: type, time: Math.max(0, Math.min(slots[i].time, Math.floor(uCutoff))), mg: mg });
             }
         }
 
@@ -1066,26 +1069,38 @@ hidden: true
     function updateResults(drinks) {
         var waking = wakingMinutes();
 
-        // Last safe drink time (single-drink decay to 25mg threshold)
-        // This matches the cutoff the scheduling algorithm uses for placement
+        // Last safe drink time - latest you could add ANOTHER drink of this type given the
+        // rest of the day's schedule (residual-aware, so it never claims an unsafe time).
         if (state.coffees > 0) {
-            document.getElementById('last-coffee').textContent = formatTime(lastSafeDrinkTime(state.sleep, state.halfLife, COFFEE_MG));
+            var lc = lastSafeDrinkTimeWithResidual(drinks, state.sleep, state.wake, state.halfLife, COFFEE_MG);
+            document.getElementById('last-coffee').textContent = lc <= state.wake ? 'None left today' : formatTime(lc);
         } else {
             document.getElementById('last-coffee').textContent = '--:--';
         }
 
         if (state.teas > 0) {
-            document.getElementById('last-tea').textContent = formatTime(lastSafeDrinkTime(state.sleep, state.halfLife, TEA_MG));
+            var lt = lastSafeDrinkTimeWithResidual(drinks, state.sleep, state.wake, state.halfLife, TEA_MG);
+            document.getElementById('last-tea').textContent = lt <= state.wake ? 'None left today' : formatTime(lt);
         } else {
             document.getElementById('last-tea').textContent = '--:--';
         }
 
-        // Caffeine at bedtime (including carry-over)
+        // Caffeine at bedtime (including carry-over) - flag if over the 25mg threshold
+        var bedEl = document.getElementById('bedtime-mg');
         if (drinks.length > 0) {
             var bedtimeMg = totalCaffeineAtTime(drinks, waking, state.halfLife);
-            document.getElementById('bedtime-mg').textContent = Math.round(bedtimeMg) + ' mg';
+            bedEl.textContent = Math.round(bedtimeMg) + ' mg';
+            if (bedtimeMg > RESIDUAL_THRESHOLD) {
+                bedEl.style.color = '#dc2626';
+                bedEl.title = 'Above the 25 mg threshold - likely to disrupt sleep. Move drinks earlier or cut one.';
+            } else {
+                bedEl.style.color = '';
+                bedEl.title = '';
+            }
         } else {
-            document.getElementById('bedtime-mg').textContent = '0 mg';
+            bedEl.textContent = '0 mg';
+            bedEl.style.color = '';
+            bedEl.title = '';
         }
     }
 

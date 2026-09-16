@@ -653,7 +653,7 @@ hidden: true
         if (!match) return false;
         try {
             var d = JSON.parse(decodeURIComponent(match[1]));
-            if (d.cur && CURRENCIES[d.cur]) state.currency = d.cur;
+            if (d.cur && Object.prototype.hasOwnProperty.call(CURRENCIES, d.cur)) state.currency = d.cur;
             if (d.ac !== undefined) state.activeCustomers = clamp(d.ac, 0, 999999);
             if (d.lr !== undefined) state.loyaltyRate = clamp(d.lr, 0, 100);
             if (d.nc !== undefined) state.newCustomers = clamp(d.nc, 0, 999999);
@@ -675,7 +675,7 @@ hidden: true
     function readURL() {
         var p = new URLSearchParams(window.location.search);
         var found = false;
-        if (p.has('cur') && CURRENCIES[p.get('cur')]) { state.currency = p.get('cur'); found = true; }
+        if (p.has('cur') && Object.prototype.hasOwnProperty.call(CURRENCIES, p.get('cur'))) { state.currency = p.get('cur'); found = true; }
         if (p.has('cust')) { state.activeCustomers = clamp(+p.get('cust'), 0, 999999); found = true; }
         if (p.has('loyalty')) { state.loyaltyRate = clamp(+p.get('loyalty'), 0, 100); found = true; }
         if (p.has('new')) { state.newCustomers = clamp(+p.get('new'), 0, 999999); found = true; }
@@ -1157,6 +1157,8 @@ hidden: true
                 recalculate();
             });
             el(pair.num).addEventListener('input', function() {
+                // Let the user type a leading minus / partial value without it being clobbered
+                if (this.value === '' || this.value === '-') return;
                 var clamped = clamp(+this.value || 0, +el(pair.range).min, +el(pair.range).max);
                 el(pair.range).value = clamped;
                 this.value = clamped;
