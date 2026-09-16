@@ -262,6 +262,8 @@ function baseMarkers(map){ BASES.forEach(b=>L.circleMarker([b[0],b[1]],{radius:6
 
 // overview
 (function(){
+  if(typeof L==='undefined'||typeof TMB==='undefined') return;   // CDN/data failure must not block the text cards below
+  try{
   const m=L.map('map-overview',{scrollWheelZoom:false});
   const t=terrain().addTo(m), h=hybrid();
   L.control.layers({"Terrain":t,"Satellite":h}).addTo(m);
@@ -272,12 +274,14 @@ function baseMarkers(map){ BASES.forEach(b=>L.circleMarker([b[0],b[1]],{radius:6
   (TMB.variants||[]).forEach(v=>L.polyline(v.pts,{color:DAYS[v.day].col,weight:3,dashArray:'5 6',opacity:.9}).addTo(m).bindPopup(v.name));
   baseMarkers(m);
   m.fitBounds(L.latLngBounds(all).pad(0.06));
+  }catch(e){}
 })();
 
 // per-day weather widget (data in tmb-weather.js, refreshed daily)
 function wxBlock(n){
   if(typeof WX==='undefined' || !WX[String(n)]) return '';
   const w=WX[String(n)];
+  if(!w.high || !w.low) return '';   // partial entry (tier fetch failed) - skip, don't crash the page
   const badge=`<span class="tmb-wx-badge ${w.status}">${w.status==='actual'?'recorded':'forecast'}</span>`;
   const temp=(o,tier)=>{
     let t=`${o.tmax}&deg;/${o.tmin}&deg;`;
@@ -296,7 +300,7 @@ function wxBlock(n){
 
 // day cards
 const wrap=document.getElementById('tmb-days');
-const today=new Date().toISOString().slice(0,10);
+const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 
 // role filter: ?walkers shows only the walking side, ?driver only Nicole's side
 const _q=location.search.toLowerCase();
@@ -339,7 +343,9 @@ DAYS.forEach((d,i)=>{
 const io=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(!e.isIntersecting||e.target.dataset.done) return;
+    if(typeof L==='undefined'||typeof TMB==='undefined') return;
     e.target.dataset.done=1;
+    try{
     const i=+e.target.dataset.i, d=DAYS[i];
     if(document.getElementById('walk'+i)){
       const wm=L.map('walk'+i,{scrollWheelZoom:false}); terrain().addTo(wm);
@@ -358,6 +364,7 @@ const io=new IntersectionObserver(entries=>{
       L.polyline(TMB.walk[i],{color:d.col,weight:2,opacity:.6,dashArray:'4 4'}).addTo(dm);
       baseMarkers(dm); dm.fitBounds(dl.getBounds().pad(0.1));
     }
+    }catch(err){}
   });
 },{rootMargin:'200px'});
 DAYS.forEach((d,i)=>{ const el=document.getElementById('day'+d.n); el.dataset.i=i; io.observe(el); });
