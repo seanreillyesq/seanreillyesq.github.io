@@ -14,12 +14,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4 pinned 2026-09-16
         with:
           fetch-depth: 0  # Needed for jekyll-last-modified-at
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@984c0c890880bbf811283d6f09c4607c62d210a4  # v1 pinned 2026-09-16
         with:
           ruby-version: '3.2'
           bundler-cache: true
@@ -30,7 +30,7 @@ jobs:
           JEKYLL_ENV: production
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd  # v3 pinned 2026-09-16
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -51,7 +51,7 @@ jobs:
             echo "GSC_SA_JSON not set - skipping sitemap submit (provision a Search-Console-only SA to enable)."
             exit 0
           fi
-          python3 -m pip install --quiet google-auth requests
+          python3 -m pip install --quiet 'google-auth==2.35.0' 'requests==2.32.3'
           python3 - <<'PY'
           import os, json, urllib.parse, requests
           from google.oauth2 import service_account

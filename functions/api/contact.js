@@ -8,20 +8,29 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json();
-    const { name, email, message, website, token } = body;
+    const { name, email, message, contact_time, token } = body;
 
     // Honeypot - if filled in, it's a bot
-    if (website) {
+    if (contact_time) {
       return new Response(
         JSON.stringify({ success: true }),
         { status: 200, headers: corsHeaders }
       );
     }
 
-    // Validate required fields
-    if (!name || !email || !message) {
+    // Validate required fields (must be strings)
+    if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string'
+        || !name.trim() || !email.trim() || !message.trim()) {
       return new Response(
         JSON.stringify({ error: 'All fields are required.' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    // Length caps (protect D1 and stay within Slack Block Kit limits)
+    if (name.length > 200 || email.length > 254 || message.length > 5000) {
+      return new Response(
+        JSON.stringify({ error: 'One or more fields are too long.' }),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -91,32 +100,43 @@ export async function onRequestPost(context) {
       'INSERT INTO contact_submissions (name, email, message, ip_address) VALUES (?, ?, ?, ?)'
     ).bind(name, email, message, ip).run();
 
-    // Notify via Slack
+    // Notify via Slack. Escape mrkdwn metacharacters so a submission cannot inject
+    // channel mentions or masked links, and keep each block within Slack's limits.
+    // Failure here must not fail the response, but must be logged (the row is already in D1).
     if (env.SLACK_WEBHOOK_URL) {
-      await fetch(env.SLACK_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: `New contact form submission from ${name}`,
-          blocks: [
-            {
-              type: 'header',
-              text: { type: 'plain_text', text: 'New Contact Form Submission' },
-            },
-            {
-              type: 'section',
-              fields: [
-                { type: 'mrkdwn', text: `*Name:*\n${name}` },
-                { type: 'mrkdwn', text: `*Email:*\n${email}` },
-              ],
-            },
-            {
-              type: 'section',
-              text: { type: 'mrkdwn', text: `*Message:*\n${message}` },
-            },
-          ],
-        }),
-      });
+      const esc = (str) => String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const msgText = esc(message).slice(0, 2900);
+      try {
+        const slackRes = await fetch(env.SLACK_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: `New contact form submission from ${esc(name)}`,
+            blocks: [
+              {
+                type: 'header',
+                text: { type: 'plain_text', text: 'New Contact Form Submission' },
+              },
+              {
+                type: 'section',
+                fields: [
+                  { type: 'mrkdwn', text: `*Name:*\n${esc(name).slice(0, 1900)}` },
+                  { type: 'mrkdwn', text: `*Email:*\n${esc(email)}` },
+                ],
+              },
+              {
+                type: 'section',
+                text: { type: 'mrkdwn', text: `*Message:*\n${msgText}${message.length > 2900 ? '\n_(truncated - full text in D1)_' : ''}` },
+              },
+            ],
+          }),
+        });
+        if (!slackRes.ok) {
+          console.error('Slack notify failed', slackRes.status, await slackRes.text());
+        }
+      } catch (slackErr) {
+        console.error('Slack notify threw', slackErr);
+      }
     }
 
     return new Response(
