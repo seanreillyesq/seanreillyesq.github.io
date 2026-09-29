@@ -1,0 +1,6 @@
+# Cloudflare Pages headers
+# See: https://developers.cloudflare.com/pages/configuration/headers/
+
+# Unlisted files shared by direct URL only - keep them out of search results
+/files/*
+  X-Robots-Tag: noindex, nofollow, noarchive
