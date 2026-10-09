@@ -164,7 +164,7 @@ test.describe('Caffeine calculator', () => {
         // Warning 2 counts exactly the drinks that were asked for but are not in the list.
         const left = asked.coffee + asked.tea - st.drinks.length;
         if (left > 0) {
-          expect(st.warning).toBe(left === 1
+          expect(st.warning).toContain(left === 1
             ? "1 drink doesn't fit before your cut-offs today and has been left off."
             : `${left} drinks don't fit before your cut-offs today and have been left off.`);
         } else {
@@ -217,11 +217,33 @@ test.describe('Caffeine calculator', () => {
       await scheduleInput(page, 4).fill('21:00');
       await page.keyboard.press('Enter');
       await expect(page.locator('#caffeine-warning')).toContainText('is later than the 14:10 cut-off');
+      // the late drink comes first, then the daily total
+      const lines = await page.locator('#caffeine-warning p').allTextContents();
+      expect(lines[0]).toMatch(/^Your coffee at 21:00 is later than the 14:10 cut-off/);
+      expect(lines[1]).toMatch(/^That's 475 mg today/);
     });
 
-    test('warning 2 wins over warning 3', async ({ page }) => {
-      await page.goto(URL + '?wake=0700&sleep=1530&coffee=8&tea=0');
-      await expect(page.locator('#caffeine-warning')).toContainText("don't fit before your cut-offs");
+    test('the daily total is shown ahead of dropped drinks, and both can show', async ({ page }) => {
+      await page.goto(URL + '?coffee=8&tea=8&order=tea-first');
+      const lines = await page.locator('#caffeine-warning p').allTextContents();
+      expect(lines).toHaveLength(2);
+      expect(lines[0]).toMatch(/^That's \d+ mg today\. The NHS and EFSA/);
+      expect(lines[1]).toBe("1 drink doesn't fit before your cut-offs today and has been left off.");
+    });
+
+    test('at most two lines show, in the order late, total, dropped', async ({ page }) => {
+      await page.goto(URL + '?coffee=8&tea=8&order=tea-first');
+      await scheduleInput(page, 0).fill('23:00');
+      await page.keyboard.press('Enter');
+      const lines = await page.locator('#caffeine-warning p').allTextContents();
+      expect(lines).toHaveLength(2);
+      expect(lines[0]).toMatch(/^Your (coffee|tea) at 22:30 is later than/);
+      expect(lines[1]).toMatch(/^That's \d+ mg today/);
+    });
+
+    test('a single warning is a single line', async ({ page }) => {
+      await page.goto(URL + '?coffee=5&tea=0');
+      await expect(page.locator('#caffeine-warning p')).toHaveCount(1);
     });
 
     test('the warning is text with an icon, in the live region', async ({ page }) => {
@@ -274,13 +296,37 @@ test.describe('Caffeine calculator', () => {
     test('coffee first: every tea comes after every coffee at 8 and 8', async ({ page }) => {
       await page.goto(URL + '?coffee=8&tea=8');
       const d = await byType(page);
+      // All sixteen fit: coffees from 07:00 every 30 minutes, then the teas, inside both cut-offs
       expect(d.coffee).toHaveLength(8);
-      expect(d.tea.length).toBeGreaterThan(0);
+      expect(d.tea).toHaveLength(8);
+      expect(min(d.coffee)).toBeGreaterThanOrEqual(hhmm('07:00'));
+      expect(max(d.coffee)).toBeLessThanOrEqual(hhmm('14:10'));
       expect(min(d.tea) - max(d.coffee)).toBeGreaterThanOrEqual(MIN_GAP);
       expect(max(d.tea)).toBeLessThanOrEqual(hhmm('16:05'));
-      // anything that did not fit is reported, not mixed in
-      const left = 16 - d.coffee.length - d.tea.length;
-      if (left > 0) await expect(page.locator('#caffeine-warning')).toContainText(`${left} drink`);
+      await expect(page.locator('#caffeine-warning')).not.toContainText("don't fit");
+    });
+
+    test('tea first at 8 and 8: 15 fit, one coffee is left off and the warning says so', async ({ page }) => {
+      await page.goto(URL + '?coffee=8&tea=8&order=tea-first');
+      const d = await byType(page);
+      expect(d.tea).toHaveLength(8);
+      expect(d.coffee).toHaveLength(7);
+      expect(min(d.coffee) - max(d.tea)).toBeGreaterThanOrEqual(MIN_GAP);
+      expect(max(d.coffee)).toBeLessThanOrEqual(hhmm('14:10'));
+      await expect(page.locator('#caffeine-warning')).toContainText("1 drink doesn't fit before your cut-offs today and has been left off.");
+    });
+
+    test('a drop is only reported when the drinks cannot fit at all', async ({ page }) => {
+      // Brute force: the most that can fit in each order is the first type packed from wake, then the second
+      const cases = [
+        ['coffee=8&tea=8', 16], ['coffee=8&tea=8&order=tea-first', 15],
+        ['coffee=6&tea=6', 12], ['coffee=7&tea=8', 15], ['coffee=8&tea=6&order=tea-first', 14],
+      ];
+      for (const [q, expected] of cases) {
+        await page.goto(URL + '?' + q);
+        await expect(page.locator('#bedtime-mg')).not.toHaveText('-- mg');
+        expect(await page.locator('.schedule-item').count(), q).toBe(expected);
+      }
     });
 
     test('coffee first: teas follow a coffee pinned late', async ({ page }) => {
@@ -1045,6 +1091,36 @@ test.describe('Caffeine calculator', () => {
       await page.keyboard.press('Tab');
     }
     expect(seen).toBeGreaterThanOrEqual(3);
+  });
+
+  test('the count boxes show the whole digit at 360 px and are not tab stops', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 780 });
+    await page.goto(URL + '?coffee=8&tea=2');
+    const boxes = await page.evaluate(() => ['coffee-count', 'tea-count'].map((id) => {
+      const e = document.getElementById(id);
+      const col = e.closest('[class*="col-"]').getBoundingClientRect();
+      const group = e.closest('.input-group').getBoundingClientRect();
+      return {
+        id, scroll: e.scrollWidth, client: e.clientWidth, tabindex: e.getAttribute('tabindex'),
+        groupInside: group.left >= col.left - 0.5 && group.right <= col.right + 0.5,
+        width: e.getBoundingClientRect().width,
+      };
+    }));
+    for (const b of boxes) {
+      expect(b.scroll, b.id).toBeLessThanOrEqual(b.client);
+      expect(b.width, b.id).toBeGreaterThanOrEqual(24);
+      expect(b.groupInside, `${b.id} stepper group inside its column`).toBe(true);
+      expect(b.tabindex).toBe('-1');
+    }
+  });
+
+  test('the second intro line gives the personal reason, keeping the disclaimer', async ({ page }) => {
+    await page.goto(URL);
+    const text = await page.locator('.caffeine-intro').nth(1).innerText();
+    expect(text).toContain('I built this to stop my afternoon coffee costing me sleep.');
+    expect(text).toContain('Tim Ferriss');
+    expect(text).toContain('This is not medical advice.');
+    expect(text).not.toContain('cortisol peaks');
   });
 
   test('stepper updates the schedule and totals', async ({ page }) => {
