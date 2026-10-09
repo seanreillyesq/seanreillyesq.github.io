@@ -9,7 +9,33 @@ on:
       - master
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4 pinned 2026-09-16
+        with:
+          fetch-depth: 0  # Needed for jekyll-last-modified-at
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@984c0c890880bbf811283d6f09c4607c62d210a4  # v1 pinned 2026-09-16
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Build Jekyll
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
+
+      # Add --strict to promote WARN findings to failures once the
+      # offending content has been fixed.
+      - name: Lint content and links
+        run: python3 scripts/lint-site.py --source . --site _site
+
   build-and-deploy:
+    needs: lint
     runs-on: ubuntu-latest
 
     steps:

@@ -1,0 +1,5 @@
+# Site lint
+
+`lint-site.py` is the quality gate run by CI before every deploy. It reads the Jekyll source and the built site and checks that posts have valid front matter (`title`, `date`, `layout: post`, `categories`) and a `YYYY-MM-DD-kebab-case-slug.md` filename, that hidden posts also carry `robots: noindex`, that `header-img` files exist, and that no post or page body contains an em or en dash. It also scans post bodies for banned words and phrases, and in `_site/` it checks that every site-relative `<a href>` and `<img src>` resolves (links under `/files/` are ignored) and that every `<img>` has a non-empty `alt`. Each finding prints as `LEVEL path: message`; the script exits 1 if any FAIL is reported, otherwise 0.
+
+To run it locally, build the site and then lint it: `JEKYLL_ENV=production bundle exec jekyll build && python3 scripts/lint-site.py --source . --site _site`. Python 3 with the standard library is all it needs. Checks listed in `WARN_CHECKS` at the top of the script print as WARN and are not fatal, because existing content still breaks them; add `--strict` to treat WARN as FAIL, or remove the check from `WARN_CHECKS` once the content is fixed.
