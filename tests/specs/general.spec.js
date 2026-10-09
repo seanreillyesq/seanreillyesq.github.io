@@ -36,7 +36,7 @@ const pages = [
       await page.locator('#sleep-time').fill('23:00');
       await page.locator('[data-stepper="coffee"][data-dir="1"]').click();
       await page.locator('[data-stepper="tea"][data-dir="-1"]').click();
-      await page.locator('#metabolism').selectOption('7');
+      await page.locator('#metabolism').selectOption('8');
       await page.locator('#drink-order').selectOption('interleave');
       await page.locator('#carry-over').check();
     },
