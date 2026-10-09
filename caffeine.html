@@ -7,6 +7,7 @@ header-img: "img/home-bg.jpg"
 meta-description: "When to stop drinking coffee and tea before bed, using cut-offs from a 2023 sleep research review. Set your wake and sleep times and get a schedule."
 permalink: /caffeine/
 hidden: true
+sitemap: true
 ---
 
 <style>
@@ -750,6 +751,26 @@ hidden: true
         var result = pinned.slice();
         var placedCount = { coffee: pinnedCoffees, tea: pinnedTeas };
 
+        // Spreads the batch: each target moves to the nearest free time in [lo, cut-off]. With
+        // `useEarliest` the first drink takes the earliest free time instead. Returns the placed
+        // drinks, or null if any would not fit.
+        function spread(targets, lo, useEarliest) {
+            var placed = [];
+            for (var j = 0; j < targets.length; j++) {
+                var t = targets[j];
+                var hi = Math.min(cut[t.type], waking);
+                var taken = result.concat(placed);
+                var time = (useEarliest && j === 0) ? earliestFreeTime(lo, hi, taken) : nearestFreeTime(t.time, lo, hi, taken);
+                if (time === null) return null;
+                placed.push({ type: t.type, time: time, mg: t.mg, pinned: false });
+            }
+            return placed;
+        }
+
+        function earliestOf(list) {
+            return Math.min.apply(null, list.map(function(d) { return d.time; }));
+        }
+
         // Spacing pass. Spread attempt: move each target to the nearest free time in [lo, cut-off],
         // and if that leaves some out, pack the whole batch from the earliest free times. Packed
         // attempt: earliest free times straight away.
@@ -759,15 +780,23 @@ hidden: true
             var counts = { coffee: placedCount.coffee, tea: placedCount.tea };
             var j, t, time;
             if (!packed) {
-                for (j = 0; j < targets.length; j++) {
-                    t = targets[j];
-                    time = nearestFreeTime(t.time, lo, Math.min(cut[t.type], waking), result);
-                    if (time === null) break;
-                    result.push({ type: t.type, time: time, mg: t.mg, pinned: false });
-                    counts[t.type]++;
+                var placedSpread = spread(targets, lo, false);
+                if (placedSpread) {
+                    // Round locks, a spread that ends up hugging a cut-off has lost its evenness
+                    // anyway, so the first drink may as well take the earliest free slot.
+                    if (pinned.length > 0 && placedSpread.length > 0 && placedSpread.some(function(d) {
+                        return Math.min(cut[d.type], waking) - d.time < MIN_GAP;
+                    })) {
+                        var early = spread(targets, lo, true);
+                        if (early && earliestOf(early) < earliestOf(placedSpread)) placedSpread = early;
+                    }
+                    for (j = 0; j < placedSpread.length; j++) {
+                        result.push(placedSpread[j]);
+                        counts[placedSpread[j].type]++;
+                    }
+                    placedCount = counts;
+                    return;
                 }
-                if (j === targets.length) { placedCount = counts; return; }
-                result.length = startLen;
                 counts = { coffee: placedCount.coffee, tea: placedCount.tea };
             }
             for (j = 0; j < targets.length; j++) {
@@ -1134,6 +1163,8 @@ hidden: true
                 x1: tx, y1: M.top + PH, x2: tx, y2: M.top + PH + 4,
                 stroke: COL.axis, 'stroke-width': 1
             }));
+            // A label within its own width of the right edge would meet the mg labels; the "Sleep" label marks that end.
+            if (M.left + PW - tx < textWidth('00:00', FS)) continue;
             svg.appendChild(el('text', {
                 x: tx, y: M.top + PH + 4 + FS, 'text-anchor': 'middle',
                 fill: COL.text, 'font-size': FS, 'font-family': font
@@ -1251,13 +1282,16 @@ hidden: true
         if (target) target.focus();
     }
 
-    // Where a typed clock time lands, in minutes since wake. Times outside the waking day go to
-    // whichever end of it is nearer.
+    // Where a typed clock time lands, in minutes since wake. A time up to an hour after bedtime is
+    // a late drink and goes to bedtime; any other time outside the waking day goes to wake (so 02:00
+    // on a 22:30 bedtime is the start of the next day, not a late drink).
+    var LATE_GRACE = 60;
+
     function relativeFromClock(clock) {
         var waking = wakingMinutes();
         var rel = clock - state.wake;
         if (rel < 0) rel += 1440;
-        if (rel > waking) rel = (rel - waking <= 1440 - rel) ? waking : 0;
+        if (rel > waking) rel = (rel - waking <= LATE_GRACE) ? waking : 0;
         return rel;
     }
 
@@ -1354,9 +1388,16 @@ hidden: true
         }
         var dropped = state.dropped.coffee + state.dropped.tea;
         if (dropped > 0) {
-            lines.push(dropped === 1
-                ? "1 drink doesn't fit before your cut-offs today and has been left off."
-                : dropped + " drinks don't fit before your cut-offs today and have been left off.");
+            if (lines.length >= 2) {
+                // Both slots are taken, so the dropped count rides on the last line rather than being lost.
+                lines[1] += ' ' + (dropped === 1
+                    ? "1 drink doesn't fit before your cut-offs and has been left off."
+                    : dropped + " drinks don't fit before your cut-offs and have been left off.");
+            } else {
+                lines.push(dropped === 1
+                    ? "1 drink doesn't fit before your cut-offs today and has been left off."
+                    : dropped + " drinks don't fit before your cut-offs today and have been left off.");
+            }
         }
         return lines.slice(0, 2);
     }

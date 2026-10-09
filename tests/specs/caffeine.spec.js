@@ -241,6 +241,28 @@ test.describe('Caffeine calculator', () => {
       expect(lines[1]).toMatch(/^That's \d+ mg today/);
     });
 
+    test('dropped drinks are still reported when a late drink and the 400 mg line fill both slots', async ({ page }) => {
+      await page.goto(URL + '?coffee=8&tea=8&order=tea-first');
+      const asked = 16;
+      // Locking one drink at 12:00 squeezes the rest and forces drops; locking another at 21:00 is a late drink.
+      await scheduleInput(page, 0).fill('12:00');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('.schedule-time-input.pinned')).toHaveCount(1);
+      await page.locator('.schedule-time-input').last().fill('21:00');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('.schedule-time-input.pinned')).toHaveCount(2);
+      const shown = await page.locator('.schedule-item').count();
+      const dropped = asked - shown;
+      expect(dropped, 'the case must force drops').toBeGreaterThan(0);
+      const lines = await page.locator('#caffeine-warning p').allTextContents();
+      expect(lines).toHaveLength(2);
+      expect(lines[0]).toMatch(/^Your (coffee|tea) at 21:00 is later than/);
+      expect(lines[1]).toMatch(/^That's \d+ mg today\. The NHS and EFSA suggest no more than 400 mg a day for most adults, and 200 mg in pregnancy\. /);
+      expect(lines[1]).toMatch(dropped === 1
+        ? / 1 drink doesn't fit before your cut-offs and has been left off\.$/
+        : new RegExp(` ${dropped} drinks don't fit before your cut-offs and have been left off\\.$`));
+    });
+
     test('a single warning is a single line', async ({ page }) => {
       await page.goto(URL + '?coffee=5&tea=0');
       await expect(page.locator('#caffeine-warning p')).toHaveCount(1);
@@ -496,13 +518,36 @@ test.describe('Caffeine calculator', () => {
       await expect(page.locator('#caffeine-warning')).toBeHidden();
     });
 
-    test('2: a time after sleep goes to sleep and warns', async ({ page }) => {
+    test('2: a time up to an hour after sleep goes to sleep and warns', async ({ page }) => {
       await page.goto(URL);
-      await scheduleInput(page, 0).fill('23:45');
+      await scheduleInput(page, 0).fill('23:00');
       await page.keyboard.press('Enter');
       await expect(page.locator('.schedule-time-input').last()).toHaveValue('22:30');
       await expect(page.locator('#caffeine-warning')).toContainText('Your coffee at 22:30 is later than the 14:10 cut-off');
     });
+
+    for (const [typed, landed] of [['23:00', '22:30'], ['23:30', '22:30'], ['23:45', '07:00'], ['02:00', '07:00'], ['05:00', '07:00']]) {
+      test(`2: ${typed} on a 07:00 to 22:30 day goes to ${landed}`, async ({ page }) => {
+        await page.goto(URL);
+        await scheduleInput(page, 0).fill(typed);
+        await page.keyboard.press('Enter');
+        await expect(page.locator('.schedule-time-input.pinned')).toHaveValue(landed);
+        if (landed === '22:30') {
+          await expect(page.locator('#caffeine-warning')).toContainText('Your coffee at 22:30 is later than the 14:10 cut-off');
+        } else {
+          await expect(page.locator('#caffeine-warning')).toBeHidden();
+        }
+      });
+    }
+
+    for (const [typed, landed] of [['11:30', '11:00'], ['12:00', '11:00'], ['12:01', '19:00'], ['15:00', '19:00'], ['18:00', '19:00']]) {
+      test(`2: ${typed} on a 19:00 to 11:00 night shift goes to ${landed}`, async ({ page }) => {
+        await page.goto(URL + '?wake=1900&sleep=1100&coffee=1&tea=0');
+        await scheduleInput(page, 0).fill(typed);
+        await page.keyboard.press('Enter');
+        await expect(page.locator('.schedule-time-input.pinned')).toHaveValue(landed);
+      });
+    }
 
     test('2: before wake on a day that crosses midnight', async ({ page }) => {
       await page.goto(URL + '?wake=1000&sleep=0200&coffee=1&tea=0');
@@ -864,6 +909,30 @@ test.describe('Caffeine calculator', () => {
       });
     }
 
+    for (const width of [360, 1280]) {
+      test(`the last time label does not meet the mg labels on a night shift at ${width} px`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 800 });
+        await page.goto(URL + '?wake=1900&sleep=1100&coffee=2&tea=2');
+        await expect(page.locator('#bedtime-mg')).not.toHaveText('-- mg');
+        const boxes = await page.evaluate(() => {
+          const rect = (e) => { const r = e.getBoundingClientRect(); return { text: e.textContent, l: r.left, r: r.right, t: r.top, b: r.bottom }; };
+          const texts = Array.from(document.querySelectorAll('#caffeine-graph text'));
+          return {
+            ticks: texts.filter((t) => /^\d\d:\d\d$/.test(t.textContent) && !t.classList.contains('drink-label')).map(rect),
+            mg: texts.filter((t) => / mg$/.test(t.textContent)).map(rect),
+            sleep: texts.filter((t) => t.textContent === 'Sleep').length,
+          };
+        });
+        expect(boxes.ticks.length).toBeGreaterThan(1);
+        expect(boxes.mg.length).toBeGreaterThan(2);
+        expect(boxes.sleep).toBe(1);
+        const hit = (a, b) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
+        for (const tk of boxes.ticks) for (const m of boxes.mg) {
+          expect(hit(tk, m), `${tk.text} meets ${m.text}`).toBe(false);
+        }
+      });
+    }
+
     test('text scales when the window is resized to phone width', async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 800 });
       await page.goto(URL);
@@ -1072,6 +1141,33 @@ test.describe('Caffeine calculator', () => {
       await expect(link).toHaveAttribute('target', '_blank');
       expect(await link.getAttribute('rel')).toContain('noopener');
     });
+  });
+
+  test.describe('drinks spread round a lock', () => {
+    // Bedtime 15:00 puts the tea cut-off at 08:35, so three teas have little room.
+    const q = 'wake=0700&sleep=1500&coffee=0&tea=3';
+    const mins = (list) => list.map(hhmm);
+
+    test('without a lock the default spread is unchanged', async ({ page }) => {
+      await page.goto(URL + '?' + q);
+      expect(await times(page)).toEqual(['07:31', '08:01', '08:31']);
+    });
+
+    for (const [lock, expected] of [['08:01', '07:00'], ['07:50', '07:00']]) {
+      test(`locking a tea at ${lock} lets the first free tea use ${expected}`, async ({ page }) => {
+        await page.goto(URL + '?' + q);
+        await scheduleInput(page, 0).fill(lock);
+        await page.keyboard.press('Enter');
+        const after = await times(page);
+        expect(after).toHaveLength(3);
+        expect(after).toContain(lock);
+        expect(after[0]).toBe(expected);
+        const m = mins(after);
+        for (let i = 1; i < m.length; i++) expect(m[i] - m[i - 1], 'spacing').toBeGreaterThanOrEqual(MIN_GAP);
+        expect(m[m.length - 1], 'cut-off').toBeLessThanOrEqual(hhmm('08:35'));
+        await expect(page.locator('#caffeine-warning')).toBeHidden();
+      });
+    }
   });
 
   test('focus stays visible on every internal stop of a time field', async ({ page }) => {
