@@ -136,7 +136,7 @@ If you want the richer, more detailed version his work, this is where to start:
 <iframe src="https://www.youtube-nocookie.com/embed/iKwRWwabkEc" frameborder="0" allowfullscreen></iframe>
 </div>
 
-For a gentler introduction, [NetworkChuck's AI in Terminal video](https://www.youtube.com/watch?v=MsQACpcuTkU){:target="_blank"} gets you running in an afternoon - though you'll need coffee (don't worry, he'll remind you), because Chuck's energy level is... a lot. Daniel's approach is more powerful and comprehensive, but Chuck's is more accessible if you're not sure where to begin.
+For a gentler introduction, [NetworkChuck's AI in Terminal video](https://www.youtube.com/watch?v=MsQACpcuTkU){:target="_blank"} gets you running in an afternoon - though you'll need coffee (don't worry, he'll remind you), because Chuck's energy level is... a lot. Daniel's approach is more powerful and thorough, but Chuck's is more accessible if you're not sure where to begin.
 
 **Inspiration:**
 - [Daniel Miessler](https://danielmiessler.com/){:target="_blank"} - PAI concept and Fabric
@@ -158,7 +158,7 @@ But the current setup requires me to be at my desk, SSH'd into my AI workstation
 
 I'm building an integration with n8n and Slack to enable mobile access (thanks again to [NetworkChuck for the inspiration](https://youtu.be/E-1_J2S-2pQ){:target="_blank"}).
 
-The goal is a Slack bot that can reach SAI, run queries, keep conversation threads organised, and move files back and forth. This would be more connection-robust and less typo-prone than my current mobile solution Termux, which disconnected three times while I was working through this post on the train.
+The goal is a Slack bot that can reach SAI, run queries, keep conversation threads organised, and move files back and forth. This would be more resilient to dropped connections and less typo-prone than my current mobile solution Termux, which disconnected three times while I was working through this post on the train.
 
 ## Would I Recommend PAI?
 
