@@ -1,0 +1,11 @@
+{
+  "name": "seanreilly-net-tests",
+  "private": true,
+  "description": "Playwright regression tests for the interactive tools on www.seanreilly.net",
+  "scripts": {
+    "test": "playwright test -c tests/playwright.config.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}
