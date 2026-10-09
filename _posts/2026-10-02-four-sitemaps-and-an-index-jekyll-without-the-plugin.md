@@ -15,9 +15,9 @@ hidden: true
 robots: noindex
 ---
 
-For years this blog used `jekyll-sitemap`, because GitHub Pages let me and it took no effort. When I moved the build to GitHub Actions and Cloudflare Pages in late January 2026, the reason for that choice went away.
+For years this blog used `jekyll-sitemap`, because GitHub Pages let me and it took no effort. When I moved the build to GitHub Actions and Cloudflare Pages in late January 2026, the reason for that choice went away, so I dropped the plugin.
 
-I dropped the plugin anyway. It writes one flat `sitemap.xml`. It can't produce an index, an image sitemap, a news sitemap or hreflang entries, and I wanted all four of those. Rather than bolt on a second plugin, I wrote the files by hand as Liquid templates. The Gemfile and `_config.yml` both carry a comment saying the plugin is left out on purpose, mostly so that future me doesn't helpfully add it back.
+The plugin writes one flat `sitemap.xml`. It can't produce an index, an image sitemap, a news sitemap or hreflang entries, and I wanted all four of those. Rather than bolt on a second plugin, I wrote the files by hand as Liquid templates. The Gemfile and `_config.yml` both carry a comment saying the plugin is left out on purpose, mostly so that future me doesn't helpfully add it back.
 
 ## The index and the four children
 
@@ -91,6 +91,6 @@ Each one is a `PUT` to `webmasters/v3/sites/{site}/sitemaps/{feed}` and the step
 
 The comment above that step in the workflow still says "all 5 regional TLDs". There are four in the list, because the fifth domain has gone. I'll fix the comment next time I'm in the file.
 
-There's a bigger gap in the news sitemap. The content and image templates both skip hidden posts. The news template doesn't check `hidden` at all. A hidden draft dated within the last 48 hours would be listed there for as long as the build stays fresh. The drafts on this site are dated in the past or are noindexed, so it hasn't mattered yet. I'll add the `hidden` check next time I'm in there.
+There's a bigger gap in the news sitemap. The content and image templates both skip hidden posts. The news template doesn't check `hidden` at all. A hidden draft dated within the last 48 hours would be listed there for as long as the build stays fresh. The drafts on this site are all dated more than 48 hours back, so none has ever qualified. I'll add the `hidden` check next time I'm in there.
 
 And the archives sitemap builds its tag and category list from every post, hidden ones included. A tag used only on a hidden draft would still get a URL.
