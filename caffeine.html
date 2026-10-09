@@ -36,6 +36,9 @@ sitemap: true
     padding-left: 0.125rem;
     padding-right: 0.125rem;
 }
+.caffeine-inputs .input-group {
+    flex-wrap: nowrap;
+}
 .caffeine-inputs .input-group .btn {
     min-width: 44px;
     min-height: 44px;
@@ -249,15 +252,15 @@ sitemap: true
 <!-- Inputs -->
 <div class="caffeine-inputs">
     <div class="row g-2 g-md-3 mb-3">
-        <div class="col-6 col-md-3">
+        <div class="col-6">
             <label class="form-label" for="wake-time">Wake time</label>
             <input type="time" class="form-control" id="wake-time" value="07:00">
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-6">
             <label class="form-label" for="sleep-time">Sleep time</label>
             <input type="time" class="form-control" id="sleep-time" value="22:30">
         </div>
-        <div class="col-4 col-md-2">
+        <div class="col-6 col-md-4">
             <label class="form-label" for="coffee-count">Coffees</label>
             <div class="input-group input-group-sm">
                 <button class="btn btn-outline-secondary" type="button" data-stepper="coffee" data-dir="-1" aria-label="Fewer coffees">&minus;</button>
@@ -265,7 +268,7 @@ sitemap: true
                 <button class="btn btn-outline-secondary" type="button" data-stepper="coffee" data-dir="1" aria-label="More coffees">+</button>
             </div>
         </div>
-        <div class="col-4 col-md-2">
+        <div class="col-6 col-md-4">
             <label class="form-label" for="tea-count">Teas</label>
             <div class="input-group input-group-sm">
                 <button class="btn btn-outline-secondary" type="button" data-stepper="tea" data-dir="-1" aria-label="Fewer teas">&minus;</button>
@@ -273,7 +276,7 @@ sitemap: true
                 <button class="btn btn-outline-secondary" type="button" data-stepper="tea" data-dir="1" aria-label="More teas">+</button>
             </div>
         </div>
-        <div class="col-4 col-md-2">
+        <div class="col-12 col-md-4">
             <label class="form-label" for="metabolism">Metabolism</label>
             <select class="form-select form-select-sm" id="metabolism">
                 <option value="3">Fast</option>

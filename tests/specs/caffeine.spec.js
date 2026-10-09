@@ -715,6 +715,23 @@ test.describe('Caffeine calculator', () => {
   });
 
   test.describe('accessibility', () => {
+    test('the - count + steppers stay on one row at every width', async ({ page }) => {
+      for (const width of [320, 360, 390, 768, 992, 1280]) {
+        await page.setViewportSize({ width, height: 800 });
+        await page.goto(URL + '?coffee=8&tea=8');
+        const rows = await page.evaluate(() => [...document.querySelectorAll('.caffeine-inputs .input-group')].map((g) => {
+          const [minus, plus] = [...g.querySelectorAll('.btn')].map((b) => b.getBoundingClientRect());
+          const box = g.querySelector('input');
+          return { sameRow: Math.abs(minus.top - plus.top) < 1, plusWidth: Math.round(plus.width), clipped: box.scrollWidth > box.clientWidth };
+        }));
+        for (const r of rows) {
+          expect(r.sameRow, `stepper wrapped at ${width}px`).toBe(true);
+          expect(r.plusWidth, `stepper narrower than 44px at ${width}px`).toBeGreaterThanOrEqual(44);
+          expect(r.clipped, `count clipped at ${width}px`).toBe(false);
+        }
+      }
+    });
+
     test('names for steppers, counts, time fields and pin buttons', async ({ page }) => {
       await page.goto(URL + '?coffee=2&tea=2');
       const labels = await page.locator('[data-stepper]').evaluateAll((els) => els.map((e) => e.getAttribute('aria-label')));
