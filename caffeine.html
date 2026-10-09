@@ -2,7 +2,7 @@
 layout: page
 title: "Caffeine Calculator"
 header-title: "Caffeine Calculator"
-description: "Science-based timing for your coffee and tea"
+description: "When to stop drinking coffee and tea, based on sleep research"
 header-img: "img/home-bg.jpg"
 meta-description: "Calculate optimal coffee and tea timing based on your cortisol rhythm, caffeine half-life, and sleep schedule."
 permalink: /caffeine/
@@ -15,21 +15,47 @@ hidden: true
 /* Input section */
 .caffeine-inputs .form-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--color-accent);
+    letter-spacing: 1px;
+    color: #3A6590;
     margin-bottom: 0.25rem;
+}
+.caffeine-inputs .form-control,
+.caffeine-inputs .form-select {
+    min-height: 44px;
 }
 .caffeine-inputs .input-group .form-control {
     border-left: 0;
     border-right: 0;
 }
 .caffeine-inputs .input-group .btn {
-    min-width: 2.5rem;
+    min-width: 44px;
+    min-height: 44px;
     font-weight: 700;
     font-size: 1.1rem;
     padding: 0.375rem 0.5rem;
+}
+.carry-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+.carry-switch .form-check-input {
+    float: none;
+    margin: 0;
+    flex-shrink: 0;
+}
+.carry-switch .form-check-label {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    cursor: pointer;
 }
 
 /* Result cards */
@@ -39,14 +65,18 @@ hidden: true
     border-radius: 0.75rem;
     padding: 0.875rem 0.5rem;
     text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .result-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--color-accent, #4A7BA7);
-    margin-bottom: 0.125rem;
+    letter-spacing: 1px;
+    color: #3A6590;
+    margin-bottom: 0.25rem;
 }
 .result-value {
     font-family: 'Inter', sans-serif;
@@ -54,7 +84,26 @@ hidden: true
     font-weight: 800;
     color: var(--color-text, #2D2D2D);
     line-height: 1.2;
+    overflow-wrap: anywhere;
 }
+.result-value.is-text { font-size: 1.125rem; }
+
+/* Warning line */
+.caffeine-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 0 0 1rem;
+    padding: 0.625rem 0.75rem;
+    border-left: 4px solid #B43C3C;
+    border-radius: 0.25rem;
+    background: #FBEFEF;
+    color: #7F1D1D;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+}
+.caffeine-warning:empty { display: none; }
+.caffeine-warning svg { flex-shrink: 0; margin-top: 0.125rem; }
 
 /* Graph */
 #graph-container {
@@ -68,12 +117,12 @@ hidden: true
 }
 
 /* Schedule */
-.schedule-list { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+.schedule-list { list-style: none; padding: 0; margin: 0 0 0.5rem; }
 .schedule-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
     border-bottom: 1px solid var(--color-border, #E5E7EB);
     font-size: 0.9375rem;
 }
@@ -90,34 +139,45 @@ hidden: true
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.875rem;
     width: 7rem;
+    min-height: 44px;
     padding: 0.25rem 0.5rem;
     flex-shrink: 0;
 }
 .schedule-time-input.pinned {
-    border-color: var(--color-accent, #4A7BA7);
+    border-color: #3A6590;
     background: #f0f6fb;
 }
 .schedule-pin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     background: none;
     border: none;
-    padding: 0.125rem 0.25rem;
+    border-radius: 0.5rem;
     cursor: pointer;
-    font-size: 0.875rem;
-    color: var(--color-border, #E5E7EB);
+    color: #6B7280;
     flex-shrink: 0;
-    line-height: 1;
 }
-.schedule-pin.pinned { color: var(--color-accent, #4A7BA7); }
+.schedule-pin:hover { background: #f3f4f6; }
+.schedule-pin.pinned { color: #3A6590; }
 .schedule-type { color: var(--color-text-muted, #6B7280); }
+.schedule-help {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted, #6B7280);
+    margin: 0 0 1.5rem;
+}
 .schedule-reset {
     font-size: 0.8125rem;
-    color: var(--color-accent, #4A7BA7);
+    color: #3A6590;
     cursor: pointer;
     background: none;
     border: none;
-    padding: 0;
+    padding: 0.75rem 0;
+    min-height: 44px;
     text-decoration: underline;
-    margin-bottom: 0.5rem;
     display: none;
 }
 
@@ -148,6 +208,7 @@ hidden: true
     color: var(--color-text-muted, #6B7280);
     line-height: 1.7;
 }
+.methodology a { color: #3A6590; }
 
 /* Empty state */
 .empty-message {
@@ -160,7 +221,8 @@ hidden: true
 /* Mobile */
 @media (max-width: 575.98px) {
     .result-value { font-size: 1.375rem; }
-    .result-label { font-size: 0.5625rem; letter-spacing: 1px; }
+    .result-value.is-text { font-size: 1rem; }
+    .result-label { letter-spacing: 0.5px; }
     .result-card { padding: 0.625rem 0.375rem; }
 }
 </style>
@@ -180,19 +242,19 @@ hidden: true
             <input type="time" class="form-control" id="sleep-time" value="22:30">
         </div>
         <div class="col-4 col-md-2">
-            <label class="form-label">Coffees</label>
+            <label class="form-label" for="coffee-count">Coffees</label>
             <div class="input-group input-group-sm">
-                <button class="btn btn-outline-secondary" type="button" data-stepper="coffee" data-dir="-1">&minus;</button>
-                <input type="text" class="form-control text-center" id="coffee-count" value="2" readonly>
-                <button class="btn btn-outline-secondary" type="button" data-stepper="coffee" data-dir="1">+</button>
+                <button class="btn btn-outline-secondary" type="button" data-stepper="coffee" data-dir="-1" aria-label="Fewer coffees">&minus;</button>
+                <input type="text" class="form-control text-center" id="coffee-count" value="2" readonly aria-label="Number of coffees">
+                <button class="btn btn-outline-secondary" type="button" data-stepper="coffee" data-dir="1" aria-label="More coffees">+</button>
             </div>
         </div>
         <div class="col-4 col-md-2">
-            <label class="form-label">Teas</label>
+            <label class="form-label" for="tea-count">Teas</label>
             <div class="input-group input-group-sm">
-                <button class="btn btn-outline-secondary" type="button" data-stepper="tea" data-dir="-1">&minus;</button>
-                <input type="text" class="form-control text-center" id="tea-count" value="2" readonly>
-                <button class="btn btn-outline-secondary" type="button" data-stepper="tea" data-dir="1">+</button>
+                <button class="btn btn-outline-secondary" type="button" data-stepper="tea" data-dir="-1" aria-label="Fewer teas">&minus;</button>
+                <input type="text" class="form-control text-center" id="tea-count" value="2" readonly aria-label="Number of teas">
+                <button class="btn btn-outline-secondary" type="button" data-stepper="tea" data-dir="1" aria-label="More teas">+</button>
             </div>
         </div>
         <div class="col-4 col-md-2">
@@ -200,12 +262,12 @@ hidden: true
             <select class="form-select form-select-sm" id="metabolism">
                 <option value="3">Fast</option>
                 <option value="5" selected>Normal</option>
-                <option value="7">Slow</option>
+                <option value="8">Slow</option>
             </select>
         </div>
     </div>
     <div class="row g-2 g-md-3 mb-3">
-        <div class="col-7 col-md-4">
+        <div class="col-12 col-sm-7 col-md-4">
             <label class="form-label" for="drink-order">Drink order</label>
             <select class="form-select form-select-sm" id="drink-order">
                 <option value="coffee-first" selected>Coffee first, tea later</option>
@@ -213,35 +275,38 @@ hidden: true
                 <option value="interleave">Interleave</option>
             </select>
         </div>
-        <div class="col-5 col-md-3 d-flex align-items-end">
-            <div class="form-check form-switch mb-1">
+        <div class="col-12 col-sm-5 col-md-3 d-flex align-items-end">
+            <div class="form-check form-switch carry-switch">
                 <input class="form-check-input" type="checkbox" id="carry-over">
-                <label class="form-check-label" for="carry-over" style="font-size:0.8125rem;">Yesterday's carry-over</label>
+                <label class="form-check-label" for="carry-over">Include yesterday</label>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Results summary -->
-<div class="row g-2 g-md-3 mb-3" id="results-summary">
-    <div class="col-4">
-        <div class="result-card">
-            <div class="result-label">Last Safe Coffee</div>
-            <div class="result-value" id="last-coffee">--:--</div>
+<!-- Results summary and warning -->
+<div id="caffeine-live" aria-live="polite">
+    <div class="row g-2 g-md-3 mb-3" id="results-summary">
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Last coffee by</div>
+                <div class="result-value" id="last-coffee">--:--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Last tea by</div>
+                <div class="result-value" id="last-tea">--:--</div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="result-card">
+                <div class="result-label">Left at bedtime</div>
+                <div class="result-value" id="bedtime-mg">-- mg</div>
+            </div>
         </div>
     </div>
-    <div class="col-4">
-        <div class="result-card">
-            <div class="result-label">Last Safe Tea</div>
-            <div class="result-value" id="last-tea">--:--</div>
-        </div>
-    </div>
-    <div class="col-4">
-        <div class="result-card">
-            <div class="result-label">At Bedtime</div>
-            <div class="result-value" id="bedtime-mg">-- mg</div>
-        </div>
-    </div>
+    <div class="caffeine-warning" id="caffeine-warning"></div>
 </div>
 
 <!-- Graph legend -->
@@ -256,23 +321,25 @@ hidden: true
 
 <!-- SVG Graph -->
 <div id="graph-container">
-    <svg id="caffeine-graph" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet"></svg>
+    <svg id="caffeine-graph" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Caffeine through the day"></svg>
 </div>
 
 <!-- Schedule -->
 <div id="schedule-wrapper">
     <button type="button" class="schedule-reset" id="schedule-reset">Reset to optimal times</button>
     <div id="schedule"></div>
+    <p class="schedule-help" id="schedule-help" hidden>Change a time to lock it. Locked drinks stay put and the rest are rearranged around them.</p>
 </div>
 
 <!-- How this works -->
 <div class="methodology mb-4">
     <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
-    <p><strong>Cortisol rhythm:</strong> Your body produces cortisol in peaks throughout the day, starting with the cortisol awakening response about 30-45 minutes after you wake up, with smaller peaks in the late morning and mid-afternoon. Caffeine is most effective between these peaks, when cortisol is naturally low.</p>
-    <p><strong>Caffeine half-life:</strong> The average adult eliminates half the caffeine in their system every 5 hours. Fast metabolisers (including smokers) clear it in about 3 hours; slow metabolisers (including those on oral contraceptives) may take 7 hours. This affects how late you can safely drink.</p>
-    <p><strong>The 25mg threshold:</strong> The "last safe drink" calculation works backwards from your bedtime to find the latest time you can drink so that less than 25mg of caffeine remains in your system when you want to sleep. Below 25mg, most people experience minimal sleep disruption.</p>
-    <p><strong>Drink placement:</strong> By default, coffees are placed in earlier optimal windows (higher caffeine, more time to clear) and teas in later windows (lower caffeine, needs less clearance time). Use the drink order selector to change this if you prefer tea in the morning.</p>
-    <p><strong>Yesterday's carry-over:</strong> Caffeine doesn't fully clear overnight. With a 5-hour half-life, a drink at 2pm still leaves a few milligrams in your system 17 hours later at 7am. Toggle this on to see the residual from an identical previous day's schedule layered into the curve. It's usually small (10-15mg) but adds up for slow metabolisers or heavy drinkers.</p>
+    <p><strong>Cortisol rhythm:</strong> Your body produces cortisol in peaks throughout the day, starting with the cortisol awakening response about 30-45 minutes after you wake up, with smaller peaks in the late morning and mid-afternoon. Some people prefer to wait until after the cortisol awakening response before their first coffee. The evidence for this is thin, so treat the green windows as a preference, not a rule.</p>
+    <p><strong>Caffeine half-life:</strong> The average adult eliminates half the caffeine in their system every 5 hours. Smokers clear it faster, in about 3 hours. Slow metabolisers take around 8 hours (oral contraceptives raise it from roughly 5 to 8 hours), and pregnancy slows it much further. The metabolism setting stretches or shortens the cut-off times in proportion.</p>
+    <p><strong>When to stop:</strong> Gardiner et al. (2023, <em>Sleep Medicine Reviews</em>) reviewed the evidence on caffeine and the sleep that follows it. To avoid losing total sleep time, they recommend a 107 mg coffee at least 8.8 hours before bed and 217.5 mg at least 13.2 hours before bed. This tool draws a straight line between those two points, so each drink gets its own gap: at normal metabolism a coffee (95 mg) needs about 8.3 hours and a tea (47 mg) about 6.4 hours. Your bedtime minus that gap gives the "Last coffee by" and "Last tea by" times, and no drink is scheduled after its cut-off. <a href="https://doi.org/10.1016/j.smrv.2023.101764" target="_blank" rel="noopener">Read the paper</a>.</p>
+    <p><strong>Drink placement:</strong> By default, coffees are placed in earlier optimal windows (higher caffeine, more time to clear) and teas in later windows (lower caffeine, needs less clearance time). Drinks are kept at least 30 minutes apart. Use the drink order selector to change this if you prefer tea in the morning.</p>
+    <p><strong>Yesterday's carry-over:</strong> Caffeine doesn't fully clear overnight. With a 5-hour half-life, a drink at 14:00 still leaves a few milligrams in your system 17 hours later at 07:00. Toggle this on to see the residual from an identical previous day's schedule layered into the curve. It's often 15-25 mg but adds up for slow metabolisers or heavy drinkers.</p>
+    <p><strong>Assumptions:</strong> The tool assumes 95 mg per coffee (a mug of filter coffee) and 47 mg per tea. A UK instant coffee is often nearer 60-80 mg, and a high-street flat white can be 130 mg or more.</p>
     <p>This is a simplified model. Individual responses to caffeine vary based on genetics, tolerance, medications, and other factors. Use it as a guide, not gospel.</p>
 </div>
 
@@ -284,40 +351,49 @@ hidden: true
     var COFFEE_MG = 95;
     var TEA_MG = 47;
     var LN2 = Math.LN2;
-    var RESIDUAL_THRESHOLD = 25; // mg at bedtime considered safe
+    var MIN_GAP = 30;          // minutes between any two drinks
+    var DAILY_LIMIT_MG = 400;  // NHS and EFSA guidance for most adults
+    var MAX_PER_TYPE = 8;
 
-    // Graph dimensions (viewBox coords)
-    var W = 800, H = 300;
-    var M = { top: 15, right: 50, bottom: 30, left: 40 };
-    var PW = W - M.left - M.right;
-    var PH = H - M.top - M.bottom;
+    // Graph dimensions. The viewBox is set to the container width in pixels on every render
+    // (see renderGraph), so one viewBox unit is one CSS pixel and label sizes stay readable.
+    var H = 300;
+    var M = { top: 15, right: 46, bottom: 34, left: 40 };
+    var W = 800, PW = W - M.left - M.right, PH = H - M.top - M.bottom;
+    var FS = 12;
 
-    // Colours
+    // Colours (text colours all reach 4.5:1 on white and on the #FAFAF9 plot)
     var COL = {
         coffee: '#6F4E37',
         tea: '#4A7C59',
+        teaText: '#3D6B4B',
         cortisolFill: 'rgba(196, 162, 101, 0.2)',
         cortisolLine: '#C4A265',
+        cortisolText: '#7A5C14',
         caffeine: '#4A7BA7',
+        caffeineText: '#3A6590',
         zoneGood: 'rgba(74, 124, 89, 0.12)',
         zoneBad: 'rgba(180, 60, 60, 0.10)',
-        cutoff: '#B43C3C',
         grid: '#E5E7EB',
         axis: '#9CA3AF',
         text: '#6B7280'
     };
 
-    // State
+    // State. Drink times are minutes since wake. Pinned drinks keep their time when others are rearranged.
     var state = {
         wake: 420,      // 07:00 in minutes
-        sleep: 1350,    // 22:30
+        sleep: 1350,    // 22:30 (minutes from midnight of the wake day, so it can exceed 1440)
         coffees: 2,
         teas: 2,
         halfLife: 5,
         drinkOrder: 'coffee-first',
         carryOver: false,
-        drinks: []
+        drinks: [],
+        dropped: { coffee: 0, tea: 0 }
     };
+
+    var rendering = false;   // true while the schedule list is being rebuilt
+    var pendingFocus = null; // focus to put back after the next schedule render
 
     // Cookie
     var COOKIE_NAME = 'caffeine_prefs';
@@ -338,47 +414,61 @@ hidden: true
             drinkOrder: state.drinkOrder,
             carryOver: state.carryOver
         };
-        // Save pinned drink times if any are pinned
-        var hasPinned = state.drinks.some(function(d) { return d.pinned; });
-        if (hasPinned) {
-            data.pins = state.drinks.map(function(d) {
-                return { type: d.type, time: d.time, mg: d.mg, pinned: !!d.pinned };
-            });
-        }
+        var pins = state.drinks.filter(function(d) { return d.pinned; }).map(function(d) {
+            return { type: d.type, time: d.time };
+        });
+        if (pins.length) data.pins = pins;
         var expires = new Date(Date.now() + COOKIE_DAYS * 864e5).toUTCString();
         document.cookie = COOKIE_NAME + '=' + encodeURIComponent(JSON.stringify(data))
             + ';expires=' + expires + ';path=/caffeine/;SameSite=Lax;Secure';
     }
 
-    function loadPrefs() {
-        if (!canUseCookie()) return false;
+    // Returns the saved preferences, or null if there are none or consent has not been given.
+    function readCookie() {
+        if (!canUseCookie()) return null;
         var match = document.cookie.match('(?:^|; )' + COOKIE_NAME + '=([^;]*)');
-        if (!match) return false;
+        if (!match) return null;
         try {
             var data = JSON.parse(decodeURIComponent(match[1]));
-            if (data.wake !== undefined) state.wake = clamp(data.wake, 0, 1439);
-            if (data.sleep !== undefined) state.sleep = clamp(data.sleep, 0, 1439);
-            if (data.coffees !== undefined) state.coffees = clamp(data.coffees, 0, 8);
-            if (data.teas !== undefined) state.teas = clamp(data.teas, 0, 8);
-            if (data.halfLife === 3 || data.halfLife === 5 || data.halfLife === 7) state.halfLife = data.halfLife;
-            if (data.drinkOrder === 'coffee-first' || data.drinkOrder === 'tea-first' || data.drinkOrder === 'interleave') state.drinkOrder = data.drinkOrder;
-            if (data.carryOver !== undefined) state.carryOver = !!data.carryOver;
-            if (state.sleep <= state.wake) state.sleep += 1440;
-            // Restore pinned drinks if saved and counts still match
-            if (data.pins && Array.isArray(data.pins)) {
-                var savedCoffees = data.pins.filter(function(d) { return d.type === 'coffee'; }).length;
-                var savedTeas = data.pins.filter(function(d) { return d.type === 'tea'; }).length;
-                if (savedCoffees === state.coffees && savedTeas === state.teas) {
-                    state.drinks = data.pins.map(function(d) {
-                        var validMg = d.type === 'coffee' ? COFFEE_MG : TEA_MG;
-                        return { type: d.type === 'coffee' ? 'coffee' : 'tea', time: clamp(+d.time || 0, 0, 1440), mg: validMg, pinned: !!d.pinned };
-                    });
-                }
-            }
-            return true;
+            return data && typeof data === 'object' ? data : null;
         } catch (e) {
-            return false;
+            return null;
         }
+    }
+
+    function applyCookieSettings(data) {
+        if (data.wake !== undefined) state.wake = clamp(+data.wake || 0, 0, 1439);
+        if (data.sleep !== undefined) state.sleep = clamp(+data.sleep || 0, 0, 1439);
+        if (data.coffees !== undefined) state.coffees = clamp(+data.coffees || 0, 0, MAX_PER_TYPE);
+        if (data.teas !== undefined) state.teas = clamp(+data.teas || 0, 0, MAX_PER_TYPE);
+        var hl = normaliseHalfLife(data.halfLife);
+        if (hl) state.halfLife = hl;
+        if (isOrder(data.drinkOrder)) state.drinkOrder = data.drinkOrder;
+        if (data.carryOver !== undefined) state.carryOver = !!data.carryOver;
+    }
+
+    // Pins from the cookie only apply when the cookie was saved for the same settings as the page now has.
+    function cookiePinsFor(data) {
+        if (!data || !Array.isArray(data.pins)) return [];
+        var same = data.wake === state.wake
+            && data.sleep === state.sleep % 1440
+            && data.coffees === state.coffees
+            && data.teas === state.teas
+            && normaliseHalfLife(data.halfLife) === state.halfLife
+            && (data.drinkOrder || 'coffee-first') === state.drinkOrder
+            && !!data.carryOver === state.carryOver;
+        if (!same) return [];
+        var waking = wakingMinutes();
+        var pins = [];
+        var counts = { coffee: 0, tea: 0 };
+        for (var i = 0; i < data.pins.length; i++) {
+            var p = data.pins[i];
+            if (!p || (p.type !== 'coffee' && p.type !== 'tea')) continue;
+            if (counts[p.type] >= (p.type === 'coffee' ? state.coffees : state.teas)) continue;
+            counts[p.type]++;
+            pins.push({ type: p.type, mg: p.type === 'coffee' ? COFFEE_MG : TEA_MG, time: clamp(Math.round(+p.time) || 0, 0, waking), pinned: true });
+        }
+        return pins;
     }
 
     // SVG namespace
@@ -397,11 +487,26 @@ hidden: true
         return e;
     }
 
+    function $(id) { return document.getElementById(id); }
+
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
+    function isOrder(o) { return o === 'coffee-first' || o === 'tea-first' || o === 'interleave'; }
+
+    // Slow used to be 7 hours; old URLs and cookies still say 7.
+    function normaliseHalfLife(v) {
+        v = parseFloat(v);
+        if (v === 7) return 8;
+        return (v === 3 || v === 5 || v === 8) ? v : null;
+    }
+
+    // Parses "HH:MM" from a time input. NaN for empty or invalid values.
     function timeToMinutes(str) {
-        var parts = str.split(':');
-        return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+        var m = /^(\d{1,2}):(\d{2})/.exec(str || '');
+        if (!m) return NaN;
+        var h = parseInt(m[1], 10), mi = parseInt(m[2], 10);
+        if (h > 23 || mi > 59) return NaN;
+        return h * 60 + mi;
     }
 
     function formatTime(mins) {
@@ -431,6 +536,15 @@ hidden: true
         return d;
     }
 
+    // Keeps sleep after wake: sleep is a clock time, moved to the next day when it is not later than wake.
+    function normaliseDay() {
+        state.sleep = state.sleep % 1440;
+        if (state.sleep <= state.wake) state.sleep += 1440;
+    }
+
+    function typeName(type) { return type === 'coffee' ? 'coffee' : 'tea'; }
+    function capital(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
     // ========== SCIENCE ==========
 
     function cortisolLevel(minsSinceWake) {
@@ -458,119 +572,42 @@ hidden: true
         ];
     }
 
-    function lastSafeDrinkTime(sleepMins, halfLifeHrs, mg) {
-        var halfLifeMin = halfLifeHrs * 60;
-        var k = LN2 / halfLifeMin;
-        var decayNeeded = Math.log(mg / RESIDUAL_THRESHOLD) / k;
-        return sleepMins - decayNeeded;
+    // Hours a drink of `mg` needs before bed.
+    // Gardiner et al. 2023 (Sleep Medicine Reviews, doi 10.1016/j.smrv.2023.101764) recommend a
+    // 107 mg coffee at least 8.8 h before bed and 217.5 mg at least 13.2 h before bed. The line
+    // through those two points rises (13.2 - 8.8) / (217.5 - 107) = 4.4 / 110.5 h per mg, so
+    //   hours = 8.8 + (mg - 107) * 4.4 / 110.5
+    // The published points are for a typical (5 h half-life) adult, so the result is scaled by
+    // halfLife / 5: fast (3 h) shortens the gap, slow (8 h) lengthens it.
+    function gapHours(mg, halfLife) {
+        return (8.8 + (mg - 107) * 4.4 / 110.5) * (halfLife / 5);
     }
 
-    // Account for residual caffeine from scheduled drinks when computing cutoff
-    function lastSafeDrinkTimeWithResidual(drinks, sleepMins, wakeMins, halfLifeHrs, addMg) {
-        var waking = sleepMins - wakeMins;
-        if (waking <= 0) waking += 1440;
-        var residual = caffeineAtTime(drinks, waking, halfLifeHrs);
-        var allowance = RESIDUAL_THRESHOLD - residual;
-        if (allowance <= 0) return wakeMins; // already over threshold
-        if (addMg <= allowance) return sleepMins; // can drink right before bed
-        var halfLifeMin = halfLifeHrs * 60;
-        var k = LN2 / halfLifeMin;
-        var decayNeeded = Math.log(addMg / allowance) / k;
-        return sleepMins - decayNeeded;
+    // The one place cut-offs are worked out. Minutes since wake, rounded down to a whole minute so
+    // the cards, the graph, the scheduler and the warnings all agree. Negative means the cut-off
+    // falls before wake, so that drink type is skipped today.
+    function cutoffs() {
+        function since(mg) {
+            return Math.floor(state.sleep - gapHours(mg, state.halfLife) * 60) - state.wake;
+        }
+        return { coffee: since(COFFEE_MG), tea: since(TEA_MG) };
     }
 
-    function scheduleDrinks(coffees, teas, wakeMins, sleepMins, halfLife) {
-        var windows = getOptimalWindows();
-        var waking = sleepMins - wakeMins;
-        if (waking <= 0) waking += 1440;
+    // ========== SCHEDULING ==========
 
-        var coffeeCutoff = lastSafeDrinkTime(sleepMins, halfLife, COFFEE_MG) - wakeMins;
-        var teaCutoff = lastSafeDrinkTime(sleepMins, halfLife, TEA_MG) - wakeMins;
-
-        function clampWindows(wins, cutoff) {
-            var result = [];
-            for (var i = 0; i < wins.length; i++) {
-                var w = wins[i];
-                if (w.start >= cutoff || w.start >= waking) continue;
-                result.push({ start: w.start, end: Math.min(w.end, cutoff, waking) });
-            }
-            return result;
-        }
-
-        // Trim window time that occurs before a given minute
-        function trimWindowsBefore(wins, afterMin) {
-            var result = [];
-            for (var i = 0; i < wins.length; i++) {
-                var w = wins[i];
-                var s = Math.max(w.start, afterMin);
-                if (s < w.end) result.push({ start: s, end: w.end });
-            }
-            return result;
-        }
-
-        var coffeeWins = clampWindows(windows, coffeeCutoff);
-        var teaWins = clampWindows(windows, teaCutoff);
-
-        var drinks = [];
-        if (state.drinkOrder === 'coffee-first') {
-            distribute(drinks, 'coffee', coffees, COFFEE_MG, coffeeWins);
-            // Teas only in time after the last coffee
-            var lastCoffeeTime = 0;
-            for (var i = 0; i < drinks.length; i++) {
-                if (drinks[i].time > lastCoffeeTime) lastCoffeeTime = drinks[i].time;
-            }
-            var remainingWins = trimWindowsBefore(teaWins, lastCoffeeTime + 1);
-            if (remainingWins.length === 0 && teaWins.length > 0) remainingWins = teaWins;
-            distribute(drinks, 'tea', teas, TEA_MG, remainingWins);
-        } else if (state.drinkOrder === 'tea-first') {
-            distribute(drinks, 'tea', teas, TEA_MG, teaWins);
-            var lastTeaTime = 0;
-            for (var i = 0; i < drinks.length; i++) {
-                if (drinks[i].time > lastTeaTime) lastTeaTime = drinks[i].time;
-            }
-            var remainingWins = trimWindowsBefore(coffeeWins, lastTeaTime + 1);
-            if (remainingWins.length === 0 && coffeeWins.length > 0) remainingWins = coffeeWins;
-            distribute(drinks, 'coffee', coffees, COFFEE_MG, remainingWins);
-        } else {
-            // Interleave: all drinks spread evenly, alternating types
-            var totalCount = coffees + teas;
-            var maxCutoff = Math.max(coffeeCutoff, teaCutoff);
-            var allWins = clampWindows(windows, maxCutoff);
-            var slots = [];
-            distribute(slots, '_', totalCount, 0, allWins);
-            // Build alternating sequence
-            var cRemain = coffees, tRemain = teas;
-            var useCoffeeNext = true;
-            for (var i = 0; i < slots.length; i++) {
-                var type, mg;
-                if (useCoffeeNext && cRemain > 0) {
-                    type = 'coffee'; mg = COFFEE_MG; cRemain--;
-                } else if (tRemain > 0) {
-                    type = 'tea'; mg = TEA_MG; tRemain--;
-                } else if (cRemain > 0) {
-                    type = 'coffee'; mg = COFFEE_MG; cRemain--;
-                } else {
-                    continue;
-                }
-                useCoffeeNext = !useCoffeeNext;
-                var cutoff = type === 'coffee' ? coffeeCutoff : teaCutoff;
-                if (cutoff <= 0) continue;  // no safe slot for this type today - drop it rather than schedule before wake
-                drinks.push({ type: type, time: Math.max(0, Math.min(slots[i].time, Math.floor(cutoff))), mg: mg });
-            }
-        }
-
-        drinks.sort(function(a, b) { return a.time - b.time; });
-        return drinks;
-    }
-
-    function distribute(drinks, type, count, mg, windows) {
+    // Places `count` drinks of one type across windows. Never loses a drink: if the windows have
+    // no length they are all put at the start (the spacing pass then spreads or drops them).
+    function distribute(out, type, count, mg, windows) {
         if (count === 0 || windows.length === 0) return;
 
         var totalSpan = 0;
         for (var i = 0; i < windows.length; i++) {
             totalSpan += windows[i].end - windows[i].start;
         }
-        if (totalSpan <= 0) return;
+        if (totalSpan <= 0) {
+            for (var n = 0; n < count; n++) out.push({ type: type, time: Math.round(windows[0].start), mg: mg });
+            return;
+        }
 
         var spacing = totalSpan / (count + 1);
         var placed = 0;
@@ -584,11 +621,10 @@ hidden: true
                 var target = (placed + 1) * spacing;
                 var posInWindow = target - accumulated;
                 if (posInWindow > 0 && posInWindow <= wLen) {
-                    drinks.push({ type: type, time: Math.round(w.start + posInWindow), mg: mg });
+                    out.push({ type: type, time: Math.round(w.start + posInWindow), mg: mg });
                     placed++;
                 } else if (posInWindow <= 0) {
-                    // Target falls before this window; place at window start
-                    drinks.push({ type: type, time: Math.round(w.start), mg: mg });
+                    out.push({ type: type, time: Math.round(w.start), mg: mg });
                     placed++;
                 } else {
                     break;
@@ -600,9 +636,145 @@ hidden: true
         while (placed < count) {
             var lastWin = windows[windows.length - 1];
             var t = Math.round(lastWin.start + (lastWin.end - lastWin.start) * (placed + 1) / (count + 1));
-            drinks.push({ type: type, time: t, mg: mg });
+            out.push({ type: type, time: t, mg: mg });
             placed++;
         }
+    }
+
+    // Optimal windows cut back to a cut-off. If the cut-off is before the first window, use the
+    // stretch from wake to the cut-off instead. Empty only when the cut-off is before wake.
+    function windowsFor(cut, waking) {
+        if (cut < 0) return [];
+        var result = [];
+        var wins = getOptimalWindows();
+        for (var i = 0; i < wins.length; i++) {
+            var w = wins[i];
+            if (w.start >= cut || w.start >= waking) continue;
+            result.push({ start: w.start, end: Math.min(w.end, cut, waking) });
+        }
+        if (result.length === 0) result.push({ start: 0, end: Math.min(cut, waking) });
+        return result;
+    }
+
+    // Takes out the time within MIN_GAP of each pinned drink.
+    function subtractPinned(wins, pinnedList) {
+        var result = [];
+        for (var i = 0; i < wins.length; i++) {
+            var segments = [{ start: wins[i].start, end: wins[i].end }];
+            for (var p = 0; p < pinnedList.length; p++) {
+                var pTime = pinnedList[p].time;
+                var next = [];
+                for (var s = 0; s < segments.length; s++) {
+                    var seg = segments[s];
+                    if (pTime - MIN_GAP >= seg.end || pTime + MIN_GAP <= seg.start) {
+                        next.push(seg);
+                    } else {
+                        if (seg.start < pTime - MIN_GAP) next.push({ start: seg.start, end: pTime - MIN_GAP });
+                        if (pTime + MIN_GAP < seg.end) next.push({ start: pTime + MIN_GAP, end: seg.end });
+                    }
+                }
+                segments = next;
+            }
+            result = result.concat(segments);
+        }
+        return result;
+    }
+
+    function latestOfType(list, type, from) {
+        var latest = from;
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].type === type && list[i].time > latest) latest = list[i].time;
+        }
+        return latest;
+    }
+
+    function afterTime(wins, t) {
+        var result = [];
+        for (var i = 0; i < wins.length; i++) {
+            var s = Math.max(wins[i].start, t);
+            if (s < wins[i].end) result.push({ start: s, end: wins[i].end });
+        }
+        return result.length ? result : wins;
+    }
+
+    // Lays out the unpinned drinks around the pinned ones. Every drink ends up no later than its
+    // type's cut-off and at least MIN_GAP from every other; a drink that cannot be placed is dropped
+    // and counted in state.dropped.
+    function layout(pinned, coffees, teas) {
+        var cut = cutoffs();
+        var waking = wakingMinutes();
+        var pinnedCoffees = pinned.filter(function(d) { return d.type === 'coffee'; }).length;
+        var pinnedTeas = pinned.length - pinnedCoffees;
+        var wantCoffees = Math.max(0, coffees - pinnedCoffees);
+        var wantTeas = Math.max(0, teas - pinnedTeas);
+
+        var coffeeWins = subtractPinned(windowsFor(cut.coffee, waking), pinned);
+        var teaWins = subtractPinned(windowsFor(cut.tea, waking), pinned);
+
+        var targets = [];
+        if (state.drinkOrder === 'coffee-first') {
+            distribute(targets, 'coffee', wantCoffees, COFFEE_MG, coffeeWins);
+            var lastCoffee = latestOfType(targets.concat(pinned), 'coffee', 0);
+            distribute(targets, 'tea', wantTeas, TEA_MG, afterTime(teaWins, lastCoffee + 1));
+        } else if (state.drinkOrder === 'tea-first') {
+            distribute(targets, 'tea', wantTeas, TEA_MG, teaWins);
+            var lastTea = latestOfType(targets.concat(pinned), 'tea', 0);
+            distribute(targets, 'coffee', wantCoffees, COFFEE_MG, afterTime(coffeeWins, lastTea + 1));
+        } else {
+            var allWins = subtractPinned(windowsFor(Math.max(cut.coffee, cut.tea), waking), pinned);
+            var slots = [];
+            distribute(slots, '_', wantCoffees + wantTeas, 0, allWins);
+            var cLeft = wantCoffees, tLeft = wantTeas, coffeeNext = true;
+            for (var i = 0; i < slots.length; i++) {
+                var type;
+                if (coffeeNext && cLeft > 0) { type = 'coffee'; cLeft--; }
+                else if (tLeft > 0) { type = 'tea'; tLeft--; }
+                else if (cLeft > 0) { type = 'coffee'; cLeft--; }
+                else { continue; }
+                coffeeNext = !coffeeNext;
+                targets.push({ type: type, time: slots[i].time, mg: type === 'coffee' ? COFFEE_MG : TEA_MG });
+            }
+        }
+
+        // Spacing pass: move each drink to the nearest free time at or before its cut-off.
+        targets.sort(function(a, b) { return a.time - b.time; });
+        var result = pinned.slice();
+        var placedCount = { coffee: pinnedCoffees, tea: pinnedTeas };
+        for (var j = 0; j < targets.length; j++) {
+            var t = targets[j];
+            var time = nearestFreeTime(t.time, Math.min(cut[t.type], waking), result);
+            if (time === null) continue;
+            result.push({ type: t.type, time: time, mg: t.mg, pinned: false });
+            placedCount[t.type]++;
+        }
+
+        state.drinks = result;
+        state.drinks.sort(function(a, b) { return a.time - b.time; });
+        state.dropped = {
+            coffee: Math.max(0, coffees - placedCount.coffee),
+            tea: Math.max(0, teas - placedCount.tea)
+        };
+    }
+
+    // Nearest whole minute to `want` in [0, hi] that is at least MIN_GAP from every taken drink.
+    function nearestFreeTime(want, hi, taken) {
+        if (hi < 0) return null;
+        var start = clamp(Math.round(want), 0, hi);
+        var candidates = [start, 0, hi];
+        for (var i = 0; i < taken.length; i++) {
+            candidates.push(taken[i].time - MIN_GAP, taken[i].time + MIN_GAP);
+        }
+        var best = null;
+        for (var c = 0; c < candidates.length; c++) {
+            var cand = candidates[c];
+            if (cand < 0 || cand > hi) continue;
+            var ok = true;
+            for (var k = 0; k < taken.length; k++) {
+                if (Math.abs(cand - taken[k].time) < MIN_GAP) { ok = false; break; }
+            }
+            if (ok && (best === null || Math.abs(cand - start) < Math.abs(best - start))) best = cand;
+        }
+        return best;
     }
 
     function caffeineAtTime(drinks, minutesSinceWake, halfLifeHrs) {
@@ -650,29 +822,53 @@ hidden: true
         return M.top + PH - (val / maxVal) * PH;
     }
 
+    function textWidth(str, size) { return str.length * size * 0.6; }
+
+    function joinList(items) {
+        if (items.length <= 1) return items.join('');
+        return items.slice(0, -1).join(', ') + ' and ' + items[items.length - 1];
+    }
+
+    function graphSummary(drinks) {
+        if (drinks.length === 0) return 'Caffeine through the day: no drinks scheduled';
+        var parts = [];
+        ['coffee', 'tea'].forEach(function(type) {
+            var times = drinks.filter(function(d) { return d.type === type; })
+                .map(function(d) { return formatTime(state.wake + d.time); });
+            if (times.length) parts.push(type + ' at ' + joinList(times));
+        });
+        var left = Math.round(totalCaffeineAtTime(drinks, wakingMinutes(), state.halfLife));
+        return 'Caffeine through the day: ' + parts.join(', ') + ', about ' + left + ' mg left at bedtime';
+    }
+
     function renderGraph(drinks) {
-        var svg = document.getElementById('caffeine-graph');
+        var svg = $('caffeine-graph');
         while (svg.firstChild) svg.removeChild(svg.firstChild);
 
         var waking = wakingMinutes();
         if (waking <= 0) return;
 
+        // One viewBox unit per CSS pixel, so text is the size it is set to at any width.
+        W = Math.max(300, Math.round($('graph-container').getBoundingClientRect().width) || 800);
+        FS = W < 500 ? 11 : 12;
+        PW = W - M.left - M.right;
+        PH = H - M.top - M.bottom;
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        svg.setAttribute('aria-label', graphSummary(drinks));
+
+        var font = 'Inter, sans-serif';
+
         // Calculate max caffeine for y-axis
         var maxCaffeine = 0;
-        var totalDrinks = state.coffees + state.teas;
-        if (totalDrinks > 0) {
-            // Sample the caffeine curve to find peak
+        if (drinks.length > 0) {
             for (var t = 0; t <= waking; t += 5) {
                 var c = totalCaffeineAtTime(drinks, t, state.halfLife);
                 if (c > maxCaffeine) maxCaffeine = c;
             }
         }
-        maxCaffeine = Math.max(maxCaffeine, 50); // minimum scale
-        maxCaffeine = Math.ceil(maxCaffeine / 50) * 50; // round up to nearest 50
-
-        // Defs
-        var defs = el('defs');
-        svg.appendChild(defs);
+        maxCaffeine = Math.max(maxCaffeine, 50);
+        var mgStep = maxCaffeine > 300 ? 100 : 50;
+        maxCaffeine = Math.ceil(maxCaffeine / mgStep) * mgStep;
 
         // Background
         svg.appendChild(el('rect', {
@@ -689,7 +885,7 @@ hidden: true
             }));
         }
 
-        // Zone backgrounds (optimal windows as green, cortisol peaks as red)
+        // Optimal windows
         var windows = getOptimalWindows();
         for (var wi = 0; wi < windows.length; wi++) {
             var w = windows[wi];
@@ -702,79 +898,73 @@ hidden: true
             }));
         }
 
-        // Per-drink-type cutoff lines and zones
-        var coffeeCutoffSinceWake = lastSafeDrinkTime(state.sleep, state.halfLife, COFFEE_MG) - state.wake;
-        if (coffeeCutoffSinceWake < 0) coffeeCutoffSinceWake += 1440;
-        var teaCutoffSinceWake = lastSafeDrinkTime(state.sleep, state.halfLife, TEA_MG) - state.wake;
-        if (teaCutoffSinceWake < 0) teaCutoffSinceWake += 1440;
+        // Cut-offs: the same numbers the cards and scheduler use
+        var cut = cutoffs();
 
-        // Red zone starts at whichever cutoff comes later (tea, since lower mg)
-        var latestCutoff = Math.max(coffeeCutoffSinceWake, teaCutoffSinceWake);
-        if (latestCutoff < waking) {
+        // Red zone from the later cut-off (tea) to sleep
+        var redStart = Math.max(0, Math.max(cut.coffee, cut.tea));
+        if (redStart < waking) {
             svg.appendChild(el('rect', {
-                x: xScale(latestCutoff, waking), y: M.top,
-                width: xScale(waking, waking) - xScale(latestCutoff, waking),
+                x: xScale(redStart, waking), y: M.top,
+                width: xScale(waking, waking) - xScale(redStart, waking),
                 height: PH, fill: COL.zoneBad
             }));
         }
 
-        // Coffee cutoff line (if there are coffees)
-        if (state.coffees > 0 && coffeeCutoffSinceWake < waking) {
-            var ccx = xScale(coffeeCutoffSinceWake, waking);
+        // Cut-off lines. Their labels sit at the bottom of the plot, away from the drink time labels at the top.
+        var labelRow = M.top + PH - 6;
+        var cutLabels = [];
+        var cutDefs = [
+            { type: 'coffee', count: state.coffees, text: 'Last coffee', colour: COL.coffee, textColour: COL.coffee },
+            { type: 'tea', count: state.teas, text: 'Last tea', colour: COL.tea, textColour: COL.teaText }
+        ];
+        for (var ci = 0; ci < cutDefs.length; ci++) {
+            var cd = cutDefs[ci];
+            var cm = cut[cd.type];
+            if (cd.count <= 0 || cm < 0 || cm >= waking) continue;
+            var cx = xScale(cm, waking);
             svg.appendChild(el('line', {
-                x1: ccx, y1: M.top, x2: ccx, y2: M.top + PH,
-                stroke: COL.coffee, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
+                x1: cx, y1: M.top, x2: cx, y2: M.top + PH,
+                stroke: cd.colour, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
             }));
-            svg.appendChild(el('text', {
-                x: ccx + 4, y: M.top + 12,
-                fill: COL.coffee, 'font-size': '9', 'font-family': 'Inter, sans-serif'
-            }, 'Last coffee'));
-        }
-
-        // Tea cutoff line (if there are teas and it differs from coffee cutoff)
-        if (state.teas > 0 && teaCutoffSinceWake < waking) {
-            var tcx = xScale(teaCutoffSinceWake, waking);
-            svg.appendChild(el('line', {
-                x1: tcx, y1: M.top, x2: tcx, y2: M.top + PH,
-                stroke: COL.tea, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
-            }));
-            svg.appendChild(el('text', {
-                x: tcx + 4, y: state.coffees > 0 ? M.top + 22 : M.top + 12,
-                fill: COL.tea, 'font-size': '9', 'font-family': 'Inter, sans-serif'
-            }, 'Last tea'));
+            var tw = textWidth(cd.text, FS);
+            var fitsLeft = cx - 4 - tw >= M.left;
+            var label = el('text', {
+                x: fitsLeft ? cx - 4 : cx + 4, y: labelRow,
+                'text-anchor': fitsLeft ? 'end' : 'start',
+                fill: cd.textColour, 'font-size': FS, 'font-family': font,
+                'class': 'cutoff-label'
+            }, cd.text);
+            svg.appendChild(label);
+            cutLabels.push(label);
+            labelRow -= FS + 6;
         }
 
         // Cortisol curve
         var cortisolPath = '';
         var cortisolFillPath = '';
-        var maxCortisol = 1.0;
-        for (var t = 0; t <= waking; t += 3) {
-            var cv = cortisolLevel(t);
-            var px = xScale(t, waking);
-            var py = yScale(cv, maxCortisol);
-            cortisolPath += (t === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
-            cortisolFillPath += (t === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+        for (var ct = 0; ct <= waking; ct += 3) {
+            var cv = cortisolLevel(ct);
+            var px = xScale(ct, waking);
+            var py = yScale(cv, 1.0);
+            cortisolPath += (ct === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+            cortisolFillPath += (ct === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
         }
-        // Close fill path
         cortisolFillPath += 'L' + xScale(waking, waking).toFixed(1) + ',' + (M.top + PH);
         cortisolFillPath += 'L' + xScale(0, waking).toFixed(1) + ',' + (M.top + PH) + 'Z';
 
-        svg.appendChild(el('path', {
-            d: cortisolFillPath, fill: COL.cortisolFill
-        }));
+        svg.appendChild(el('path', { d: cortisolFillPath, fill: COL.cortisolFill }));
         svg.appendChild(el('path', {
             d: cortisolPath, fill: 'none',
             stroke: COL.cortisolLine, 'stroke-width': 1.5
         }));
 
         // Caffeine decay curve
-        if (totalDrinks > 0 && drinks.length > 0) {
+        if (drinks.length > 0) {
             var caffPath = '';
-            for (var t = 0; t <= waking; t += 3) {
-                var cv = totalCaffeineAtTime(drinks, t, state.halfLife);
-                var px = xScale(t, waking);
-                var py = yScale(cv, maxCaffeine);
-                caffPath += (t === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+            for (var t2 = 0; t2 <= waking; t2 += 3) {
+                var cf = totalCaffeineAtTime(drinks, t2, state.halfLife);
+                caffPath += (t2 === 0 ? 'M' : 'L') + xScale(t2, waking).toFixed(1) + ',' + yScale(cf, maxCaffeine).toFixed(1);
             }
             svg.appendChild(el('path', {
                 d: caffPath, fill: 'none',
@@ -787,348 +977,305 @@ hidden: true
             var d = drinks[di];
             var dx = xScale(d.time, waking);
             var colour = d.type === 'coffee' ? COL.coffee : COL.tea;
-
             svg.appendChild(el('line', {
                 x1: dx, y1: M.top, x2: dx, y2: M.top + PH,
                 stroke: colour, 'stroke-width': 1, 'stroke-dasharray': '3,3', opacity: 0.6
             }));
-            svg.appendChild(el('circle', {
-                cx: dx, cy: M.top + 8, r: 5,
-                fill: colour
-            }));
-
-            // Time label - alternate above/below to avoid overlap
-            var labelY = (di % 2 === 0) ? M.top + 24 : M.top + 36;
-            svg.appendChild(el('text', {
-                x: dx, y: labelY, 'text-anchor': 'middle',
-                fill: colour, 'font-size': '9', 'font-family': 'JetBrains Mono, monospace',
-                'font-weight': '600'
-            }, formatTime(state.wake + d.time)));
+            svg.appendChild(el('circle', { cx: dx, cy: M.top + 8, r: 5, fill: colour }));
         }
 
-        // X-axis (time labels)
-        var hourStep = waking > 840 ? 120 : 60; // 2hr labels if waking >14h, else 1hr
+        // Drink time labels: stacked in up to three rows at the top. If any would overlap another
+        // (or there are 16 or more drinks) none are drawn; the schedule list has the times.
+        var rows = [-Infinity, -Infinity, -Infinity];
+        var labelDefs = [];
+        var allFit = drinks.length < 16;
+        for (var li = 0; allFit && li < drinks.length; li++) {
+            var ld = drinks[li];
+            var lx = xScale(ld.time, waking);
+            var lw = textWidth('00:00', FS) + 4;
+            var row = -1;
+            for (var r = 0; r < rows.length; r++) {
+                if (lx - lw / 2 >= rows[r]) { row = r; break; }
+            }
+            if (row < 0) { allFit = false; break; }
+            rows[row] = lx + lw / 2;
+            labelDefs.push({ d: ld, x: lx, y: M.top + 8 + 5 + FS + 3 + row * (FS + 6) });
+        }
+        if (allFit) {
+            for (var ldi = 0; ldi < labelDefs.length; ldi++) {
+                var item = labelDefs[ldi];
+                svg.appendChild(el('text', {
+                    x: item.x, y: item.y, 'text-anchor': 'middle',
+                    fill: item.d.type === 'coffee' ? COL.coffee : COL.teaText,
+                    'font-size': FS, 'font-family': 'JetBrains Mono, monospace',
+                    'font-weight': '600', 'class': 'drink-label'
+                }, formatTime(state.wake + item.d.time)));
+            }
+        }
+
+        // X-axis (time labels), spaced so neighbours do not touch
         svg.appendChild(el('line', {
             x1: M.left, y1: M.top + PH, x2: M.left + PW, y2: M.top + PH,
             stroke: COL.grid, 'stroke-width': 1
         }));
-
-        for (var t = 0; t <= waking; t += hourStep) {
-            var tx = xScale(t, waking);
+        var steps = [60, 120, 180, 240, 360, 720];
+        var hourStep = steps[steps.length - 1];
+        for (var si = 0; si < steps.length; si++) {
+            if (steps[si] / waking * PW >= textWidth('00:00', FS) + 14) { hourStep = steps[si]; break; }
+        }
+        for (var xt = 0; xt <= waking; xt += hourStep) {
+            var tx = xScale(xt, waking);
             svg.appendChild(el('line', {
                 x1: tx, y1: M.top + PH, x2: tx, y2: M.top + PH + 4,
                 stroke: COL.axis, 'stroke-width': 1
             }));
             svg.appendChild(el('text', {
-                x: tx, y: M.top + PH + 16, 'text-anchor': 'middle',
-                fill: COL.text, 'font-size': '10', 'font-family': 'Inter, sans-serif'
-            }, formatTime(state.wake + t)));
+                x: tx, y: M.top + PH + 4 + FS, 'text-anchor': 'middle',
+                fill: COL.text, 'font-size': FS, 'font-family': font
+            }, formatTime(state.wake + xt)));
         }
 
         // Y-axis right (caffeine mg)
-        if (totalDrinks > 0) {
-            for (var mg = 0; mg <= maxCaffeine; mg += 50) {
-                var my = yScale(mg, maxCaffeine);
+        if (drinks.length > 0) {
+            for (var mg = 0; mg <= maxCaffeine; mg += mgStep) {
                 svg.appendChild(el('text', {
-                    x: M.left + PW + 6, y: my + 3, 'text-anchor': 'start',
-                    fill: COL.caffeine, 'font-size': '9', 'font-family': 'Inter, sans-serif'
+                    x: M.left + PW + 6, y: yScale(mg, maxCaffeine) + 4, 'text-anchor': 'start',
+                    fill: COL.caffeineText, 'font-size': FS, 'font-family': font
                 }, mg + 'mg'));
             }
         }
 
         // Y-axis left (cortisol, relative)
         svg.appendChild(el('text', {
-            x: M.left - 6, y: M.top + 4, 'text-anchor': 'end',
-            fill: COL.cortisolLine, 'font-size': '9', 'font-family': 'Inter, sans-serif'
+            x: M.left - 6, y: M.top + FS - 2, 'text-anchor': 'end',
+            fill: COL.cortisolText, 'font-size': FS, 'font-family': font
         }, 'High'));
         svg.appendChild(el('text', {
-            x: M.left - 6, y: M.top + PH + 3, 'text-anchor': 'end',
-            fill: COL.cortisolLine, 'font-size': '9', 'font-family': 'Inter, sans-serif'
+            x: M.left - 6, y: M.top + PH, 'text-anchor': 'end',
+            fill: COL.cortisolText, 'font-size': FS, 'font-family': font
         }, 'Low'));
 
         // Wake/Sleep labels
         svg.appendChild(el('text', {
-            x: M.left, y: M.top + PH + 27, 'text-anchor': 'middle',
-            fill: COL.text, 'font-size': '9', 'font-family': 'Inter, sans-serif',
-            'font-weight': '600'
+            x: M.left, y: M.top + PH + 4 + FS * 2 + 2, 'text-anchor': 'middle',
+            fill: COL.text, 'font-size': FS, 'font-family': font, 'font-weight': '600'
         }, 'Wake'));
         svg.appendChild(el('text', {
-            x: M.left + PW, y: M.top + PH + 27, 'text-anchor': 'middle',
-            fill: COL.text, 'font-size': '9', 'font-family': 'Inter, sans-serif',
-            'font-weight': '600'
+            x: M.left + PW, y: M.top + PH + 4 + FS * 2 + 2, 'text-anchor': 'middle',
+            fill: COL.text, 'font-size': FS, 'font-family': font, 'font-weight': '600'
         }, 'Sleep'));
     }
 
-    function renderSchedule(drinks) {
-        var container = document.getElementById('schedule');
-        var resetBtn = document.getElementById('schedule-reset');
+    var PIN_LOCKED = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C9.24 2 7 4.24 7 7v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v3H9V7c0-1.66 1.34-3 3-3z"/></svg>';
+    var PIN_OPEN = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C9.24 2 7 4.24 7 7H9c0-1.66 1.34-3 3-3s3 1.34 3 3v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2H17V7c0-2.76-2.24-5-5-5z"/></svg>';
 
+    function renderSchedule(drinks) {
+        var container = $('schedule');
+        var resetBtn = $('schedule-reset');
+        var help = $('schedule-help');
+        var focus = pendingFocus;
+        pendingFocus = null;
+
+        rendering = true;
         if (drinks.length === 0) {
-            container.innerHTML = '<div class="empty-message">Add some drinks to see your optimal schedule.</div>';
+            // With no drinks asked for there is nothing to show; if some were asked for the warning explains.
+            container.innerHTML = (state.coffees + state.teas === 0)
+                ? '<div class="empty-message">Add some drinks to see your optimal schedule.</div>'
+                : '';
             resetBtn.style.display = 'none';
+            help.hidden = true;
+            rendering = false;
             return;
         }
 
-        // Show reset button if any drink is pinned
-        var hasPinned = drinks.some(function(d) { return d.pinned; });
-        resetBtn.style.display = hasPinned ? 'inline' : 'none';
+        resetBtn.style.display = drinks.some(function(d) { return d.pinned; }) ? 'inline-block' : 'none';
+        help.hidden = false;
 
+        var ordinals = { coffee: 0, tea: 0 };
         var html = '<ul class="schedule-list">';
         for (var i = 0; i < drinks.length; i++) {
             var d = drinks[i];
-            var label = d.type === 'coffee' ? 'Coffee' : 'Tea';
-            var mg = d.mg + 'mg';
+            var ord = ++ordinals[d.type];
+            var name = typeName(d.type) + ' ' + ord;
             var time = formatTime(state.wake + d.time);
             var pinnedClass = d.pinned ? ' pinned' : '';
+            var attrs = ' data-drink-index="' + i + '" data-type="' + d.type + '" data-ord="' + ord + '"';
             html += '<li class="schedule-item">';
-            html += '<span class="schedule-dot ' + d.type + '"></span>';
-            html += '<input type="time" class="form-control schedule-time-input' + pinnedClass + '" data-drink-index="' + i + '" value="' + time + '">';
-            html += '<button type="button" class="schedule-pin' + pinnedClass + '" data-drink-index="' + i + '" title="' + (d.pinned ? 'Unpin (recalculate this time)' : 'Pinned when you edit') + '">';
-            html += d.pinned ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.24 2 7 4.24 7 7v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v3H9V7c0-1.66 1.34-3 3-3z"/></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.24 2 7 4.24 7 7H9c0-1.66 1.34-3 3-3s3 1.34 3 3v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2H17V7c0-2.76-2.24-5-5-5z"/></svg>';
-            html += '</button>';
-            html += '<span class="schedule-type">' + label + ' (' + mg + ')</span>';
+            html += '<span class="schedule-dot ' + d.type + '" aria-hidden="true"></span>';
+            html += '<input type="time" class="form-control schedule-time-input' + pinnedClass + '"' + attrs
+                + ' data-committed="' + time + '" value="' + time + '" aria-label="' + capital(name) + ' time">';
+            html += '<button type="button" class="schedule-pin' + pinnedClass + '"' + attrs
+                + ' aria-label="' + (d.pinned ? 'Unlock ' + name + ', let it be rescheduled' : 'Lock ' + name + ' at this time') + '">'
+                + (d.pinned ? PIN_LOCKED : PIN_OPEN) + '</button>';
+            html += '<span class="schedule-type">' + capital(typeName(d.type)) + ' (' + d.mg + 'mg)</span>';
             html += '</li>';
         }
         html += '</ul>';
         container.innerHTML = html;
+        rendering = false;
 
-        // Bind Enter key and blur on time inputs (apply on Enter or tab-out, not mid-edit)
         var inputs = container.querySelectorAll('.schedule-time-input');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].addEventListener('keydown', onScheduleTimeKeydown);
-            inputs[i].addEventListener('blur', onScheduleTimeBlur);
+        for (var a = 0; a < inputs.length; a++) {
+            inputs[a].addEventListener('keydown', onScheduleTimeKeydown);
+            inputs[a].addEventListener('blur', onScheduleTimeBlur);
+        }
+        var pins = container.querySelectorAll('.schedule-pin');
+        for (var b = 0; b < pins.length; b++) {
+            pins[b].addEventListener('click', onPinToggle);
         }
 
-        // Bind pin toggle buttons
-        var pins = container.querySelectorAll('.schedule-pin');
-        for (var i = 0; i < pins.length; i++) {
-            pins[i].addEventListener('click', onPinToggle);
-        }
+        if (focus) restoreFocus(focus, container);
     }
 
-    function applyScheduleTime(input) {
-        var idx = parseInt(input.getAttribute('data-drink-index'), 10);
-        var newAbsMinutes = timeToMinutes(input.value);
-        if (isNaN(newAbsMinutes)) return;
-        var newRelMinutes = newAbsMinutes - state.wake;
-        if (newRelMinutes < 0) newRelMinutes += 1440;
-        // Clamp to waking window
+    // Works out which schedule control has focus, so it can be given back after a re-render.
+    function captureFocus(target) {
+        var active = target || document.activeElement;
+        if (!active || !active.closest || !active.closest('#schedule')) return null;
+        var kind = active.classList.contains('schedule-pin') ? 'pin'
+            : active.classList.contains('schedule-time-input') ? 'time' : null;
+        if (!kind) return null;
+        var idx = parseInt(active.getAttribute('data-drink-index'), 10);
+        return { kind: kind, ref: state.drinks[idx], type: active.getAttribute('data-type'), ord: active.getAttribute('data-ord') };
+    }
+
+    function restoreFocus(focus, container) {
+        var idx = state.drinks.indexOf(focus.ref);
+        var sel = focus.kind === 'pin' ? '.schedule-pin' : '.schedule-time-input';
+        var target = idx >= 0 ? container.querySelector(sel + '[data-drink-index="' + idx + '"]')
+            : container.querySelector(sel + '[data-type="' + focus.type + '"][data-ord="' + focus.ord + '"]');
+        if (target) target.focus();
+    }
+
+    // Where a typed clock time lands, in minutes since wake. Times outside the waking day go to
+    // whichever end of it is nearer.
+    function relativeFromClock(clock) {
         var waking = wakingMinutes();
-        if (newRelMinutes > waking) newRelMinutes = waking;
-        // Only recalculate if the time actually changed
-        if (state.drinks[idx].time === newRelMinutes && state.drinks[idx].pinned) return;
-        state.drinks[idx].time = newRelMinutes;
-        state.drinks[idx].pinned = true;
-        recalculateUnpinned();
+        var rel = clock - state.wake;
+        if (rel < 0) rel += 1440;
+        if (rel > waking) rel = (rel - waking <= 1440 - rel) ? waking : 0;
+        return rel;
+    }
+
+    // Applies an edited schedule time once. Does nothing if the value is unchanged, and puts the
+    // current time back if the field was cleared.
+    function commitScheduleTime(input) {
+        if (!input.isConnected) return;
+        var committed = input.getAttribute('data-committed');
+        var clock = timeToMinutes(input.value);
+        if (isNaN(clock)) { input.value = committed; return; }
+        if (input.value === committed) return;
+        var idx = parseInt(input.getAttribute('data-drink-index'), 10);
+        var drink = state.drinks[idx];
+        if (!drink) return;
+
+        pendingFocus = captureFocus();
+        drink.time = relativeFromClock(clock);
+        drink.pinned = true;
+        relayoutUnpinned();
     }
 
     function onScheduleTimeKeydown(e) {
         if (e.key !== 'Enter') return;
         e.preventDefault();
-        applyScheduleTime(this);
-        this.blur();
+        commitScheduleTime(this);
     }
 
+    // Runs after focus has moved on, so the re-render cannot swallow the next field's focus.
     function onScheduleTimeBlur() {
-        applyScheduleTime(this);
+        if (rendering) return;
+        var input = this;
+        if (input.value === '') { input.value = input.getAttribute('data-committed'); return; }
+        if (input.value === input.getAttribute('data-committed')) return;
+        setTimeout(function() { commitScheduleTime(input); }, 0);
     }
 
     function onPinToggle() {
         var idx = parseInt(this.getAttribute('data-drink-index'), 10);
-        state.drinks[idx].pinned = !state.drinks[idx].pinned;
-        if (!state.drinks[idx].pinned) {
-            recalculateUnpinned();
-        } else {
-            renderSchedule(state.drinks);
-        }
+        var drink = state.drinks[idx];
+        if (!drink) return;
+        pendingFocus = captureFocus(this);
+        drink.pinned = !drink.pinned;
+        if (drink.pinned) refreshViews();
+        else relayoutUnpinned();
     }
 
-    function onResetPins() {
-        recalculate();
+    function relayoutUnpinned() {
+        var pinned = state.drinks.filter(function(d) { return d.pinned; });
+        layout(pinned, state.coffees, state.teas);
+        refreshViews();
     }
 
-    // Recalculate only unpinned drinks, keeping pinned ones fixed
-    function recalculateUnpinned() {
-        var windows = getOptimalWindows();
-        var waking = state.sleep - state.wake;
-        if (waking <= 0) waking += 1440;
+    // ========== RESULTS AND WARNINGS ==========
 
-        var coffeeCutoff = lastSafeDrinkTime(state.sleep, state.halfLife, COFFEE_MG) - state.wake;
-        var teaCutoff = lastSafeDrinkTime(state.sleep, state.halfLife, TEA_MG) - state.wake;
+    function setCard(id, count, cutRel) {
+        var node = $(id);
+        var text = count === 0 ? '--:--' : cutRel < 0 ? 'Skip today' : formatTime(state.wake + cutRel);
+        node.textContent = text;
+        node.classList.toggle('is-text', text === 'Skip today');
+    }
 
-        function clampWindows(wins, cutoff) {
-            var result = [];
-            for (var i = 0; i < wins.length; i++) {
-                var w = wins[i];
-                if (w.start >= cutoff || w.start >= waking) continue;
-                result.push({ start: w.start, end: Math.min(w.end, cutoff, waking) });
-            }
-            return result;
-        }
+    var WARNING_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>';
 
-        // Collect pinned drinks and count unpinned by type
-        var pinned = [];
-        var unpinnedCoffees = 0;
-        var unpinnedTeas = 0;
-        for (var i = 0; i < state.drinks.length; i++) {
-            if (state.drinks[i].pinned) {
-                pinned.push(state.drinks[i]);
-            } else {
-                if (state.drinks[i].type === 'coffee') unpinnedCoffees++;
-                else unpinnedTeas++;
+    function warningText(drinks) {
+        var cut = cutoffs();
+        for (var i = 0; i < drinks.length; i++) {
+            var d = drinks[i];
+            if (d.time > cut[d.type]) {
+                return 'Your ' + typeName(d.type) + ' at ' + formatTime(state.wake + d.time)
+                    + ' is later than the ' + formatTime(state.wake + cut[d.type])
+                    + ' cut-off and is likely to cost you sleep.';
             }
         }
-
-        // Remove time ranges occupied by pinned drinks (buffer of 15 min either side)
-        function subtractPinned(wins, pinnedList) {
-            var result = [];
-            for (var i = 0; i < wins.length; i++) {
-                var segments = [{ start: wins[i].start, end: wins[i].end }];
-                for (var p = 0; p < pinnedList.length; p++) {
-                    var pTime = pinnedList[p].time;
-                    var newSegments = [];
-                    for (var s = 0; s < segments.length; s++) {
-                        var seg = segments[s];
-                        if (pTime - 15 >= seg.end || pTime + 15 <= seg.start) {
-                            newSegments.push(seg);
-                        } else {
-                            if (seg.start < pTime - 15) newSegments.push({ start: seg.start, end: pTime - 15 });
-                            if (pTime + 15 < seg.end) newSegments.push({ start: pTime + 15, end: seg.end });
-                        }
-                    }
-                    segments = newSegments;
-                }
-                result = result.concat(segments);
-            }
-            return result;
+        var dropped = state.dropped.coffee + state.dropped.tea;
+        if (dropped > 0) {
+            return dropped === 1
+                ? "1 drink doesn't fit before your cut-offs today and has been left off."
+                : dropped + " drinks don't fit before your cut-offs today and have been left off.";
         }
-
-        var coffeeWins = subtractPinned(clampWindows(windows, coffeeCutoff), pinned);
-        var teaWins = subtractPinned(clampWindows(windows, teaCutoff), pinned);
-
-        // Distribute unpinned drinks
-        var newDrinks = [];
-        if (state.drinkOrder === 'coffee-first') {
-            distribute(newDrinks, 'coffee', unpinnedCoffees, COFFEE_MG, coffeeWins);
-            var lastCoffeeTime = 0;
-            for (var i = 0; i < newDrinks.length; i++) {
-                if (newDrinks[i].time > lastCoffeeTime) lastCoffeeTime = newDrinks[i].time;
-            }
-            for (var i = 0; i < pinned.length; i++) {
-                if (pinned[i].type === 'coffee' && pinned[i].time > lastCoffeeTime) lastCoffeeTime = pinned[i].time;
-            }
-            var remainingTeaWins = teaWins.filter(function(w) { return w.end > lastCoffeeTime + 1; }).map(function(w) {
-                return { start: Math.max(w.start, lastCoffeeTime + 1), end: w.end };
-            });
-            if (remainingTeaWins.length === 0 && teaWins.length > 0) remainingTeaWins = teaWins;
-            distribute(newDrinks, 'tea', unpinnedTeas, TEA_MG, remainingTeaWins);
-        } else if (state.drinkOrder === 'tea-first') {
-            distribute(newDrinks, 'tea', unpinnedTeas, TEA_MG, teaWins);
-            var lastTeaTime = 0;
-            for (var i = 0; i < newDrinks.length; i++) {
-                if (newDrinks[i].time > lastTeaTime) lastTeaTime = newDrinks[i].time;
-            }
-            for (var i = 0; i < pinned.length; i++) {
-                if (pinned[i].type === 'tea' && pinned[i].time > lastTeaTime) lastTeaTime = pinned[i].time;
-            }
-            var remainingCoffeeWins = coffeeWins.filter(function(w) { return w.end > lastTeaTime + 1; }).map(function(w) {
-                return { start: Math.max(w.start, lastTeaTime + 1), end: w.end };
-            });
-            if (remainingCoffeeWins.length === 0 && coffeeWins.length > 0) remainingCoffeeWins = coffeeWins;
-            distribute(newDrinks, 'coffee', unpinnedCoffees, COFFEE_MG, remainingCoffeeWins);
-        } else {
-            var allWins = subtractPinned(clampWindows(windows, Math.max(coffeeCutoff, teaCutoff)), pinned);
-            var totalUnpinned = unpinnedCoffees + unpinnedTeas;
-            var slots = [];
-            distribute(slots, '_', totalUnpinned, 0, allWins);
-            var cR = unpinnedCoffees, tR = unpinnedTeas, useC = true;
-            for (var i = 0; i < slots.length; i++) {
-                var type, mg;
-                if (useC && cR > 0) { type = 'coffee'; mg = COFFEE_MG; cR--; }
-                else if (tR > 0) { type = 'tea'; mg = TEA_MG; tR--; }
-                else if (cR > 0) { type = 'coffee'; mg = COFFEE_MG; cR--; }
-                else { continue; }
-                useC = !useC;
-                var uCutoff = type === 'coffee' ? coffeeCutoff : teaCutoff;
-                if (uCutoff <= 0) continue;
-                newDrinks.push({ type: type, time: Math.max(0, Math.min(slots[i].time, Math.floor(uCutoff))), mg: mg });
-            }
+        var total = drinks.reduce(function(sum, d) { return sum + d.mg; }, 0);
+        if (total > DAILY_LIMIT_MG) {
+            return "That's " + total + ' mg today. The NHS and EFSA suggest no more than 400 mg a day for most adults, and 200 mg in pregnancy.';
         }
-
-        // Merge pinned + new unpinned
-        state.drinks = pinned.concat(newDrinks);
-        state.drinks.sort(function(a, b) { return a.time - b.time; });
-
-        renderGraph(state.drinks);
-        renderSchedule(state.drinks);
-        updateResults(state.drinks);
-        updateURL();
-        savePrefs();
+        return '';
     }
 
     function updateResults(drinks) {
-        var waking = wakingMinutes();
+        var cut = cutoffs();
+        setCard('last-coffee', state.coffees, cut.coffee);
+        setCard('last-tea', state.teas, cut.tea);
 
-        // Last safe drink time - latest you could add ANOTHER drink of this type given the
-        // rest of the day's schedule (residual-aware, so it never claims an unsafe time).
-        if (state.coffees > 0) {
-            var lc = lastSafeDrinkTimeWithResidual(drinks, state.sleep, state.wake, state.halfLife, COFFEE_MG);
-            document.getElementById('last-coffee').textContent = lc <= state.wake ? 'None left today' : formatTime(lc);
-        } else {
-            document.getElementById('last-coffee').textContent = '--:--';
-        }
+        // Caffeine at bedtime (including carry-over). Information only.
+        $('bedtime-mg').textContent = Math.round(totalCaffeineAtTime(drinks, wakingMinutes(), state.halfLife)) + ' mg';
 
-        if (state.teas > 0) {
-            var lt = lastSafeDrinkTimeWithResidual(drinks, state.sleep, state.wake, state.halfLife, TEA_MG);
-            document.getElementById('last-tea').textContent = lt <= state.wake ? 'None left today' : formatTime(lt);
-        } else {
-            document.getElementById('last-tea').textContent = '--:--';
-        }
-
-        // Caffeine at bedtime (including carry-over) - flag if over the 25mg threshold
-        var bedEl = document.getElementById('bedtime-mg');
-        if (drinks.length > 0) {
-            var bedtimeMg = totalCaffeineAtTime(drinks, waking, state.halfLife);
-            bedEl.textContent = Math.round(bedtimeMg) + ' mg';
-            if (bedtimeMg > RESIDUAL_THRESHOLD) {
-                bedEl.style.color = '#dc2626';
-                bedEl.title = 'Above the 25 mg threshold - likely to disrupt sleep. Move drinks earlier or cut one.';
-            } else {
-                bedEl.style.color = '';
-                bedEl.title = '';
-            }
-        } else {
-            bedEl.textContent = '0 mg';
-            bedEl.style.color = '';
-            bedEl.title = '';
+        var warning = $('caffeine-warning');
+        var text = warningText(drinks);
+        warning.innerHTML = '';
+        if (text) {
+            warning.innerHTML = WARNING_ICON;
+            var span = document.createElement('span');
+            span.textContent = text;
+            warning.appendChild(span);
         }
     }
 
     // ========== UI ==========
 
-    function readInputs() {
-        state.wake = timeToMinutes(document.getElementById('wake-time').value) || 0;
-        state.sleep = timeToMinutes(document.getElementById('sleep-time').value) || 0;
-        state.coffees = clamp(parseInt(document.getElementById('coffee-count').value, 10) || 0, 0, 8);
-        state.teas = clamp(parseInt(document.getElementById('tea-count').value, 10) || 0, 0, 8);
-        state.halfLife = parseFloat(document.getElementById('metabolism').value) || 5;
-        state.drinkOrder = document.getElementById('drink-order').value;
-        state.carryOver = document.getElementById('carry-over').checked;
-
-        // Handle sleep before wake (next day)
-        if (state.sleep <= state.wake) {
-            state.sleep += 1440;
-        }
+    function readControls() {
+        state.coffees = clamp(parseInt($('coffee-count').value, 10) || 0, 0, MAX_PER_TYPE);
+        state.teas = clamp(parseInt($('tea-count').value, 10) || 0, 0, MAX_PER_TYPE);
+        state.halfLife = normaliseHalfLife($('metabolism').value) || 5;
+        state.drinkOrder = isOrder($('drink-order').value) ? $('drink-order').value : 'coffee-first';
+        state.carryOver = $('carry-over').checked;
     }
 
     function syncInputs() {
-        document.getElementById('wake-time').value = formatTime(state.wake);
-        document.getElementById('sleep-time').value = formatTime(state.sleep % 1440);
-        document.getElementById('coffee-count').value = state.coffees;
-        document.getElementById('tea-count').value = state.teas;
-        document.getElementById('metabolism').value = state.halfLife;
-        document.getElementById('drink-order').value = state.drinkOrder;
-        document.getElementById('carry-over').checked = state.carryOver;
+        $('wake-time').value = formatTime(state.wake);
+        $('sleep-time').value = formatTime(state.sleep % 1440);
+        $('coffee-count').value = state.coffees;
+        $('tea-count').value = state.teas;
+        $('metabolism').value = state.halfLife;
+        $('drink-order').value = state.drinkOrder;
+        $('carry-over').checked = state.carryOver;
     }
 
     function updateURL() {
@@ -1141,8 +1288,7 @@ hidden: true
         if (state.drinkOrder !== 'coffee-first') params.set('order', state.drinkOrder);
         if (state.carryOver) params.set('carry', '1');
 
-        var url = window.location.pathname + '?' + params.toString();
-        history.replaceState(null, '', url);
+        history.replaceState(null, '', window.location.pathname + '?' + params.toString());
     }
 
     function readURL() {
@@ -1157,30 +1303,18 @@ hidden: true
             var s = parseCompactTime(params.get('sleep'));
             if (!isNaN(s)) state.sleep = clamp(s, 0, 1439);
         }
-        if (params.has('coffee')) {
-            state.coffees = clamp(parseInt(params.get('coffee'), 10) || 0, 0, 8);
-        }
-        if (params.has('tea')) {
-            state.teas = clamp(parseInt(params.get('tea'), 10) || 0, 0, 8);
-        }
+        if (params.has('coffee')) state.coffees = clamp(parseInt(params.get('coffee'), 10) || 0, 0, MAX_PER_TYPE);
+        if (params.has('tea')) state.teas = clamp(parseInt(params.get('tea'), 10) || 0, 0, MAX_PER_TYPE);
         if (params.has('metabolism')) {
-            var m = parseFloat(params.get('metabolism'));
-            if (m === 3 || m === 5 || m === 7) state.halfLife = m;
+            var m = normaliseHalfLife(params.get('metabolism'));
+            if (m) state.halfLife = m;
         }
-        if (params.has('order')) {
-            var o = params.get('order');
-            if (o === 'coffee-first' || o === 'tea-first' || o === 'interleave') state.drinkOrder = o;
-        }
+        if (params.has('order') && isOrder(params.get('order'))) state.drinkOrder = params.get('order');
         if (params.has('carry')) state.carryOver = params.get('carry') === '1';
-
-        // Handle sleep before wake
-        if (state.sleep <= state.wake) state.sleep += 1440;
-
         return true;
     }
 
-    function recalculate() {
-        state.drinks = scheduleDrinks(state.coffees, state.teas, state.wake, state.sleep, state.halfLife);
+    function refreshViews() {
         renderGraph(state.drinks);
         renderSchedule(state.drinks);
         updateResults(state.drinks);
@@ -1188,64 +1322,73 @@ hidden: true
         savePrefs();
     }
 
+    // Full recalculation: every drink is rescheduled and all pins are cleared.
+    function recalculate() {
+        layout([], state.coffees, state.teas);
+        refreshViews();
+    }
+
+    function onDayTimeChange(which) {
+        var input = $(which + '-time');
+        var mins = timeToMinutes(input.value);
+        if (isNaN(mins)) {
+            // Empty or invalid: put back the last valid time and leave everything as it was.
+            input.value = formatTime(which === 'wake' ? state.wake : state.sleep);
+            return;
+        }
+        state[which] = mins;
+        normaliseDay();
+        recalculate();
+    }
+
     function bindEvents() {
-        // Time inputs
-        document.getElementById('wake-time').addEventListener('change', function() {
-            readInputs();
-            recalculate();
+        $('wake-time').addEventListener('change', function() { onDayTimeChange('wake'); });
+        $('sleep-time').addEventListener('change', function() { onDayTimeChange('sleep'); });
+
+        ['metabolism', 'drink-order'].forEach(function(id) {
+            $(id).addEventListener('change', function() {
+                readControls();
+                recalculate();
+            });
         });
-        document.getElementById('sleep-time').addEventListener('change', function() {
-            readInputs();
-            recalculate();
+        // Yesterday's carry-over only changes the curve, so pinned times are kept.
+        $('carry-over').addEventListener('change', function() {
+            readControls();
+            refreshViews();
         });
 
-        // Dropdowns
-        document.getElementById('metabolism').addEventListener('change', function() {
-            readInputs();
-            recalculate();
-        });
-        document.getElementById('drink-order').addEventListener('change', function() {
-            readInputs();
-            recalculate();
-        });
-        document.getElementById('carry-over').addEventListener('change', function() {
-            readInputs();
-            recalculate();
-        });
-
-        // Stepper buttons
         var buttons = document.querySelectorAll('[data-stepper]');
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].addEventListener('click', function() {
-                var target = this.getAttribute('data-stepper');
-                var dir = parseInt(this.getAttribute('data-dir'), 10);
-                var input = document.getElementById(target + '-count');
-                var val = clamp((parseInt(input.value, 10) || 0) + dir, 0, 8);
-                input.value = val;
-                readInputs();
+                var input = $(this.getAttribute('data-stepper') + '-count');
+                input.value = clamp((parseInt(input.value, 10) || 0) + parseInt(this.getAttribute('data-dir'), 10), 0, MAX_PER_TYPE);
+                readControls();
                 recalculate();
             });
         }
 
-        // Reset pins
-        document.getElementById('schedule-reset').addEventListener('click', onResetPins);
+        $('schedule-reset').addEventListener('click', recalculate);
+
+        var resizeFrame = 0;
+        window.addEventListener('resize', function() {
+            if (resizeFrame) return;
+            resizeFrame = requestAnimationFrame(function() {
+                resizeFrame = 0;
+                renderGraph(state.drinks);
+            });
+        });
     }
 
-    // Init - URL params take priority over cookie, cookie over defaults
+    // URL parameters take priority over the cookie for settings, the cookie over defaults. Pinned
+    // times come from the cookie whenever its settings are the ones now in use.
     function init() {
-        var hasUrlParams = readURL();
-        if (!hasUrlParams) loadPrefs();
+        var cookie = readCookie();
+        if (!readURL() && cookie) applyCookieSettings(cookie);
+        normaliseDay();
         syncInputs();
         bindEvents();
-        // If drinks were restored from cookie with pins, render them directly
-        if (state.drinks.length > 0 && state.drinks.some(function(d) { return d.pinned; })) {
-            renderGraph(state.drinks);
-            renderSchedule(state.drinks);
-            updateResults(state.drinks);
-            updateURL();
-        } else {
-            recalculate();
-        }
+        layout(cookiePinsFor(cookie), state.coffees, state.teas);
+        refreshViews();
     }
 
     if (document.readyState === 'loading') {
