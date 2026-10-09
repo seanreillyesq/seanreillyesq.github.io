@@ -21,3 +21,7 @@ Thumbs.db
 .vscode/
 *.swp
 .wrangler/
+
+# Playwright output
+playwright-report/
+test-results/
