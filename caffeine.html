@@ -4,7 +4,7 @@ title: "Caffeine Calculator"
 header-title: "Caffeine Calculator"
 description: "When to stop drinking coffee and tea, based on sleep research"
 header-img: "img/home-bg.jpg"
-meta-description: "Calculate optimal coffee and tea timing based on your cortisol rhythm, caffeine half-life, and sleep schedule."
+meta-description: "When to stop drinking coffee and tea before bed, using cut-offs from a 2023 sleep research review. Set your wake and sleep times and get a schedule."
 permalink: /caffeine/
 hidden: true
 ---
@@ -162,6 +162,13 @@ hidden: true
     flex-shrink: 0;
 }
 .schedule-pin:hover { background: #f3f4f6; }
+/* Keep focus visible on every internal stop of a time field, including the clock icon. */
+.caffeine-inputs input[type="time"]:focus-within,
+.schedule-time-input:focus-within,
+.schedule-pin:focus-visible {
+    outline: 2px solid #3A6590;
+    outline-offset: 2px;
+}
 .schedule-pin.pinned { color: #3A6590; }
 .schedule-type { color: var(--color-text-muted, #6B7280); }
 .schedule-help {
@@ -227,7 +234,7 @@ hidden: true
 }
 </style>
 
-<p class="caffeine-intro">Work out when to drink your coffee and tea, based on your cortisol rhythm and caffeine half-life. Adjust the inputs and everything recalculates instantly.</p>
+<p class="caffeine-intro">Work out the latest time to have your coffee and tea before bed, using cut-offs from sleep research. Adjust the inputs and everything recalculates instantly. If you like to time caffeine around your cortisol rhythm, the graph also shows optional preferred windows.</p>
 <p class="caffeine-intro" style="font-size:0.875rem; color:var(--color-text-muted, #6B7280);">I built this to help me time my caffeine around my cortisol peaks. To quote Tim Ferriss: "I am not a doctor, and I don't play one on the internet." This is not medical advice.</p>
 
 <!-- Inputs -->
@@ -313,9 +320,9 @@ hidden: true
 <div class="graph-legend">
     <div class="legend-item"><div class="legend-swatch" style="background:#C4A265;"></div> Cortisol</div>
     <div class="legend-item"><div class="legend-swatch" style="background:#4A7BA7;"></div> Caffeine in system</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#6F4E37;"></div> Coffee / cutoff</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:#4A7C59;"></div> Tea / cutoff</div>
-    <div class="legend-item"><div class="legend-swatch" style="background:rgba(74,124,89,0.12);"></div> Optimal window</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#6F4E37;"></div> Coffee cut-off</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#4A7C59;"></div> Tea cut-off</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:rgba(74,124,89,0.12);"></div> Preferred window</div>
     <div class="legend-item"><div class="legend-swatch" style="background:rgba(180,60,60,0.2);"></div> Too late</div>
 </div>
 
@@ -336,7 +343,7 @@ hidden: true
     <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
     <p><strong>Cortisol rhythm:</strong> Your body produces cortisol in peaks throughout the day, starting with the cortisol awakening response about 30-45 minutes after you wake up, with smaller peaks in the late morning and mid-afternoon. Some people prefer to wait until after the cortisol awakening response before their first coffee. The evidence for this is thin, so treat the green windows as a preference, not a rule.</p>
     <p><strong>Caffeine half-life:</strong> The average adult eliminates half the caffeine in their system every 5 hours. Smokers clear it faster, in about 3 hours. Slow metabolisers take around 8 hours (oral contraceptives raise it from roughly 5 to 8 hours), and pregnancy slows it much further. The metabolism setting stretches or shortens the cut-off times in proportion.</p>
-    <p><strong>When to stop:</strong> Gardiner et al. (2023, <em>Sleep Medicine Reviews</em>) reviewed the evidence on caffeine and the sleep that follows it. To avoid losing total sleep time, they recommend a 107 mg coffee at least 8.8 hours before bed and 217.5 mg at least 13.2 hours before bed. This tool draws a straight line between those two points, so each drink gets its own gap: at normal metabolism a coffee (95 mg) needs about 8.3 hours and a tea (47 mg) about 6.4 hours. Your bedtime minus that gap gives the "Last coffee by" and "Last tea by" times, and no drink is scheduled after its cut-off. <a href="https://doi.org/10.1016/j.smrv.2023.101764" target="_blank" rel="noopener">Read the paper</a>.</p>
+    <p><strong>When to stop:</strong> Gardiner et al. (2023, <em>Sleep Medicine Reviews</em>) reviewed the evidence on caffeine and the sleep that follows it. To avoid losing total sleep time, they recommend a 107 mg coffee at least 8.8 hours before bed and 217.5 mg at least 13.2 hours before bed. This tool draws a straight line between those two points, so each drink gets its own gap: at normal metabolism a coffee (95 mg) needs about 8.3 hours and a tea (47 mg) about 6.4 hours. Your bedtime minus that gap gives the "Last coffee by" and "Last tea by" times, and no drink is scheduled after its cut-off. <a href="https://doi.org/10.1016/j.smrv.2023.101764" target="_blank" rel="noopener">Read the paper<span class="visually-hidden"> (opens in a new tab)</span></a>.</p>
     <p><strong>Drink placement:</strong> By default, coffees are placed in earlier optimal windows (higher caffeine, more time to clear) and teas in later windows (lower caffeine, needs less clearance time). Drinks are kept at least 30 minutes apart. Use the drink order selector to change this if you prefer tea in the morning.</p>
     <p><strong>Yesterday's carry-over:</strong> Caffeine doesn't fully clear overnight. With a 5-hour half-life, a drink at 14:00 still leaves a few milligrams in your system 17 hours later at 07:00. Toggle this on to see the residual from an identical previous day's schedule layered into the curve. It's often 15-25 mg but adds up for slow metabolisers or heavy drinkers.</p>
     <p><strong>Assumptions:</strong> The tool assumes 95 mg per coffee (a mug of filter coffee) and 47 mg per tea. A UK instant coffee is often nearer 60-80 mg, and a high-street flat white can be 130 mg or more.</p>
@@ -358,7 +365,7 @@ hidden: true
     // Graph dimensions. The viewBox is set to the container width in pixels on every render
     // (see renderGraph), so one viewBox unit is one CSS pixel and label sizes stay readable.
     var H = 300;
-    var M = { top: 15, right: 46, bottom: 34, left: 40 };
+    var M = { top: 15, right: 58, bottom: 34, left: 40 };
     var W = 800, PW = W - M.left - M.right, PH = H - M.top - M.bottom;
     var FS = 12;
 
@@ -478,6 +485,13 @@ hidden: true
 
     function el(tag, attrs, text) {
         var e = document.createElementNS(NS, tag);
+        if (tag === 'text') {
+            // Halo in the plot colour so lines never run through a label.
+            e.setAttribute('stroke', '#FAFAF9');
+            e.setAttribute('stroke-width', '3');
+            e.setAttribute('stroke-linejoin', 'round');
+            e.setAttribute('paint-order', 'stroke');
+        }
         if (attrs) {
             for (var k in attrs) {
                 if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
@@ -560,8 +574,15 @@ hidden: true
             var x = minsSinceWake - p.c;
             level += p.a * Math.exp(-(x * x) / (2 * p.s * p.s));
         }
-        return Math.min(level, 1.0);
+        return level;
     }
+
+    // The tallest the curve gets, so it can be drawn with its peak at 90% of the plot height.
+    var CORTISOL_PEAK = (function() {
+        var peak = 0;
+        for (var t = 0; t <= 1440; t++) peak = Math.max(peak, cortisolLevel(t));
+        return peak;
+    })();
 
     function getOptimalWindows() {
         // Windows between cortisol peaks (minutes since wake)
@@ -680,51 +701,65 @@ hidden: true
         return result;
     }
 
-    function latestOfType(list, type, from) {
-        var latest = from;
-        for (var i = 0; i < list.length; i++) {
-            if (list[i].type === type && list[i].time > latest) latest = list[i].time;
-        }
-        return latest;
-    }
-
-    function afterTime(wins, t) {
+    // Windows with everything before `from` cut off.
+    function trimFrom(wins, from) {
         var result = [];
         for (var i = 0; i < wins.length; i++) {
-            var s = Math.max(wins[i].start, t);
-            if (s < wins[i].end) result.push({ start: s, end: wins[i].end });
+            var start = Math.max(wins[i].start, from);
+            if (start < wins[i].end) result.push({ start: start, end: wins[i].end });
         }
-        return result.length ? result : wins;
+        return result;
     }
 
     // Lays out the unpinned drinks around the pinned ones. Every drink ends up no later than its
     // type's cut-off and at least MIN_GAP from every other; a drink that cannot be placed is dropped
-    // and counted in state.dropped.
+    // and counted in state.dropped. Unless the order is Interleave, the second type is kept after the
+    // last drink of the first (up to its own cut-off) and dropped if it does not fit there.
     function layout(pinned, coffees, teas) {
         var cut = cutoffs();
         var waking = wakingMinutes();
         var pinnedCoffees = pinned.filter(function(d) { return d.type === 'coffee'; }).length;
         var pinnedTeas = pinned.length - pinnedCoffees;
-        var wantCoffees = Math.max(0, coffees - pinnedCoffees);
-        var wantTeas = Math.max(0, teas - pinnedTeas);
+        var want = { coffee: Math.max(0, coffees - pinnedCoffees), tea: Math.max(0, teas - pinnedTeas) };
+        var mgOf = { coffee: COFFEE_MG, tea: TEA_MG };
 
-        var coffeeWins = subtractPinned(windowsFor(cut.coffee, waking), pinned);
-        var teaWins = subtractPinned(windowsFor(cut.tea, waking), pinned);
+        var result = pinned.slice();
+        var placedCount = { coffee: pinnedCoffees, tea: pinnedTeas };
 
-        var targets = [];
-        if (state.drinkOrder === 'coffee-first') {
-            distribute(targets, 'coffee', wantCoffees, COFFEE_MG, coffeeWins);
-            var lastCoffee = latestOfType(targets.concat(pinned), 'coffee', 0);
-            distribute(targets, 'tea', wantTeas, TEA_MG, afterTime(teaWins, lastCoffee + 1));
-        } else if (state.drinkOrder === 'tea-first') {
-            distribute(targets, 'tea', wantTeas, TEA_MG, teaWins);
-            var lastTea = latestOfType(targets.concat(pinned), 'tea', 0);
-            distribute(targets, 'coffee', wantCoffees, COFFEE_MG, afterTime(coffeeWins, lastTea + 1));
-        } else {
+        // Spacing pass: move each target to the nearest free time in [lo, cut-off]. If that leaves
+        // some out, pack the whole batch from the earliest free times instead, so as many as possible fit.
+        function place(targets, lo) {
+            targets.sort(function(a, b) { return a.time - b.time; });
+            var startLen = result.length;
+            var counts = { coffee: placedCount.coffee, tea: placedCount.tea };
+            var j, t, time;
+            for (j = 0; j < targets.length; j++) {
+                t = targets[j];
+                time = nearestFreeTime(t.time, lo, Math.min(cut[t.type], waking), result);
+                if (time === null) break;
+                result.push({ type: t.type, time: time, mg: t.mg, pinned: false });
+                counts[t.type]++;
+            }
+            if (j < targets.length) {
+                result.length = startLen;
+                counts = { coffee: placedCount.coffee, tea: placedCount.tea };
+                for (j = 0; j < targets.length; j++) {
+                    t = targets[j];
+                    time = earliestFreeTime(lo, Math.min(cut[t.type], waking), result);
+                    if (time === null) continue;
+                    result.push({ type: t.type, time: time, mg: t.mg, pinned: false });
+                    counts[t.type]++;
+                }
+            }
+            placedCount = counts;
+        }
+
+        if (state.drinkOrder === 'interleave') {
             var allWins = subtractPinned(windowsFor(Math.max(cut.coffee, cut.tea), waking), pinned);
             var slots = [];
-            distribute(slots, '_', wantCoffees + wantTeas, 0, allWins);
-            var cLeft = wantCoffees, tLeft = wantTeas, coffeeNext = true;
+            distribute(slots, '_', want.coffee + want.tea, 0, allWins);
+            var cLeft = want.coffee, tLeft = want.tea, coffeeNext = true;
+            var targets = [];
             for (var i = 0; i < slots.length; i++) {
                 var type;
                 if (coffeeNext && cLeft > 0) { type = 'coffee'; cLeft--; }
@@ -732,20 +767,32 @@ hidden: true
                 else if (cLeft > 0) { type = 'coffee'; cLeft--; }
                 else { continue; }
                 coffeeNext = !coffeeNext;
-                targets.push({ type: type, time: slots[i].time, mg: type === 'coffee' ? COFFEE_MG : TEA_MG });
+                targets.push({ type: type, time: slots[i].time, mg: mgOf[type] });
             }
-        }
+            place(targets, 0);
+        } else {
+            var first = state.drinkOrder === 'tea-first' ? 'tea' : 'coffee';
+            var second = first === 'coffee' ? 'tea' : 'coffee';
 
-        // Spacing pass: move each drink to the nearest free time at or before its cut-off.
-        targets.sort(function(a, b) { return a.time - b.time; });
-        var result = pinned.slice();
-        var placedCount = { coffee: pinnedCoffees, tea: pinnedTeas };
-        for (var j = 0; j < targets.length; j++) {
-            var t = targets[j];
-            var time = nearestFreeTime(t.time, Math.min(cut[t.type], waking), result);
-            if (time === null) continue;
-            result.push({ type: t.type, time: time, mg: t.mg, pinned: false });
-            placedCount[t.type]++;
+            // Keep the first type early enough that the second still has room after it.
+            var firstCut = cut[first];
+            var room = cut[second] - want[second] * MIN_GAP;
+            if (want[second] > 0 && room >= 0) firstCut = Math.min(firstCut, room);
+            var firstTargets = [];
+            distribute(firstTargets, first, want[first], mgOf[first], subtractPinned(windowsFor(firstCut, waking), pinned));
+            place(firstTargets, 0);
+
+            // The second type goes after the last of the first, up to its own cut-off.
+            var lo = 0;
+            for (var k = 0; k < result.length; k++) {
+                if (result[k].type === first && result[k].time + MIN_GAP > lo) lo = result[k].time + MIN_GAP;
+            }
+            var hi = Math.min(cut[second], waking);
+            var wins = trimFrom(subtractPinned(windowsFor(cut[second], waking), pinned), lo);
+            if (wins.length === 0 && lo <= hi) wins = [{ start: lo, end: hi }];
+            var secondTargets = [];
+            distribute(secondTargets, second, want[second], mgOf[second], wins);
+            place(secondTargets, lo);
         }
 
         state.drinks = result;
@@ -756,18 +803,35 @@ hidden: true
         };
     }
 
-    // Nearest whole minute to `want` in [0, hi] that is at least MIN_GAP from every taken drink.
-    function nearestFreeTime(want, hi, taken) {
-        if (hi < 0) return null;
-        var start = clamp(Math.round(want), 0, hi);
-        var candidates = [start, 0, hi];
+    // Earliest whole minute in [lo, hi] that is at least MIN_GAP from every taken drink.
+    function earliestFreeTime(lo, hi, taken) {
+        var candidates = [lo];
+        for (var i = 0; i < taken.length; i++) candidates.push(taken[i].time + MIN_GAP);
+        var best = null;
+        for (var c = 0; c < candidates.length; c++) {
+            var cand = candidates[c];
+            if (cand < lo || cand > hi) continue;
+            var ok = true;
+            for (var k = 0; k < taken.length; k++) {
+                if (Math.abs(cand - taken[k].time) < MIN_GAP) { ok = false; break; }
+            }
+            if (ok && (best === null || cand < best)) best = cand;
+        }
+        return best;
+    }
+
+    // Nearest whole minute to `want` in [lo, hi] that is at least MIN_GAP from every taken drink.
+    function nearestFreeTime(want, lo, hi, taken) {
+        if (hi < lo) return null;
+        var start = clamp(Math.round(want), lo, hi);
+        var candidates = [start, lo, hi];
         for (var i = 0; i < taken.length; i++) {
             candidates.push(taken[i].time - MIN_GAP, taken[i].time + MIN_GAP);
         }
         var best = null;
         for (var c = 0; c < candidates.length; c++) {
             var cand = candidates[c];
-            if (cand < 0 || cand > hi) continue;
+            if (cand < lo || cand > hi) continue;
             var ok = true;
             for (var k = 0; k < taken.length; k++) {
                 if (Math.abs(cand - taken[k].time) < MIN_GAP) { ok = false; break; }
@@ -885,29 +949,34 @@ hidden: true
             }));
         }
 
-        // Optimal windows
-        var windows = getOptimalWindows();
-        for (var wi = 0; wi < windows.length; wi++) {
-            var w = windows[wi];
-            if (w.start >= waking) continue;
-            var wEnd = Math.min(w.end, waking);
-            svg.appendChild(el('rect', {
-                x: xScale(w.start, waking), y: M.top,
-                width: xScale(wEnd, waking) - xScale(w.start, waking),
-                height: PH, fill: COL.zoneGood
-            }));
-        }
-
         // Cut-offs: the same numbers the cards and scheduler use
         var cut = cutoffs();
 
-        // Red zone from the later cut-off (tea) to sleep
-        var redStart = Math.max(0, Math.max(cut.coffee, cut.tea));
+        // The red zone starts at the latest cut-off among the drink types in use (tea's if none are).
+        var inUse = [];
+        if (state.coffees > 0) inUse.push(cut.coffee);
+        if (state.teas > 0) inUse.push(cut.tea);
+        if (inUse.length === 0) inUse.push(cut.tea);
+        var redStart = Math.max(0, Math.max.apply(null, inUse));
+
+        // Preferred windows, trimmed at the red zone so no green is drawn inside it
+        var windows = getOptimalWindows();
+        for (var wi = 0; wi < windows.length; wi++) {
+            var w = windows[wi];
+            if (w.start >= waking || w.start >= redStart) continue;
+            var wEnd = Math.min(w.end, waking, redStart);
+            svg.appendChild(el('rect', {
+                x: xScale(w.start, waking), y: M.top,
+                width: xScale(wEnd, waking) - xScale(w.start, waking),
+                height: PH, fill: COL.zoneGood, 'class': 'zone-good'
+            }));
+        }
+
         if (redStart < waking) {
             svg.appendChild(el('rect', {
                 x: xScale(redStart, waking), y: M.top,
                 width: xScale(waking, waking) - xScale(redStart, waking),
-                height: PH, fill: COL.zoneBad
+                height: PH, fill: COL.zoneBad, 'class': 'zone-bad'
             }));
         }
 
@@ -946,7 +1015,7 @@ hidden: true
         for (var ct = 0; ct <= waking; ct += 3) {
             var cv = cortisolLevel(ct);
             var px = xScale(ct, waking);
-            var py = yScale(cv, 1.0);
+            var py = yScale(cv, CORTISOL_PEAK / 0.9);
             cortisolPath += (ct === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
             cortisolFillPath += (ct === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
         }
@@ -985,10 +1054,10 @@ hidden: true
         }
 
         // Drink time labels: stacked in up to three rows at the top. If any would overlap another
-        // (or there are 16 or more drinks) none are drawn; the schedule list has the times.
+        // (or 8 coffees and 8 teas were asked for) none are drawn; the schedule list has the times.
         var rows = [-Infinity, -Infinity, -Infinity];
         var labelDefs = [];
-        var allFit = drinks.length < 16;
+        var allFit = drinks.length < 16 && state.coffees + state.teas < 16;
         for (var li = 0; allFit && li < drinks.length; li++) {
             var ld = drinks[li];
             var lx = xScale(ld.time, waking);
@@ -1041,7 +1110,7 @@ hidden: true
                 svg.appendChild(el('text', {
                     x: M.left + PW + 6, y: yScale(mg, maxCaffeine) + 4, 'text-anchor': 'start',
                     fill: COL.caffeineText, 'font-size': FS, 'font-family': font
-                }, mg + 'mg'));
+                }, mg + ' mg'));
             }
         }
 
@@ -1107,7 +1176,7 @@ hidden: true
             html += '<button type="button" class="schedule-pin' + pinnedClass + '"' + attrs
                 + ' aria-label="' + (d.pinned ? 'Unlock ' + name + ', let it be rescheduled' : 'Lock ' + name + ' at this time') + '">'
                 + (d.pinned ? PIN_LOCKED : PIN_OPEN) + '</button>';
-            html += '<span class="schedule-type">' + capital(typeName(d.type)) + ' (' + d.mg + 'mg)</span>';
+            html += '<span class="schedule-type">' + capital(typeName(d.type)) + ' (' + d.mg + ' mg)</span>';
             html += '</li>';
         }
         html += '</ul>';
@@ -1197,6 +1266,20 @@ hidden: true
         drink.pinned = !drink.pinned;
         if (drink.pinned) refreshViews();
         else relayoutUnpinned();
+    }
+
+    // Count changed: keep the locks. Adding a drink adds it unlocked. Removing one takes away the
+    // latest unlocked drink of that type first (the re-layout does this by itself, as it only
+    // reschedules the unlocked ones), and the latest locked one only if every drink of that type is locked.
+    function relayoutKeepingLocks() {
+        var pinned = state.drinks.filter(function(d) { return d.pinned; });
+        ['coffee', 'tea'].forEach(function(type) {
+            var limit = type === 'coffee' ? state.coffees : state.teas;
+            var mine = pinned.filter(function(d) { return d.type === type; }).sort(function(a, b) { return a.time - b.time; });
+            while (mine.length > limit) pinned.splice(pinned.indexOf(mine.pop()), 1);
+        });
+        layout(pinned, state.coffees, state.teas);
+        refreshViews();
     }
 
     function relayoutUnpinned() {
@@ -1363,7 +1446,7 @@ hidden: true
                 var input = $(this.getAttribute('data-stepper') + '-count');
                 input.value = clamp((parseInt(input.value, 10) || 0) + parseInt(this.getAttribute('data-dir'), 10), 0, MAX_PER_TYPE);
                 readControls();
-                recalculate();
+                relayoutKeepingLocks();
             });
         }
 

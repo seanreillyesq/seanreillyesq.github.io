@@ -256,6 +256,151 @@ test.describe('Caffeine calculator', () => {
     });
   });
 
+  test.describe('drink order is kept', () => {
+    // Clock times of the scheduled coffees and teas
+    async function byType(page) {
+      return page.evaluate(() => {
+        const out = { coffee: [], tea: [] };
+        document.querySelectorAll('.schedule-item').forEach((li) => {
+          const mins = li.querySelector('.schedule-time-input').value.split(':').map(Number);
+          out[/^Coffee/.test(li.querySelector('.schedule-type').textContent) ? 'coffee' : 'tea'].push(mins[0] * 60 + mins[1]);
+        });
+        return out;
+      });
+    }
+    const max = (a) => Math.max.apply(null, a);
+    const min = (a) => Math.min.apply(null, a);
+
+    test('coffee first: every tea comes after every coffee at 8 and 8', async ({ page }) => {
+      await page.goto(URL + '?coffee=8&tea=8');
+      const d = await byType(page);
+      expect(d.coffee).toHaveLength(8);
+      expect(d.tea.length).toBeGreaterThan(0);
+      expect(min(d.tea) - max(d.coffee)).toBeGreaterThanOrEqual(MIN_GAP);
+      expect(max(d.tea)).toBeLessThanOrEqual(hhmm('16:05'));
+      // anything that did not fit is reported, not mixed in
+      const left = 16 - d.coffee.length - d.tea.length;
+      if (left > 0) await expect(page.locator('#caffeine-warning')).toContainText(`${left} drink`);
+    });
+
+    test('coffee first: teas follow a coffee pinned late', async ({ page }) => {
+      await page.goto(URL);
+      await page.getByLabel('Coffee 2 time').fill('14:00');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('.schedule-time-input.pinned')).toHaveValue('14:00');
+      const d = await byType(page);
+      expect(d.coffee).toContain(hhmm('14:00'));
+      expect(d.tea).toHaveLength(2);
+      expect(min(d.tea) - max(d.coffee)).toBeGreaterThanOrEqual(MIN_GAP);
+      expect(max(d.tea)).toBeLessThanOrEqual(hhmm('16:05'));
+    });
+
+    test('coffee first: teas that cannot follow a late coffee are dropped with the warning', async ({ page }) => {
+      await page.goto(URL + '?coffee=1&tea=8');
+      await scheduleInput(page, 0).fill('14:00');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('.schedule-time-input.pinned')).toHaveValue('14:00');
+      const d = await byType(page);
+      // 14:00 + 30 min to the 16:05 tea cut-off leaves room for 14:30, 15:00, 15:30 and 16:00 only
+      expect(d.tea).toHaveLength(4);
+      expect(min(d.tea)).toBeGreaterThanOrEqual(hhmm('14:30'));
+      expect(max(d.tea)).toBeLessThanOrEqual(hhmm('16:05'));
+      await expect(page.locator('#caffeine-warning')).toHaveText(
+        "4 drinks don't fit before your cut-offs today and have been left off.");
+    });
+
+    test('tea first: every coffee comes after every tea', async ({ page }) => {
+      for (const q of ['coffee=2&tea=2&order=tea-first', 'coffee=4&tea=4&order=tea-first']) {
+        await page.goto(URL + '?' + q);
+        const d = await byType(page);
+        expect(d.tea.length, q).toBeGreaterThan(0);
+        expect(d.coffee.length, q).toBeGreaterThan(0);
+        expect(min(d.coffee) - max(d.tea), q).toBeGreaterThanOrEqual(MIN_GAP);
+        expect(max(d.coffee), q).toBeLessThanOrEqual(hhmm('14:10'));
+      }
+    });
+
+    test('tea first: the default 2 and 2 loses nothing', async ({ page }) => {
+      await page.goto(URL + '?coffee=2&tea=2&order=tea-first');
+      await expect(page.locator('.schedule-item')).toHaveCount(4);
+      await expect(page.locator('#caffeine-warning')).toBeHidden();
+    });
+
+    test('tea first: coffees follow a tea pinned late', async ({ page }) => {
+      await page.goto(URL + '?coffee=2&tea=2&order=tea-first');
+      await page.getByLabel('Tea 2 time').fill('12:00');
+      await page.keyboard.press('Enter');
+      const d = await byType(page);
+      expect(d.tea).toContain(hhmm('12:00'));
+      for (const c of d.coffee) expect(c).toBeGreaterThanOrEqual(max(d.tea) + MIN_GAP);
+    });
+
+    test('interleave may mix the types', async ({ page }) => {
+      await page.goto(URL + '?coffee=3&tea=3&order=interleave');
+      const d = await byType(page);
+      expect(min(d.tea)).toBeLessThan(max(d.coffee));
+    });
+  });
+
+  test.describe('locks survive a change of count', () => {
+    const pinnedTimes = (page) => page.locator('.schedule-time-input.pinned').evaluateAll((e) => e.map((x) => x.value));
+
+    test('adding a drink keeps the lock and adds the new one unlocked', async ({ page }) => {
+      await page.goto(URL);
+      await page.getByLabel('Coffee 1 time').fill('11:11');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('.schedule-time-input.pinned')).toHaveCount(1);
+      await page.getByLabel('More teas').click();
+      await expect(page.locator('.schedule-item')).toHaveCount(5);
+      expect(await pinnedTimes(page)).toEqual(['11:11']);
+      await page.getByLabel('More coffees').click();
+      await expect(page.locator('.schedule-item')).toHaveCount(6);
+      expect(await pinnedTimes(page)).toEqual(['11:11']);
+    });
+
+    test('removing a drink takes an unlocked one first', async ({ page }) => {
+      await page.goto(URL);
+      await page.getByLabel('Coffee 1 time').fill('11:11');
+      await page.keyboard.press('Enter');
+      await page.getByLabel('Fewer coffees').click();
+      await expect(page.locator('.schedule-item')).toHaveCount(3);
+      expect(await pinnedTimes(page)).toEqual(['11:11']);
+      await expect(page.locator('.schedule-type', { hasText: 'Coffee' })).toHaveCount(1);
+    });
+
+    test('with every drink of the type locked, the latest locked one goes', async ({ page }) => {
+      await page.goto(URL);
+      await page.getByLabel('Coffee 1 time').fill('10:00');
+      await page.keyboard.press('Enter');
+      await page.getByLabel('Coffee 2 time').fill('12:00');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('.schedule-time-input.pinned')).toHaveCount(2);
+      await page.getByLabel('Fewer coffees').click();
+      await expect(page.locator('.schedule-type', { hasText: 'Coffee' })).toHaveCount(1);
+      expect(await pinnedTimes(page)).toEqual(['10:00']);
+      await page.getByLabel('Fewer coffees').click();
+      await expect(page.locator('.schedule-type', { hasText: 'Coffee' })).toHaveCount(0);
+      expect(await pinnedTimes(page)).toEqual([]);
+    });
+
+    test('locks of the other type are untouched when one type changes', async ({ page }) => {
+      await page.goto(URL);
+      await page.getByLabel('Tea 1 time').fill('13:00');
+      await page.keyboard.press('Enter');
+      await page.getByLabel('More coffees').click();
+      await page.getByLabel('Fewer coffees').click();
+      expect(await pinnedTimes(page)).toEqual(['13:00']);
+    });
+
+    test('changing another setting still clears locks', async ({ page }) => {
+      await page.goto(URL);
+      await page.getByLabel('Coffee 1 time').fill('11:11');
+      await page.keyboard.press('Enter');
+      await page.locator('#drink-order').selectOption('tea-first');
+      await expect(page.locator('.schedule-time-input.pinned')).toHaveCount(0);
+    });
+  });
+
   test.describe('metabolism options', () => {
     test('Fast 3, Normal 5, Slow 8', async ({ page }) => {
       await page.goto(URL);
@@ -635,8 +780,8 @@ test.describe('Caffeine calculator', () => {
         return { width: vb.width, xs: lines.map((l) => parseFloat(l.getAttribute('x1'))) };
       });
       expect(geo.xs).toHaveLength(2);
-      // plot runs from x = 40 to width - 46 over the waking day (07:00 to 22:30 = 930 minutes)
-      const plotW = geo.width - 40 - 46;
+      // plot runs from x = 40 to width - 58 over the waking day (07:00 to 22:30 = 930 minutes)
+      const plotW = geo.width - 40 - 58;
       const at = (mins) => 40 + (mins / 930) * plotW;
       expect(geo.xs[0]).toBeCloseTo(at(hhmm('14:10') - 420), 0);
       expect(geo.xs[1]).toBeCloseTo(at(hhmm('16:05') - 420), 0);
@@ -684,6 +829,121 @@ test.describe('Caffeine calculator', () => {
       })).toBeGreaterThanOrEqual(10);
     });
 
+    // x position of a clock time on the graph, from the page's own viewBox
+    async function plotMapper(page, wake, sleep) {
+      const width = await page.evaluate(() => document.getElementById('caffeine-graph').viewBox.baseVal.width);
+      let sleepAbs = hhmm(sleep);
+      if (sleepAbs <= hhmm(wake)) sleepAbs += 1440;
+      const waking = sleepAbs - hhmm(wake);
+      return (clock) => 40 + ((hhmm(clock) - hhmm(wake)) / waking) * (width - 40 - 58);
+    }
+    const zones = (page) => page.evaluate(() => {
+      const box = (e) => ({ x: parseFloat(e.getAttribute('x')), w: parseFloat(e.getAttribute('width')) });
+      const svg = document.getElementById('caffeine-graph');
+      return {
+        good: Array.from(svg.querySelectorAll('.zone-good')).map(box),
+        bad: Array.from(svg.querySelectorAll('.zone-bad')).map(box),
+      };
+    });
+
+    test('no green window is drawn inside the red zone', async ({ page }) => {
+      for (const q of ['', 'wake=0700&sleep=1400&coffee=2&tea=2', 'coffee=3&tea=0', 'coffee=0&tea=0', 'wake=0600&sleep=2000&coffee=1&tea=1&metabolism=8']) {
+        await page.goto(URL + (q ? '?' + q : ''));
+        await expect(page.locator('#bedtime-mg')).not.toHaveText('-- mg');
+        const z = await zones(page);
+        expect(z.bad.length, q).toBeLessThanOrEqual(1);
+        if (z.bad.length === 1) {
+          for (const g of z.good) expect(g.x + g.w, `green ends inside red for "${q}"`).toBeLessThanOrEqual(z.bad[0].x + 0.5);
+        } else {
+          expect(z.good.length).toBeGreaterThan(0);
+        }
+      }
+    });
+
+    test('green is trimmed at the cut-off on the default day', async ({ page }) => {
+      await page.goto(URL);
+      const at = await plotMapper(page, '07:00', '22:30');
+      const z = await zones(page);
+      expect(z.bad).toHaveLength(1);
+      expect(z.bad[0].x).toBeCloseTo(at('16:05'), 0);
+      expect(z.good.length).toBeGreaterThan(0);
+      // the 14:30 end of the afternoon window is already before the cut-off, so it is untouched;
+      // the evening window (after 16:05) is not drawn at all
+      const last = z.good[z.good.length - 1];
+      expect(last.x + last.w).toBeCloseTo(at('14:30'), 0);
+      expect(last.x + last.w).toBeLessThanOrEqual(z.bad[0].x);
+    });
+
+    test('a short day has no green inside red', async ({ page }) => {
+      await page.goto(URL + '?wake=0700&sleep=1400&coffee=2&tea=2');
+      const z = await zones(page);
+      expect(z.bad).toHaveLength(1);
+      for (const g of z.good) expect(g.x + g.w).toBeLessThanOrEqual(z.bad[0].x + 0.5);
+    });
+
+    test('the red zone starts at the latest cut-off of the types in use', async ({ page }) => {
+      const cases = [
+        ['coffee=3&tea=0', '14:10'],   // coffee only: coffee cut-off, not tea's
+        ['coffee=0&tea=3', '16:05'],
+        ['coffee=2&tea=2', '16:05'],
+        ['coffee=0&tea=0', '16:05'],   // nothing in use: tea cut-off as before
+      ];
+      for (const [q, expected] of cases) {
+        await page.goto(URL + '?' + q);
+        await expect(page.locator('#bedtime-mg')).not.toHaveText('-- mg');
+        const at = await plotMapper(page, '07:00', '22:30');
+        const z = await zones(page);
+        expect(z.bad, q).toHaveLength(1);
+        expect(z.bad[0].x, q).toBeCloseTo(at(expected), 0);
+      }
+    });
+
+    test('every graph label has a halo in the plot colour', async ({ page }) => {
+      await page.goto(URL);
+      const halos = await page.locator('#caffeine-graph text').evaluateAll((els) => els.map((e) => {
+        const cs = getComputedStyle(e);
+        return { paint: cs.paintOrder, stroke: cs.stroke, width: parseFloat(cs.strokeWidth), join: cs.strokeLinejoin };
+      }));
+      expect(halos.length).toBeGreaterThan(5);
+      for (const h of halos) {
+        expect(h.paint).toMatch(/^stroke/);
+        expect(h.stroke).toBe('rgb(250, 250, 249)');
+        expect(h.width).toBeGreaterThanOrEqual(3);
+        expect(h.join).toBe('round');
+      }
+    });
+
+    test('the right-hand mg labels fit inside the graph and carry a space', async ({ page }) => {
+      for (const q of ['', 'coffee=8&tea=8']) {
+        await page.goto(URL + (q ? '?' + q : ''));
+        const labels = await page.evaluate(() => {
+          const svg = document.getElementById('caffeine-graph');
+          const right = svg.getBoundingClientRect().right;
+          return Array.from(svg.querySelectorAll('text')).filter((t) => /mg$/.test(t.textContent))
+            .map((t) => ({ text: t.textContent, over: t.getBoundingClientRect().right - right }));
+        });
+        expect(labels.length).toBeGreaterThan(2);
+        for (const l of labels) {
+          expect(l.text).toMatch(/^\d+ mg$/);
+          expect(l.over, l.text).toBeLessThanOrEqual(0);
+        }
+      }
+    });
+
+    test('the cortisol curve peaks at about 90% of the plot, not flat at the top', async ({ page }) => {
+      await page.goto(URL);
+      const info = await page.evaluate(() => {
+        const paths = Array.from(document.querySelectorAll('#caffeine-graph path[stroke="#C4A265"]'));
+        const ys = paths[0].getAttribute('d').match(/,([\d.]+)/g).map((v) => parseFloat(v.slice(1)));
+        const top = Math.min.apply(null, ys);
+        return { top, atTop: ys.filter((y) => y === top).length };
+      });
+      // plot spans y = 15..(300 - 34) = 251 high: 90% height is y = 266 - 0.9 * 251 = about 40
+      expect(info.top).toBeGreaterThan(36);
+      expect(info.top).toBeLessThan(46);
+      expect(info.atTop).toBeLessThanOrEqual(2);
+    });
+
     test('at 8 coffees and 8 teas the per-drink labels are dropped', async ({ page }) => {
       await page.goto(URL + '?coffee=8&tea=8');
       await expect(page.locator('.schedule-item')).not.toHaveCount(0);
@@ -727,7 +987,36 @@ test.describe('Caffeine calculator', () => {
       expect(m).toContain('a drink at 14:00');
       expect(m).toContain('at 07:00');
       expect(m).toContain('often 15-25 mg');
+      expect((await page.locator('.methodology').textContent())).toContain('Read the paper (opens in a new tab)');
       expect(m).toContain('The tool assumes 95 mg per coffee (a mug of filter coffee) and 47 mg per tea. A UK instant coffee is often nearer 60-80 mg, and a high-street flat white can be 130 mg or more.');
+    });
+
+    test('legend and schedule use the page wording', async ({ page }) => {
+      await page.goto(URL);
+      const legend = (await page.locator('.graph-legend').innerText()).replace(/\s+/g, ' ');
+      expect(legend).toContain('Coffee cut-off');
+      expect(legend).toContain('Tea cut-off');
+      expect(legend).toContain('Preferred window');
+      expect(legend).not.toMatch(/cutoff|Optimal window/);
+      const types = await page.locator('.schedule-type').allTextContents();
+      expect(types.sort()).toEqual(['Coffee (95 mg)', 'Coffee (95 mg)', 'Tea (47 mg)', 'Tea (47 mg)']);
+    });
+
+    test('meta description and intro lead with the cut-offs', async ({ page }) => {
+      await page.goto(URL);
+      const meta = await page.locator('meta[name="description"]').getAttribute('content');
+      expect(meta).toBe('When to stop drinking coffee and tea before bed, using cut-offs from a 2023 sleep research review. Set your wake and sleep times and get a schedule.');
+      expect(meta.length).toBeLessThan(155);
+      const intro = await page.locator('.caffeine-intro').first().innerText();
+      expect(intro).toMatch(/^Work out the latest time to have your coffee and tea before bed/);
+      expect(intro).not.toMatch(/based on your cortisol rhythm/);
+      expect(intro).toMatch(/optional/);
+    });
+
+    test('the new-tab link says so to screen readers', async ({ page }) => {
+      await page.goto(URL);
+      const link = page.locator(`.methodology a[href="${DOI}"]`);
+      await expect(link.locator('.visually-hidden')).toHaveText(' (opens in a new tab)');
     });
 
     test('the paper is linked in a new tab', async ({ page }) => {
@@ -737,6 +1026,25 @@ test.describe('Caffeine calculator', () => {
       await expect(link).toHaveAttribute('target', '_blank');
       expect(await link.getAttribute('rel')).toContain('noopener');
     });
+  });
+
+  test('focus stays visible on every internal stop of a time field', async ({ page }) => {
+    await page.goto(URL);
+    await scheduleInput(page, 0).focus();
+    let seen = 0;
+    for (let i = 0; i < 6; i++) {
+      const info = await page.evaluate(() => {
+        const a = document.activeElement;
+        if (!a || !a.classList.contains('schedule-time-input')) return null;
+        const cs = getComputedStyle(a);
+        return { outline: cs.outlineStyle, width: parseFloat(cs.outlineWidth), shadow: cs.boxShadow };
+      });
+      if (!info) break;
+      seen++;
+      expect(info.outline !== 'none' && info.width > 0, JSON.stringify(info)).toBe(true);
+      await page.keyboard.press('Tab');
+    }
+    expect(seen).toBeGreaterThanOrEqual(3);
   });
 
   test('stepper updates the schedule and totals', async ({ page }) => {
