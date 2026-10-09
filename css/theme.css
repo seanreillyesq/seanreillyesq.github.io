@@ -620,7 +620,8 @@ hr.small {
 }
 .hp-logo-cell img {
     max-height: 56px;
-    max-width: 150px;
+    max-width: min(150px, 100%);
+    min-width: 0;
     width: auto;
     height: auto;
     object-fit: contain;

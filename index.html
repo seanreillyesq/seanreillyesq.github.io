@@ -58,11 +58,12 @@ meta-description: "Digital marketing consultant with 18+ years across agency, in
     <div class="container">
         <h2 class="text-center fw-bold mb-5 reveal" style="font-size: 2rem;">Latest Writing</h2>
         <div class="row g-4 reveal-stagger">
-            {% for post in site.posts limit: 3 %}{% unless post.hidden %}
+            {% assign visible_posts = site.posts | where_exp: "post", "post.hidden != true" %}
+            {% for post in visible_posts limit: 3 %}
             <div class="col-lg-4 reveal">
                 {% include post-card.html post=post %}
             </div>
-            {% endunless %}{% endfor %}
+            {% endfor %}
         </div>
         <div class="text-center mt-5 reveal">
             <a href="/blog/" class="btn btn-outline-accent text-uppercase fw-bold">View all posts</a>
