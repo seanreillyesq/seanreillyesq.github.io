@@ -1,7 +1,7 @@
 <div class="hp-card h-100">
     <a href="{{ include.post.url }}">
         {% if include.post.header-img %}
-        <img src="/{{ include.post.header-img }}" alt="{{ include.post.title }}" class="hp-card-img">
+        <img src="/{{ include.post.header-img }}" alt="{{ include.post.title }}" class="hp-card-img img-fluid" width="1600" height="900" loading="lazy" decoding="async">
         {% endif %}
         <div class="hp-card-body p-4">
             {% if include.post.categories.first %}
