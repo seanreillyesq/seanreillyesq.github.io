@@ -21,7 +21,7 @@ permalink: /adventures/
 </header>
 
 <div class="container">
-    {% assign adventures = site.categories.Adventures | sort: 'date' | reverse %}
+    {% assign adventures = site.categories.Adventures | where_exp: "post", "post.hidden != true" | sort: 'date' | reverse %}
     <p class="font-mono text-uppercase text-center mb-4 small" style="letter-spacing: 2px; color: var(--color-text-muted);">{{ adventures | size }} adventure{% if adventures.size != 1 %}s{% endif %}</p>
     <div class="row g-4">
         {% for post in adventures %}

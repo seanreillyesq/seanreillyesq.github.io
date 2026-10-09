@@ -39,7 +39,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% include career-years.html %}{% capture _years_plus %}{{ career_years }}+{% endcapture %}{% if page.meta-description %}{% assign _meta_desc = page.meta-description | replace: '18+', _years_plus %}<meta name="description" content="{{ _meta_desc | escape }}">{% endif %}
-    {% if page.robots %}<meta name="robots" content="{{ page.robots }}">{% endif %}
+    {% if page.robots %}<meta name="robots" content="{{ page.robots }}">{% elsif page.layout == 'archive' and page.posts %}{% assign _archive_visible = page.posts | where_exp: "post", "post.hidden != true" %}{% if _archive_visible.size == 0 %}<meta name="robots" content="noindex">{% endif %}{% endif %}
 
     {% assign defined_url = page.url | replace: '/index.html', '/' %}
     <!-- Open Graph -->
