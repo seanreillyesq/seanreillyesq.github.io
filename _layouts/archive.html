@@ -16,14 +16,20 @@ layout: default
     </div>
 </header>
 
+{%- comment -%} Hidden posts are never listed publicly, archives included. {%- endcomment -%}
+{%- assign visible_posts = page.posts | where_exp: "post", "post.hidden != true" -%}
 <div class="container">
-    <p class="font-mono text-uppercase text-center mb-4 small" style="letter-spacing: 2px; color: var(--color-text-muted);">{{ page.posts | size }} post{% if page.posts.size != 1 %}s{% endif %}</p>
+    {% if visible_posts.size == 0 %}
+    <p class="text-center my-5">Nothing published here yet.</p>
+    {% else %}
+    <p class="font-mono text-uppercase text-center mb-4 small" style="letter-spacing: 2px; color: var(--color-text-muted);">{{ visible_posts.size }} post{% if visible_posts.size != 1 %}s{% endif %}</p>
 
     <div class="row g-4">
-        {% for post in page.posts %}
+        {% for post in visible_posts %}
         <div class="col-md-6 col-lg-4">
             {% include post-card.html post=post %}
         </div>
         {% endfor %}
     </div>
+    {% endif %}
 </div>

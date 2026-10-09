@@ -11,7 +11,8 @@ layout: null
 {%- endcomment -%}
 
 {%- assign two_days_ago = 'now' | date: '%s' | minus: 172800 -%}
-{%- for post in site.posts limit: 10 -%}
+{%- assign visible_posts = site.posts | where_exp: "post", "post.hidden != true" -%}
+{%- for post in visible_posts limit: 10 -%}
 {%- assign post_timestamp = post.date | date: '%s' | plus: 0 -%}
 {%- if post_timestamp >= two_days_ago %}
   <url>

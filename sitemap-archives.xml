@@ -10,22 +10,28 @@ layout: null
 {%- endcomment -%}
 
 {%- comment -%} Category archive pages {%- endcomment -%}
-{%- for category in site.categories %}
+{%- for category in site.categories -%}
+{%- assign cat_posts = site.posts | where: "categories", category[0] | where_exp: "post", "post.hidden != true" -%}
+{%- if cat_posts.size > 0 %}
   <url>
     <loc>{{ site.url }}/category/{{ category[0] | slugify }}/</loc>
-    <lastmod>{{ site.posts | where: "categories", category[0] | map: "date" | first | date_to_xmlschema }}</lastmod>
+    <lastmod>{{ cat_posts | map: "date" | first | date_to_xmlschema }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.3</priority>
   </url>
+{%- endif -%}
 {%- endfor %}
 
 {%- comment -%} Tag archive pages {%- endcomment -%}
-{%- for tag in site.tags %}
+{%- for tag in site.tags -%}
+{%- assign tag_posts = site.posts | where: "tags", tag[0] | where_exp: "post", "post.hidden != true" -%}
+{%- if tag_posts.size > 0 %}
   <url>
     <loc>{{ site.url }}/tag/{{ tag[0] | slugify }}/</loc>
-    <lastmod>{{ site.posts | where: "tags", tag[0] | map: "date" | first | date_to_xmlschema }}</lastmod>
+    <lastmod>{{ tag_posts | map: "date" | first | date_to_xmlschema }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
+{%- endif -%}
 {%- endfor %}
 </urlset>

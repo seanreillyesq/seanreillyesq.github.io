@@ -186,6 +186,59 @@ def check_site(site):
                 report("alt", rel, "<img> without non-empty alt: %s" % src)
 
 
+def slugify(name):
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+def check_archives(source, site):
+    """Hidden posts are never listed publicly: no archive page may link to one, and an archive
+    page with no visible post must be noindex."""
+    hidden_urls = set()
+    visible = {"tag": set(), "category": set()}
+    for path in sorted(glob.glob(os.path.join(source, "_posts", "*.md"))):
+        with open(path, encoding="utf-8") as f:
+            try:
+                fm, _ = parse_front_matter(f.read())
+            except ValueError:
+                continue  # reported by check_source
+        if not fm:
+            continue
+        m = re.match(r"^(\d{4})-(\d{2})-(\d{2})-(.+)\.md$", os.path.basename(path))
+        if not m:
+            continue
+        is_hidden = str(fm.get("hidden", "")).lower() == "true"
+        if is_hidden:
+            hidden_urls.add("/%s-%s%s%s/" % (m.group(4), m.group(1), m.group(2), m.group(3)))
+            continue
+        for kind, key in (("tag", "tags"), ("category", "categories")):
+            val = fm.get(key) or []
+            for name in (val if isinstance(val, list) else [val]):
+                visible[kind].add(slugify(str(name)))
+
+    for kind in ("tag", "category"):
+        base = os.path.join(site, kind)
+        if not os.path.isdir(base):
+            continue
+        for slug in sorted(os.listdir(base)):
+            page = os.path.join(base, slug, "index.html")
+            if not os.path.isfile(page):
+                continue
+            rel = os.path.relpath(page, site)
+            with open(page, encoding="utf-8", errors="replace") as f:
+                html = f.read()
+            parser = RefParser()
+            parser.feed(html)
+            for tag, url in parser.refs:
+                if tag != "a":
+                    continue
+                path = urllib.parse.urlsplit(url.strip()).path
+                if path in hidden_urls:
+                    report("archive-hidden", rel, "links to hidden post %s" % path)
+            noindex = re.search(r'<meta\s+name="robots"\s+content="[^"]*noindex', html) is not None
+            if slug not in visible[kind] and not noindex:
+                report("archive-noindex", rel, "no visible posts but the page is not noindex")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--source", default=".", help="repository root")
@@ -195,6 +248,7 @@ def main():
 
     check_source(args.source)
     check_site(args.site)
+    check_archives(args.source, args.site)
 
     if args.strict:
         findings[:] = [("FAIL",) + f[1:] for f in findings]
