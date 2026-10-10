@@ -203,7 +203,7 @@ tool_order: 6
             <div class="col-6 col-md-6">
                 <label class="form-label" for="vat">VAT rate</label>
                 <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="vat" value="20" aria-describedby="vat-hint vat-note"><span class="input-group-text" aria-hidden="true">%</span></div>
-                <div class="hv-hint" id="vat-hint">UK standard rate on hotel rooms: 20% in the 2025-26 tax year. Edit it if yours differs</div>
+                <div class="hv-hint" id="vat-hint">UK standard rate on hotel rooms is 20%. Edit it if yours differs</div>
                 <div class="hv-note" id="vat-note" hidden></div>
             </div>
             <div class="col-6 col-md-6">
@@ -273,18 +273,18 @@ tool_order: 6
 
 <div class="hv-section" id="section-results">
     <h3>What each channel is worth</h3>
-    <p class="hv-section-desc">Net revenue is what you keep from a room night after VAT and the channel's own costs. It is before housekeeping, utilities, staff and every other cost of running the room, which are the same whichever channel the guest came through.</p>
+    <p class="hv-section-desc">Net revenue is what you keep from a room night after <span class="hv-ex">VAT and </span>the channel's own costs. It is before housekeeping, utilities, staff and every other cost of running the room, which are the same whichever channel the guest came through.</p>
 
     <div class="row g-2 g-md-3 mb-2">
         <div class="col-6 col-md-3">
             <div class="result-card">
-                <div class="result-label">OTA net per night, ex VAT</div>
+                <div class="result-label">OTA net per night<span class="hv-ex">, ex VAT</span></div>
                 <div class="result-value" id="res-ota-net">--</div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="result-card">
-                <div class="result-label">Direct net per night, ex VAT</div>
+                <div class="result-label">Direct net per night<span class="hv-ex">, ex VAT</span></div>
                 <div class="result-value" id="res-direct-net">--</div>
             </div>
         </div>
@@ -311,7 +311,7 @@ tool_order: 6
         </div>
         <div class="col-6 col-md-3">
             <div class="result-card">
-                <div class="result-label">Net room revenue now, ex VAT</div>
+                <div class="result-label">Net room revenue now<span class="hv-ex">, ex VAT</span></div>
                 <div class="result-value" id="res-total-now">--</div>
             </div>
         </div>
@@ -351,7 +351,7 @@ tool_order: 6
 
     <div class="hv-table-wrap">
         <table class="table hv-table" id="hv-table">
-            <caption>Before and after the shift, per year, ex VAT</caption>
+            <caption>Before and after the shift, per year<span class="hv-ex">, ex VAT</span></caption>
             <thead>
                 <tr><th scope="col">Channel</th><th scope="col">Now</th><th scope="col">After</th></tr>
             </thead>
@@ -390,7 +390,7 @@ tool_order: 6
         <li><strong>Break-even marketing</strong> is the direct marketing cost at which the two channels net the same. <strong>Break-even commission</strong> is the OTA commission at which they net the same. Each holds every other input where you set it.</li>
     </ul>
     <p>The shift cannot be larger than the OTA share you start with, because you cannot move more room nights than you have there. Figures are calculated from the numbers you enter, not from rounded ones, and only the display is rounded.</p>
-    <p><strong>VAT and commission.</strong> Whether an OTA charges commission on the price including VAT or excluding it varies by OTA, by contract and by country, and I have not assumed what any of them does. Check your contract and set the choice to match. The 20% VAT rate is the UK standard rate for 2025-26; change it if your rate or country differs. If your ADR is quoted ex VAT, or VAT does not apply to you, switch the VAT setting off.</p>
+    <p><strong>VAT and commission.</strong> Whether an OTA charges commission on the price including VAT or excluding it varies by OTA, by contract and by country, and I have not assumed what any of them does. Check your contract and set the choice to match. The 20% VAT rate is the UK standard rate on hotel rooms; change it if your rate or country differs. If your ADR is quoted ex VAT, or VAT does not apply to you, switch the VAT setting off.</p>
     <p><strong>What the model leaves out.</strong> It is a model of mix, not of demand, so treat the answer as a guide to the order of magnitude rather than a forecast.</p>
     <ul>
         <li><strong>The billboard effect.</strong> OTA listings send people to your own website to book. Cut OTA exposure hard and you may lose some direct bookings too. The model assumes the direct room nights you win are extra to the ones you already have, and that nothing else falls. That flatters the shift.</li>
@@ -602,8 +602,10 @@ tool_order: 6
         }
         var pts = +v.shift.toFixed(2);
         var ptsWord = pts === 1 ? 'point' : 'points';
+        var ex = v.vatinc ? ', ex VAT,' : '';
         var shiftLine;
         if (!c.annual) shiftLine = 'Enter rooms and occupancy to see the annual figures. The per-night comparison does not need them.';
+        else if (c.v.share <= 0) shiftLine = 'There are no OTA room nights to move, so there is no annual gain to show. Raise the OTA share to see one.';
         else if (v.shift <= 0) shiftLine = 'Set a shift above zero to see the annual figure. One point of room nights is worth ' + money(c.point, 0, 1e9, true) + ' a year.';
         else if (c.gain >= 0) shiftLine = 'Moving ' + pts + ' ' + ptsWord + ' of room nights from OTA to direct adds ' + money(c.gain, 0, 1e9, false) + ' a year.';
         else shiftLine = 'Moving ' + pts + ' ' + ptsWord + ' of room nights from OTA to direct would cost ' + money(-c.gain, 0, 1e9, false) + ' a year.';
@@ -612,7 +614,7 @@ tool_order: 6
 
         if (c.gap < -0.005) {
             var d = biggestDriver(c);
-            var paras = ['Direct nets ' + gapTxt + ' less per room night, ex VAT, than an OTA booking with these inputs, so moving bookings to direct would lose money. ' + shiftLine];
+            var paras = ['Direct nets ' + gapTxt + ' less per room night' + ex + ' than an OTA booking with these inputs, so moving bookings to direct would lose money. ' + shiftLine];
             var why = 'The biggest direct cost is the ' + d.name + ' at ' + pct(d.pct) + ', worth ' + money(d.amount, 2, 0, false) + ' per night.';
             var fixes = [];
             if (c.beMkt !== null && c.beMkt >= 0) fixes.push('marketing cost fell to ' + pct(c.beMkt) + ' from ' + pct(v.mkt));
@@ -625,10 +627,10 @@ tool_order: 6
 
         if (Math.abs(c.gap) <= 0.005) {
             return { cls: 'hv-verdict-level', title: 'Level with the OTAs',
-                paras: ['Direct and OTA bookings net the same per room night, ex VAT, with these inputs, so shifting the mix changes nothing on this measure. The case for direct then rests on what the model leaves out, such as guest data and repeat stays.'] };
+                paras: ['Direct and OTA bookings net the same per room night' + ex + ' with these inputs, so shifting the mix changes nothing on this measure. The case for direct then rests on what the model leaves out, such as guest data and repeat stays.'] };
         }
 
-        var out = ['Direct nets ' + gapTxt + ' more per room night, ex VAT, than an OTA booking. ' + shiftLine];
+        var out = ['Direct nets ' + gapTxt + ' more per room night' + ex + ' than an OTA booking. ' + shiftLine];
         var holds = [];
         if (c.beMkt !== null && c.beMkt >= 0) holds.push('direct marketing stays below ' + pct(c.beMkt) + ' of room revenue (you have ' + pct(v.mkt) + ')');
         if (c.beComm !== null && c.beComm > 0) holds.push('OTA commission stays above ' + pct(c.beComm) + ' (you have ' + pct(v.comm) + ')');
@@ -663,14 +665,14 @@ tool_order: 6
         var trackW = Math.max(60, W - valW - 8);
         var scaleMax = c.adrEx;
         var rows = [
-            { label: 'OTA net per night, ex VAT', val: c.otaNet, txt: vals[0], col: COL.ota },
-            { label: 'Direct net per night, ex VAT', val: c.directNet, txt: vals[1], col: COL.direct }
+            { label: 'OTA net per night' + (c.v.vatinc ? ', ex VAT' : ''), val: c.otaNet, txt: vals[0], col: COL.ota },
+            { label: 'Direct net per night' + (c.v.vatinc ? ', ex VAT' : ''), val: c.directNet, txt: vals[1], col: COL.direct }
         ];
         var H = rows.length * 46 + 22;
-        var adrWord = (c.v.vatinc && c.v.vat > 0) ? 'ADR ex VAT' : 'ADR';
+        var adrWord = c.v.vatinc ? 'ADR ex VAT' : 'ADR';
         var svg = svgEl('svg', {
             viewBox: '0 0 ' + W + ' ' + H, preserveAspectRatio: 'xMidYMid meet', role: 'img',
-            'aria-label': 'Bar chart of net revenue per room night, ex VAT, from an ' + adrWord + ' of ' + money(c.adrEx, 2, 0) +
+            'aria-label': 'Bar chart of net revenue per room night' + (c.v.vatinc ? ', ex VAT,' : '') + ' from an ' + adrWord + ' of ' + money(c.adrEx, 2, 0) +
                 ': OTA ' + vals[0] + ', direct ' + vals[1] + '.'
         });
         rows.forEach(function(r, i) {
@@ -737,8 +739,13 @@ tool_order: 6
         if (c.annual) {
             setCard('res-total-now', moneyCard(c.totalNow, 0));
             setCard('res-gain', moneyCard(c.gain, 0, true), deltaClass(c.gain));
-            setCard('res-point', moneyCard(c.point, 0, true), deltaClass(c.point));
-            el('res-point-sub').textContent = 'a year';
+            if (c.v.share > 0) {
+                setCard('res-point', moneyCard(c.point, 0, true), deltaClass(c.point));
+                el('res-point-sub').textContent = 'a year';
+            } else {
+                setCard('res-point', '-');
+                el('res-point-sub').textContent = 'no OTA nights to move';
+            }
         } else {
             setCard('res-total-now', 'Needs rooms and occupancy', '', true);
             setCard('res-gain', 'Needs rooms and occupancy', '', true);
@@ -813,6 +820,8 @@ tool_order: 6
         var s = sym();
         var syms = document.querySelectorAll('.hv-sym');
         for (var i = 0; i < syms.length; i++) syms[i].textContent = s;
+        var ex = document.querySelectorAll('.hv-ex');
+        for (var j = 0; j < ex.length; j++) ex[j].hidden = !v.vatinc;
         el('vat').disabled = !v.vatinc;
         el('cbase').disabled = !v.vatinc;
     }

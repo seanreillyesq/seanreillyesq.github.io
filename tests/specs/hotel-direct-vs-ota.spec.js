@@ -162,10 +162,40 @@ test.describe('Hotel direct vs OTA calculator', () => {
       expect(hint).not.toMatch(/Booking\.com|Expedia/);
     });
 
-    test('the VAT rate hint names the UK standard rate and the tax year', async ({ page }) => {
+    test('the VAT rate hint names the UK standard rate and carries no tax year', async ({ page }) => {
       await expect(page.locator('#vat')).toHaveValue('20');
-      await expect(page.locator('#vat-hint')).toContainText('UK standard rate on hotel rooms');
-      await expect(page.locator('#vat-hint')).toContainText('2025-26');
+      await expect(page.locator('#vat-hint')).toContainText('UK standard rate on hotel rooms is 20%');
+      const all = (await page.locator('#section-inputs').innerText()) + (await page.locator('.hv-method').innerText());
+      expect(all).not.toMatch(/20\d\d-\d\d/);
+      expect(all).not.toMatch(/tax year/i);
+    });
+
+    test('with VAT off the results drop the ex VAT wording and it returns when VAT is on', async ({ page }) => {
+      const section = page.locator('#section-results');
+      await expect(section).toContainText('ex VAT');
+      await page.locator('#vatinc').uncheck();
+      await expect(page.locator('#res-ota-net')).toHaveText('£147.60');
+      const text = await section.innerText();
+      expect(text).not.toMatch(/ex VAT/i);
+      expect(text).not.toMatch(/after VAT/);
+      expect(text).toContain('OTA net per night');
+      expect(text).toContain('Direct nets more than OTA');
+      await expect(page.locator('#hv-chart svg')).not.toHaveAttribute('aria-label', /VAT/);
+      expect(await page.locator('#hv-chart svg text').allInnerTexts().then((t) => t.join(' '))).not.toMatch(/VAT/);
+      // and in the less-than and level verdicts
+      await page.locator('#disc').fill('30');
+      await expect(page.locator('#verdict')).toContainText('Direct nets less than OTA');
+      expect(await txt(page, 'verdict')).not.toMatch(/VAT/);
+      await page.locator('#vatinc').check();
+      await expect(section).toContainText('ex VAT');
+      await expect(page.locator('#verdict')).toContainText('ex VAT');
+    });
+
+    test('with VAT off the level verdict has no ex VAT wording either', async ({ page }) => {
+      await page.locator('#vatinc').uncheck();
+      await setAll(page, { comm: 10, disc: 0, mkt: 7, fee: 3 });
+      await expect(page.locator('#verdict')).toContainText('Level with the OTAs');
+      expect(await txt(page, 'verdict')).not.toMatch(/VAT/);
     });
 
     test('the VAT switch is a labelled switch, on by default, at least 44px to tap', async ({ page }) => {
@@ -362,6 +392,27 @@ test.describe('Hotel direct vs OTA calculator', () => {
       await expect(page.locator('#res-gain')).toHaveText('Needs rooms and occupancy');
       await expect(page.locator('#res-be-mkt')).toHaveText('14.5%');
       await expect(page.locator('#hv-chart svg')).toHaveCount(1);
+    });
+
+    test('with no OTA nights the verdict says there is nothing to move and the per-point card shows a dash', async ({ page }) => {
+      await page.locator('#share').fill('0');
+      await expect(page.locator('#verdict')).toContainText('There are no OTA room nights to move');
+      await expect(page.locator('#verdict')).not.toContainText('Set a shift above zero');
+      await expect(page.locator('#verdict')).not.toContainText('One point of room nights is worth');
+      await expect(page.locator('#res-point')).toHaveText('-');
+      await expect(page.locator('#res-gain')).toHaveText('£0');
+      // the per-night comparison is unaffected
+      await expect(page.locator('#res-gap-night')).toHaveText('+£9.23');
+    });
+
+    test('a zero shift with OTA nights still shows what one point is worth', async ({ page }) => {
+      await page.locator('#shift').fill('0');
+      await expect(page.locator('#verdict')).toContainText('Set a shift above zero');
+      await expect(page.locator('#res-point')).toHaveText('+' + gbp(model({}).point));
+      await page.locator('#share').fill('0');
+      await expect(page.locator('#res-point')).toHaveText('-');
+      await page.locator('#share').fill('40');
+      await expect(page.locator('#res-point')).toHaveText('+' + gbp(model({}).point));
     });
 
     test('zero occupancy behaves the same way', async ({ page }) => {
