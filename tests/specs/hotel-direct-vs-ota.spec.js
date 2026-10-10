@@ -4,28 +4,35 @@ const { test, expect, setValue } = require('../fixtures');
 
 const URL = '/hotel-direct-vs-ota/';
 
-const DEFAULTS = { rooms: 50, occ: 75, adr: 180, los: 2, share: 40, comm: 18, mkt: 8, fee: 3, disc: 5, shift: 5 };
+const DEFAULTS = {
+  rooms: 50, occ: 75, adr: 180, los: 2, vat: 20, share: 40, comm: 18, ofee: 0, mkt: 8, fee: 3, disc: 5, shift: 5,
+  vatinc: true, cbase: 'inc',
+};
 
 // The page's own definitions, worked out by hand from the brief.
 function model(o) {
   const v = { ...DEFAULTS, ...o };
-  const otaNet = v.adr * (1 - v.comm / 100);
-  const directNet = v.adr * (1 - v.disc / 100) * (1 - v.mkt / 100 - v.fee / 100);
+  const adrEx = v.vatinc ? v.adr / (1 + v.vat / 100) : v.adr;
+  const base = v.cbase === 'ex' ? adrEx : v.adr;
+  const otaNet = (adrEx - (v.comm / 100) * base) * (1 - v.ofee / 100);
+  const directNet = adrEx * (1 - v.disc / 100) * (1 - v.mkt / 100 - v.fee / 100);
   const gap = directNet - otaNet;
   const nights = v.rooms * 365 * (v.occ / 100);
   const otaNights = nights * v.share / 100;
   const dirNights = nights - otaNights;
   const moved = nights * v.shift / 100;
   return {
-    otaNet, directNet, gap, perStay: gap * v.los, nights, otaNights, dirNights, moved,
+    adrEx, otaNet, directNet, gap, perStay: gap * v.los, nights, otaNights, dirNights, moved,
     otaRev: otaNights * otaNet, dirRev: dirNights * directNet,
     totalNow: otaNights * otaNet + dirNights * directNet,
     gain: moved * gap, point: nights * 0.01 * gap,
+    beMkt: (1 - v.fee / 100 - otaNet / (adrEx * (1 - v.disc / 100))) * 100,
+    beComm: ((adrEx - directNet / (1 - v.ofee / 100)) / base) * 100,
   };
 }
 
 const gbp = (n, dp = 0) => {
-  const r = Math.round(Math.abs(n) * 10 ** dp) / 10 ** dp;
+  const r = Math.round((Math.abs(n) + 1e-9) * 10 ** dp) / 10 ** dp;
   return '£' + r.toLocaleString('en-GB', { minimumFractionDigits: dp, maximumFractionDigits: dp });
 };
 // Parse "+£4.59", "-£11.43", "£3,141" back to a number.
@@ -37,8 +44,15 @@ const parse = (t) => {
 const txt = async (page, id) => (await page.locator('#' + id).innerText()).trim();
 
 async function setAll(page, o) {
-  for (const [k, v] of Object.entries(o)) await setValue(page, '#' + k, v);
+  for (const [k, v] of Object.entries(o)) {
+    if (k === 'vatinc') await page.locator('#vatinc').setChecked(!!v);
+    else if (k === 'cbase') await page.locator('#cbase').selectOption(v);
+    else await setValue(page, '#' + k, v);
+  }
 }
+
+const TAB_ORDER = ['rooms', 'occ', 'adr', 'los', 'vatinc', 'vat', 'cbase', 'share', 'comm', 'ofee', 'mkt', 'fee', 'disc', 'shift'];
+const TEXT_IDS = ['rooms', 'occ', 'adr', 'los', 'vat', 'share', 'comm', 'ofee', 'mkt', 'fee', 'disc', 'shift'];
 
 test.describe('Hotel direct vs OTA calculator', () => {
   test.beforeEach(async ({ page }) => {
@@ -46,22 +60,23 @@ test.describe('Hotel direct vs OTA calculator', () => {
     await expect(page.locator('#res-ota-net')).not.toHaveText('--');
   });
 
-  test.describe('default maths', () => {
-    test('net per night, gap and gap per stay match the brief', async ({ page }) => {
-      await expect(page.locator('#res-ota-net')).toHaveText('£147.60');
-      await expect(page.locator('#res-direct-net')).toHaveText('£152.19');
-      await expect(page.locator('#res-gap-night')).toHaveText('+£4.59');
-      await expect(page.locator('#res-gap-stay')).toHaveText('+£9.18');
+  test.describe('default maths (ex VAT, commission on the VAT-inclusive price)', () => {
+    test('net per night, gap and gap per stay match the hand calculation', async ({ page }) => {
+      // ADR ex VAT 180 / 1.2 = 150. OTA = 150 - 0.18 x 180 = 117.60. Direct = 150 x 0.95 x 0.89 = 126.825.
+      await expect(page.locator('#res-ota-net')).toHaveText('£117.60');
+      await expect(page.locator('#res-direct-net')).toHaveText('£126.83');
+      await expect(page.locator('#res-gap-night')).toHaveText('+£9.23');
+      await expect(page.locator('#res-gap-stay')).toHaveText('+£18.45');
     });
 
     test('annual room nights, gain and value of one point', async ({ page }) => {
       const m = model({});
       expect(m.nights).toBeCloseTo(13687.5, 6);
       await expect(page.locator('#res-nights')).toHaveText('13,688');
-      // 684.375 nights x 4.59 = 3,141 a year, worked from unrounded values
-      expect(Math.abs(parse(await txt(page, 'res-gain')) - 3141)).toBeLessThan(2);
+      // 684.375 nights x 9.225 = 6,313 a year; one point = 136.875 x 9.225 = 1,263
+      expect(Math.abs(parse(await txt(page, 'res-gain')) - 6313)).toBeLessThan(2);
       await expect(page.locator('#res-gain')).toHaveText('+' + gbp(m.gain));
-      expect(Math.abs(parse(await txt(page, 'res-point')) - 628)).toBeLessThan(2);
+      expect(Math.abs(parse(await txt(page, 'res-point')) - 1263)).toBeLessThan(2);
       await expect(page.locator('#res-point')).toHaveText('+' + gbp(m.point));
     });
 
@@ -71,15 +86,15 @@ test.describe('Hotel direct vs OTA calculator', () => {
       await expect(page.locator('#tb-dir-nights-now')).toHaveText('8,213');
       await expect(page.locator('#tb-ota-nights-after')).toHaveText('4,791');
       await expect(page.locator('#tb-dir-nights-after')).toHaveText('8,897');
-      await expect(page.locator('#tb-ota-net-now')).toHaveText(gbp(m.otaRev));
-      await expect(page.locator('#tb-dir-net-now')).toHaveText(gbp(m.dirRev));
-      await expect(page.locator('#tb-total-now')).toHaveText(gbp(m.totalNow));
-      const after = model({}).totalNow + m.gain;
-      await expect(page.locator('#tb-total-after')).toHaveText(gbp(after));
+      await expect(page.locator('#tb-ota-net-now')).toHaveText('£643,860');
+      await expect(page.locator('#tb-dir-net-now')).toHaveText('£1,041,550');
+      await expect(page.locator('#tb-total-now')).toHaveText('£1,685,410');
+      await expect(page.locator('#tb-total-after')).toHaveText(gbp(m.totalNow + m.gain));
+      await expect(page.locator('#hv-table caption')).toContainText('ex VAT');
     });
 
     test('a different set of inputs follows the formulas', async ({ page }) => {
-      const o = { rooms: 120, occ: 82, adr: 245, los: 3, share: 55, comm: 20, mkt: 11, fee: 2.5, disc: 10, shift: 8 };
+      const o = { rooms: 120, occ: 82, adr: 245, los: 3, share: 55, comm: 20, mkt: 11, fee: 2.5, disc: 10, shift: 8, ofee: 1.5, vat: 15 };
       await setAll(page, o);
       const m = model(o);
       await expect(page.locator('#res-ota-net')).toHaveText(gbp(m.otaNet, 2));
@@ -88,10 +103,113 @@ test.describe('Hotel direct vs OTA calculator', () => {
       await expect(page.locator('#res-nights')).toHaveText(Math.round(m.nights).toLocaleString('en-GB'));
     });
 
-    test('verdict states the break-even marketing cost', async ({ page }) => {
-      // 1 - 0.03 - 0.82/0.95 = 10.7%
+    test('result labels say ex VAT', async ({ page }) => {
+      await expect(page.locator('#res-ota-net').locator('xpath=preceding-sibling::div')).toContainText('ex VAT');
+      await expect(page.locator('#res-direct-net').locator('xpath=preceding-sibling::div')).toContainText('ex VAT');
+    });
+  });
+
+  test.describe('VAT, commission base and OTA-side fees', () => {
+    test('VAT switched off reproduces the figures without any VAT adjustment', async ({ page }) => {
+      await page.locator('#vatinc').uncheck();
+      await expect(page.locator('#res-ota-net')).toHaveText('£147.60');
+      await expect(page.locator('#res-direct-net')).toHaveText('£152.19');
+      await expect(page.locator('#res-gap-night')).toHaveText('+£4.59');
+      await expect(page.locator('#res-gap-stay')).toHaveText('+£9.18');
+      expect(Math.abs(parse(await txt(page, 'res-gain')) - 3141)).toBeLessThan(2);
+      expect(Math.abs(parse(await txt(page, 'res-point')) - 628)).toBeLessThan(2);
+      await expect(page.locator('#vat')).toBeDisabled();
+      await expect(page.locator('#cbase')).toBeDisabled();
+    });
+
+    test('a VAT rate of zero also reproduces the no-VAT figures', async ({ page }) => {
+      await page.locator('#vat').fill('0');
+      await expect(page.locator('#res-ota-net')).toHaveText('£147.60');
+      await expect(page.locator('#res-direct-net')).toHaveText('£152.19');
+    });
+
+    test('commission on the price excluding VAT: 150 x 0.82 = 123.00', async ({ page }) => {
+      await page.locator('#cbase').selectOption('ex');
+      await expect(page.locator('#res-ota-net')).toHaveText('£123.00');
+      await expect(page.locator('#res-direct-net')).toHaveText('£126.83');
+      await expect(page.locator('#res-gap-night')).toHaveText('+£3.83');
+      await expect(page.locator('#res-gap-stay')).toHaveText('+£7.65');
+    });
+
+    test('a different VAT rate changes the ex-VAT rate', async ({ page }) => {
+      await page.locator('#vat').fill('5');
+      const m = model({ vat: 5 });
+      await expect(page.locator('#res-ota-net')).toHaveText(gbp(m.otaNet, 2));
+      await expect(page.locator('#res-direct-net')).toHaveText(gbp(m.directNet, 2));
+    });
+
+    test('OTA-side fees reduce OTA net: (150 - 32.40) x 0.95 = 111.72', async ({ page }) => {
+      await page.locator('#ofee').fill('5');
+      await expect(page.locator('#res-ota-net')).toHaveText('£111.72');
+      await expect(page.locator('#res-direct-net')).toHaveText('£126.83');
+      await expect(page.locator('#res-gap-night')).toHaveText(gbp(model({ ofee: 5 }).gap, 2).replace('£', '+£'));
+    });
+
+    test('OTA-side fees default to zero and carry a hint', async ({ page }) => {
+      await expect(page.locator('#ofee')).toHaveValue('0');
+      await expect(page.locator('#ofee-hint')).toContainText('channel manager');
+    });
+
+    test('the commission-base hint does not state what any OTA does', async ({ page }) => {
+      const hint = await txt(page, 'cbase-hint');
+      expect(hint).toMatch(/varies/i);
+      expect(hint).toMatch(/contract/i);
+      expect(hint).not.toMatch(/Booking\.com|Expedia/);
+    });
+
+    test('the VAT rate hint names the UK standard rate and the tax year', async ({ page }) => {
+      await expect(page.locator('#vat')).toHaveValue('20');
+      await expect(page.locator('#vat-hint')).toContainText('UK standard rate on hotel rooms');
+      await expect(page.locator('#vat-hint')).toContainText('2025-26');
+    });
+
+    test('the VAT switch is a labelled switch, on by default, at least 44px to tap', async ({ page }) => {
+      await expect(page.locator('#vatinc')).toBeChecked();
+      const h = await page.evaluate(() => document.querySelector('label[for="vatinc"]').getBoundingClientRect().height);
+      expect(h).toBeGreaterThanOrEqual(44);
+      await expect(page.locator('label[for="vatinc"]')).toHaveText('ADR includes VAT');
+    });
+  });
+
+  test.describe('break-even', () => {
+    test('defaults: marketing 14.5% and commission 12.9% are shown as cards and in the verdict', async ({ page }) => {
+      // 1 - 0.03 - 117.6 / (150 x 0.95) = 14.47%; (150 - 126.825) / 180 = 12.875%
+      await expect(page.locator('#res-be-mkt')).toHaveText('14.5%');
+      await expect(page.locator('#res-be-comm')).toHaveText('12.9%');
       await expect(page.locator('#verdict')).toContainText('Direct nets more than OTA');
-      await expect(page.locator('#verdict')).toContainText('10.7%');
+      await expect(page.locator('#verdict')).toContainText('marketing stays below 14.5%');
+      await expect(page.locator('#verdict')).toContainText('commission stays above 12.9%');
+    });
+
+    test('at the break-even marketing cost the channels net the same', async ({ page }) => {
+      const be = model({}).beMkt;
+      await page.locator('#mkt').fill(String(be));
+      expect(Math.abs(parse(await txt(page, 'res-gap-night')))).toBeLessThan(0.02);
+    });
+
+    test('at the break-even commission the channels net the same', async ({ page }) => {
+      const be = model({}).beComm;
+      await page.locator('#comm').fill(String(be));
+      expect(Math.abs(parse(await txt(page, 'res-gap-night')))).toBeLessThan(0.02);
+    });
+
+    test('break-even follows the VAT and fee inputs', async ({ page }) => {
+      const o = { ofee: 4, cbase: 'ex', disc: 8 };
+      await setAll(page, o);
+      const m = model(o);
+      await expect(page.locator('#res-be-mkt')).toHaveText((Math.round(m.beMkt * 10) / 10) + '%');
+      await expect(page.locator('#res-be-comm')).toHaveText((Math.round(m.beComm * 10) / 10) + '%');
+    });
+
+    test('when marketing alone cannot fix it, the card says so', async ({ page }) => {
+      await setAll(page, { comm: 5, disc: 10, mkt: 0, fee: 3 });
+      await expect(page.locator('#res-be-mkt')).toHaveText('Not reachable');
+      await expect(page.locator('#res-be-comm')).toHaveText(/%$/);
     });
   });
 
@@ -105,7 +223,7 @@ test.describe('Hotel direct vs OTA calculator', () => {
       await expect(los).toHaveValue('2.5');
       await expect(los).toBeFocused();
       expect(await page.evaluate(() => document.getElementById('los').__marker)).toBe('same-node');
-      expect(Math.abs(parse(await txt(page, 'res-gap-stay')) - 4.59 * 2.5)).toBeLessThan(0.02);
+      expect(Math.abs(parse(await txt(page, 'res-gap-stay')) - 9.225 * 2.5)).toBeLessThan(0.02);
     });
 
     test('typing a decimal percentage digit by digit passes through partial values', async ({ page }) => {
@@ -128,7 +246,8 @@ test.describe('Hotel direct vs OTA calculator', () => {
       await comm.pressSequentially('150');
       await expect(comm).toHaveValue('150');
       await expect(page.locator('#comm-note')).toHaveText('Maximum is 100 - using 100.');
-      await expect(page.locator('#res-ota-net')).toHaveText('£0.00');
+      // 100% commission on the VAT-inclusive 180 is 180, more than the 150 ex VAT the hotel receives
+      await expect(page.locator('#res-ota-net')).toHaveText('-£30.00');
       await page.locator('#occ').click();
       await expect(comm).toHaveValue('100');
       await expect(page.locator('#comm-note')).toHaveText('Maximum is 100 - using 100.');
@@ -146,12 +265,13 @@ test.describe('Hotel direct vs OTA calculator', () => {
 
     test('a pasted "£1,200" is understood and tidied to 1200', async ({ page }) => {
       await page.locator('#adr').fill('£1,200');
-      await expect(page.locator('#res-ota-net')).toHaveText('£984.00');
+      // 1200 / 1.2 = 1000; 1000 - 0.18 x 1200 = 784
+      await expect(page.locator('#res-ota-net')).toHaveText('£784.00');
       await page.locator('#occ').click();
       await expect(page.locator('#adr')).toHaveValue('1200');
     });
 
-    test('shift larger than the OTA share is capped and says so', async ({ page }) => {
+    test('shift larger than the OTA share is capped in the maths and says so', async ({ page }) => {
       await page.locator('#shift').fill('60');
       await expect(page.locator('#shift-note')).toContainText('Maximum is 40');
       await expect(page.locator('#shift-note')).toContainText('using 40');
@@ -162,21 +282,24 @@ test.describe('Hotel direct vs OTA calculator', () => {
 
     test('money is formatted with the sign before the symbol and separators', async ({ page }) => {
       await page.locator('#disc').fill('20');
-      // direct = 180 x 0.8 x 0.89 = 128.16 vs 147.60: gap -19.44, a year -13687.5 x 0.05 x 19.44
-      await expect(page.locator('#res-gap-night')).toHaveText('-£19.44');
+      // direct = 150 x 0.8 x 0.89 = 106.80 vs 117.60: gap -10.80
+      await expect(page.locator('#res-gap-night')).toHaveText('-£10.80');
       const gain = await txt(page, 'res-gain');
       expect(gain).toMatch(/^-£\d{1,3}(,\d{3})*$/);
     });
   });
 
   test.describe('direct nets less than OTA', () => {
-    test('says so plainly and names the input doing it', async ({ page }) => {
+    test('says so plainly, names the input doing it and both break-even points', async ({ page }) => {
       await page.locator('#disc').fill('15');
       const verdict = page.locator('#verdict');
+      const m = model({ disc: 15 });
       await expect(verdict).toContainText('Direct nets less than OTA');
       await expect(verdict).toContainText('less per room night');
-      await expect(verdict).toContainText('member or direct-booking discount');
-      await expect(page.locator('#res-gap-night')).toHaveText(/^-£11\.43$/);
+      await expect(verdict).toContainText('direct booking discount');
+      await expect(verdict).toContainText('OTA commission rose to ' + (Math.round(m.beComm * 10) / 10) + '%');
+      await expect(verdict).toContainText('marketing cost fell to ' + (Math.round(m.beMkt * 10) / 10) + '%');
+      await expect(page.locator('#res-gap-night')).toHaveText('-' + gbp(m.gap, 2));
       await expect(page.locator('#res-gain')).toHaveText(/^-£/);
       await expect(verdict).toContainText('would cost');
     });
@@ -193,7 +316,7 @@ test.describe('Hotel direct vs OTA calculator', () => {
     });
 
     test('equal nets read as level, not as a gain', async ({ page }) => {
-      await setAll(page, { comm: 10, disc: 0, mkt: 7, fee: 3 });
+      await setAll(page, { cbase: 'ex', comm: 10, disc: 0, mkt: 7, fee: 3 });
       await expect(page.locator('#verdict')).toContainText('Level with the OTAs');
       await expect(page.locator('#res-gap-night')).toHaveText('£0.00');
     });
@@ -209,8 +332,12 @@ test.describe('Hotel direct vs OTA calculator', () => {
       'no OTA share': { share: 0 },
       'all OTA': { share: 100, shift: 100 },
       '100% commission': { comm: 100 },
+      '100% commission on ex VAT price': { comm: 100, cbase: 'ex' },
       '100% discount': { disc: 100 },
       '100% marketing': { mkt: 100 },
+      '100% OTA-side fees': { ofee: 100 },
+      '100% VAT': { vat: 100 },
+      'VAT off with 100% fees': { vatinc: false, ofee: 100 },
       'marketing and fees over 100%': { mkt: 70, fee: 60 },
       'huge numbers': { rooms: 99999999, adr: 99999999, occ: 100 },
     };
@@ -224,11 +351,37 @@ test.describe('Hotel direct vs OTA calculator', () => {
       });
     }
 
+    test('zero rooms keeps the per-night comparison and says only the annual figures need rooms', async ({ page }) => {
+      await page.locator('#rooms').fill('0');
+      await expect(page.locator('#res-ota-net')).toHaveText('£117.60');
+      await expect(page.locator('#res-gap-night')).toHaveText('+£9.23');
+      await expect(page.locator('#verdict')).toContainText('Direct nets more than OTA');
+      await expect(page.locator('#verdict')).toContainText('Enter rooms and occupancy');
+      await expect(page.locator('#verdict')).toContainText('does not need them');
+      await expect(page.locator('#verdict')).not.toContainText('Nothing to compare yet');
+      await expect(page.locator('#res-gain')).toHaveText('Needs rooms and occupancy');
+      await expect(page.locator('#res-be-mkt')).toHaveText('14.5%');
+      await expect(page.locator('#hv-chart svg')).toHaveCount(1);
+    });
+
+    test('zero occupancy behaves the same way', async ({ page }) => {
+      await page.locator('#occ').fill('0');
+      await expect(page.locator('#res-direct-net')).toHaveText('£126.83');
+      await expect(page.locator('#verdict')).toContainText('does not need them');
+      await expect(page.locator('#res-point')).toHaveText('Needs rooms and occupancy');
+    });
+
+    test('a zero rate is the only case that says there is nothing to compare', async ({ page }) => {
+      await page.locator('#adr').fill('0');
+      await expect(page.locator('#verdict')).toContainText('Nothing to compare yet');
+      await expect(page.locator('#verdict')).toContainText('average daily rate');
+    });
+
     test('blank fields are treated as zero and noted once left', async ({ page }) => {
       await page.locator('#rooms').fill('');
       await page.locator('#occ').click();
       await expect(page.locator('#rooms-note')).toHaveText('Blank - using 0.');
-      await expect(page.locator('#verdict')).toContainText('Nothing to compare yet');
+      await expect(page.locator('#verdict')).toContainText('Enter rooms and occupancy');
     });
 
     test('text that is not a number is noted', async ({ page }) => {
@@ -259,12 +412,15 @@ test.describe('Hotel direct vs OTA calculator', () => {
           ws: getComputedStyle(e).whiteSpace,
           over: e.scrollWidth > e.parentElement.clientWidth + 1,
           lines: Math.round(e.getBoundingClientRect().height / parseFloat(getComputedStyle(e).lineHeight)),
+          small: e.classList.contains('hv-small'),
         }));
       });
       for (const c of checks) {
         expect(c.over, c.id + ' overflows its card').toBe(false);
-        if (c.id !== 'res-gap-stay') expect(c.ws, c.id).toBe('nowrap');
-        expect(c.lines, c.id + ' wraps').toBeLessThanOrEqual(1);
+        if (!c.small) {
+          expect(c.ws, c.id).toBe('nowrap');
+          expect(c.lines, c.id + ' wraps').toBeLessThanOrEqual(1);
+        }
       }
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     });
@@ -279,30 +435,72 @@ test.describe('Hotel direct vs OTA calculator', () => {
   test.describe('currency', () => {
     test('USD and EUR change every symbol', async ({ page }) => {
       await page.locator('#currency-select').selectOption('USD');
-      await expect(page.locator('#res-ota-net')).toHaveText('$147.60');
-      await expect(page.locator('#adr-pre, .hv-sym').first()).toHaveText('$');
+      await expect(page.locator('#res-ota-net')).toHaveText('$117.60');
+      await expect(page.locator('.hv-sym').first()).toHaveText('$');
       await expect(page.locator('#tb-total-now')).toHaveText(/^\$/);
       await page.locator('#currency-select').selectOption('EUR');
-      await expect(page.locator('#res-direct-net')).toHaveText('€152.19');
-      await expect(page.locator('#hv-chart svg')).toHaveAttribute('aria-label', /€147\.60/);
+      await expect(page.locator('#res-direct-net')).toHaveText('€126.83');
+      await expect(page.locator('#hv-chart svg')).toHaveAttribute('aria-label', /€117\.60/);
     });
   });
 
   test.describe('URL state', () => {
     test('inputs are written to the URL and a link reproduces the result', async ({ page }) => {
-      await setAll(page, { rooms: 80, adr: 210, comm: 17.5, shift: 7 });
+      await setAll(page, { rooms: 80, adr: 210, comm: 17.5, shift: 7, ofee: 2, vat: 12.5 });
+      await page.locator('#cbase').selectOption('ex');
       await page.locator('#currency-select').selectOption('EUR');
       await expect.poll(() => page.url()).toContain('rooms=80');
       const url = new globalThis.URL(page.url());
       expect(url.searchParams.get('adr')).toBe('210');
       expect(url.searchParams.get('comm')).toBe('17.5');
+      expect(url.searchParams.get('ofee')).toBe('2');
+      expect(url.searchParams.get('vat')).toBe('12.5');
+      expect(url.searchParams.get('cbase')).toBe('ex');
+      expect(url.searchParams.get('vatinc')).toBe('1');
       expect(url.searchParams.get('cur')).toBe('EUR');
       const gain = await txt(page, 'res-gain');
       await page.goto(url.pathname + url.search);
       await expect(page.locator('#rooms')).toHaveValue('80');
       await expect(page.locator('#comm')).toHaveValue('17.5');
+      await expect(page.locator('#ofee')).toHaveValue('2');
+      await expect(page.locator('#cbase')).toHaveValue('ex');
       await expect(page.locator('#currency-select')).toHaveValue('EUR');
       await expect(page.locator('#res-gain')).toHaveText(gain);
+    });
+
+    test('the VAT switch is kept in the URL', async ({ page }) => {
+      await page.locator('#vatinc').uncheck();
+      await expect.poll(() => page.url()).toContain('vatinc=0');
+      await page.reload();
+      await expect(page.locator('#vatinc')).not.toBeChecked();
+      await expect(page.locator('#res-ota-net')).toHaveText('£147.60');
+    });
+
+    test('the typed shift stays in the URL even when a 0% OTA share caps it to zero', async ({ page }) => {
+      await page.locator('#share').fill('0');
+      await expect.poll(() => new globalThis.URL(page.url()).searchParams.get('share')).toBe('0');
+      const p = new globalThis.URL(page.url()).searchParams;
+      expect(p.get('shift')).toBe('5');
+      // The maths still uses the cap
+      await expect(page.locator('#res-gain')).toHaveText('£0');
+      await expect(page.locator('#shift-note')).toContainText('Maximum is 0');
+      // And the box keeps what was typed after the user leaves it
+      await page.locator('#shift').fill('7');
+      await page.locator('#occ').click();
+      await expect(page.locator('#shift')).toHaveValue('7');
+      expect(new globalThis.URL(page.url()).searchParams.get('shift')).toBe('7');
+      // Raising the OTA share again lets the typed shift through
+      await page.locator('#share').fill('40');
+      await expect(page.locator('#shift-note')).toBeHidden();
+      await expect(page.locator('#res-gain')).toHaveText('+' + gbp(model({ shift: 7 }).gain));
+    });
+
+    test('an over-range typed value stays as typed in the URL and is clamped only in the maths', async ({ page }) => {
+      await page.locator('#comm').fill('150');
+      await expect.poll(() => new globalThis.URL(page.url()).searchParams.get('comm')).toBe('150');
+      await page.goto('/hotel-direct-vs-ota/' + new globalThis.URL(page.url()).search);
+      await expect(page.locator('#comm-note')).toContainText('Maximum is 100');
+      await expect(page.locator('#res-ota-net')).toHaveText('-£30.00');
     });
 
     test('an out-of-range value in the URL is capped with a note', async ({ page }) => {
@@ -314,6 +512,7 @@ test.describe('Hotel direct vs OTA calculator', () => {
     test('no cookies or local storage are written', async ({ page }) => {
       await setAll(page, { rooms: 77, adr: 199 });
       await page.locator('#currency-select').selectOption('USD');
+      await page.locator('#vatinc').uncheck();
       const stored = await page.evaluate(() => ({
         cookie: document.cookie, local: localStorage.length, session: sessionStorage.length,
       }));
@@ -342,6 +541,11 @@ test.describe('Hotel direct vs OTA calculator', () => {
       expect(await page.evaluate(() => window.__events)).toEqual(['calculated']);
     });
 
+    test('toggling the VAT switch counts as a real change', async ({ page }) => {
+      await page.locator('#vatinc').uncheck();
+      await expect.poll(() => page.evaluate(() => window.__events)).toEqual(['calculated']);
+    });
+
     test('shared fires on copy link and the status confirms', async ({ page, context }) => {
       await context.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => {});
       await page.locator('#copy-link').click();
@@ -351,10 +555,8 @@ test.describe('Hotel direct vs OTA calculator', () => {
   });
 
   test.describe('structure and accessibility', () => {
-    const ids = ['rooms', 'occ', 'adr', 'los', 'share', 'comm', 'mkt', 'fee', 'disc', 'shift'];
-
     test('every input has a visible label tied by for, and is at least 44px tall', async ({ page }) => {
-      for (const id of [...ids, 'currency-select']) {
+      for (const id of [...TEXT_IDS, 'cbase', 'currency-select']) {
         const info = await page.evaluate((i) => {
           const input = document.getElementById(i);
           const label = document.querySelector('label[for="' + i + '"]');
@@ -374,19 +576,19 @@ test.describe('Hotel direct vs OTA calculator', () => {
     });
 
     test('inputs describe themselves with a hint and a note', async ({ page }) => {
-      for (const id of ids) {
+      for (const id of [...TEXT_IDS, 'cbase']) {
         await expect(page.locator('#' + id)).toHaveAttribute('aria-describedby', id + '-hint ' + id + '-note');
       }
     });
 
-    test('tab order follows the page: currency, then inputs in order, then copy link', async ({ page }) => {
+    test('tab order follows the page: currency, then the controls in order, then copy link', async ({ page }) => {
       await page.locator('#currency-select').focus();
       const seen = [];
-      for (let i = 0; i < ids.length + 2; i++) {
+      for (let i = 0; i < TAB_ORDER.length + 1; i++) {
         await page.keyboard.press('Tab');
         seen.push(await page.evaluate(() => document.activeElement.id));
       }
-      expect(seen).toEqual([...ids, 'copy-link', seen[ids.length + 1]]);
+      expect(seen).toEqual([...TAB_ORDER, 'copy-link']);
     });
 
     test('inputs get a visible focus outline', async ({ page }) => {
@@ -425,14 +627,31 @@ test.describe('Hotel direct vs OTA calculator', () => {
 
     test('how this works lists the formulas and the caveats', async ({ page }) => {
       const t = await page.locator('.hv-method').innerText();
-      for (const s of ['ADR x (1 - commission)', 'ADR x (1 - discount) x (1 - marketing - fees)', 'rooms x 365 x occupancy',
-        'billboard effect', 'Parity clauses', 'Cancellations and no-shows', 'lifetime value', 'Occupancy is fixed']) {
+      for (const s of ['ADR / (1 + VAT rate)', '(ADR ex VAT - commission) x (1 - OTA-side fees)',
+        'ADR ex VAT x (1 - discount) x (1 - marketing - fees)', 'rooms x 365 x occupancy', 'Break-even commission',
+        'varies by OTA, by contract and by country',
+        'billboard effect', 'Parity clauses', 'Cancellations and no-shows', 'lifetime value', 'Occupancy is fixed',
+        'Extras and the blended marketing cost']) {
         expect(t).toContain(s);
       }
+      expect(t).not.toContain('Other commissioned business');
+      expect(t).not.toMatch(/if anything the model understates direct/i);
+      expect(t).toContain('I would not assume the omissions cancel out');
+    });
+
+    test('the marketing hint says it is a blended cost and the next booking costs more', async ({ page }) => {
+      const hint = await txt(page, 'mkt-hint');
+      expect(hint).toMatch(/blended/i);
+      expect(hint).toMatch(/next booking usually costs more/i);
+    });
+
+    test('the channel model is stated as two channels', async ({ page }) => {
+      await expect(page.locator('#section-inputs')).toContainText('two channels only');
     });
 
     test('no uncaught errors and no dialogs', async ({ page, pageErrors, dialogs }) => {
       await setAll(page, { rooms: 0, adr: 'x', comm: 999 });
+      await page.locator('#vatinc').uncheck();
       await page.locator('#occ').click();
       expect(pageErrors).toEqual([]);
       expect(dialogs).toEqual([]);
@@ -464,17 +683,46 @@ test.describe('Hotel direct vs OTA calculator', () => {
       test(`inputs in a row share a top at ${width}px`, async ({ page }) => {
         await page.setViewportSize({ width, height: 900 });
         const tops = await page.evaluate(() => {
-          const t = (id) => Math.round(document.getElementById(id).closest('.input-group, .col-6, .col-md-3, .col-md-4')
-            .querySelector('input').getBoundingClientRect().top);
-          return { rooms: t('rooms'), occ: t('occ'), adr: t('adr'), los: t('los'), mkt: t('mkt'), fee: t('fee'), disc: t('disc'), share: t('share'), comm: t('comm') };
+          const t = (id) => Math.round(document.getElementById(id).getBoundingClientRect().top);
+          const out = {};
+          ['rooms', 'occ', 'adr', 'los', 'vat', 'cbase', 'share', 'comm', 'ofee', 'mkt', 'fee', 'disc'].forEach((id) => { out[id] = t(id); });
+          return out;
         });
         expect(tops.rooms).toBe(tops.occ);
         expect(tops.adr).toBe(tops.los);
         expect(tops.share).toBe(tops.comm);
         expect(tops.mkt).toBe(tops.fee);
-        if (width === 1280) { expect(tops.rooms).toBe(tops.adr); expect(tops.mkt).toBe(tops.disc); }
+        if (width === 1280) {
+          expect(tops.rooms).toBe(tops.adr);
+          expect(tops.vat).toBe(tops.cbase);
+          expect(tops.share).toBe(tops.ofee);
+          expect(tops.mkt).toBe(tops.disc);
+        }
       });
     }
+
+    test('at 1280 the short-label rows reserve one line, not three: no empty gap above the fields', async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      const gaps = await page.evaluate(() => ['vat', 'cbase', 'share', 'comm', 'ofee', 'mkt', 'fee', 'disc', 'shift'].map((id) => {
+        const label = document.querySelector('label[for="' + id + '"]').getBoundingClientRect();
+        const field = document.getElementById(id).getBoundingClientRect();
+        const input = (document.getElementById(id).closest('.input-group') || document.getElementById(id)).getBoundingClientRect();
+        return { id, labelH: label.height, between: input.top - label.bottom, fieldH: field.height };
+      }));
+      for (const g of gaps) {
+        expect(g.labelH, g.id + ' label should be a single line').toBeLessThan(20);
+        expect(g.between, g.id).toBeLessThan(8);
+      }
+    });
+
+    test('result and form labels are at least 12px', async ({ page }) => {
+      for (const width of [360, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        const sizes = await page.evaluate(() => Array.from(document.querySelectorAll('.result-label, .hv-inputs .form-label, .result-sub, .hv-table thead th, .hv-hint, .hv-note'))
+          .map((e) => ({ cls: e.className + ':' + e.textContent.trim().slice(0, 20), px: parseFloat(getComputedStyle(e).fontSize) })));
+        for (const s of sizes) expect(s.px, s.cls + ' @' + width).toBeGreaterThanOrEqual(12);
+      }
+    });
 
     test('result cards in a row share a top', async ({ page }) => {
       await page.setViewportSize({ width: 360, height: 900 });
@@ -500,8 +748,9 @@ test.describe('Hotel direct vs OTA calculator', () => {
         expect(Math.abs(info.svgW - info.boxW)).toBeLessThanOrEqual(1);
         expect(info.min).toBeGreaterThanOrEqual(11);
         expect(info.role).toBe('img');
-        expect(info.label).toContain('£147.60');
-        expect(info.label).toContain('£152.19');
+        expect(info.label).toContain('£117.60');
+        expect(info.label).toContain('£126.83');
+        expect(info.label).toContain('ex VAT');
       });
     }
 
@@ -514,11 +763,11 @@ test.describe('Hotel direct vs OTA calculator', () => {
       expect(Math.abs(vbW - boxW)).toBeLessThanOrEqual(1);
     });
 
-    test('bar lengths follow the net per night', async ({ page }) => {
+    test('bar lengths follow the net per night as a share of ADR ex VAT', async ({ page }) => {
       const widths = await page.evaluate(() => Array.from(document.querySelectorAll('#hv-chart svg rect')).map((r) => parseFloat(r.getAttribute('width'))));
       // [track, ota bar, track, direct bar]
-      expect(widths[1] / widths[0]).toBeCloseTo(147.6 / 180, 2);
-      expect(widths[3] / widths[2]).toBeCloseTo(152.19 / 180, 2);
+      expect(widths[1] / widths[0]).toBeCloseTo(117.6 / 150, 2);
+      expect(widths[3] / widths[2]).toBeCloseTo(126.825 / 150, 2);
     });
 
     test('is left out when there is nothing to draw', async ({ page }) => {
