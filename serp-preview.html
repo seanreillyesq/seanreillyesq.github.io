@@ -24,6 +24,7 @@ sitemap: true
 .serp-inputs .form-control,
 .serp-inputs .form-select {
     font-size: 0.9375rem;
+    min-height: 44px;
 }
 .serp-inputs textarea.form-control {
     resize: vertical;
@@ -63,7 +64,7 @@ sitemap: true
     gap: 0.25rem;
     border-bottom: 2px solid var(--color-border);
     margin: 2rem 0 0;
-    overflow-x: auto;
+    flex-wrap: wrap;
 }
 .serp-tab {
     font-family: 'Inter', sans-serif;
@@ -72,6 +73,7 @@ sitemap: true
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: 0.5rem 1rem;
+    min-height: 44px;
     border: none;
     background: none;
     color: var(--color-text-muted);
@@ -82,6 +84,8 @@ sitemap: true
     transition: color 0.2s ease;
 }
 .serp-tab:hover { color: var(--color-text); }
+.serp-tab:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+.serp-panel:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 .serp-tab.active {
     color: var(--color-accent);
     border-bottom-color: var(--color-accent);
@@ -94,7 +98,9 @@ sitemap: true
 /* ========== Google SERP ========== */
 .google-result {
     font-family: Arial, sans-serif;
-    max-width: 600px;
+    /* 580px title threshold + 2 x 20px padding + 2 x 1px border, so a title that
+       measures at the limit fits on one line. Keep in step with TITLE_MAX_PX. */
+    max-width: 622px;
     padding: 1.25rem;
     background: #fff;
     border: 1px solid var(--color-border);
@@ -134,6 +140,7 @@ sitemap: true
     font-size: 14px;
     color: #202124;
     line-height: 1.3;
+    overflow-wrap: anywhere;
 }
 .google-breadcrumb {
     font-size: 12px;
@@ -149,7 +156,7 @@ sitemap: true
     line-height: 1.3;
     margin-bottom: 0.25rem;
     cursor: pointer;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
 }
 .google-title:hover {
     text-decoration: underline;
@@ -158,6 +165,7 @@ sitemap: true
     font-size: 14px;
     color: #4d5156;
     line-height: 1.58;
+    overflow-wrap: anywhere;
 }
 .google-date {
     color: #70757a;
@@ -189,6 +197,7 @@ sitemap: true
     color: #202124;
     line-height: 1.58;
     margin-bottom: 1rem;
+    overflow-wrap: anywhere;
 }
 .ai-overview-sources-label {
     font-size: 12px;
@@ -220,6 +229,11 @@ sitemap: true
     gap: 0.375rem;
     margin-bottom: 0.375rem;
     color: #70757a;
+    min-width: 0;
+}
+.ai-source-site span {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 .ai-source-favicon {
     width: 16px;
@@ -236,6 +250,7 @@ sitemap: true
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    overflow-wrap: anywhere;
 }
 
 /* ========== Social Card ========== */
@@ -279,6 +294,7 @@ sitemap: true
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    overflow-wrap: anywhere;
     margin-bottom: 0.25rem;
 }
 .social-card-desc {
@@ -289,11 +305,13 @@ sitemap: true
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    overflow-wrap: anywhere;
 }
 
 /* ========== Validation ========== */
 .serp-validation {
     margin-top: 1.5rem;
+    margin-bottom: 2rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--color-border);
 }
@@ -347,16 +365,19 @@ sitemap: true
     align-items: center;
     gap: 0.5rem;
     margin: 0;
+    min-height: 44px;
 }
 .serp-fetch-row input[type="checkbox"] {
     accent-color: var(--color-accent);
-    width: 1rem;
-    height: 1rem;
+    width: 1.25rem;
+    height: 1.25rem;
     cursor: pointer;
 }
-.serp-fetch-url {
+.serp-fetch-url,
+.serp-fetch-url.form-control-sm {
     flex: 1;
     min-width: 0;
+    min-height: 44px;
 }
 .serp-fetch-btn {
     font-family: 'Inter', sans-serif;
@@ -365,6 +386,7 @@ sitemap: true
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: 0.375rem 1rem;
+    min-height: 44px;
     background: var(--color-accent);
     color: #fff;
     border: none;
@@ -393,7 +415,7 @@ sitemap: true
 .serp-fetch-fields.visible {
     display: flex;
     flex-wrap: wrap;
-    align-items: end;
+    align-items: center;
     gap: 0.75rem;
     margin-top: 0.5rem;
 }
@@ -404,7 +426,7 @@ sitemap: true
 
 /* Mobile */
 @media (max-width: 575.98px) {
-    .serp-tab { padding: 0.5rem 0.625rem; font-size: 0.6875rem; }
+    .serp-tab { padding: 0.5rem 0.5rem; font-size: 0.6875rem; letter-spacing: 0.5px; }
     .google-result { padding: 1rem; }
 }
 </style>
@@ -418,11 +440,12 @@ sitemap: true
         Load from URL
     </label>
     <div class="serp-fetch-fields" id="serp-fetch-fields">
+        <label class="visually-hidden" for="serp-fetch-url">URL of the page to load metadata from</label>
         <input type="text" class="form-control form-control-sm serp-fetch-url" id="serp-fetch-url" placeholder="https://www.example.com/page/">
         <button type="button" class="serp-fetch-btn" id="serp-fetch-btn">Fetch</button>
     </div>
 </div>
-<div class="serp-fetch-status" id="serp-fetch-status"></div>
+<div class="serp-fetch-status" id="serp-fetch-status" aria-live="polite" aria-atomic="true"></div>
 
 <!-- Inputs -->
 <div class="serp-inputs">
@@ -477,28 +500,29 @@ sitemap: true
 </div>
 
 <!-- Tabs -->
-<div class="serp-tabs" role="tablist">
-    <button class="serp-tab active" data-tab="desktop" role="tab">Desktop</button>
-    <button class="serp-tab" data-tab="mobile" role="tab">Mobile</button>
-    <button class="serp-tab" data-tab="ai-overview" role="tab">AI Overview</button>
-    <button class="serp-tab" data-tab="social" role="tab">Social Card</button>
+<div class="serp-tabs" role="tablist" aria-label="Preview type">
+    <button type="button" class="serp-tab active" id="tab-desktop" data-tab="desktop" role="tab" aria-selected="true" aria-controls="panel-desktop" tabindex="0">Desktop</button>
+    <button type="button" class="serp-tab" id="tab-mobile" data-tab="mobile" role="tab" aria-selected="false" aria-controls="panel-mobile" tabindex="-1">Mobile</button>
+    <button type="button" class="serp-tab" id="tab-ai-overview" data-tab="ai-overview" role="tab" aria-selected="false" aria-controls="panel-ai-overview" tabindex="-1">AI Overview</button>
+    <button type="button" class="serp-tab" id="tab-social" data-tab="social" role="tab" aria-selected="false" aria-controls="panel-social" tabindex="-1">Social Card</button>
 </div>
 
 <!-- Preview panels -->
-<div class="serp-panel active" id="panel-desktop">
+<div class="serp-panel active" id="panel-desktop" role="tabpanel" aria-labelledby="tab-desktop" tabindex="0">
     <div class="google-result" id="preview-desktop"></div>
 </div>
-<div class="serp-panel" id="panel-mobile">
+<div class="serp-panel" id="panel-mobile" role="tabpanel" aria-labelledby="tab-mobile" tabindex="0">
     <div class="google-result google-result-mobile" id="preview-mobile"></div>
 </div>
-<div class="serp-panel" id="panel-ai-overview">
+<div class="serp-panel" id="panel-ai-overview" role="tabpanel" aria-labelledby="tab-ai-overview" tabindex="0">
     <div class="ai-overview" id="preview-ai"></div>
 </div>
-<div class="serp-panel" id="panel-social">
+<div class="serp-panel" id="panel-social" role="tabpanel" aria-labelledby="tab-social" tabindex="0">
     <div class="social-card" id="preview-social"></div>
 </div>
 
 <!-- Validation -->
+<div class="visually-hidden" id="validation-status" aria-live="polite" aria-atomic="true"></div>
 <div class="serp-validation" id="validation"></div>
 
 <!-- How this works -->
@@ -510,6 +534,7 @@ sitemap: true
     <p><strong>AI Overview citations:</strong> When Google's AI Overview cites your page, it appears as a small source card with your site name, favicon and title. The preview shows your card highlighted alongside placeholder competitors. Whether your content gets cited depends on authority, relevance and content structure, not anything you can control from metadata alone.</p>
     <p><strong>Social cards:</strong> Facebook and LinkedIn use Open Graph tags (og:title, og:description, og:image) to render link previews. The recommended OG image ratio is 1.91:1 (1200x630px). Without an image, social shares look significantly less engaging.</p>
 </div>
+
 
 <script>
 (function() {
@@ -524,6 +549,7 @@ sitemap: true
     var DESC_MOBILE_MAX_PX = 780;
     var TITLE_FONT = '20px Arial';
     var DESC_FONT = '14px Arial';
+    var ELLIPSIS = '\u2026';
 
     // DOM refs
     var titleInput = document.getElementById('serp-title');
@@ -551,9 +577,29 @@ sitemap: true
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext('2d');
 
+    // Rounded up, so "measures <= limit" always means "fits in a box of that width".
     function measurePx(text, font) {
         ctx.font = font;
-        return Math.round(ctx.measureText(text).width);
+        return Math.ceil(ctx.measureText(text).width);
+    }
+
+    // The preview is HTML, which collapses runs of whitespace and ignores leading and
+    // trailing space. Measure and truncate the same text the browser will show.
+    function collapseWs(text) {
+        return String(text == null ? '' : text).replace(/\s+/g, ' ').trim();
+    }
+
+    // Count what a person sees as characters, not UTF-16 units.
+    var segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
+    function countChars(text) {
+        if (!text) return 0;
+        if (segmenter) {
+            var n = 0;
+            var it = segmenter.segment(text)[Symbol.iterator]();
+            while (!it.next().done) n++;
+            return n;
+        }
+        return Array.from(text).length;
     }
 
     function escapeHtml(text) {
@@ -562,16 +608,19 @@ sitemap: true
         return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
+    function escapeRegex(w) {
+        return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Unicode-aware: \b only knows ASCII word characters, so it fails next to Cafe-with-accent,
+    // C++ and similar. The lookbehind also keeps the match out of HTML entities (&amp; etc).
     function boldKeywords(html) {
         var phrase = keyphraseInput.value.trim();
         if (!phrase) return html;
-        // Split into unique words, filter short ones, escape for regex
-        var words = phrase.split(/\s+/).filter(function(w) { return w.length >= 2; });
+        var words = phrase.split(/\s+/).filter(function(w) { return Array.from(w).length >= 2; });
         if (!words.length) return html;
-        var escaped = words.map(function(w) {
-            return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        });
-        var pattern = new RegExp('(?<![&#\\w])(' + escaped.join('|') + ')\\b(?!;)', 'gi');
+        words.sort(function(a, b) { return b.length - a.length; });
+        var pattern = new RegExp('(?<![&#\\p{L}\\p{N}_])(' + words.map(escapeRegex).join('|') + ')(?![\\p{L}\\p{N}_])(?!;)', 'giu');
         return html.replace(pattern, '<b>$1</b>');
     }
 
@@ -587,18 +636,75 @@ sitemap: true
         return '#dc2626';
     }
 
-    function urlToBreadcrumb(url) {
+    // ----- Punycode (RFC 3492) so internationalised domains show as people type them -----
+    function punyAdapt(delta, numPoints, first) {
+        var k = 0;
+        delta = first ? Math.floor(delta / 700) : delta >> 1;
+        delta += Math.floor(delta / numPoints);
+        for (; delta > 455; k += 36) delta = Math.floor(delta / 35);
+        return Math.floor(k + 36 * delta / (delta + 38));
+    }
+    function punyDigit(c) {
+        if (c - 48 < 10) return c - 22;
+        if (c - 65 < 26) return c - 65;
+        if (c - 97 < 26) return c - 97;
+        return 36;
+    }
+    function punyDecode(input) {
+        var output = [], i = 0, n = 128, bias = 72;
+        var basic = input.lastIndexOf('-');
+        if (basic < 0) basic = 0;
+        for (var j = 0; j < basic; j++) output.push(input.charCodeAt(j));
+        for (var index = basic > 0 ? basic + 1 : 0; index < input.length;) {
+            var oldi = i;
+            for (var w = 1, k = 36; ; k += 36) {
+                if (index >= input.length) throw new Error('bad punycode');
+                var digit = punyDigit(input.charCodeAt(index++));
+                if (digit >= 36) throw new Error('bad punycode');
+                i += digit * w;
+                var t = k <= bias ? 1 : (k >= bias + 26 ? 26 : k - bias);
+                if (digit < t) break;
+                w *= 36 - t;
+            }
+            var len = output.length + 1;
+            bias = punyAdapt(i - oldi, len, oldi === 0);
+            n += Math.floor(i / len);
+            i %= len;
+            output.splice(i++, 0, n);
+        }
+        return String.fromCodePoint.apply(null, output);
+    }
+    function unicodeHost(hostname) {
+        return hostname.split('.').map(function(label) {
+            if (label.slice(0, 4).toLowerCase() !== 'xn--') return label;
+            try { return punyDecode(label.slice(4)); } catch (e) { return label; }
+        }).join('.');
+    }
+
+    // Only absolute http(s) URLs with a host count as URLs here.
+    function parseHttpUrl(str) {
         try {
-            var parsed = new URL(url);
-            var parts = parsed.pathname.split('/').filter(Boolean).map(function(s) {
-                try { s = decodeURIComponent(s); } catch(e) {}
-                return s.replace(/-/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
-            });
-            if (parts.length === 0) return parsed.hostname;
-            return parsed.hostname + ' \u203A ' + parts.join(' \u203A ');
-        } catch (e) {
+            var u = new URL(str);
+            if ((u.protocol === 'http:' || u.protocol === 'https:') && u.hostname) return u;
+        } catch (e) {}
+        return null;
+    }
+
+    function urlToBreadcrumb(url) {
+        var parsed = parseHttpUrl(url);
+        if (!parsed) {
+            try { new URL(url); return 'example.com'; } catch (e) {}
             return url || 'example.com';
         }
+        var host = unicodeHost(parsed.hostname);
+        var parts = parsed.pathname.split('/').filter(Boolean).map(function(s) {
+            try { s = decodeURIComponent(s); } catch(e) {}
+            // Capitalise the first letter of each space-separated word only (\b\w breaks on
+            // accents and apostrophes).
+            return s.replace(/-/g, ' ').replace(/(^|\s)(\p{L})/gu, function(m, sp, c) { return sp + c.toUpperCase(); });
+        });
+        if (parts.length === 0) return host;
+        return host + ' \u203a ' + parts.join(' \u203a ');
     }
 
     function formatDate(dateStr) {
@@ -611,23 +717,71 @@ sitemap: true
         }
     }
 
+    // Cut text so that it plus an ellipsis fits in maxPx. Cuts at the last whole word that
+    // fits and drops trailing space and punctuation before the single ellipsis character.
+    // A single word wider than the box has no earlier boundary, so it is cut mid-word.
     function truncateAtPx(text, font, maxPx) {
+        text = collapseWs(text);
         if (measurePx(text, font) <= maxPx) return { text: text, truncated: false };
-        var lo = 0, hi = text.length;
+        var chars = Array.from(text);
+        var lo = 0, hi = chars.length;
         while (lo < hi) {
             var mid = Math.ceil((lo + hi) / 2);
-            if (measurePx(text.slice(0, mid) + '...', font) <= maxPx) {
+            if (measurePx(chars.slice(0, mid).join('') + ELLIPSIS, font) <= maxPx) {
                 lo = mid;
             } else {
                 hi = mid - 1;
             }
         }
-        return { text: text.slice(0, lo) + '...', truncated: true };
+        var cut = chars.slice(0, lo).join('');
+        if (lo < chars.length && !/\s/.test(chars[lo])) {
+            var boundary = cut.search(/\s\S*$/);
+            if (boundary > 0) cut = cut.slice(0, boundary);
+        }
+        cut = cut.replace(/[\s\p{P}]+$/u, '');
+        return { text: cut + ELLIPSIS, truncated: true };
     }
 
-    // Favicon state
+    // Split on sentence-ending punctuation followed by whitespace and a capital letter (or
+    // the end of the text). Original punctuation is kept. Common abbreviations never end one.
+    var ABBREVIATIONS = ['e.g.', 'i.e.', 'etc.', 'vs.', 'mr.', 'mrs.', 'ms.', 'dr.', 'prof.', 'st.', 'no.', 'inc.', 'ltd.', 'approx.'];
+    function splitSentences(text) {
+        var out = [], start = 0, m;
+        var re = /[.!?]+["')\]]*(?=\s+\p{Lu}|\s*$)/gu;
+        while ((m = re.exec(text)) !== null) {
+            var end = m.index + m[0].length;
+            if (m[0].charAt(0) === '.') {
+                var word = text.slice(start, m.index + 1).match(/(\S+)$/);
+                var token = word ? word[1].replace(/^["'(\[]+/, '').toLowerCase() : '';
+                if (m[0] === '.' && ABBREVIATIONS.indexOf(token) !== -1) continue;
+            }
+            out.push(text.slice(start, end).trim());
+            start = end;
+        }
+        var rest = text.slice(start).trim();
+        if (rest) out.push(rest);
+        return out;
+    }
+
+    function summarise(desc) {
+        var text = collapseWs(desc);
+        if (!text) return 'Based on the content of your page, Google would generate a summary here. The AI Overview synthesises information from multiple sources to answer the search query.';
+        var summary = splitSentences(text).slice(0, 2).join(' ');
+        if (!/[.!?]["')\]]*$/.test(summary)) summary += '.';
+        return summary;
+    }
+
+    // Quote a URL for a CSS url("...") string. The value is set through the DOM, never by
+    // building a style attribute, so a quote in the URL cannot add declarations.
+    function cssUrl(url) {
+        return 'url("' + url.trim().replace(/[\\"]/g, '\\$&').replace(/\n/g, '\\a ').replace(/\r/g, '') + '")';
+    }
+
+    // Favicon and fetched Open Graph state (valid only while the URL field is unchanged)
     var faviconUrl = '';
     var fetchedForUrl = '';
+    var ogTitle = '';
+    var ogDescription = '';
 
     // Globe icon SVG (favicon fallback)
     var globeSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="#70757a" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>';
@@ -649,16 +803,36 @@ sitemap: true
     // Sparkle icon SVG (AI Overview)
     var sparkleSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="#1a73e8"/></svg>';
 
+    // One place for the numbers the counters, validation and previews all share.
+    function datePrefix() {
+        var date = formatDate(dateInput.value);
+        return date ? date + ' - ' : '';
+    }
+
+    function metrics() {
+        var title = collapseWs(titleInput.value);
+        var desc = collapseWs(descInput.value);
+        var prefix = desc ? datePrefix() : '';
+        return {
+            title: title,
+            desc: desc,
+            titleLen: countChars(title),
+            descLen: countChars(desc),
+            titlePx: measurePx(title, TITLE_FONT),
+            descPx: measurePx(desc, DESC_FONT) + (prefix ? measurePx(prefix, DESC_FONT) : 0)
+        };
+    }
+
     function renderGoogleResult(container, titleMaxPx, descMaxPx) {
-        var title = titleInput.value || 'Page Title';
+        var title = collapseWs(titleInput.value) || 'Page Title';
         var url = urlInput.value || 'https://www.example.com/';
-        var desc = descInput.value || 'No meta description provided. Google will pull text from the page instead.';
+        var desc = collapseWs(descInput.value) || 'No meta description provided. Google will pull text from the page instead.';
         var date = formatDate(dateInput.value);
         var sitename = sitenameInput.value || 'example.com';
 
         var truncTitle = truncateAtPx(title, TITLE_FONT, titleMaxPx);
-        var datePrefix = date ? date + ' - ' : '';
-        var dateWidth = datePrefix ? measurePx(datePrefix, DESC_FONT) : 0;
+        var prefix = datePrefix();
+        var dateWidth = prefix ? measurePx(prefix, DESC_FONT) : 0;
         var truncDesc = truncateAtPx(desc, DESC_FONT, descMaxPx - dateWidth);
         var breadcrumb = urlToBreadcrumb(url);
         var dateHtml = date ? '<span class="google-date">' + escapeHtml(date) + ' - </span>' : '';
@@ -676,15 +850,9 @@ sitemap: true
     }
 
     function renderAIOverview() {
-        var title = titleInput.value || 'Page Title';
-        var desc = descInput.value || '';
+        var title = collapseWs(titleInput.value) || 'Page Title';
         var sitename = sitenameInput.value || 'example.com';
-
-        // Build a summary from the description (or placeholder)
-        var summary = desc
-            ? desc.split(/[.!?]/).filter(Boolean).slice(0, 2).join('. ').trim()
-            : 'Based on the content of your page, Google would generate a summary here. The AI Overview synthesises information from multiple sources to answer the search query.';
-        if (summary && !/[.!?]$/.test(summary)) summary += '.';
+        var summary = summarise(descInput.value);
 
         previewAI.innerHTML =
             '<div class="ai-overview-header">' + sparkleSvg + ' AI Overview</div>' +
@@ -716,112 +884,110 @@ sitemap: true
     }
 
     function renderSocialCard() {
-        var title = titleInput.value || 'Page Title';
-        var desc = descInput.value || 'No description provided.';
+        // Social platforms read og:title and og:description first, so use the fetched
+        // values when we have them and fall back to the page title and meta description.
+        var title = ogTitle || titleInput.value || 'Page Title';
+        var desc = ogDescription || descInput.value || 'No description provided.';
         var url = urlInput.value;
-        var image = imageInput.value;
+        var image = imageInput.value.trim();
 
         var domain = sitenameInput.value || 'example.com';
-        try { domain = new URL(url).hostname; } catch(e) {}
-
-        var imageHtml = image
-            ? '<div class="social-card-image" style="background-image:url(\'' + escapeHtml(image).replace(/'/g, '%27') + '\')"></div>'
-            : '<div class="social-card-image">No OG image set</div>';
+        var parsed = parseHttpUrl(url);
+        if (parsed) domain = unicodeHost(parsed.hostname);
 
         previewSocial.innerHTML =
-            imageHtml +
+            '<div class="social-card-image">' + (image ? '' : 'No OG image set') + '</div>' +
             '<div class="social-card-body">' +
                 '<div class="social-card-domain">' + escapeHtml(domain) + '</div>' +
                 '<div class="social-card-title">' + escapeHtml(title) + '</div>' +
                 '<div class="social-card-desc">' + escapeHtml(desc) + '</div>' +
             '</div>';
+
+        if (image) {
+            previewSocial.querySelector('.social-card-image').style.backgroundImage = cssUrl(image);
+        }
     }
 
     function updateCounters() {
-        var title = titleInput.value;
-        var desc = descInput.value;
+        var m = metrics();
 
-        var titleLen = title.length;
-        var titlePx = measurePx(title, TITLE_FONT);
-        var tCls = statusClass(titlePx, TITLE_WARN_PX, TITLE_MAX_PX);
-        titleChars.textContent = titleLen + ' chars';
+        var tCls = statusClass(m.titlePx, TITLE_WARN_PX, TITLE_MAX_PX);
+        titleChars.textContent = m.titleLen + ' chars';
         titleChars.className = tCls;
-        titlePixels.textContent = titlePx + 'px / ' + TITLE_MAX_PX + 'px';
+        titlePixels.textContent = m.titlePx + 'px / ' + TITLE_MAX_PX + 'px';
         titlePixels.className = tCls;
-        titleBar.style.width = Math.min(titlePx / TITLE_MAX_PX * 100, 100) + '%';
+        titleBar.style.width = Math.min(m.titlePx / TITLE_MAX_PX * 100, 100) + '%';
         titleBar.style.backgroundColor = barColour(tCls);
 
-        var descLen = desc.length;
-        var descPx = measurePx(desc, DESC_FONT);
-        var dCls = statusClass(descPx, DESC_WARN_PX, DESC_MAX_PX);
-        descChars.textContent = descLen + ' chars';
+        var dCls = statusClass(m.descPx, DESC_WARN_PX, DESC_MAX_PX);
+        descChars.textContent = m.descLen + ' chars';
         descChars.className = dCls;
-        descPixels.textContent = descPx + 'px / ' + DESC_MAX_PX + 'px';
+        descPixels.textContent = m.descPx + 'px / ' + DESC_MAX_PX + 'px';
         descPixels.className = dCls;
-        descBar.style.width = Math.min(descPx / DESC_MAX_PX * 100, 100) + '%';
+        descBar.style.width = Math.min(m.descPx / DESC_MAX_PX * 100, 100) + '%';
         descBar.style.backgroundColor = barColour(dCls);
     }
 
+    var lastValidationHtml = '';
+    var lastValidationSignature = null;
+    var validationStatus = document.getElementById('validation-status');
     function renderValidation() {
-        var title = titleInput.value;
-        var desc = descInput.value;
+        var m = metrics();
+        var title = m.title;
+        var desc = m.desc;
         var url = urlInput.value;
         var image = imageInput.value;
-        var titlePx = measurePx(title, TITLE_FONT);
-        var datePrefix = formatDate(dateInput.value) ? formatDate(dateInput.value) + ' - ' : '';
-        var descPx = measurePx(desc, DESC_FONT) + (datePrefix ? measurePx(datePrefix, DESC_FONT) : 0);
+        var titlePx = m.titlePx;
+        var descPx = m.descPx;
 
         var checks = [];
 
         // Title
         if (!title) {
-            checks.push({ s: 'red', t: 'Title tag is empty' });
+            checks.push({ s: 'red', k: 'title-empty', t: 'Title tag is empty' });
         } else if (titlePx > TITLE_MAX_PX) {
-            checks.push({ s: 'red', t: 'Title will truncate on desktop (' + titlePx + 'px exceeds ' + TITLE_MAX_PX + 'px)' });
+            checks.push({ s: 'red', k: 'title-over', t: 'Title will truncate on desktop (' + titlePx + 'px exceeds ' + TITLE_MAX_PX + 'px)' });
         } else if (titlePx > TITLE_WARN_PX) {
-            checks.push({ s: 'amber', t: 'Title is close to the truncation limit (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
+            checks.push({ s: 'amber', k: 'title-warn', t: 'Title is close to the truncation limit (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
         } else {
-            checks.push({ s: 'green', t: 'Title length is good (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
+            checks.push({ s: 'green', k: 'title-good', t: 'Title length is good (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
         }
 
         // Mobile title
         if (title && titlePx > TITLE_MOBILE_MAX_PX) {
-            checks.push({ s: 'amber', t: 'Title will truncate on mobile (' + titlePx + 'px exceeds ' + TITLE_MOBILE_MAX_PX + 'px)' });
+            checks.push({ s: 'amber', k: 'title-mobile', t: 'Title will truncate on mobile (' + titlePx + 'px exceeds ' + TITLE_MOBILE_MAX_PX + 'px)' });
         }
 
         // Description
         if (!desc) {
-            checks.push({ s: 'red', t: 'Meta description is empty - Google will pull text from the page' });
+            checks.push({ s: 'red', k: 'desc-empty', t: 'Meta description is empty - Google will pull text from the page' });
         } else if (descPx > DESC_MAX_PX) {
-            checks.push({ s: 'red', t: 'Description will truncate (' + descPx + 'px exceeds ' + DESC_MAX_PX + 'px)' });
+            checks.push({ s: 'red', k: 'desc-over', t: 'Description will truncate (' + descPx + 'px exceeds ' + DESC_MAX_PX + 'px)' });
         } else if (descPx < 200) {
-            checks.push({ s: 'amber', t: 'Description may be too short to fill the snippet' });
+            checks.push({ s: 'amber', k: 'desc-short', t: 'Description may be too short to fill the snippet' });
         } else if (descPx > DESC_WARN_PX) {
-            checks.push({ s: 'amber', t: 'Description is close to truncation (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
+            checks.push({ s: 'amber', k: 'desc-warn', t: 'Description is close to truncation (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
         } else {
-            checks.push({ s: 'green', t: 'Description length is good (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
+            checks.push({ s: 'green', k: 'desc-good', t: 'Description length is good (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
         }
 
         // URL
         if (!url) {
-            checks.push({ s: 'grey', t: 'No URL provided' });
+            checks.push({ s: 'grey', k: 'url-none', t: 'No URL provided' });
+        } else if (parseHttpUrl(url)) {
+            checks.push({ s: 'green', k: 'url-ok', t: 'URL format is valid' });
         } else {
-            try {
-                new URL(url);
-                checks.push({ s: 'green', t: 'URL format is valid' });
-            } catch(e) {
-                checks.push({ s: 'amber', t: 'URL does not appear to be valid' });
-            }
+            checks.push({ s: 'amber', k: 'url-bad', t: 'URL does not appear to be valid (use a full http or https address)' });
         }
 
         // Image
         if (!image) {
-            checks.push({ s: 'amber', t: 'No OG image - social shares will lack a preview image' });
+            checks.push({ s: 'amber', k: 'image-none', t: 'No OG image - social shares will lack a preview image' });
         } else {
-            checks.push({ s: 'green', t: 'OG image is set' });
+            checks.push({ s: 'green', k: 'image-ok', t: 'OG image is set' });
         }
 
-        validationEl.innerHTML =
+        var html =
             '<h3>Validation</h3>' +
             checks.map(function(c) {
                 return '<div class="validation-item">' +
@@ -829,10 +995,34 @@ sitemap: true
                     '<span>' + c.t + '</span>' +
                 '</div>';
             }).join('');
+        // Only touch the live region when the text changed, so screen readers are not re-read the same thing.
+        if (html !== lastValidationHtml) {
+            validationEl.innerHTML = html;
+            lastValidationHtml = html;
+        }
+
+        // The list changes with every keystroke (pixel figures), so it is not a live region.
+        // This hidden status announces a short summary only when the set of messages changes
+        // (which check, and its status), never for a change in the numbers alone.
+        var signature = checks.map(function(c) { return c.k + ':' + c.s; }).join('|');
+        if (signature !== lastValidationSignature) {
+            lastValidationSignature = signature;
+            validationStatus.textContent = summariseChecks(checks);
+        }
+    }
+
+    function plural(n, word) { return n + ' ' + word + (n === 1 ? '' : 's'); }
+    function summariseChecks(checks) {
+        var red = checks.filter(function(c) { return c.s === 'red'; }).length;
+        var amber = checks.filter(function(c) { return c.s === 'amber'; }).length;
+        var parts = [];
+        if (red) parts.push(plural(red, 'problem'));
+        if (amber) parts.push(plural(amber, 'warning'));
+        return parts.length ? parts.join(', ') : 'All checks pass';
     }
 
     function update() {
-        if (urlInput.value !== fetchedForUrl) faviconUrl = '';
+        if (urlInput.value !== fetchedForUrl) { faviconUrl = ''; ogTitle = ''; ogDescription = ''; }
         updateCounters();
         renderGoogleResult(previewDesktop, TITLE_MAX_PX, DESC_MAX_PX);
         renderGoogleResult(previewMobile, TITLE_MOBILE_MAX_PX, DESC_MOBILE_MAX_PX);
@@ -843,13 +1033,29 @@ sitemap: true
         save();
     }
 
-    // Tab switching
-    document.querySelectorAll('.serp-tab').forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            document.querySelectorAll('.serp-tab').forEach(function(t) { t.classList.remove('active'); });
-            document.querySelectorAll('.serp-panel').forEach(function(p) { p.classList.remove('active'); });
-            tab.classList.add('active');
-            document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    // Tabs (WAI-ARIA tabs pattern: roving tabindex, arrow keys, Home and End)
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.serp-tab'));
+
+    function selectTab(tab, focus) {
+        tabs.forEach(function(t) {
+            var on = t === tab;
+            t.classList.toggle('active', on);
+            t.setAttribute('aria-selected', on ? 'true' : 'false');
+            t.tabIndex = on ? 0 : -1;
+            document.getElementById('panel-' + t.dataset.tab).classList.toggle('active', on);
+        });
+        if (focus) tab.focus();
+    }
+
+    tabs.forEach(function(tab, i) {
+        tab.addEventListener('click', function() { selectTab(tab, false); });
+        tab.addEventListener('keydown', function(e) {
+            var next = null;
+            if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+            else if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+            else if (e.key === 'Home') next = tabs[0];
+            else if (e.key === 'End') next = tabs[tabs.length - 1];
+            if (next) { e.preventDefault(); selectTab(next, true); }
         });
     });
 
@@ -858,15 +1064,18 @@ sitemap: true
         el.addEventListener('input', update);
     });
 
-    // LocalStorage
+    // LocalStorage. The consent script is deferred, so CookieConsent only exists once the
+    // document has been parsed: load() runs from init() on DOMContentLoaded, and save() does
+    // nothing until load() has run, so an early event can never overwrite the saved state.
     var KEY = 'serp-preview-v1';
+    var restored = false;
 
     function canUseStorage() {
         return typeof CookieConsent !== 'undefined' && CookieConsent.acceptedCategory('functionality');
     }
 
     function save() {
-        if (!canUseStorage()) return;
+        if (!restored || !canUseStorage()) return;
         try {
             localStorage.setItem(KEY, JSON.stringify({
                 title: titleInput.value,
@@ -876,7 +1085,9 @@ sitemap: true
                 sitename: sitenameInput.value,
                 image: imageInput.value,
                 keyphrase: keyphraseInput.value,
-                favicon: faviconUrl
+                favicon: faviconUrl,
+                ogTitle: ogTitle,
+                ogDescription: ogDescription
             }));
         } catch(e) {}
     }
@@ -885,16 +1096,19 @@ sitemap: true
         if (!canUseStorage()) return;
         try {
             var data = JSON.parse(localStorage.getItem(KEY));
-            if (!data) return;
-            if (data.title) titleInput.value = data.title;
-            if (data.url) urlInput.value = data.url;
-            if (data.desc) descInput.value = data.desc;
-            if (data.date) dateInput.value = data.date;
-            if (data.sitename) sitenameInput.value = data.sitename;
-            if (data.image) imageInput.value = data.image;
-            if (data.keyphrase) keyphraseInput.value = data.keyphrase;
-            if (data.favicon) {
-                faviconUrl = data.favicon;
+            if (!data || typeof data !== 'object') return;
+            // Empty strings are real values (a deliberately cleared Site Name stays cleared).
+            if (typeof data.title === 'string') titleInput.value = data.title;
+            if (typeof data.url === 'string') urlInput.value = data.url;
+            if (typeof data.desc === 'string') descInput.value = data.desc;
+            if (typeof data.date === 'string') dateInput.value = data.date;
+            if (typeof data.sitename === 'string') sitenameInput.value = data.sitename;
+            if (typeof data.image === 'string') imageInput.value = data.image;
+            if (typeof data.keyphrase === 'string') keyphraseInput.value = data.keyphrase;
+            if (data.favicon || data.ogTitle || data.ogDescription) {
+                faviconUrl = data.favicon || '';
+                ogTitle = data.ogTitle || '';
+                ogDescription = data.ogDescription || '';
                 fetchedForUrl = data.url || '';
             }
         } catch(e) {}
@@ -954,6 +1168,7 @@ sitemap: true
                     var d = data.publishedDate.slice(0, 10);
                     if (/^\d{4}-\d{2}-\d{2}$/.test(d)) dateInput.value = d;
                 }
+                faviconUrl = '';
                 if (data.favicon) {
                     try {
                         faviconUrl = new URL(data.favicon, url).href;
@@ -961,11 +1176,15 @@ sitemap: true
                         faviconUrl = data.favicon;
                     }
                 }
+                ogTitle = data.ogTitle || '';
+                ogDescription = data.ogDescription || '';
                 fetchedForUrl = urlInput.value;
 
                 var loaded = [];
                 if (data.title) loaded.push('title');
                 if (data.description) loaded.push('description');
+                if (data.ogTitle) loaded.push('og:title');
+                if (data.ogDescription) loaded.push('og:description');
                 if (data.ogImage) loaded.push('og:image');
                 if (data.siteName) loaded.push('site name');
                 if (data.publishedDate) loaded.push('date');
@@ -985,8 +1204,16 @@ sitemap: true
         fetchStatus.className = 'serp-fetch-status ' + cls;
     }
 
-    // Init
-    load();
-    update();
+    // Init, once the deferred consent script has run (it runs before DOMContentLoaded).
+    function init() {
+        load();
+        restored = true;
+        update();
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();
 </script>
