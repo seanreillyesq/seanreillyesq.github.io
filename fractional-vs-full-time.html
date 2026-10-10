@@ -1,0 +1,836 @@
+---
+layout: page
+title: "Fractional vs Full-Time Cost Calculator"
+header-title: "Fractional vs Full-Time"
+description: "What does a senior digital leader really cost, full-time versus fractional?"
+header-img: "img/home-bg.jpg"
+meta-description: "Compare the real annual and first-year cost of a full-time Head of Digital with a fractional one, with the break-even in days a month and time to a productive leader."
+permalink: /fractional-vs-full-time/
+hidden: true
+sitemap: true
+tool: true
+tool_group: business
+tool_summary: "What does a senior digital leader really cost me, full-time versus fractional?"
+tool_order: 4
+---
+
+<script src="/js/tool-events.js" defer></script>
+
+<style>
+.fvf-intro { margin-bottom: 1.5rem; }
+.fvf-top-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+.fvf-top-row select { width: auto; font-size: 0.875rem; min-height: 44px; }
+.fvf-copy {
+    min-height: 44px;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.375rem;
+    background: transparent;
+    color: var(--color-text, #2D2D2D);
+    cursor: pointer;
+}
+.fvf-copy:hover { border-color: var(--color-accent, #4A7BA7); }
+.fvf-copy-status { font-size: 0.8125rem; color: var(--color-text-muted, #6B7280); }
+
+.fvf-section { margin-bottom: 1.25rem; }
+.fvf-section h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+.fvf-section-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-muted, #6B7280);
+    margin-bottom: 1rem;
+}
+
+/* Inputs */
+.fvf-inputs .form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent);
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+    min-height: 2.6em;
+    display: flex;
+    align-items: flex-end;
+}
+.fvf-inputs .form-control,
+.fvf-inputs .input-group-text { min-height: 44px; }
+.fvf-inputs .input-group > .form-control { min-width: 0; }
+.fvf-inputs .input-group-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    min-width: 1.75rem;
+    justify-content: center;
+}
+.fvf-inputs .row > [class*="col"] { align-self: flex-start; }
+.fvf-hint {
+    color: var(--color-text-muted, #6B7280);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    margin-top: 0.25rem;
+}
+.fvf-check {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    font-size: 0.9375rem;
+    cursor: pointer;
+}
+.fvf-check input { width: 1.375rem; height: 1.375rem; flex: none; accent-color: var(--color-accent, #4A7BA7); }
+.fvf-note {
+    color: #b91c1c;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    margin-top: 0.25rem;
+}
+.fvf-note[hidden] { display: none; }
+
+/* Results */
+.fvf-group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--color-accent, #4A7BA7);
+    margin: 1rem 0 0.5rem;
+}
+.result-card {
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.75rem;
+    padding: 0.875rem 0.5rem;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+.result-label {
+    min-height: 2.6em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-accent, #4A7BA7);
+    margin-bottom: 0.125rem;
+}
+.result-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: var(--color-text, #2D2D2D);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.result-value.result-value-weeks { font-size: clamp(0.8125rem, 4vw, 1.25rem); }
+.result-sub {
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #6B7280);
+    line-height: 1.3;
+    margin-top: 0.125rem;
+}
+
+.fvf-group-note {
+    color: var(--color-text-muted, #6B7280);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    margin: -0.25rem 0 0.5rem;
+}
+.fvf-breakeven {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin: 1rem 0 0.75rem;
+    line-height: 1.5;
+}
+.fvf-verdict {
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    color: var(--color-text, #2D2D2D);
+}
+.fvf-verdict strong {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Build-up table */
+.fvf-table { width: 100%; font-size: 0.875rem; border-collapse: collapse; margin: 0.5rem 0 1rem; }
+.fvf-table th, .fvf-table td { padding: 0.375rem 0; border-bottom: 1px solid var(--color-border, #E5E7EB); }
+.fvf-table th { font-weight: 400; text-align: left; }
+.fvf-table td { text-align: right; white-space: nowrap; font-family: 'JetBrains Mono', monospace; }
+.fvf-table tr.fvf-total th, .fvf-table tr.fvf-total td { font-weight: 700; }
+
+/* Chart */
+#fvf-chart-container { margin: 1rem 0; }
+#fvf-chart { display: block; width: 100%; height: auto; }
+
+.fvf-divider { border: 0; border-top: 1px solid var(--color-border, #E5E7EB); margin: 1.5rem 0; }
+.methodology p, .methodology li {
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #6B7280);
+    line-height: 1.7;
+}
+
+@media (max-width: 575.98px) {
+    .result-value { font-size: clamp(0.9375rem, 5.2vw, 1.375rem); }
+    .result-label { font-size: 0.75rem; letter-spacing: 0.25px; }
+    .result-card { padding: 0.625rem 0.375rem; }
+}
+</style>
+
+<p class="fvf-intro">I am a fractional Head of Digital, so I have a stake in this question, and you should read the answer with that in mind. I built this to show the full cost of a hire and the point where hiring full-time is the better buy. Every figure is editable, and the maths is explained at the bottom of the page.</p>
+
+<div class="fvf-top-row">
+    <label class="visually-hidden" for="fvf-currency">Currency</label>
+    <select class="form-select form-select-sm" id="fvf-currency">
+        <option value="GBP" selected>&pound; GBP</option>
+        <option value="USD">$ USD</option>
+        <option value="EUR">&euro; EUR</option>
+    </select>
+    <button type="button" class="fvf-copy" id="fvf-copy">Copy link to these numbers</button>
+    <span class="fvf-copy-status" id="fvf-copy-status" role="status" aria-live="polite"></span>
+</div>
+
+<div class="fvf-section fvf-inputs" id="fvf-inputs">
+    <h3>Full-time hire</h3>
+    <p class="fvf-section-desc">Employer National Insurance defaults are the UK rates for the 2026/27 tax year: 15% above a secondary threshold of &pound;5,000 a year. Change them if your situation differs, or if you are outside the UK.</p>
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="f-sal">Base salary</label>
+            <div class="input-group"><span class="input-group-text fvf-cur">&pound;</span><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="f-sal" data-key="sal" value="95000"></div>
+            <div class="fvf-note" id="f-sal-note" hidden></div>
+            <div class="fvf-hint" id="f-sal-hint">A year, before any on-costs</div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="f-ni">Employer NI rate</label>
+            <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="f-ni" data-key="ni" value="15"><span class="input-group-text">%</span></div>
+            <div class="fvf-note" id="f-ni-note" hidden></div>
+            <div class="fvf-hint" id="f-ni-hint">15% in 2026/27</div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="f-nit">Employer NI threshold</label>
+            <div class="input-group"><span class="input-group-text fvf-cur">&pound;</span><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="f-nit" data-key="nit" value="5000"></div>
+            <div class="fvf-note" id="f-nit-note" hidden></div>
+            <div class="fvf-hint" id="f-nit-hint">&pound;5,000 a year in 2026/27</div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="f-pen">Employer pension</label>
+            <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="f-pen" data-key="pen" value="5"><span class="input-group-text">%</span></div>
+            <div class="fvf-note" id="f-pen-note" hidden></div>
+            <div class="fvf-hint" id="f-pen-hint">5% of salary is a typical senior package; the legal minimum is 3% of qualifying earnings. Applied to the whole salary here.</div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="f-ben">Benefits and overheads a year</label>
+            <div class="input-group"><span class="input-group-text fvf-cur">&pound;</span><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="f-ben" data-key="ben" value="6000"></div>
+            <div class="fvf-note" id="f-ben-note" hidden></div>
+            <div class="fvf-hint" id="f-ben-hint">Equipment, software, training, health cover in one figure</div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="f-rec">Recruiter fee</label>
+            <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="f-rec" data-key="rec" value="20"><span class="input-group-text">%</span></div>
+            <div class="fvf-note" id="f-rec-note" hidden></div>
+            <div class="fvf-hint" id="f-rec-hint">Of salary, first year only. Use 0 if you hire direct.</div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="f-tth">Time to hire (weeks)</label>
+            <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="f-tth" data-key="tth" value="12">
+            <div class="fvf-note" id="f-tth-note" hidden></div>
+            <div class="fvf-hint" id="f-tth-hint">From deciding to hire to the first day</div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="f-rup">Ramp-up (months)</label>
+            <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="f-rup" data-key="rup" value="3">
+            <div class="fvf-note" id="f-rup-note" hidden></div>
+            <div class="fvf-hint" id="f-rup-hint">Until up to speed</div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="f-wd">Working days a year</label>
+            <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="f-wd" data-key="wd" value="225">
+            <div class="fvf-note" id="f-wd-note" hidden></div>
+            <div class="fvf-hint" id="f-wd-hint">260 weekdays - 25 holiday - 8 bank holidays - 2 other = 225</div>
+        </div>
+    </div>
+
+    <h3>Fractional</h3>
+    <p class="fvf-section-desc">Use the quote you have. The day rate is treated as excluding VAT.</p>
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="p-dr">Day rate</label>
+            <div class="input-group"><span class="input-group-text fvf-cur">&pound;</span><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="p-dr" data-key="dr" value="850"></div>
+            <div class="fvf-note" id="p-dr-note" hidden></div>
+            <div class="fvf-hint" id="p-dr-hint">Typical UK range &pound;600-&pound;1,200; use the quote you have</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="p-dpm">Days per month</label>
+            <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="p-dpm" data-key="dpm" value="4">
+            <div class="fvf-note" id="p-dpm-note" hidden></div>
+            <div class="fvf-hint" id="p-dpm-hint">Four days is about one day a week</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="p-rup">Ramp-up (weeks)</label>
+            <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="p-rup" data-key="frup" value="6">
+            <div class="fvf-note" id="p-rup-note" hidden></div>
+            <div class="fvf-hint" id="p-rup-hint">Until up to speed, working fewer hours a week</div>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="p-st">Start time (weeks)</label>
+            <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="p-st" data-key="fst" value="4">
+            <div class="fvf-note" id="p-st-note" hidden></div>
+            <div class="fvf-hint" id="p-st-hint">From deciding to the first day, including finding and choosing someone</div>
+        </div>
+        <div class="col-12">
+            <label class="fvf-check" for="p-ir35"><input type="checkbox" id="p-ir35" aria-describedby="p-ir35-hint"> Inside IR35 (the client pays employer NI on the fees)</label>
+            <div class="fvf-hint" id="p-ir35-hint">Optional. Adds employer NI at the rate above to the fractional cost, on the full fee with no threshold.</div>
+        </div>
+    </div>
+</div>
+
+<div class="fvf-section" id="fvf-results">
+    <h3>What each option costs</h3>
+
+    <div class="fvf-group-title">Cost of a full year</div>
+    <div class="row g-2 g-md-3 mb-2">
+        <div class="col-6 col-md-4"><div class="result-card"><div class="result-label">Full-time, a year</div><div class="result-value" id="res-ft-annual">--</div></div></div>
+        <div class="col-6 col-md-4"><div class="result-card"><div class="result-label">Fractional, a year</div><div class="result-value" id="res-fr-annual">--</div></div></div>
+        <div class="col-12 col-md-4"><div class="result-card"><div class="result-label" id="res-diff-label">Fractional saves, a year</div><div class="result-value" id="res-diff">--</div></div></div>
+    </div>
+
+    <div class="fvf-group-title">First 12 months from today</div>
+    <p class="fvf-group-note">Cash spent from the day you decide: the hire's salary and on-costs only start after the time to hire, plus the recruiter fee. Fractional starts after its start weeks.</p>
+    <div class="row g-2 g-md-3 mb-2">
+        <div class="col-6 col-md-4"><div class="result-card"><div class="result-label" id="res-ft-first-label">Full-time, first 12 months</div><div class="result-value" id="res-ft-first">--</div></div></div>
+        <div class="col-6 col-md-4"><div class="result-card"><div class="result-label" id="res-fr-first-label">Fractional, first 12 months</div><div class="result-value" id="res-fr-first">--</div></div></div>
+        <div class="col-12 col-md-4"><div class="result-card"><div class="result-label" id="res-first-diff-label">Fractional saves, first 12 months</div><div class="result-value" id="res-first-diff">--</div></div></div>
+    </div>
+
+    <div class="fvf-group-title">Per day</div>
+    <div class="row g-2 g-md-3 mb-2">
+        <div class="col-6"><div class="result-card"><div class="result-label">Full-time, per working day</div><div class="result-value" id="res-ft-day">--</div></div></div>
+        <div class="col-6"><div class="result-card"><div class="result-label">Fractional, per day</div><div class="result-value" id="res-fr-day">--</div></div></div>
+    </div>
+    <div class="fvf-hint" id="fvf-perday-note"></div>
+
+    <div class="fvf-group-title">Calendar time to someone in post and up to speed</div>
+    <p class="fvf-group-note">A fractional leader delivers fewer hours each week, so being up to speed sooner is not the same as getting the same output sooner.</p>
+    <div class="row g-2 g-md-3 mb-2">
+        <div class="col-4"><div class="result-card"><div class="result-label">Full-time hire</div><div class="result-value result-value-weeks" id="res-ft-weeks">--</div></div></div>
+        <div class="col-4"><div class="result-card"><div class="result-label">Fractional</div><div class="result-value result-value-weeks" id="res-fr-weeks">--</div></div></div>
+        <div class="col-4"><div class="result-card"><div class="result-label">Gap</div><div class="result-value result-value-weeks" id="res-gap">--</div><div class="result-sub" id="res-gap-sub"></div></div></div>
+    </div>
+
+    <p class="fvf-breakeven" id="fvf-breakeven"></p>
+    <p class="fvf-breakeven" id="fvf-breakeven-first"></p>
+    <div class="fvf-verdict" id="fvf-verdict"></div>
+
+    <div class="visually-hidden" id="fvf-live" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <h4 class="fw-bold" style="font-size: 1rem;">How the full-time figure is built</h4>
+    <table class="fvf-table" aria-label="Full-time cost build-up">
+        <tbody>
+            <tr><th scope="row">Base salary</th><td id="bu-sal">--</td></tr>
+            <tr><th scope="row">Employer National Insurance</th><td id="bu-ni">--</td></tr>
+            <tr><th scope="row">Employer pension</th><td id="bu-pen">--</td></tr>
+            <tr><th scope="row">Benefits and overheads</th><td id="bu-ben">--</td></tr>
+            <tr class="fvf-total"><th scope="row">Annual cost</th><td id="bu-annual">--</td></tr>
+            <tr><th scope="row">Recruiter fee (once)</th><td id="bu-rec">--</td></tr>
+            <tr><th scope="row">Weeks of salary in the first 12 months</th><td id="bu-weeks">--</td></tr>
+            <tr class="fvf-total"><th scope="row">First 12 months from today</th><td id="bu-first">--</td></tr>
+        </tbody>
+    </table>
+
+    <div id="fvf-chart-container">
+        <svg id="fvf-chart" viewBox="0 0 320 240" role="img" aria-label="Bar chart comparing full-time and fractional cost"></svg>
+    </div>
+</div>
+{% include tool-cta.html text="Whether a fractional leader or a full-time hire is the better buy depends on the days you really need. If you want an honest view on yours, that is what I do." %}
+
+<hr class="fvf-divider">
+
+<div class="methodology mb-4">
+    <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
+    <p><strong>Full-time:</strong> annual cost is salary, plus employer National Insurance on the salary above the threshold, plus employer pension, plus one figure for benefits and overheads. The recruiter fee is a percentage of salary and is added to the first year only. Cost per working day is the annual cost divided by the working days you enter.</p>
+    <p><strong>Fractional:</strong> annual cost is the day rate multiplied by days per month and by twelve. The day rate is treated as excluding VAT; if you cannot reclaim VAT, add it yourself. The IR35 box is optional and off by default. The per-day comparison is the point to look at: a fractional day costs more than a day of the salaried hire, and the saving comes entirely from buying fewer days.</p>
+    <p><strong>Break-even:</strong> the annual cost of the hire divided by (12 x day rate). Above that many days a month, the hire is cheaper. If the figure is higher than the working days in a month, the hire's days cannot beat fractional on cost at that day rate. The first-12-month break-even uses the same idea on the cash spent in the first 12 months from today.</p>
+    <p><strong>First 12 months from today:</strong> for the hire, the annual cost for the weeks left after the time to hire (52 minus those weeks, over 52), plus the recruiter fee if the hire starts inside the year. For fractional, the annual cost for the weeks after its start time. With the defaults that is &pound;119,250 x 40/52 + &pound;19,000 = &pound;110,731.</p>
+    <p><strong>Time to up to speed:</strong> calendar time until someone is in post and up to speed. For the hire, time to hire plus ramp-up (months converted at 52 weeks over 12 months). For fractional, start time plus ramp-up. A fractional leader delivers fewer hours each week, so these two figures are not a like-for-like measure of output. Both are your estimates, not predictions.</p>
+    <p><strong>Statutory figures:</strong> employer National Insurance is 15% above a secondary threshold of &pound;5,000 a year, the rates for the 2026/27 tax year (GOV.UK, rates and thresholds for employers). Both are editable. The calculator ignores the Employment Allowance, which can reduce employer National Insurance for some employers, and any reduced rates for particular employees.</p>
+    <p><strong>What it leaves out:</strong> the cost of a bad hire or a bad fractional fit, bonus, salary growth, redundancy risk, the management time either option needs from you, and the cost of a vacancy while you wait. Class 1A National Insurance on benefits is a small omission. Nothing you type leaves your browser.</p>
+    <p><strong>IR35 and flexibility:</strong> for a medium or large client, the client decides the contractor's employment status. If the engagement is judged to be inside IR35, the client owes employer National Insurance and other costs on the fees, and this tool does not model that unless you tick the box. The box is a rough guide: it adds employer National Insurance at the rate you entered to the full fee, with no threshold and no Employment Allowance, and it ignores any other costs. On the other side, a short notice period is a real benefit of fractional: you can scale back or stop in weeks, where ending a hire takes months and costs more.</p>
+
+    <p><strong>When full-time is the right choice:</strong></p>
+    <ul>
+        <li>You need someone for more days a month than the break-even above. At that point you are paying a premium day rate for days a salary would cover more cheaply.</li>
+        <li>The role needs daily line management of a large team, or someone in the room most days.</li>
+        <li>The work is a steady, long-term programme, not a build, a fix or a stretch of direction-setting.</li>
+        <li>You want the knowledge to live inside the business and grow with it.</li>
+        <li>You can hire well and have time to wait for it. A rushed hire is the most expensive option of all.</li>
+    </ul>
+    <p><strong>When fractional tends to fit:</strong> you need senior judgement but not five days a week, you cannot wait for a hiring process, or you want to test what the role should be before committing to a salary.</p>
+</div>
+
+<p class="text-muted small mb-4 tool-more"><a href="/tools/">More tools</a></p>
+
+<!-- Latest Writing -->
+<section class="py-5 border-top" style="background-color: var(--color-surface);">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4" style="font-size: 1.75rem;">Latest Writing</h2>
+        <div class="row g-4">
+            {% assign card_count = 0 %}
+            {% for post in site.posts %}{% unless post.hidden or card_count >= 3 %}
+            <div class="col-md-6 col-lg-4">
+                {% include post-card.html post=post %}
+            </div>
+            {% assign card_count = card_count | plus: 1 %}
+            {% endunless %}{% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    'use strict';
+
+    var SYM = { GBP: '£', USD: '$', EUR: '€' };
+
+    // key: [default, min, max, label, integerOnly]
+    var FIELDS = {
+        sal:  { id: 'f-sal',  def: 95000, min: 0, max: 1000000 },
+        ni:   { id: 'f-ni',   def: 15,    min: 0, max: 100 },
+        nit:  { id: 'f-nit',  def: 5000,  min: 0, max: 1000000 },
+        pen:  { id: 'f-pen',  def: 5,     min: 0, max: 100 },
+        ben:  { id: 'f-ben',  def: 6000,  min: 0, max: 1000000 },
+        rec:  { id: 'f-rec',  def: 20,    min: 0, max: 100 },
+        tth:  { id: 'f-tth',  def: 12,    min: 0, max: 104 },
+        rup:  { id: 'f-rup',  def: 3,     min: 0, max: 24 },
+        wd:   { id: 'f-wd',   def: 225,   min: 1, max: 365 },
+        dr:   { id: 'p-dr',   def: 850,   min: 0, max: 10000 },
+        dpm:  { id: 'p-dpm',  def: 4,     min: 0, max: 22 },
+        frup: { id: 'p-rup',  def: 6,     min: 0, max: 52 },
+        fst:  { id: 'p-st',   def: 4,     min: 0, max: 52 }
+    };
+
+    var currency = 'GBP';
+    var vals = {};
+    var touched = false;
+    var calcSent = false;
+    var calcTimer = null;
+    var liveTimer = null;
+    var lastLive = '';
+
+    function el(id) { return document.getElementById(id); }
+    function readIr35() { vals.ir35 = el('p-ir35').checked ? 1 : 0; }
+
+    // ---------- formatting ----------
+    function sym() { return SYM[currency]; }
+
+    function trimNum(n, dp) {
+        return n.toLocaleString('en-GB', { maximumFractionDigits: dp, minimumFractionDigits: 0 });
+    }
+
+    // Sign goes before the symbol. Compact only for the very large.
+    function money(v) {
+        if (!isFinite(v)) return '--';
+        var a = Math.abs(v);
+        var r = Math.round(a + 1e-9); // 850 x 1.15 is 977.4999... in floats; keep exact halves rounding up
+        var sign = (v < 0 && r !== 0) ? '-' : '';
+        if (a >= 1e9) return sign + sym() + trimNum(a / 1e9, 1) + 'B';
+        if (a >= 1e7) return sign + sym() + trimNum(a / 1e6, 1) + 'M';
+        return sign + sym() + r.toLocaleString('en-GB');
+    }
+
+    function moneyAxis(v) {
+        var a = Math.abs(v);
+        var sign = v < 0 ? '-' : '';
+        if (a >= 1e6) return sign + sym() + trimNum(a / 1e6, 1) + 'M';
+        if (a >= 1e3) return sign + sym() + trimNum(a / 1e3, 1) + 'k';
+        return sign + sym() + Math.round(a);
+    }
+
+    function weeksTxt(w) {
+        var r = Math.round(w);
+        return r + (r === 1 ? ' week' : ' weeks');
+    }
+
+    // ---------- parsing ----------
+    // Accepts "£1,200", "1 200", "12.5%" and the like. Returns null when it is not a number.
+    function parse(raw) {
+        var s = String(raw).replace(/[£$€,%\s]/g, '');
+        if (s === '') return { blank: true, n: 0 };
+        if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) return { bad: true, n: 0 };
+        return { n: parseFloat(s) };
+    }
+
+    function fmtLimit(n) { return n.toLocaleString('en-GB'); }
+
+    // Read one field, clamp, and set its inline note. Never writes to the input.
+    function readField(key, final) {
+        var f = FIELDS[key];
+        var input = el(f.id);
+        var note = el(f.id + '-note');
+        var p = parse(input.value);
+        var n = p.n;
+        var msg = '';
+        if (p.bad) {
+            if (final) msg = 'That is not a number - using ' + fmtLimit(f.min) + '.';
+            n = f.min;
+        } else if (p.blank) {
+            if (final) msg = 'Left blank - using ' + fmtLimit(f.min) + '.';
+            n = f.min;
+        } else if (n < f.min) {
+            msg = f.min === 0 ? 'Negative values are not allowed - using 0.' : 'Minimum is ' + fmtLimit(f.min) + ' - using ' + fmtLimit(f.min) + '.';
+            n = f.min;
+        } else if (n > f.max) {
+            msg = 'Maximum is ' + fmtLimit(f.max) + ' - using ' + fmtLimit(f.max) + '.';
+            n = f.max;
+        }
+        if (final || msg || !note.hidden) {
+            // keep an existing message visible until the value is valid again
+            note.textContent = msg;
+            note.hidden = !msg;
+        }
+        input.setAttribute('aria-describedby', f.id + '-hint' + (note.hidden ? '' : ' ' + note.id));
+        vals[key] = n;
+        return n;
+    }
+
+    // Tidy the visible text only on change (blur / enter).
+    function tidy(key) {
+        var f = FIELDS[key];
+        var input = el(f.id);
+        var n = readField(key, true);
+        input.value = String(Math.round(n * 100) / 100);
+    }
+
+    // ---------- model ----------
+    function calc() {
+        var v = vals;
+        var ni = Math.max(0, v.sal - v.nit) * v.ni / 100;
+        var pen = v.sal * v.pen / 100;
+        var annual = v.sal + ni + pen + v.ben;
+        var rec = v.sal * v.rec / 100;
+        // Inside IR35: the client owes employer NI on the whole fee (no threshold).
+        var rate = v.dr * (1 + (v.ir35 ? v.ni / 100 : 0));
+        var fr = rate * v.dpm * 12;
+        var ftDay = annual / v.wd;
+        var breakEven = v.dr > 0 ? annual / (rate * 12) : null;
+        var ftWeeks = v.tth + v.rup * 52 / 12;
+        var frWeeks = v.fst + v.frup;
+        // First 12 months from today: only the weeks after each option starts are paid for.
+        var ftActive = Math.max(0, 52 - v.tth);
+        var frActive = Math.max(0, 52 - v.fst);
+        var ftFirst = annual * ftActive / 52 + (ftActive > 0 ? rec : 0);
+        var frFirst = fr * frActive / 52;
+        var breakEvenFirst = (v.dr > 0 && frActive > 0) ? ftFirst / (rate * 12 * frActive / 52) : null;
+        return {
+            ni: ni, pen: pen, annual: annual, rec: rec, fr: fr, rate: rate, ftDay: ftDay,
+            ftActive: ftActive, frActive: frActive, first: ftFirst, frFirst: frFirst,
+            breakEven: breakEven, breakEvenFirst: breakEvenFirst,
+            ftWeeks: ftWeeks, frWeeks: frWeeks,
+            // one gap, rounded once, used by the card and the verdict
+            gap: Math.round(ftWeeks) - Math.round(frWeeks),
+            monthDays: v.wd / 12,
+            hasSalary: v.sal > 0, hasRate: v.dr > 0, hasDays: v.dpm > 0,
+            frOk: v.dr > 0 && v.dpm > 0
+        };
+    }
+
+    function round1(x) { return Math.round(x * 10) / 10; }
+
+    // Shared wording for the full-year and first-12-month break-evens.
+    function beSentence(be, monthDays, lead) {
+        if (be < 0.1) return lead + ' a full-time hire is cheaper at almost any amount of cover.';
+        if (be > monthDays) {
+            return lead + ' fractional costs less than the hire at this day rate, even if you bought every working day' +
+                (monthDays >= 1 ? ' (about ' + trimNum(round1(monthDays), 1) + ' days a month).' : '.');
+        }
+        return lead + ' the hire is cheaper above ' + trimNum(round1(be), 1) + ' days a month.';
+    }
+
+    function breakEvenText(c) {
+        if (!c.hasSalary || c.annual <= 0) return 'Enter a salary to see the break-even.';
+        if (!c.hasRate) return 'Enter a day rate to see the break-even.';
+        return beSentence(c.breakEven, c.monthDays, 'Over a full year,');
+    }
+
+    function breakEvenFirstText(c) {
+        if (!c.hasSalary || c.annual <= 0 || !c.hasRate) return '';
+        if (c.first <= 0) return 'The hire would not start inside the first 12 months, so there is no first-year cost to compare.';
+        if (c.breakEvenFirst === null) return 'Fractional would not start inside the first 12 months, so there is no first-year break-even.';
+        return beSentence(c.breakEvenFirst, c.monthDays, 'Over the first 12 months from today,');
+    }
+
+    function verdict(c) {
+        var caveat = ' Cost is only part of it: if the role needs daily line management of a large team, full-time is usually the right call whatever the numbers say.';
+        if (!c.hasSalary || !c.hasRate) {
+            return { title: 'Add the two main figures', body: 'Enter a salary and a day rate and I will compare them.' };
+        }
+        if (!c.hasDays) {
+            return { title: 'No fractional days entered', body: 'Enter the days per month you would buy to compare the cost.' };
+        }
+        var d = vals.dpm;
+        var save = c.annual - c.fr;
+        var hours = ', though a fractional leader delivers fewer hours each week.';
+        var speed = c.gap > 0
+            ? 'a fractional leader would be in post and up to speed ' + weeksTxt(c.gap) + ' sooner' + hours
+            : c.gap < 0
+                ? 'the hire would be in post and up to speed ' + weeksTxt(-c.gap) + ' sooner.'
+                : 'both would be in post and up to speed at about the same time' + hours;
+        // Time is always a secondary point, placed before the caveat and a neutral closing line,
+        // so no verdict ends on an argument for one side.
+        var outside = c.ftActive <= 0 ? ' The full-time hire would not start until after the first 12 months.' : '';
+        var speedSide = ' Separately, ' + speed + outside;
+        var close = ' These are estimates from your inputs; change them to see how the answer moves.';
+        if (c.breakEven > c.monthDays) {
+            return { title: 'Fractional is cheaper at any level of cover',
+                body: 'Even buying every working day, fractional costs less than the hire at this day rate.' + speedSide + caveat + close };
+        }
+        if (d >= c.breakEven) {
+            return { title: 'Full-time looks like the better buy',
+                body: 'At ' + trimNum(d, 1) + ' days a month fractional costs ' + money(c.fr) + ' a year against ' + money(c.annual) + ' for the hire, and the hire gives you ' + trimNum(round1(c.monthDays), 1) + ' days a month for that money.' + speedSide + caveat + close };
+        }
+        if (d >= c.breakEven * 0.75) {
+            return { title: 'A close call',
+                body: 'Fractional saves ' + money(save) + ' a year, but that buys ' + trimNum(d, 1) + ' days a month against about ' + trimNum(round1(c.monthDays), 1) + ' from the hire. If you would use more of that time, full-time may be the better value.' + speedSide + caveat + close };
+        }
+        return { title: 'Fractional is cheaper for this amount of time',
+            body: 'At ' + trimNum(d, 1) + ' days a month fractional saves ' + money(save) + ' a year, and costs more per day but ' + (save >= c.annual / 2 ? 'far less' : 'less') + ' in total.' + speedSide + caveat + close };
+    }
+
+    // ---------- chart ----------
+    var chartW = 0;
+
+    function drawChart(c) {
+        var svg = el('fvf-chart');
+        var box = el('fvf-chart-container');
+        var W = Math.max(240, Math.round(box.clientWidth) || 320);
+        chartW = W;
+        var rows = [
+            ['Annual: full-time', c.annual, '#4A7BA7'],
+            ['Annual: fractional', c.frOk ? c.fr : null, '#b45309'],
+            ['First 12 months: full-time', c.ftActive > 0 ? c.first : null, '#4A7BA7', 'starts after 12 months'],
+            ['First 12 months: fractional', (c.frOk && c.frActive > 0) ? c.frFirst : null, '#b45309', c.frOk ? 'starts after 12 months' : '-']
+        ];
+        // A missing value is never drawn as a zero-cost bar.
+        function rowMoney(r) { return r[1] === null ? (r[3] || '-') : money(r[1]); }
+        var maxV = Math.max(c.annual, c.ftActive > 0 ? c.first : 0, c.frOk ? c.fr : 0, 1);
+        var gutter = 78, rowH = 46, barH = 18;
+        var H = rows.length * rowH + 8;
+        var barMax = W - gutter;
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        svg.setAttribute('aria-label', 'Bar chart. ' + rows.map(function(r) { return r[0] + ' ' + rowMoney(r); }).join('. ') + '.');
+        var NS = 'http://www.w3.org/2000/svg';
+        function add(tag, attrs, text) {
+            var e = document.createElementNS(NS, tag);
+            for (var k in attrs) e.setAttribute(k, attrs[k]);
+            if (text !== undefined) e.textContent = text;
+            svg.appendChild(e);
+        }
+        rows.forEach(function(r, i) {
+            var y = i * rowH + 4;
+            add('text', { x: 0, y: y + 13, 'font-size': 12, 'font-family': "'JetBrains Mono', monospace", fill: '#4B5563' }, r[0]);
+            var val = r[1] === null ? 0 : r[1];
+            var w = Math.max(val > 0 ? 2 : 0, val / maxV * barMax);
+            add('rect', { x: 0, y: y + 20, width: w, height: barH, fill: r[2], rx: 2 });
+            add('text', { x: w + 6, y: y + 20 + 13, 'font-size': 12, 'font-family': "'JetBrains Mono', monospace", fill: '#374151', 'font-weight': 700 }, r[1] === null ? (r[3] || '-') : moneyAxis(r[1]));
+        });
+    }
+
+    // ---------- render ----------
+    // Positive figure, label flips with the direction.
+    function showDiff(valId, labelId, show, diff, suffix) {
+        var who = !show ? 'Difference' : Math.round(diff) < 0 ? 'Full-time saves' : Math.round(diff) === 0 ? 'Difference' : 'Fractional saves';
+        el(labelId).textContent = who + ', ' + suffix;
+        el(valId).textContent = show ? money(Math.abs(diff)) : '-';
+    }
+
+    function render() {
+        var c = calc();
+        var ok = c.hasSalary && c.annual > 0;
+        el('res-ft-annual').textContent = ok ? money(c.annual) : '-';
+        var ftFirstOk = ok && c.ftActive > 0;
+        var frFirstOk = c.frOk && c.frActive > 0;
+        el('res-ft-first').textContent = ftFirstOk ? money(c.first) : '-';
+        el('res-ft-first-label').textContent = (ok && !ftFirstOk) ? 'Full-time, starts after 12 months' : 'Full-time, first 12 months';
+        el('res-fr-first-label').textContent = (c.frOk && !frFirstOk) ? 'Fractional, starts after 12 months' : 'Fractional, first 12 months';
+        el('res-fr-annual').textContent = c.frOk ? money(c.fr) : '-';
+        el('res-fr-first').textContent = frFirstOk ? money(c.frFirst) : '-';
+        showDiff('res-diff', 'res-diff-label', ok && c.frOk, c.annual - c.fr, 'a year');
+        showDiff('res-first-diff', 'res-first-diff-label', ok && c.frOk && c.ftActive > 0 && c.frActive > 0, c.first - c.frFirst, 'first 12 months');
+        el('res-ft-day').textContent = ok ? money(c.ftDay) : '-';
+        el('res-fr-day').textContent = c.hasRate ? money(c.rate) : '-';
+        el('res-ft-weeks').textContent = weeksTxt(c.ftWeeks);
+        el('res-fr-weeks').textContent = weeksTxt(c.frWeeks);
+        el('res-gap').textContent = c.gap === 0 ? '0 weeks' : weeksTxt(Math.abs(c.gap));
+        el('res-gap-sub').textContent = c.gap === 0 ? 'no difference' : c.gap > 0 ? 'fractional is sooner' : 'full-time is sooner';
+
+        var perDay = el('fvf-perday-note');
+        if (ok && c.hasRate) {
+            var rel = c.rate > c.ftDay ? 'more' : c.rate < c.ftDay ? 'less' : 'the same';
+            perDay.textContent = ['A fractional day costs ' + money(c.rate) + (vals.ir35 ? ' (day rate plus employer NI)' : '') + ' against ' + money(c.ftDay) + ' for a day of the hire' +
+                (rel === 'the same' ? '.' : ', so ' + rel + ' per day.'),
+                rel === 'more' && c.frOk && c.fr < c.annual ? 'The saving comes from buying fewer days: ' + trimNum(vals.dpm * 12, 1) + ' days a year against ' + fmtLimit(vals.wd) + '.' : ''].filter(Boolean).join(' ');
+        } else {
+            perDay.textContent = 'Enter a salary and a day rate to compare cost per day.';
+        }
+
+        el('fvf-breakeven').textContent = breakEvenText(c);
+        el('fvf-breakeven-first').textContent = breakEvenFirstText(c);
+        var vd = verdict(c);
+        var vEl = el('fvf-verdict');
+                vEl.innerHTML = '<strong></strong><span></span>';
+        vEl.firstChild.textContent = vd.title;
+        vEl.lastChild.textContent = vd.body;
+
+        el('bu-sal').textContent = money(vals.sal);
+        el('bu-ni').textContent = money(c.ni);
+        el('bu-pen').textContent = money(c.pen);
+        el('bu-ben').textContent = money(vals.ben);
+        el('bu-annual').textContent = money(c.annual);
+        el('bu-rec').textContent = money(c.rec);
+        el('bu-weeks').textContent = trimNum(c.ftActive, 1) + ' of 52';
+        el('bu-first').textContent = c.ftActive > 0 ? money(c.first) : '-';
+
+        drawChart(c);
+        scheduleLive(c, vd);
+    }
+
+    // Short summary for screen readers; waits until the user pauses and skips repeats.
+    function scheduleLive(c, vd) {
+        clearTimeout(liveTimer);
+        if (!touched) return; // nothing is announced on page load
+        liveTimer = setTimeout(function() {
+            var text = (c.hasSalary && c.frOk)
+                ? 'Full-time ' + money(c.annual) + ' a year, fractional ' + money(c.fr) + ' a year. ' + vd.title + '.'
+                : vd.title + '.';
+            if (text !== lastLive) { lastLive = text; el('fvf-live').textContent = text; }
+        }, 700);
+    }
+
+    // ---------- URL ----------
+    function writeURL() {
+        var p = new URLSearchParams();
+        p.set('cur', currency);
+        Object.keys(FIELDS).forEach(function(k) { p.set(k, vals[k]); });
+        p.set('ir35', vals.ir35);
+        try { history.replaceState(null, '', '?' + p.toString()); } catch (e) {}
+    }
+
+    function readURL() {
+        var p = new URLSearchParams(window.location.search);
+        if (p.has('cur') && SYM[p.get('cur')]) {
+            currency = p.get('cur');
+            el('fvf-currency').value = currency;
+        }
+        Object.keys(FIELDS).forEach(function(k) {
+            if (p.has(k)) el(FIELDS[k].id).value = p.get(k);
+        });
+        el('p-ir35').checked = p.get('ir35') === '1';
+    }
+
+    function applyCurrency() {
+        var s = sym();
+        Array.prototype.forEach.call(document.querySelectorAll('.fvf-cur'), function(n) { n.textContent = s; });
+    }
+
+    // ---------- events ----------
+    function track() {
+        touched = true;
+        if (window.toolEvent && !calcSent) {
+            clearTimeout(calcTimer);
+            calcTimer = setTimeout(function() {
+                if (!calcSent && window.toolEvent) { calcSent = true; window.toolEvent('calculated'); }
+            }, 800);
+        }
+    }
+
+    function onInput(key) {
+        readField(key, false);
+        track();
+        render();
+        writeURL();
+    }
+
+    function onChange(key) {
+        tidy(key);
+        render();
+        writeURL();
+    }
+
+    function copyLink() {
+        writeURL();
+        var url = window.location.href;
+        var status = el('fvf-copy-status');
+        function done(msg) { status.textContent = msg; }
+        if (window.toolEvent) window.toolEvent('shared');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(function() { done('Link copied.'); }, function() { done('Copy the address bar to share these numbers.'); });
+        } else {
+            done('Copy the address bar to share these numbers.');
+        }
+    }
+
+    function init() {
+        readURL();
+        applyCurrency();
+        Object.keys(FIELDS).forEach(function(k) {
+            var input = el(FIELDS[k].id);
+            readField(k, input.value !== String(FIELDS[k].def));
+            input.addEventListener('input', function() { onInput(k); });
+            input.addEventListener('change', function() { onChange(k); });
+        });
+        readIr35();
+        el('p-ir35').addEventListener('change', function() {
+            readIr35();
+            track();
+            render();
+            writeURL();
+        });
+        el('fvf-currency').addEventListener('change', function(e) {
+            currency = e.target.value;
+            applyCurrency();
+            track();
+            render();
+            writeURL();
+        });
+        el('fvf-copy').addEventListener('click', copyLink);
+        render();
+
+        var t = null;
+        window.addEventListener('resize', function() {
+            clearTimeout(t);
+            t = setTimeout(function() {
+                if (Math.round(el('fvf-chart-container').clientWidth) !== chartW) drawChart(calc());
+            }, 100);
+        });
+    }
+
+    init();
+})();
+</script>
