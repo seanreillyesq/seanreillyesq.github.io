@@ -20,6 +20,7 @@ sitemap: true
     margin-bottom: 1rem;
 }
 .roas-currency-row select { width: auto; font-size: 0.875rem; }
+#currency-select { min-height: 44px; }
 
 /* Inputs */
 .roas-inputs .form-label {
@@ -29,10 +30,32 @@ sitemap: true
     letter-spacing: 1.5px;
     color: var(--color-accent);
     margin-bottom: 0.25rem;
+    line-height: 1.3;
 }
-.roas-inputs .input-group .form-control {
+/* Rows of fields reserve two label lines and sit the label on the bottom, so inputs share a top */
+.roas-field-row .form-label {
+    min-height: 2.6em;
+    display: flex;
+    align-items: flex-end;
+}
+.roas-inputs .input-group > .form-control {
     border-left: 0;
     border-right: 0;
+    min-height: 44px;
+}
+.roas-inputs .input-group > .input-group-text { min-height: 44px; }
+.roas-inputs > .row > [class*="col"] > .form-control { min-height: 44px; }
+.roas-field-hint {
+    color: var(--color-text-muted, #6B7280);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    margin-top: 0.25rem;
+}
+.roas-field-note {
+    color: #b91c1c;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    margin-top: 0.25rem;
 }
 .roas-inputs .input-group-text {
     font-family: 'JetBrains Mono', monospace;
@@ -62,8 +85,18 @@ sitemap: true
     border-radius: 0.75rem;
     padding: 0.875rem 0.5rem;
     text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
 }
 .result-label {
+    min-height: 2.6em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.625rem;
     text-transform: uppercase;
@@ -77,6 +110,7 @@ sitemap: true
     font-weight: 800;
     color: var(--color-text, #2D2D2D);
     line-height: 1.2;
+    overflow-wrap: anywhere;
 }
 
 /* Verdict banner */
@@ -112,7 +146,7 @@ sitemap: true
 
 /* Waterfall */
 #cost-waterfall { margin: 1rem 0; }
-#cost-waterfall svg { display: block; width: 100%; height: auto; }
+#cost-waterfall svg { display: block; width: 100%; height: auto; overflow: visible; }
 .waterfall-legend {
     display: flex;
     flex-wrap: wrap;
@@ -145,6 +179,9 @@ sitemap: true
 .roas-mode-toggle .btn {
     font-size: 0.75rem;
     padding: 0.25rem 0.75rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
 }
 
 /* Channel comparison */
@@ -159,30 +196,37 @@ sitemap: true
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 0.5rem;
     margin-bottom: 0.75rem;
 }
 .roas-channel-name {
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     font-size: 0.875rem;
-    border: none;
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.375rem;
     background: transparent;
-    padding: 0;
+    padding: 0 0.5rem;
+    min-height: 44px;
     color: var(--color-text, #2D2D2D);
-    width: auto;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 .roas-channel-name:focus {
-    outline: none;
-    border-bottom: 2px solid var(--color-accent, #4A7BA7);
+    outline: 2px solid var(--color-accent, #4A7BA7);
+    outline-offset: 1px;
 }
 .roas-remove-channel {
     background: none;
     border: none;
     color: var(--color-text-muted, #6B7280);
     cursor: pointer;
-    font-size: 1.25rem;
-    padding: 0 0.25rem;
+    font-size: 1.5rem;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
     line-height: 1;
+    flex: 0 0 auto;
 }
 .roas-remove-channel:hover { color: #dc2626; }
 .roas-add-channel {
@@ -193,6 +237,7 @@ sitemap: true
     border-radius: 0.75rem;
     padding: 0.75rem;
     width: 100%;
+    min-height: 44px;
     cursor: pointer;
     margin-bottom: 0.75rem;
 }
@@ -201,6 +246,7 @@ sitemap: true
     background: var(--color-surface, #FAFAF9);
 }
 .roas-channel-results .result-card { padding: 0.625rem 0.375rem; }
+.roas-channel-results .result-label { min-height: 0; }
 .roas-channel-results .result-value { font-size: 1.25rem; }
 .roas-channel-results .result-label { font-size: 0.5625rem; }
 
@@ -215,16 +261,20 @@ sitemap: true
 .roas-slider-row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
 }
 .roas-slider-row input[type="range"] {
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    height: 44px;
+    margin: 0;
     accent-color: var(--color-accent, #4A7BA7);
 }
-.roas-slider-value {
+.roas-slider-row .form-control.roas-slider-value {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.875rem;
     width: 4.5rem;
+    min-height: 44px;
     text-align: center;
     flex-shrink: 0;
 }
@@ -289,12 +339,10 @@ sitemap: true
 
 /* Mobile */
 @media (max-width: 575.98px) {
-    .result-value { font-size: 1.375rem; }
+    .result-value { font-size: clamp(0.9375rem, 4.6vw, 1.375rem); }
     .result-label { font-size: 0.5625rem; letter-spacing: 1px; }
     .result-card { padding: 0.625rem 0.375rem; }
-    .roas-slider-row { flex-wrap: wrap; }
-    .roas-slider-value { width: 100%; text-align: left; }
-    .roas-channel-results .result-value { font-size: 1.125rem; }
+    .roas-channel-results .result-value { font-size: 1.25rem; }
 }
 </style>
 
@@ -302,6 +350,7 @@ sitemap: true
 
 <!-- Currency selector -->
 <div class="roas-currency-row">
+    <label class="visually-hidden" for="currency-select">Currency</label>
     <select class="form-select form-select-sm" id="currency-select" style="width: auto;">
         <option value="GBP" selected>&pound; GBP</option>
         <option value="EUR">&euro; EUR</option>
@@ -316,7 +365,7 @@ sitemap: true
     <p class="roas-section-desc">Enter your ad spend and revenue, then add your cost structure. The waterfall shows where every pound actually goes.</p>
 
     <!-- Input mode toggle -->
-    <div class="roas-mode-toggle btn-group" role="group">
+    <div class="roas-mode-toggle btn-group" role="group" aria-label="Revenue input mode">
         <input type="radio" class="btn-check" name="inputMode" id="mode-revenue" value="revenue" checked>
         <label class="btn btn-outline-secondary" for="mode-revenue">Total revenue</label>
         <input type="radio" class="btn-check" name="inputMode" id="mode-orders" value="orders">
@@ -324,7 +373,7 @@ sitemap: true
     </div>
 
     <div class="roas-inputs">
-        <div class="row g-2 g-md-3 mb-3">
+        <div class="row g-2 g-md-3 mb-3 roas-field-row">
             <div class="col-6 col-md-4">
                 <label class="form-label" for="ad-spend">Ad spend</label>
                 <div class="input-group input-group-sm">
@@ -346,15 +395,16 @@ sitemap: true
                 <input type="number" class="form-control form-control-sm" id="order-count" value="50" min="0" max="999999" step="1">
             </div>
             <div class="col-6 col-md-4" id="aov-input-group">
-                <label class="form-label" for="aov">Avg order value <span style="opacity:.6">(for per-order figures)</span></label>
+                <label class="form-label" for="aov">Average order value</label>
                 <div class="input-group input-group-sm">
                     <span class="input-group-text roas-currency">&pound;</span>
                     <input type="number" class="form-control" id="aov" value="500" min="0" max="999999" step="10">
                 </div>
+                <div class="roas-field-hint" id="aov-hint">Used for per-order figures</div>
             </div>
         </div>
 
-        <div class="row g-2 g-md-3 mb-3">
+        <div class="row g-2 g-md-3 mb-3 roas-field-row">
             <div class="col-6 col-md">
                 <label class="form-label" for="vat-rate">VAT (incl.)</label>
                 <div class="input-group input-group-sm">
@@ -397,7 +447,7 @@ sitemap: true
     <div id="cost-waterfall"></div>
 
     <!-- Warning -->
-    <div class="roas-warning" id="cost-warning">Your costs exceed 100% of revenue. There is nothing left to cover ad spend or profit.</div>
+    <div class="roas-warning" id="cost-warning">Your costs reach or exceed 100% of revenue. There is nothing left to cover ad spend or profit.</div>
 
     <!-- Results row 1 -->
     <div class="row g-2 g-md-3 mb-2">
@@ -443,7 +493,7 @@ sitemap: true
     </div>
 
     <!-- Verdict -->
-    <div class="roas-verdict" id="verdict"></div>
+    <div class="roas-verdict" id="verdict" role="status" aria-live="polite" aria-atomic="true"></div>
 </div>
 
 <hr class="roas-divider">
@@ -458,7 +508,7 @@ sitemap: true
 
     <!-- Channel chart -->
     <div id="channel-chart-container">
-        <svg id="channel-chart" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet"></svg>
+        <svg id="channel-chart" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bar chart comparing revenue, ad spend and profit for each channel"></svg>
     </div>
 </div>
 
@@ -471,11 +521,11 @@ sitemap: true
 
     <div class="roas-inputs">
         <div class="roas-slider-group">
-            <label class="form-label">Scale ad spend</label>
+            <label class="form-label" for="spend-scale">Scale ad spend</label>
             <div class="roas-slider-row">
                 <input type="range" id="spend-scale" min="0.5" max="5" value="1" step="0.1">
-                <input type="number" class="form-control form-control-sm roas-slider-value" id="spend-scale-val" value="1.0" min="0.5" max="5" step="0.1">
-                <span class="input-group-text" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">x</span>
+                <input type="number" class="form-control form-control-sm roas-slider-value" id="spend-scale-val" value="1.0" min="0.5" max="5" step="0.1" aria-label="Spend multiplier value">
+                <span class="input-group-text" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;" aria-hidden="true">x</span>
             </div>
         </div>
     </div>
@@ -510,12 +560,12 @@ sitemap: true
 
     <!-- Trap chart -->
     <div id="trap-chart-container">
-        <svg id="trap-chart" viewBox="0 0 800 360" preserveAspectRatio="xMidYMid meet"></svg>
+        <svg id="trap-chart" viewBox="0 0 800 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line chart of ROAS and total profit as ad spend is scaled up, with the profit-maximising spend marked"></svg>
         <div class="roas-trap-legend">
             <span class="roas-trap-legend-item"><span class="roas-trap-legend-swatch" style="background: #4A7BA7;"></span> ROAS</span>
             <span class="roas-trap-legend-item"><span class="roas-trap-legend-swatch" style="background: #16a34a;"></span> Total Profit</span>
             <span class="roas-trap-legend-item"><span class="roas-trap-legend-swatch" style="background: #9CA3AF; border-top: 1px dashed #9CA3AF;"></span> Current spend</span>
-            <span class="roas-trap-legend-item"><span class="roas-trap-legend-swatch" style="background: #f59e0b; border-top: 1px dashed #f59e0b;"></span> Optimal spend</span>
+            <span class="roas-trap-legend-item"><span class="roas-trap-legend-swatch" style="background: #b45309; border-top: 1px dashed #b45309;"></span> Optimal spend</span>
         </div>
     </div>
 
@@ -566,24 +616,19 @@ sitemap: true
         AUD: 'A$'
     };
 
-    var WF_W = 800, WF_H = 60;
     var NS = 'http://www.w3.org/2000/svg';
 
-    // Chart dimensions
-    var CH_W = 800, CH_H = 320;
-    var CH_M = { top: 20, right: 20, bottom: 50, left: 70 };
-
-    // Trap chart dimensions
-    var TR_W = 800, TR_H = 360;
-    var TR_M = { top: 20, right: 70, bottom: 50, left: 70 };
+    // The model's optimum can run to hundreds of times current spend, far outside anything the
+    // diminishing-returns curve was fitted to, so recommendations stop here and say so.
+    var MAX_OPTIMAL_MULTIPLIER = 50;
 
     var COL = {
         revenue: '#4A7BA7',
-        adSpend: '#f59e0b',
+        adSpend: '#b45309',
         profit: '#16a34a',
         loss: '#dc2626',
         cancel: '#dc2626',
-        cogs: '#f59e0b',
+        cogs: '#0e7490',
         fulfil: '#8b5cf6',
         margin: '#6366f1',
         vat: '#94a3b8',
@@ -592,7 +637,11 @@ sitemap: true
         grid: '#E5E7EB',
         axis: '#9CA3AF',
         text: '#6B7280',
-        optimal: '#f59e0b'
+        optimal: '#b45309',
+        // darker variants for text, to keep 4.5:1 against white
+        roasText: '#3F6E96',
+        profitText: '#15803d',
+        lossText: '#b91c1c'
     };
 
     var CHANNEL_DEFAULTS = [
@@ -790,6 +839,21 @@ sitemap: true
 
     // ========== CALCULATIONS ==========
 
+    // Share of each (ex-VAT) order eaten by cancellations, COGS and fulfilment. Rounded so that
+    // e.g. 60% + 40% reads as exactly 100% rather than 0.9999999999999999.
+    function getCostRate() {
+        var r = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
+        return Math.round(r * 1e9) / 1e9;
+    }
+
+    function getVatFactor() {
+        return state.vatRate > 0 ? 1 / (1 + state.vatRate / 100) : 1;
+    }
+
+    function getContributionRate() {
+        return getVatFactor() * (1 - getCostRate());
+    }
+
     function calcProfitability() {
         var grossRevenue = getGrossRevenue();
         var exVatRevenue = getRevenue();
@@ -809,9 +873,8 @@ sitemap: true
         var profitAfterAds = grossProfit - adSpend;
 
         // Break-even and target ROAS based on ex-VAT contribution
-        var vatFactor = state.vatRate > 0 ? 1 / (1 + state.vatRate / 100) : 1;
-        var totalCostRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
-        var contributionRate = vatFactor * (1 - totalCostRate);
+        var vatFactor = getVatFactor();
+        var contributionRate = getContributionRate();
         var breakEvenROAS = contributionRate > 0 ? 1 / contributionRate : Infinity;
 
         var marginContrib = contributionRate - vatFactor * (1 - state.cancelRate / 100) * (state.marginRate / 100);
@@ -821,12 +884,13 @@ sitemap: true
         var cpa = orders > 0 ? adSpend / orders : Infinity;
 
         var cancelAmount = exVatRevenue * (state.cancelRate / 100);
-        var overBudget = (state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100)) > 1;
+        var overBudget = getCostRate() >= 1;
 
         return {
             grossRevenue: grossRevenue,
             revenue: exVatRevenue,
             orders: orders,
+            adSpend: adSpend,
             roas: roas,
             breakEvenROAS: breakEvenROAS,
             targetROAS: targetROAS,
@@ -879,23 +943,26 @@ sitemap: true
         if (baseROAS === Infinity || baseSpend <= 0 || revenue <= 0) return null;
 
         // Contribution rate on gross revenue (includes VAT deduction)
-        var vatFactor = state.vatRate > 0 ? 1 / (1 + state.vatRate / 100) : 1;
-        var costRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
-        var contributionRate = vatFactor * (1 - costRate);
+        var contributionRate = getContributionRate();
 
         // No positive contribution per pound of revenue -> no meaningful curve
         if (contributionRate <= 0) return null;
 
         // Closed-form profit-maximising multiplier: d/dm [c*ROAS*m^0.6 - m]*spend = 0
         // -> m = (0.6 * ROAS * c)^2.5. This is the true optimum; the grid below is only for drawing.
-        var analyticalOptimal = Math.min(Math.pow(0.6 * baseROAS * contributionRate, 2.5), 50);
-        var optimalMultiplier = Math.max(0, analyticalOptimal);
+        // Beyond MAX_OPTIMAL_MULTIPLIER the model is too far from the data to be credible, so the
+        // recommendation is capped there and flagged as capped.
+        var uncappedOptimal = Math.pow(0.6 * baseROAS * contributionRate, 2.5);
+        var capped = uncappedOptimal > MAX_OPTIMAL_MULTIPLIER;
+        var optimalMultiplier = Math.max(0, Math.min(uncappedOptimal, MAX_OPTIMAL_MULTIPLIER));
         var maxProfit = (baseSpend * optimalMultiplier) * (baseROAS * Math.pow(1 / optimalMultiplier, 0.4)) * contributionRate - (baseSpend * optimalMultiplier);
-        var curveMax = Math.max(5, Math.ceil(analyticalOptimal * 1.5));
+        var curveMax = Math.max(5, Math.ceil(optimalMultiplier * 1.5));
+
+        // The curve and the x axis share this lower bound, so nothing is drawn outside the plot.
+        var xMin = Math.min(0.5, Math.max(optimalMultiplier * 0.5, 0.05));
 
         var points = [];
-        var start = Math.min(0.5, optimalMultiplier > 0 ? optimalMultiplier * 0.5 : 0.5);
-        for (var m = start; m <= curveMax + 0.01; m += (curveMax - start) / 100) {
+        for (var m = xMin; m <= curveMax + 0.01; m += (curveMax - xMin) / 100) {
             var scaledSpend = baseSpend * m;
             var scaledROAS = baseROAS * Math.pow(1 / m, 0.4);
             var scaledRevenue = scaledSpend * scaledROAS;
@@ -912,13 +979,143 @@ sitemap: true
 
         return {
             points: points,
+            xMin: xMin,
             optimalMultiplier: optimalMultiplier,
+            uncappedOptimal: uncappedOptimal,
+            capped: capped,
             maxProfit: maxProfit,
+            currentProfit: baseSpend * baseROAS * contributionRate - baseSpend,
             baseROAS: baseROAS
         };
     }
 
+    // ========== CHART SIZING ==========
+    // Charts are drawn in a viewBox as wide as their container, so one SVG unit is one CSS pixel
+    // and the text stays at its stated size on phones.
+
+    var CHAR_W = 7.3;   // approx. width of one 12px monospace character
+
+    function chartWidth(container) {
+        var w = Math.round(container.clientWidth) || 800;
+        return Math.max(240, Math.min(800, w));
+    }
+
+    function labelWidth(strings) {
+        var longest = 0;
+        strings.forEach(function(s) { longest = Math.max(longest, s.length); });
+        return Math.ceil(longest * CHAR_W) + 14;
+    }
+
+    function trimZero(x) {
+        return (x >= 100 ? x.toFixed(0) : x.toFixed(1)).replace(/\.0$/, '');
+    }
+
+    // Compact currency for chart axes: 12.5k, 1.2M
+    function fmtAxis(v) {
+        var s = sym();
+        var a = Math.abs(v);
+        var sign = v < 0 ? '-' : '';
+        if (a >= 1000000) return sign + s + trimZero(a / 1000000) + 'M';
+        if (a >= 1000) return sign + s + trimZero(a / 1000) + 'k';
+        var r = Math.round(a);
+        return (r === 0 ? '' : sign) + s + r;
+    }
+
+    function svgText(svg, x, y, text, attrs) {
+        var base = { x: x, y: y, 'font-size': '12', 'font-family': "'JetBrains Mono', monospace", fill: COL.text };
+        for (var k in attrs) { if (attrs.hasOwnProperty(k)) base[k] = attrs[k]; }
+        var t = svgEl('text', base);
+        t.textContent = text;
+        svg.appendChild(t);
+        return t;
+    }
+
+    // ========== FIELD VALIDATION ==========
+
+    // Show (or clear) a message under a field explaining the value the calculator is using.
+    function setNote(input, text) {
+        var holder = input.closest('.input-group') || input;
+        var note = holder.nextElementSibling;
+        if (!note || !note.classList.contains('roas-field-note')) {
+            if (!text) return;
+            note = document.createElement('div');
+            note.className = 'roas-field-note';
+            note.id = input.id + '-note';
+            holder.parentNode.insertBefore(note, holder.nextSibling);
+        }
+        note.textContent = text;
+        note.hidden = !text;
+        if (text) input.setAttribute('aria-describedby', note.id);
+        else input.removeAttribute('aria-describedby');
+    }
+
+    // Read a numeric field, clamp it, and say so next to the field when the value had to change.
+    function readField(input, lo, hi) {
+        var raw = input.value;
+        var n = +raw;
+        var note = '';
+        if (raw === '' || isNaN(n)) {
+            n = 0;
+        } else if (n < lo) {
+            note = lo === 0 ? 'Negative values are not allowed - using 0.' : 'Minimum is ' + fmtNumber(lo) + ' - using ' + fmtNumber(lo) + '.';
+            n = lo;
+        } else if (n > hi) {
+            note = 'Maximum is ' + fmtNumber(hi) + ' - using ' + fmtNumber(hi) + '.';
+            n = hi;
+        }
+        setNote(input, note);
+        return n;
+    }
+
     // ========== RENDERING ==========
+
+    var lastVerdictHtml = '';
+
+    function verdictFor(r) {
+        var money = fmtCurrency;
+        var hasOrders = r.orders > 0;
+        var margin = state.marginRate + '% margin target';
+        var roasTxt = r.roas === Infinity ? '' : r.roas.toFixed(1) + 'x';
+
+        if (r.roas === Infinity) {
+            return { cls: 'roas-verdict-breakeven', title: 'No ad spend entered', body: 'Enter your ad spend to see profitability analysis.' };
+        }
+        if (r.roas >= r.targetROAS && r.totalProfit > 0) {
+            return {
+                cls: 'roas-verdict-profitable', title: 'Profitable',
+                body: 'Your ROAS of ' + roasTxt + ' exceeds the ' + r.targetROAS.toFixed(1) + 'x target. ' +
+                    (hasOrders
+                        ? 'You are making ' + money(r.profitPerOrder) + ' per order after all costs, excluding your ' + margin + '.'
+                        : 'Your profit after all costs is ' + money(r.totalProfit) + ' in total, excluding your ' + margin + '.')
+            };
+        }
+        if (r.roas >= r.breakEvenROAS && r.totalProfit >= 0) {
+            return {
+                cls: 'roas-verdict-breakeven', title: 'Break-even zone',
+                body: 'Your ROAS of ' + roasTxt + ' covers costs but ' +
+                    (r.targetROAS === Infinity
+                        ? 'your ' + margin + ' cannot be met at any ROAS with these costs'
+                        : 'falls short of your ' + margin + ' (needs ' + r.targetROAS.toFixed(1) + 'x)') + '. ' +
+                    (hasOrders
+                        ? 'You are making ' + money(r.profitPerOrder) + ' per order before margin.'
+                        : 'Your profit before margin is ' + money(r.totalProfit) + ' in total.')
+            };
+        }
+        var loss = hasOrders
+            ? 'You are losing ' + money(Math.abs(r.profitPerOrder)) + ' per order.'
+            : 'You are losing ' + money(Math.abs(r.totalProfit)) + ' in total.';
+        if (r.breakEvenROAS === Infinity) {
+            return {
+                cls: 'roas-verdict-unprofitable', title: 'Unprofitable',
+                body: 'Your costs take 100% or more of every order, so no ROAS can break even. ' + loss + ' Reduce costs or increase prices.'
+            };
+        }
+        return {
+            cls: 'roas-verdict-unprofitable', title: 'Unprofitable',
+            body: 'Your ROAS of ' + roasTxt + ' is below the ' + r.breakEvenROAS.toFixed(1) + 'x break-even. ' + loss +
+                ' Either reduce costs, increase prices, or improve conversion.'
+        };
+    }
 
     function renderProfitability() {
         var r = calcProfitability();
@@ -927,8 +1124,8 @@ sitemap: true
         el('res-breakeven').textContent = r.breakEvenROAS === Infinity ? 'N/A' : r.breakEvenROAS.toFixed(1) + 'x';
 
         var ppoEl = el('res-profit-order');
-        ppoEl.textContent = fmtCurrency(r.profitPerOrder);
-        ppoEl.className = 'result-value ' + deltaClass(r.profitPerOrder);
+        ppoEl.textContent = r.orders > 0 ? fmtCurrency(r.profitPerOrder) : 'N/A';
+        ppoEl.className = 'result-value ' + (r.orders > 0 ? deltaClass(r.profitPerOrder) : '');
 
         var tpEl = el('res-total-profit');
         tpEl.textContent = fmtCurrency(r.totalProfit);
@@ -942,20 +1139,14 @@ sitemap: true
         if (r.overBudget) warn.classList.add('visible');
         else warn.classList.remove('visible');
 
-        // Verdict
+        // Verdict (only rewritten when it changes, so the live region does not repeat itself)
+        var v = verdictFor(r);
+        var html = '<strong>' + v.title + '</strong>' + v.body;
         var verdict = el('verdict');
-        if (r.roas === Infinity) {
-            verdict.className = 'roas-verdict roas-verdict-breakeven';
-            verdict.innerHTML = '<strong>No ad spend entered</strong>Enter your ad spend to see profitability analysis.';
-        } else if (r.roas >= r.targetROAS && r.totalProfit > 0) {
-            verdict.className = 'roas-verdict roas-verdict-profitable';
-            verdict.innerHTML = '<strong>Profitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x exceeds the ' + r.targetROAS.toFixed(1) + 'x target. You are making ' + fmtCurrency(r.profitPerOrder) + ' per order after all costs, excluding your ' + state.marginRate + '% margin target.';
-        } else if (r.roas >= r.breakEvenROAS && r.totalProfit >= 0) {
-            verdict.className = 'roas-verdict roas-verdict-breakeven';
-            verdict.innerHTML = '<strong>Break-even zone</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x covers costs but falls short of your ' + state.marginRate + '% margin target (needs ' + (r.targetROAS === Infinity ? 'N/A' : r.targetROAS.toFixed(1) + 'x') + '). You are making ' + fmtCurrency(r.profitPerOrder) + ' per order before margin.';
-        } else {
-            verdict.className = 'roas-verdict roas-verdict-unprofitable';
-            verdict.innerHTML = '<strong>Unprofitable</strong>Your ROAS of ' + r.roas.toFixed(1) + 'x is below the ' + (r.breakEvenROAS === Infinity ? 'N/A' : r.breakEvenROAS.toFixed(1) + 'x') + ' break-even. You are losing ' + fmtCurrency(Math.abs(r.profitPerOrder)) + ' per order. Either reduce costs, increase prices, or improve conversion.';
+        if (html !== lastVerdictHtml) {
+            lastVerdictHtml = html;
+            verdict.className = 'roas-verdict ' + v.cls;
+            verdict.innerHTML = html;
         }
 
         renderWaterfall(r);
@@ -966,9 +1157,6 @@ sitemap: true
         container.innerHTML = '';
 
         if (r.grossRevenue <= 0) return;
-
-        var svg = svgEl('svg', { viewBox: '0 0 ' + WF_W + ' ' + WF_H, preserveAspectRatio: 'xMidYMid meet' });
-        var barY = 5, barH = 30;
 
         // Build segments from the revenue breakdown.
         // Note: margin is intentionally excluded here. profitAfterAds already contains
@@ -985,13 +1173,26 @@ sitemap: true
         if (r.breakdown.remaining > 0) {
             segments.push({ val: r.breakdown.remaining, col: COL.remaining, label: 'Profit' });
         }
-        // On a loss the cost segments already sum beyond gross revenue; adding a separate
-        // Loss segment would double-count it and misstate every segment's share of the bar.
+        // On a loss the cost segments already sum beyond gross revenue; the part past the revenue
+        // line is the loss. It is marked on the bar rather than added as a segment of its own,
+        // which would double-count it.
+        var loss = r.breakdown.remaining < 0 ? -r.breakdown.remaining : 0;
+
+        var W = chartWidth(container);
+        var barY = loss > 0 ? 26 : 5, barH = 30;
+        var H = barY + barH + (loss > 0 ? 44 : 24);
 
         var total = 0;
         segments.forEach(function(s) { total += s.val; });
         total = Math.max(total, r.grossRevenue);
-        var scale = total > 0 ? WF_W / total : 0;
+        var scale = total > 0 ? W / total : 0;
+
+        var svg = svgEl('svg', {
+            viewBox: '0 0 ' + W + ' ' + H, preserveAspectRatio: 'xMidYMid meet', role: 'img',
+            'aria-label': 'Cost waterfall for ' + fmtCurrency(r.grossRevenue) + ' revenue: ' +
+                segments.filter(function(s) { return s.val > 0; }).map(function(s) { return s.label + ' ' + fmtCurrency(s.val); }).join(', ') +
+                (loss > 0 ? '. Loss of ' + fmtCurrency(loss) + ' beyond revenue.' : '.')
+        });
 
         var x = 0;
         segments.forEach(function(seg) {
@@ -1001,101 +1202,132 @@ sitemap: true
                 x: x, y: barY, width: w, height: barH,
                 fill: seg.col, rx: x === 0 ? 4 : 0
             }));
-            if (w > 40) {
-                var txt = svgEl('text', {
-                    x: x + w / 2, y: barY + barH + 14,
-                    'text-anchor': 'middle',
-                    fill: COL.text,
-                    'font-size': '11',
-                    'font-family': "'JetBrains Mono', monospace"
-                });
-                txt.textContent = sym() + fmtNumber(Math.round(seg.val));
-                svg.appendChild(txt);
+            var label = fmtCurrency(seg.val);
+            if (w > label.length * CHAR_W + 8) {
+                svgText(svg, x + w / 2, barY + barH + 16, label, { 'text-anchor': 'middle' });
             }
             x += w;
         });
 
+        if (loss > 0) {
+            var revX = r.grossRevenue * scale;
+            svg.appendChild(svgEl('line', {
+                x1: revX, y1: barY - 8, x2: revX, y2: barY + barH + 4,
+                stroke: COL.text, 'stroke-width': 2
+            }));
+            svgText(svg, revX, barY - 12, 'Revenue ' + fmtCurrency(r.grossRevenue), {
+                'text-anchor': revX > W / 2 ? 'end' : 'start', 'font-weight': '700'
+            });
+            svg.appendChild(svgEl('rect', {
+                x: revX, y: barY - 2, width: Math.max(2, W - revX), height: barH + 4,
+                fill: 'none', stroke: COL.lossText, 'stroke-width': 2, 'stroke-dasharray': '4,3'
+            }));
+            var lossLabel = 'Loss ' + fmtCurrency(loss);
+            var mid = (revX + W) / 2;
+            var fits = mid + lossLabel.length * CHAR_W / 2 <= W;
+            svgText(svg, fits ? mid : W, barY + barH + 36, lossLabel, {
+                'text-anchor': fits ? 'middle' : 'end', fill: COL.lossText, 'font-weight': '700'
+            });
+        }
+
         container.appendChild(svg);
 
-        // Legend
+        // Legend (carries the amounts too, for segments too narrow to label)
         var legend = document.createElement('div');
         legend.className = 'waterfall-legend';
         segments.forEach(function(seg) {
             if (seg.val <= 0) return;
             var item = document.createElement('span');
             item.className = 'waterfall-legend-item';
-            item.innerHTML = '<span class="waterfall-legend-swatch" style="background:' + seg.col + '"></span> ' + seg.label;
+            item.innerHTML = '<span class="waterfall-legend-swatch" style="background:' + seg.col + '"></span> ' + seg.label + ' ' + fmtCurrency(seg.val);
             legend.appendChild(item);
         });
+        if (loss > 0) {
+            var li = document.createElement('span');
+            li.className = 'waterfall-legend-item';
+            li.innerHTML = '<span class="waterfall-legend-swatch" style="background:transparent;border:2px dashed ' + COL.lossText + '"></span> Loss beyond revenue ' + fmtCurrency(loss);
+            legend.appendChild(li);
+        }
         container.appendChild(legend);
     }
 
     // ========== CHANNELS ==========
 
+    function chName(ch, idx) {
+        return (ch.name || '').trim() || 'Channel ' + (idx + 1);
+    }
+
+    function setResult(card, cls, text, delta) {
+        var e = card.querySelector('.' + cls);
+        e.textContent = text;
+        e.className = 'result-value ' + cls + (delta ? ' ' + delta : '');
+    }
+
+    function fillChannelResults(card, ch) {
+        var r = calcChannelProfitability(ch);
+        setResult(card, 'ch-res-roas', r.roas === Infinity ? 'N/A' : r.roas.toFixed(1) + 'x');
+        setResult(card, 'ch-res-profit', fmtCurrency(r.profit), deltaClass(r.profit));
+        setResult(card, 'ch-res-cpa', r.cpa === Infinity ? 'N/A' : fmtCurrency(r.cpa));
+        setResult(card, 'ch-res-ppo', r.orders > 0 ? fmtCurrency(r.profitPerOrder) : 'N/A', r.orders > 0 ? deltaClass(r.profitPerOrder) : '');
+    }
+
+    // Rebuild the channel cards. Only for add / remove / first paint: rebuilding while the user
+    // types would replace the input they are typing in.
     function renderChannels() {
         var list = el('channel-list');
-        var focusClass = null, focusIdx = null, focusSel = null;
-        if (document.activeElement && document.activeElement.getAttribute('data-idx') !== null) {
-            focusIdx = document.activeElement.getAttribute('data-idx');
-            focusClass = document.activeElement.className.split(' ').filter(function(c) { return c.indexOf('ch-') === 0 || c === 'roas-channel-name'; })[0] || null;
-            if (document.activeElement.selectionStart !== undefined) {
-                focusSel = { start: document.activeElement.selectionStart, end: document.activeElement.selectionEnd };
-            }
-        }
         list.innerHTML = '';
 
         state.channels.forEach(function(ch, idx) {
             var card = document.createElement('div');
             card.className = 'roas-channel';
-
-            var r = calcChannelProfitability(ch);
+            var nm = escapeHtml(chName(ch, idx));
 
             card.innerHTML =
                 '<div class="roas-channel-header">' +
-                    '<input type="text" class="roas-channel-name" value="' + escapeHtml(ch.name) + '" data-idx="' + idx + '">' +
-                    (state.channels.length > 1 ? '<button type="button" class="roas-remove-channel" data-idx="' + idx + '">&times;</button>' : '') +
+                    '<label class="visually-hidden" for="ch-name-' + idx + '">Channel ' + (idx + 1) + ' name</label>' +
+                    '<input type="text" class="roas-channel-name" id="ch-name-' + idx + '" value="' + escapeHtml(ch.name) + '" data-idx="' + idx + '">' +
+                    (state.channels.length > 1 ? '<button type="button" class="roas-remove-channel" data-idx="' + idx + '" aria-label="Remove ' + nm + '"><span aria-hidden="true">&times;</span></button>' : '') +
                 '</div>' +
                 '<div class="roas-inputs">' +
                     '<div class="row g-2 mb-2">' +
                         '<div class="col-6">' +
-                            '<label class="form-label">Ad spend</label>' +
+                            '<label class="form-label" for="ch-spend-' + idx + '">Ad spend<span class="visually-hidden ch-name-ref"> - ' + nm + '</span></label>' +
                             '<div class="input-group input-group-sm">' +
                                 '<span class="input-group-text roas-currency">' + sym() + '</span>' +
-                                '<input type="number" class="form-control ch-spend" data-idx="' + idx + '" value="' + ch.spend + '" min="0" max="9999999" step="100">' +
+                                '<input type="number" class="form-control ch-spend" id="ch-spend-' + idx + '" data-idx="' + idx + '" value="' + ch.spend + '" min="0" max="9999999" step="100">' +
                             '</div>' +
                         '</div>' +
                         '<div class="col-6">' +
-                            '<label class="form-label">Revenue</label>' +
+                            '<label class="form-label" for="ch-revenue-' + idx + '">Revenue<span class="visually-hidden ch-name-ref"> - ' + nm + '</span></label>' +
                             '<div class="input-group input-group-sm">' +
                                 '<span class="input-group-text roas-currency">' + sym() + '</span>' +
-                                '<input type="number" class="form-control ch-revenue" data-idx="' + idx + '" value="' + ch.revenue + '" min="0" max="9999999" step="100">' +
+                                '<input type="number" class="form-control ch-revenue" id="ch-revenue-' + idx + '" data-idx="' + idx + '" value="' + ch.revenue + '" min="0" max="9999999" step="100">' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
                 '<div class="row g-2 roas-channel-results">' +
-                    '<div class="col-3"><div class="result-card"><div class="result-label">ROAS</div><div class="result-value">' + (r.roas === Infinity ? 'N/A' : r.roas.toFixed(1) + 'x') + '</div></div></div>' +
-                    '<div class="col-3"><div class="result-card"><div class="result-label">Profit / Loss</div><div class="result-value ' + deltaClass(r.profit) + '">' + fmtCurrency(r.profit) + '</div></div></div>' +
-                    '<div class="col-3"><div class="result-card"><div class="result-label">CPA</div><div class="result-value">' + (r.cpa === Infinity ? 'N/A' : fmtCurrency(r.cpa)) + '</div></div></div>' +
-                    '<div class="col-3"><div class="result-card"><div class="result-label">Profit / Order</div><div class="result-value ' + deltaClass(r.profitPerOrder) + '">' + fmtCurrency(r.profitPerOrder) + '</div></div></div>' +
+                    '<div class="col-6 col-md-3"><div class="result-card"><div class="result-label">ROAS</div><div class="result-value ch-res-roas"></div></div></div>' +
+                    '<div class="col-6 col-md-3"><div class="result-card"><div class="result-label">Profit / Loss</div><div class="result-value ch-res-profit"></div></div></div>' +
+                    '<div class="col-6 col-md-3"><div class="result-card"><div class="result-label">CPA</div><div class="result-value ch-res-cpa"></div></div></div>' +
+                    '<div class="col-6 col-md-3"><div class="result-card"><div class="result-label">Profit / Order</div><div class="result-value ch-res-ppo"></div></div></div>' +
                 '</div>';
 
+            fillChannelResults(card, ch);
             list.appendChild(card);
         });
 
         // Show/hide add button
         el('add-channel').style.display = state.channels.length >= 4 ? 'none' : 'block';
 
-        // Bind channel events
-        bindChannelEvents();
-        if (focusClass && focusIdx !== null) {
-            var refocus = list.querySelector('.' + focusClass + '[data-idx="' + focusIdx + '"]');
-            if (refocus) {
-                refocus.focus();
-                if (focusSel && refocus.setSelectionRange) {
-                    try { refocus.setSelectionRange(focusSel.start, focusSel.end); } catch(e) {}
-                }
-            }
+        renderChannelChart();
+    }
+
+    // Refresh result figures and the chart from state without touching the inputs.
+    function updateChannels() {
+        var cards = document.querySelectorAll('#channel-list .roas-channel');
+        for (var i = 0; i < cards.length; i++) {
+            if (state.channels[i]) fillChannelResults(cards[i], state.channels[i]);
         }
         renderChannelChart();
     }
@@ -1107,48 +1339,44 @@ sitemap: true
     }
 
     function bindChannelEvents() {
-        // Name inputs
-        var names = document.querySelectorAll('.roas-channel-name');
-        for (var i = 0; i < names.length; i++) {
-            names[i].addEventListener('change', function() {
-                var idx = +this.getAttribute('data-idx');
-                state.channels[idx].name = this.value;
-                savePrefs();
-            });
-        }
+        var list = el('channel-list');
 
-        // Spend inputs
-        var spends = document.querySelectorAll('.ch-spend');
-        for (var j = 0; j < spends.length; j++) {
-            spends[j].addEventListener('input', function() {
-                var idx = +this.getAttribute('data-idx');
-                state.channels[idx].spend = clamp(+this.value || 0, 0, 9999999);
-                renderChannels();
-                savePrefs();
-            });
-        }
+        // One delegated listener, so rebuilding the cards never needs re-binding.
+        list.addEventListener('input', function(e) {
+            var t = e.target;
+            var idx = +t.getAttribute('data-idx');
+            if (!state.channels[idx]) return;
+            if (t.classList.contains('roas-channel-name')) {
+                state.channels[idx].name = t.value;
+                var nm = chName(state.channels[idx], idx);
+                var card = t.closest('.roas-channel');
+                var refs = card.querySelectorAll('.ch-name-ref');
+                for (var i = 0; i < refs.length; i++) refs[i].textContent = ' - ' + nm;
+                var rm = card.querySelector('.roas-remove-channel');
+                if (rm) rm.setAttribute('aria-label', 'Remove ' + nm);
+                renderChannelChart();
+            } else if (t.classList.contains('ch-spend')) {
+                state.channels[idx].spend = readField(t, 0, 9999999);
+                updateChannels();
+            } else if (t.classList.contains('ch-revenue')) {
+                state.channels[idx].revenue = readField(t, 0, 9999999);
+                updateChannels();
+            } else {
+                return;
+            }
+            savePrefs();
+        });
 
-        // Revenue inputs
-        var revs = document.querySelectorAll('.ch-revenue');
-        for (var k = 0; k < revs.length; k++) {
-            revs[k].addEventListener('input', function() {
-                var idx = +this.getAttribute('data-idx');
-                state.channels[idx].revenue = clamp(+this.value || 0, 0, 9999999);
-                renderChannels();
-                savePrefs();
-            });
-        }
-
-        // Remove buttons
-        var removes = document.querySelectorAll('.roas-remove-channel');
-        for (var r = 0; r < removes.length; r++) {
-            removes[r].addEventListener('click', function() {
-                var idx = +this.getAttribute('data-idx');
-                state.channels.splice(idx, 1);
-                renderChannels();
-                savePrefs();
-            });
-        }
+        list.addEventListener('click', function(e) {
+            var btn = e.target.closest('.roas-remove-channel');
+            if (!btn) return;
+            var idx = +btn.getAttribute('data-idx');
+            state.channels.splice(idx, 1);
+            renderChannels();
+            savePrefs();
+            var next = list.querySelector('.roas-channel-name[data-idx="' + Math.min(idx, state.channels.length - 1) + '"]');
+            if (next) next.focus();
+        });
     }
 
     function renderChannelChart() {
@@ -1157,9 +1385,9 @@ sitemap: true
 
         if (state.channels.length === 0) return;
 
-        var data = state.channels.map(function(ch) {
+        var data = state.channels.map(function(ch, idx) {
             var r = calcChannelProfitability(ch);
-            return { name: ch.name, revenue: ch.revenue, spend: ch.spend, profit: r.profit };
+            return { name: chName(ch, idx), revenue: ch.revenue, spend: ch.spend, profit: r.profit };
         });
 
         var maxVal = 0;
@@ -1173,34 +1401,35 @@ sitemap: true
         var range = maxVal - minVal;
         if (range <= 0) return;
 
-        var pw = CH_W - CH_M.left - CH_M.right;
-        var ph = CH_H - CH_M.top - CH_M.bottom;
+        var W = chartWidth(el('channel-chart-container'));
+        var H = Math.round(clamp(W * 0.4, 250, 320));
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
 
-        var yScale = function(v) { return CH_M.top + ph - ((v - minVal) / range) * ph; };
+        var gridCount = 5;
+        var gridLabels = [];
+        for (var g = 0; g <= gridCount; g++) gridLabels.push(fmtAxis(minVal + (range / gridCount) * g));
+        var M = { top: 20, right: 12, bottom: 50, left: labelWidth(gridLabels) };
+
+        var pw = W - M.left - M.right;
+        var ph = H - M.top - M.bottom;
+
+        var yScale = function(v) { return M.top + ph - ((v - minVal) / range) * ph; };
         var zeroY = yScale(0);
 
         // Grid lines
-        var gridCount = 5;
         for (var i = 0; i <= gridCount; i++) {
-            var gv = minVal + (range / gridCount) * i;
-            var gy = yScale(gv);
+            var gy = yScale(minVal + (range / gridCount) * i);
             svg.appendChild(svgEl('line', {
-                x1: CH_M.left, y1: gy, x2: CH_W - CH_M.right, y2: gy,
+                x1: M.left, y1: gy, x2: W - M.right, y2: gy,
                 stroke: COL.grid, 'stroke-width': 1
             }));
-            var label = svgEl('text', {
-                x: CH_M.left - 8, y: gy + 4,
-                'text-anchor': 'end', fill: COL.text,
-                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
-            });
-            label.textContent = fmtCurrency(gv);
-            svg.appendChild(label);
+            svgText(svg, M.left - 8, gy + 4, gridLabels[i], { 'text-anchor': 'end' });
         }
 
         // Zero line if needed
         if (minVal < 0) {
             svg.appendChild(svgEl('line', {
-                x1: CH_M.left, y1: zeroY, x2: CH_W - CH_M.right, y2: zeroY,
+                x1: M.left, y1: zeroY, x2: W - M.right, y2: zeroY,
                 stroke: COL.axis, 'stroke-width': 1.5
             }));
         }
@@ -1210,13 +1439,14 @@ sitemap: true
         var groupWidth = pw / n;
         var barWidth = Math.min(groupWidth * 0.2, 60);
         var barGap = barWidth * 0.15;
+        var maxChars = Math.max(3, Math.min(12, Math.floor(groupWidth / 7.5)));
 
         data.forEach(function(d, idx) {
-            var groupX = CH_M.left + groupWidth * idx + groupWidth / 2;
+            var groupX = M.left + groupWidth * idx + groupWidth / 2;
             var bars = [
-                { val: d.revenue, col: COL.revenue, label: 'Revenue' },
-                { val: d.spend, col: COL.adSpend, label: 'Spend' },
-                { val: d.profit, col: d.profit >= 0 ? COL.profit : COL.loss, label: 'Profit' }
+                { val: d.revenue, col: COL.revenue },
+                { val: d.spend, col: COL.adSpend },
+                { val: d.profit, col: d.profit >= 0 ? COL.profit : COL.loss }
             ];
 
             var totalBarWidth = bars.length * barWidth + (bars.length - 1) * barGap;
@@ -1240,35 +1470,25 @@ sitemap: true
                 }));
             });
 
-            // Channel name label
-            var nameLbl = svgEl('text', {
-                x: groupX, y: CH_H - CH_M.bottom + 20,
-                'text-anchor': 'middle', fill: COL.text,
-                'font-size': '12', 'font-family': "'Inter', sans-serif", 'font-weight': '600'
-            });
-            nameLbl.textContent = d.name.length > 12 ? d.name.substring(0, 11) + '\u2026' : d.name;
-            svg.appendChild(nameLbl);
+            svgText(svg, groupX, H - M.bottom + 20,
+                d.name.length > maxChars ? d.name.substring(0, maxChars - 1) + '…' : d.name,
+                { 'text-anchor': 'middle', 'font-family': "'Inter', sans-serif", 'font-weight': '600' });
         });
 
         // Legend
-        var legY = CH_H - 8;
+        var legY = H - 16;
         var items = [
             { col: COL.revenue, label: 'Revenue' },
             { col: COL.adSpend, label: 'Ad Spend' },
             { col: COL.profit, label: 'Profit' }
         ];
-        var legX = CH_M.left;
+        var legX = M.left;
         items.forEach(function(item) {
             svg.appendChild(svgEl('rect', {
                 x: legX, y: legY, width: 10, height: 10, fill: item.col, rx: 2
             }));
-            var t = svgEl('text', {
-                x: legX + 14, y: legY + 9, fill: COL.text,
-                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
-            });
-            t.textContent = item.label;
-            svg.appendChild(t);
-            legX += 14 + item.label.length * 6.5 + 20;
+            svgText(svg, legX + 14, legY + 9, item.label, {});
+            legX += 14 + item.label.length * CHAR_W + 16;
         });
     }
 
@@ -1276,41 +1496,57 @@ sitemap: true
 
     function renderTrap() {
         var curve = calcTrapCurve();
+        var container = el('trap-chart-container');
+        var spEl = el('res-scaled-profit');
         if (!curve) {
             el('res-scaled-roas').textContent = '--';
             el('res-scaled-revenue').textContent = '--';
-            el('res-scaled-profit').textContent = '--';
+            spEl.textContent = '--';
+            spEl.className = 'result-value';
             el('res-optimal-spend').textContent = '--';
+            // No curve to show: clear the last chart rather than leave a stale one on screen.
+            var old = el('trap-chart');
+            while (old.firstChild) old.removeChild(old.firstChild);
+            container.hidden = true;
             return;
         }
+        container.hidden = false;
 
+        var slider = el('spend-scale'), box = el('spend-scale-val');
         var sliderMax = Math.max(5, Math.ceil(curve.optimalMultiplier * 1.5));
-        el('spend-scale').setAttribute('max', sliderMax);
-        el('spend-scale-val').setAttribute('max', sliderMax);
+        slider.setAttribute('max', sliderMax);
+        box.setAttribute('max', sliderMax);
+        var before = state.spendScale;
         state.spendScale = clamp(state.spendScale, 0.5, sliderMax);
+        slider.value = state.spendScale;
+        if (state.spendScale !== before && document.activeElement !== box) box.value = state.spendScale.toFixed(1);
+        slider.setAttribute('aria-valuetext', state.spendScale.toFixed(1) + 'x current spend');
 
         // Find current point on curve
         var scale = state.spendScale;
         var scaledROAS = curve.baseROAS * Math.pow(1 / scale, 0.4);
         var scaledSpend = state.adSpend * scale;
         var scaledRevenue = scaledSpend * scaledROAS;
-        var vatFactor = state.vatRate > 0 ? 1 / (1 + state.vatRate / 100) : 1;
-        var costRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
-        var contributionRate = vatFactor * (1 - costRate);
+        var contributionRate = getContributionRate();
         var scaledProfit = (scaledRevenue * contributionRate) - scaledSpend;
 
         el('res-scaled-roas').textContent = scaledROAS.toFixed(1) + 'x';
         el('res-scaled-revenue').textContent = fmtCurrency(scaledRevenue);
 
-        var spEl = el('res-scaled-profit');
         spEl.textContent = fmtCurrency(scaledProfit);
         spEl.className = 'result-value ' + deltaClass(scaledProfit);
 
+        var small = '<small style="display:block;font-size:0.7em;opacity:0.7;">';
         if (curve.optimalMultiplier < 0.5) {
-            el('res-optimal-spend').innerHTML = 'Cut hard<small style="display:block;font-size:0.7em;opacity:0.7;">below 0.5x - this spend loses money</small>';
+            if (curve.currentProfit < 0) {
+                el('res-optimal-spend').innerHTML = 'Cut hard' + small + 'below 0.5x - this spend loses money</small>';
+            } else {
+                el('res-optimal-spend').innerHTML = 'Cut back' + small + 'the last part of this spend is unprofitable</small>';
+            }
         } else {
             var optRounded = Math.round(curve.optimalMultiplier * 10) / 10;
-            el('res-optimal-spend').innerHTML = fmtCurrency(state.adSpend * optRounded) + '<small style="display:block;font-size:0.7em;opacity:0.7;">(' + optRounded.toFixed(1) + 'x current)</small>';
+            el('res-optimal-spend').innerHTML = fmtCurrency(state.adSpend * optRounded) + small + '(' + optRounded.toFixed(1) + 'x current)</small>' +
+                (curve.capped ? small + 'capped at ' + MAX_OPTIMAL_MULTIPLIER + 'x - the model’s optimum is ' + trimZero(curve.uncappedOptimal) + 'x</small>' : '');
         }
 
         renderTrapChart(curve);
@@ -1323,8 +1559,9 @@ sitemap: true
         var points = curve.points;
         if (points.length < 2) return;
 
-        var pw = TR_W - TR_M.left - TR_M.right;
-        var ph = TR_H - TR_M.top - TR_M.bottom;
+        var W = chartWidth(el('trap-chart-container'));
+        var H = Math.round(clamp(W * 0.45, 300, 360));
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
 
         // Find ranges
         var maxROAS = 0, minProfit = Infinity, maxProfit = -Infinity;
@@ -1340,129 +1577,100 @@ sitemap: true
         minProfit -= profitRange * 0.1;
         profitRange = maxProfit - minProfit;
 
-        var xMax = points[points.length - 1].multiplier;
-        var xScale = function(m) { return TR_M.left + ((m - 0.5) / (xMax - 0.5)) * pw; };
-        var yRoasScale = function(r) { return TR_M.top + ph - (r / maxROAS) * ph; };
-        var yProfitScale = function(p) { return TR_M.top + ph - ((p - minProfit) / profitRange) * ph; };
-
-        // Grid lines
         var gridCount = 5;
+        var roasLabels = [], profitLabels = [];
+        for (var g = 0; g <= gridCount; g++) {
+            roasLabels.push((maxROAS * (1 - g / gridCount)).toFixed(1) + 'x');
+            profitLabels.push(fmtAxis(maxProfit - (profitRange / gridCount) * g));
+        }
+        // Top margin holds two rows of marker labels ("Optimal" above "You"), clear of the top axis labels
+        var M = { top: 54, bottom: 50, left: labelWidth(roasLabels), right: labelWidth(profitLabels) };
+        var pw = W - M.left - M.right;
+        var ph = H - M.top - M.bottom;
+
+        var xMin = curve.xMin;
+        var xMax = points[points.length - 1].multiplier;
+        var xScale = function(m) { return M.left + ((m - xMin) / (xMax - xMin)) * pw; };
+        var xInPlot = function(m) { return clamp(xScale(m), M.left, M.left + pw); };
+        var yRoasScale = function(r) { return M.top + ph - (r / maxROAS) * ph; };
+        var yProfitScale = function(p) { return M.top + ph - ((p - minProfit) / profitRange) * ph; };
+
+        // Grid lines and y axes
         for (var i = 0; i <= gridCount; i++) {
-            var gy = TR_M.top + (ph / gridCount) * i;
+            var gy = M.top + (ph / gridCount) * i;
             svg.appendChild(svgEl('line', {
-                x1: TR_M.left, y1: gy, x2: TR_W - TR_M.right, y2: gy,
+                x1: M.left, y1: gy, x2: W - M.right, y2: gy,
                 stroke: COL.grid, 'stroke-width': 1
             }));
-
-            // Left axis (ROAS)
-            var roasVal = maxROAS * (1 - i / gridCount);
-            var roasLbl = svgEl('text', {
-                x: TR_M.left - 8, y: gy + 4,
-                'text-anchor': 'end', fill: COL.roas,
-                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
-            });
-            roasLbl.textContent = roasVal.toFixed(1) + 'x';
-            svg.appendChild(roasLbl);
-
-            // Right axis (Profit)
-            var profitVal = maxProfit - (profitRange / gridCount) * i;
-            var profitLbl = svgEl('text', {
-                x: TR_W - TR_M.right + 8, y: gy + 4,
-                'text-anchor': 'start', fill: COL.profit,
-                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
-            });
-            profitLbl.textContent = fmtCurrency(profitVal);
-            svg.appendChild(profitLbl);
+            svgText(svg, M.left - 8, gy + 4, roasLabels[i], { 'text-anchor': 'end', fill: COL.roasText });
+            svgText(svg, W - M.right + 8, gy + 4, profitLabels[i], { 'text-anchor': 'start', fill: COL.profitText });
         }
 
-        // X axis labels
-        var xStep = Math.max(0.5, Math.ceil((xMax - 0.5) / 10 * 2) / 2);
-        for (var m = 0.5; m <= xMax; m += xStep) {
-            var xx = xScale(m);
-            var xlbl = svgEl('text', {
-                x: xx, y: TR_H - TR_M.bottom + 20,
-                'text-anchor': 'middle', fill: COL.text,
-                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
-            });
-            xlbl.textContent = m.toFixed(1) + 'x';
-            svg.appendChild(xlbl);
+        // X axis labels: a step that leaves room for the labels at this width
+        var steps = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100];
+        var maxTicks = Math.max(2, Math.floor(pw / 48));
+        var xStep = 100;
+        for (var s = 0; s < steps.length; s++) {
+            if ((xMax - xMin) / steps[s] <= maxTicks) { xStep = steps[s]; break; }
+        }
+        for (var k = Math.ceil(xMin / xStep - 1e-9); k * xStep <= xMax + 1e-9; k++) {
+            var tick = k * xStep;
+            svgText(svg, xScale(tick), H - M.bottom + 20, (xStep < 1 ? tick.toFixed(1) : tick.toFixed(0)) + 'x', { 'text-anchor': 'middle' });
         }
 
         // X axis title
-        var xTitle = svgEl('text', {
-            x: TR_M.left + pw / 2, y: TR_H - 5,
-            'text-anchor': 'middle', fill: COL.text,
-            'font-size': '12', 'font-family': "'Inter', sans-serif", 'font-weight': '600'
+        svgText(svg, M.left + pw / 2, H - 6, 'Spend multiplier', {
+            'text-anchor': 'middle', 'font-family': "'Inter', sans-serif", 'font-weight': '600'
         });
-        xTitle.textContent = 'Spend multiplier';
-        svg.appendChild(xTitle);
 
         // Zero profit line
         if (minProfit < 0 && maxProfit > 0) {
             var zeroY = yProfitScale(0);
             svg.appendChild(svgEl('line', {
-                x1: TR_M.left, y1: zeroY, x2: TR_W - TR_M.right, y2: zeroY,
+                x1: M.left, y1: zeroY, x2: W - M.right, y2: zeroY,
                 stroke: COL.loss, 'stroke-width': 1, 'stroke-dasharray': '2,4', opacity: 0.5
             }));
         }
 
-        // ROAS curve
-        var roasPath = '';
+        // ROAS curve and profit curve
+        var roasPath = '', profitPath = '';
         points.forEach(function(p, idx) {
-            var px = xScale(p.multiplier);
-            var py = yRoasScale(p.roas);
-            roasPath += (idx === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
+            var px = xScale(p.multiplier).toFixed(1);
+            roasPath += (idx === 0 ? 'M' : 'L') + px + ',' + yRoasScale(p.roas).toFixed(1);
+            profitPath += (idx === 0 ? 'M' : 'L') + px + ',' + yProfitScale(p.profit).toFixed(1);
         });
-        svg.appendChild(svgEl('path', {
-            d: roasPath, fill: 'none', stroke: COL.roas, 'stroke-width': 2.5
-        }));
+        svg.appendChild(svgEl('path', { d: roasPath, fill: 'none', stroke: COL.roas, 'stroke-width': 2.5 }));
+        svg.appendChild(svgEl('path', { d: profitPath, fill: 'none', stroke: COL.profit, 'stroke-width': 2.5 }));
 
-        // Profit curve
-        var profitPath = '';
-        points.forEach(function(p, idx) {
-            var px = xScale(p.multiplier);
-            var py = yProfitScale(p.profit);
-            profitPath += (idx === 0 ? 'M' : 'L') + px.toFixed(1) + ',' + py.toFixed(1);
-        });
-        svg.appendChild(svgEl('path', {
-            d: profitPath, fill: 'none', stroke: COL.profit, 'stroke-width': 2.5
-        }));
+        // Marker label that stays inside the svg
+        var markerLabel = function(x, y, text, fill) {
+            var half = text.length * CHAR_W / 2;
+            var anchor = 'middle', lx = x;
+            if (x - half < 2) { anchor = 'start'; lx = 2; }
+            else if (x + half > W - 2) { anchor = 'end'; lx = W - 2; }
+            svgText(svg, lx, y, text, { 'text-anchor': anchor, fill: fill, 'font-weight': '600' });
+        };
 
-        // Current spend marker
-        var currentX = xScale(state.spendScale);
+        // Optimal spend marker (clamped to the plot, so it can never leave it)
+        var optX = xInPlot(curve.optimalMultiplier);
         svg.appendChild(svgEl('line', {
-            x1: currentX, y1: TR_M.top, x2: currentX, y2: TR_M.top + ph,
-            stroke: COL.axis, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
-        }));
-        var currentLbl = svgEl('text', {
-            x: currentX, y: TR_M.top - 5,
-            'text-anchor': 'middle', fill: COL.axis,
-            'font-size': '10', 'font-family': "'JetBrains Mono', monospace"
-        });
-        currentLbl.textContent = 'You: ' + state.spendScale.toFixed(1) + 'x';
-        svg.appendChild(currentLbl);
-
-        // Optimal spend marker
-        var optX = xScale(curve.optimalMultiplier);
-        svg.appendChild(svgEl('line', {
-            x1: optX, y1: TR_M.top, x2: optX, y2: TR_M.top + ph,
+            x1: optX, y1: M.top, x2: optX, y2: M.top + ph,
             stroke: COL.optimal, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
         }));
-        var optLbl = svgEl('text', {
-            x: optX, y: TR_M.top - 5,
-            'text-anchor': 'middle', fill: COL.optimal,
-            'font-size': '10', 'font-family': "'JetBrains Mono', monospace"
-        });
-        optLbl.textContent = 'Optimal: ' + curve.optimalMultiplier.toFixed(1) + 'x';
-        svg.appendChild(optLbl);
+        markerLabel(optX, M.top - 32, 'Optimal: ' + (curve.optimalMultiplier < 0.05 ? '<0.1' : curve.optimalMultiplier.toFixed(1)) + 'x' + (curve.capped ? ' (cap)' : ''), COL.optimal);
+
+        // Current spend marker
+        var currentX = xInPlot(state.spendScale);
+        svg.appendChild(svgEl('line', {
+            x1: currentX, y1: M.top, x2: currentX, y2: M.top + ph,
+            stroke: COL.axis, 'stroke-width': 1.5, 'stroke-dasharray': '6,4'
+        }));
+        markerLabel(currentX, M.top - 14, 'You: ' + state.spendScale.toFixed(1) + 'x', COL.text);
 
         // Dots at current position
         var curROAS = curve.baseROAS * Math.pow(1 / state.spendScale, 0.4);
-        var curVatFactor = state.vatRate > 0 ? 1 / (1 + state.vatRate / 100) : 1;
-        var curCostRate = state.cancelRate / 100 + (1 - state.cancelRate / 100) * (state.cogsRate / 100 + state.fulfilRate / 100);
-        var curContrib = curVatFactor * (1 - curCostRate);
         var curSpend = state.adSpend * state.spendScale;
-        var curProfit = (curSpend * curROAS * curContrib) - curSpend;
+        var curProfit = (curSpend * curROAS * getContributionRate()) - curSpend;
 
         svg.appendChild(svgEl('circle', {
             cx: currentX, cy: yRoasScale(curROAS), r: 5,
@@ -1479,16 +1687,16 @@ sitemap: true
     function readInputs() {
         state.currency = el('currency-select').value;
         state.inputMode = document.querySelector('input[name="inputMode"]:checked').value;
-        state.adSpend = clamp(+el('ad-spend').value || 0, 0, 9999999);
-        state.adRevenue = clamp(+el('ad-revenue').value || 0, 0, 9999999);
-        state.orderCount = clamp(+el('order-count').value || 0, 0, 999999);
-        state.aov = clamp(+el('aov').value || 0, 0, 999999);
-        state.vatRate = clamp(+el('vat-rate').value || 0, 0, 100);
-        state.cancelRate = clamp(+el('cancel-rate').value || 0, 0, 100);
-        state.cogsRate = clamp(+el('cogs-rate').value || 0, 0, 100);
-        state.fulfilRate = clamp(+el('fulfil-rate').value || 0, 0, 100);
-        state.marginRate = clamp(+el('margin-rate').value || 0, 0, 100);
-        state.spendScale = clamp(+el('spend-scale').value || 1, 0.5, +el('spend-scale').getAttribute('max') || 5);
+        state.adSpend = readField(el('ad-spend'), 0, 9999999);
+        state.adRevenue = readField(el('ad-revenue'), 0, 9999999);
+        state.orderCount = readField(el('order-count'), 0, 999999);
+        state.aov = readField(el('aov'), 0, 999999);
+        state.vatRate = readField(el('vat-rate'), 0, 100);
+        state.cancelRate = readField(el('cancel-rate'), 0, 100);
+        state.cogsRate = readField(el('cogs-rate'), 0, 100);
+        state.fulfilRate = readField(el('fulfil-rate'), 0, 100);
+        state.marginRate = readField(el('margin-rate'), 0, 100);
+        // spendScale is owned by the slider / number box handlers, so typing elsewhere never resets it
     }
 
     function writeInputs() {
@@ -1526,15 +1734,20 @@ sitemap: true
         el('revenue-input-group').style.display = isOrders ? 'none' : '';
         el('orders-input-group').style.display = isOrders ? '' : 'none';
         el('aov-input-group').style.display = '';  // always shown: per-order cards use it in both modes
+        el('aov-hint').textContent = isOrders ? 'Orders x this = revenue' : 'Used for per-order figures';
     }
 
     // ========== RECALCULATE ==========
 
+    function renderAll() {
+        renderProfitability();
+        updateChannels();
+        renderTrap();
+    }
+
     function recalculate() {
         readInputs();
-        renderProfitability();
-        renderChannels();
-        renderTrap();
+        renderAll();
         updateURL();
         savePrefs();
     }
@@ -1577,16 +1790,48 @@ sitemap: true
             savePrefs();
         });
 
-        // Trap slider <-> number sync
-        el('spend-scale').addEventListener('input', function() {
-            el('spend-scale-val').value = (+this.value).toFixed(1);
+        bindChannelEvents();
+
+        // Trap slider <-> number sync. The number box keeps exactly what is typed while the user
+        // types; it is clamped and tidied on change (blur / Enter) only.
+        var slider = el('spend-scale'), box = el('spend-scale-val');
+        var scaleMax = function() { return +slider.getAttribute('max') || 5; };
+        slider.addEventListener('input', function() {
+            state.spendScale = +this.value;
+            box.value = state.spendScale.toFixed(1);
             recalculate();
         });
-        el('spend-scale-val').addEventListener('input', function() {
-            el('spend-scale').value = this.value;
-            this.value = el('spend-scale').value;
+        box.addEventListener('input', function() {
+            var n = parseFloat(this.value);
+            if (isNaN(n)) return;   // empty / half-typed: leave the results alone
+            state.spendScale = clamp(n, 0.5, scaleMax());
+            slider.value = state.spendScale;
             recalculate();
         });
+        box.addEventListener('change', function() {
+            var n = parseFloat(this.value);
+            state.spendScale = clamp(isNaN(n) ? state.spendScale : n, 0.5, scaleMax());
+            this.value = state.spendScale.toFixed(1);
+            slider.value = state.spendScale;
+            recalculate();
+        });
+
+        // Redraw charts when their width changes (rotation, window resize, scrollbar appearing)
+        var ids = ['cost-waterfall', 'channel-chart-container', 'trap-chart-container'];
+        var widthKey = function() { return ids.map(function(id) { return el(id).clientWidth; }).join(','); };
+        var lastKey = widthKey();
+        var onResize = function() {
+            var key = widthKey();
+            if (key === lastKey) return;
+            lastKey = key;
+            renderAll();
+        };
+        if (window.ResizeObserver) {
+            var ro = new ResizeObserver(onResize);
+            ids.forEach(function(id) { ro.observe(el(id)); });
+        } else {
+            window.addEventListener('resize', onResize);
+        }
     }
 
     // ========== INIT ==========
@@ -1595,6 +1840,7 @@ sitemap: true
         var fromURL = readURL();
         if (!fromURL) loadPrefs();
         writeInputs();
+        renderChannels();
         bindEvents();
         recalculate();
     }
