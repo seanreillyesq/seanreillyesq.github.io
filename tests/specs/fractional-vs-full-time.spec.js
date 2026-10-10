@@ -216,7 +216,9 @@ test.describe('Fractional vs full-time', () => {
   });
 
   test('works without window.toolEvent', async ({ page, pageErrors }) => {
+    await page.route(/tool-events\.js/, (r) => r.fulfill({ status: 200, contentType: 'application/javascript', body: '' }));
     await load(page);
+    expect(await page.evaluate(() => typeof window.toolEvent)).toBe('undefined');
     await typeInto(page, '#p-dpm', '6');
     await page.locator('#fvf-copy').click();
     await page.waitForTimeout(1000);
