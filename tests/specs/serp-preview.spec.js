@@ -3,6 +3,16 @@ const { test, expect } = require('../fixtures');
 const URL = '/serp-preview/';
 
 const PAYLOAD = `He said "hi" & it's <script>window.__pwned = 1</script> <img src=x onerror="window.__pwned = 1">`;
+const accept = (page) => page.evaluate(() => CookieConsent.acceptCategory(['functionality']));
+// The consent library skips itself for automated browsers (hideFromBots checks navigator.webdriver),
+// so it would never read its own cookie back after a reload. Hide that flag, as the caffeine spec
+// does, so reloads behave as they do for a person.
+async function acceptAcrossReloads(page) {
+  await page.addInitScript(() => { Object.defineProperty(navigator, 'webdriver', { get: () => false }); });
+  await page.reload();
+  await expect(page.locator('#serp-title')).toBeVisible();
+  await accept(page);
+}
 const PREVIEWS = ['#preview-desktop', '#preview-mobile', '#preview-ai', '#preview-social', '#validation'];
 
 test.describe('SERP preview', () => {
@@ -55,18 +65,25 @@ test.describe('SERP preview', () => {
       expect(dialogs).toEqual([]);
     });
 
-    // escapeHtml() turns ' into &#39;, which the browser decodes back to ' inside the style
-    // attribute, so the .replace(/'/g, '%27') that follows it in renderSocialCard() never fires.
-    // A quote in the image URL therefore closes url('...') and lets the user add CSS declarations.
-    // No script runs (the attribute itself cannot be escaped) and the text is the user's own input,
-    // but it is not the "stays inside url()" behaviour the code intends.
-    test.fixme('image URL containing a quote stays inside url() and cannot add CSS declarations', async ({ page }) => {
+    // The image URL is quoted for CSS and set through the DOM, so a quote in it can neither
+    // break the image nor add declarations.
+    test('image URL containing a quote stays inside url() and cannot add CSS declarations', async ({ page }) => {
+      const image = page.locator('#preview-social .social-card-image');
+      const baseline = await image.evaluate((e) => getComputedStyle(e).backgroundColor);
+
       await page.locator('#serp-image').fill(`https://example.com/a.jpg');background:red;x:('`);
-      const bg = await page.locator('#preview-social .social-card-image').evaluate((e) => ({
-        style: e.getAttribute('style'), colour: getComputedStyle(e).backgroundColor,
+      const bg = await image.evaluate((e) => ({
+        declarations: e.style.length, colour: getComputedStyle(e).backgroundColor, image: getComputedStyle(e).backgroundImage,
       }));
-      expect(bg.colour).toBe('rgba(0, 0, 0, 0)');
-      expect(bg.style).not.toMatch(/;\s*background:\s*red/);
+      expect(bg.colour).toBe(baseline);
+      expect(bg.declarations).toBe(1); // background-image only
+      expect(bg.image).toContain(`a.jpg');background:red;x:('`);
+    });
+
+    test('image URL with an apostrophe still loads as the card image', async ({ page }) => {
+      await page.locator('#serp-image').fill(`https://example.com/it's.jpg`);
+      const image = await page.locator('#preview-social .social-card-image').evaluate((e) => getComputedStyle(e).backgroundImage);
+      expect(image).toBe(`url("https://example.com/it's.jpg")`);
     });
 
     test('keyphrase bolding keeps entities intact', async ({ page }) => {
@@ -109,20 +126,52 @@ test.describe('SERP preview', () => {
     });
 
     test('control: the same typing is stored once consent is granted (so the check above can fail)', async ({ page }) => {
-      await page.evaluate(() => CookieConsent.acceptCategory(['functionality']));
+      await accept(page);
       await page.locator('#serp-title').fill('Typed after consent');
       const stored = await page.evaluate(() => localStorage.getItem('serp-preview-v1'));
       expect(stored).toContain('Typed after consent');
     });
 
-    // load() runs from an inline script during parsing, before the deferred cc.js and
-    // cookieconsent-config.js have executed, so typeof CookieConsent is still 'undefined' and
-    // canUseStorage() is false. Saved fields are written but never restored on the next visit.
-    test.fixme('fields saved after consent are restored on the next visit', async ({ page }) => {
-      await page.evaluate(() => CookieConsent.acceptCategory(['functionality']));
-      await page.locator('#serp-title').fill('Typed after consent');
+    const FIELDS = {
+      '#serp-title': 'Typed after consent',
+      '#serp-desc': 'A saved description that is long enough to count as a real snippet.',
+      '#serp-url': 'https://www.example.com/saved/',
+      '#serp-date': '2026-01-02',
+      '#serp-sitename': 'Saved Site',
+      '#serp-image': 'https://www.example.com/saved.jpg',
+      '#serp-keyphrase': 'saved',
+    };
+
+    test('fields saved after consent are restored on the next visit', async ({ page }) => {
+      await acceptAcrossReloads(page);
+      for (const [sel, value] of Object.entries(FIELDS)) await page.locator(sel).fill(value);
       await page.reload();
-      await expect(page.locator('#serp-title')).toHaveValue('Typed after consent');
+      for (const [sel, value] of Object.entries(FIELDS)) await expect(page.locator(sel), sel).toHaveValue(value);
+      await expect(page.locator('#preview-desktop .google-title')).toContainText('Typed after consent');
+    });
+
+    test('the first keystroke after a reload does not wipe the saved fields', async ({ page }) => {
+      await acceptAcrossReloads(page);
+      for (const [sel, value] of Object.entries(FIELDS)) await page.locator(sel).fill(value);
+      await page.reload();
+      await page.locator('#serp-keyphrase').focus();
+      await page.keyboard.press('End');
+      await page.keyboard.press('x');
+      const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('serp-preview-v1')));
+      expect(stored.title).toBe(FIELDS['#serp-title']);
+      expect(stored.desc).toBe(FIELDS['#serp-desc']);
+      expect(stored.url).toBe(FIELDS['#serp-url']);
+      expect(stored.sitename).toBe(FIELDS['#serp-sitename']);
+      expect(stored.keyphrase).toBe('savedx');
+    });
+
+    test('a deliberately cleared Site Name stays cleared after a reload', async ({ page }) => {
+      await acceptAcrossReloads(page);
+      await page.locator('#serp-title').fill('Has a title');
+      await page.locator('#serp-sitename').fill('');
+      await page.reload();
+      await expect(page.locator('#serp-title')).toHaveValue('Has a title');
+      await expect(page.locator('#serp-sitename')).toHaveValue('');
     });
   });
 
@@ -133,11 +182,11 @@ test.describe('SERP preview', () => {
       await page.locator('#serp-title').fill(LONG);
       const desktop = (await page.locator('#preview-desktop .google-title').textContent()) || '';
       const mobile = (await page.locator('#preview-mobile .google-title').textContent()) || '';
-      expect(desktop).toMatch(/\.\.\.$/);
-      expect(mobile).toMatch(/\.\.\.$/);
+      expect(desktop).toMatch(/\u2026$/);
+      expect(mobile).toMatch(/\u2026$/);
       expect(desktop.length).toBeLessThan(LONG.length);
       expect(mobile.length).toBeLessThanOrEqual(desktop.length);
-      expect(LONG.startsWith(desktop.slice(0, -3))).toBe(true);
+      expect(LONG.startsWith(desktop.slice(0, -1))).toBe(true);
 
       // The counter and validation say so too.
       await expect(page.locator('#title-pixels')).toHaveClass(/over/);
@@ -156,9 +205,294 @@ test.describe('SERP preview', () => {
       const desc = 'This meta description is far too long for any search result and should be truncated. '.repeat(8).trim();
       await page.locator('#serp-desc').fill(desc);
       const shown = (await page.locator('#preview-desktop .google-description').textContent()) || '';
-      expect(shown).toMatch(/\.\.\.$/);
+      expect(shown).toMatch(/\u2026$/);
       expect(shown.length).toBeLessThan(desc.length);
       await expect(page.locator('#desc-pixels')).toHaveClass(/over/);
+    });
+  });
+
+  test.describe('desktop title width', () => {
+    test('a title just under the truncation limit sits on one line at 1280px', async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      // Build a title that measures between the old text-area width (558px) and the limit (580px).
+      const built = await page.evaluate(() => {
+        const c = document.createElement('canvas').getContext('2d');
+        c.font = '20px Arial';
+        let t = 'Pixel width guide for search titles';
+        while (c.measureText(t + 'i').width <= 580) t += t.length % 7 === 0 ? ' i' : 'i';
+        return { t, w: Math.ceil(c.measureText(t).width) };
+      });
+      expect(built.w).toBeGreaterThan(570);
+      expect(built.w).toBeLessThanOrEqual(580);
+
+      const title = page.locator('#preview-desktop .google-title');
+      await page.locator('#serp-title').fill('One line');
+      const oneLine = await title.evaluate((e) => e.getBoundingClientRect().height);
+
+      await page.locator('#serp-title').fill(built.t);
+      await expect(page.locator('#title-pixels')).not.toHaveClass(/over/);
+      await expect(title).toHaveText(built.t);
+      expect(await title.evaluate((e) => e.getBoundingClientRect().height)).toBe(oneLine);
+    });
+  });
+
+  test.describe('fetch from URL', () => {
+    const stub = (page, body) => page.route('**/api/fetch-meta*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify(body),
+    }));
+    async function fetchUrl(page) {
+      await accept(page);
+      await page.locator('#serp-fetch-toggle').check();
+      await page.locator('#serp-fetch-url').fill('https://www.example.com/post/');
+      await page.locator('#serp-fetch-btn').click();
+      await expect(page.locator('#serp-fetch-status')).toContainText('Loaded');
+    }
+
+    test('the social card uses fetched og:title and og:description', async ({ page }) => {
+      await stub(page, {
+        title: 'Page title', description: 'Meta description text.',
+        ogTitle: 'Open Graph title', ogDescription: 'Open Graph description.',
+        fetchedUrl: 'https://www.example.com/post/',
+      });
+      await fetchUrl(page);
+      await expect(page.locator('#preview-social .social-card-title')).toHaveText('Open Graph title');
+      await expect(page.locator('#preview-social .social-card-desc')).toHaveText('Open Graph description.');
+      await expect(page.locator('#preview-desktop .google-title')).toHaveText('Page title');
+      await expect(page.locator('#preview-desktop .google-description')).toContainText('Meta description text.');
+    });
+
+    test('the social card falls back to the title and description without og values', async ({ page }) => {
+      await stub(page, { title: 'Page title', description: 'Meta description text.', fetchedUrl: 'https://www.example.com/post/' });
+      await fetchUrl(page);
+      await expect(page.locator('#preview-social .social-card-title')).toHaveText('Page title');
+      await expect(page.locator('#preview-social .social-card-desc')).toHaveText('Meta description text.');
+    });
+
+    test('fetched og values are dropped once the URL field is edited', async ({ page }) => {
+      await stub(page, { title: 'Page title', ogTitle: 'Open Graph title', fetchedUrl: 'https://www.example.com/post/' });
+      await fetchUrl(page);
+      await page.locator('#serp-url').fill('https://www.example.com/other/');
+      await expect(page.locator('#preview-social .social-card-title')).toHaveText('Page title');
+    });
+  });
+
+  test.describe('counters and validation agree', () => {
+    test('the description counter includes the date prefix, as validation does', async ({ page }) => {
+      const desc = 'Coffee and sleep, explained with a calculator that shows how long caffeine stays in your system after each cup. '.repeat(2).trim();
+      await page.locator('#serp-desc').fill(desc);
+      const withoutDate = Number((await page.locator('#desc-pixels').textContent()).match(/^(\d+)px/)[1]);
+
+      await page.locator('#serp-date').fill('2026-01-02');
+      const counter = Number((await page.locator('#desc-pixels').textContent()).match(/^(\d+)px/)[1]);
+      const validation = Number((await page.locator('#validation').textContent()).match(/Description[^(]*\((\d+)px/)[1]);
+      expect(counter).toBeGreaterThan(withoutDate);
+      expect(counter).toBe(validation);
+    });
+
+    test('character count uses characters, not UTF-16 units', async ({ page }) => {
+      await page.locator('#serp-title').fill('Best tips \u{1F600}\u{1F600}');
+      await expect(page.locator('#title-chars')).toHaveText('12 chars');
+      await page.locator('#serp-desc').fill('\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467} family');
+      await expect(page.locator('#desc-chars')).toHaveText('8 chars');
+    });
+
+    test('runs of whitespace are collapsed before measuring', async ({ page }) => {
+      await page.locator('#serp-title').fill('Best tips');
+      const single = await page.locator('#title-pixels').textContent();
+      await page.locator('#serp-title').fill('  Best      tips   ');
+      await expect(page.locator('#title-pixels')).toHaveText(single);
+      await page.locator('#serp-desc').fill('Some description text here');
+      const descSingle = await page.locator('#desc-pixels').textContent();
+      await page.locator('#serp-desc').fill('Some   description \n\n text    here  ');
+      await expect(page.locator('#desc-pixels')).toHaveText(descSingle);
+    });
+  });
+
+  test.describe('ellipsis', () => {
+    test('title is cut at a word boundary with one ellipsis character and no trailing punctuation', async ({ page }) => {
+      const full = 'Coffee, tea, water, juice, '.repeat(8).trim();
+      await page.locator('#serp-title').fill(full);
+      const shown = (await page.locator('#preview-desktop .google-title').textContent()) || '';
+      expect(shown.endsWith('\u2026')).toBe(true);
+      expect(shown).not.toContain('...');
+      const cut = shown.slice(0, -1);
+      expect(cut).toMatch(/[\p{L}\p{N}]$/u);
+      expect(full.startsWith(cut)).toBe(true);
+      expect(full.charAt(cut.length)).toMatch(/[\s,]/);
+    });
+
+    test('description is cut at a word boundary', async ({ page }) => {
+      const full = 'Brewing a better cup takes patience and a little practice every morning. '.repeat(8).trim();
+      await page.locator('#serp-desc').fill(full);
+      const shown = (await page.locator('#preview-desktop .google-description').textContent()) || '';
+      const cut = shown.slice(0, -1);
+      expect(shown.endsWith('\u2026')).toBe(true);
+      expect(cut).not.toMatch(/\s$/);
+      expect(full.startsWith(cut)).toBe(true);
+      expect(full.charAt(cut.length)).toMatch(/[\s.]/);
+    });
+  });
+
+  test.describe('AI Overview summary', () => {
+    const body = (page) => page.locator('#preview-ai .ai-overview-body');
+
+    test('decimals and abbreviations do not split a sentence and punctuation is kept', async ({ page }) => {
+      await page.locator('#serp-desc').fill('Caffeine has a 5.5 hour half-life, e.g. for most adults!');
+      await expect(body(page)).toHaveText('Caffeine has a 5.5 hour half-life, e.g. for most adults!');
+    });
+
+    test('takes the first two sentences and skips honorifics', async ({ page }) => {
+      await page.locator('#serp-desc').fill('Dr. Smith drinks 3.5 cups, i.e. a lot. He sleeps badly! Nobody is surprised? Third.');
+      await expect(body(page)).toHaveText('Dr. Smith drinks 3.5 cups, i.e. a lot. He sleeps badly!');
+    });
+
+    test('adds a full stop when the description has none', async ({ page }) => {
+      await page.locator('#serp-desc').fill('No punctuation here');
+      await expect(body(page)).toHaveText('No punctuation here.');
+    });
+  });
+
+  test.describe('URL validation and display', () => {
+    for (const junk of ['javascript:alert(1)', 'foo:bar', 'ftp://example.com/file']) {
+      test(`"${junk}" is not a valid URL`, async ({ page }) => {
+        await page.locator('#serp-url').fill(junk);
+        await expect(page.locator('#validation')).not.toContainText('URL format is valid');
+        await expect(page.locator('#validation')).toContainText('URL does not appear to be valid');
+        const crumb = (await page.locator('#preview-desktop .google-breadcrumb').textContent()) || '';
+        expect(crumb).not.toMatch(/javascript|foo|ftp/);
+      });
+    }
+
+    test('an https URL with a host is valid', async ({ page }) => {
+      await page.locator('#serp-url').fill('https://www.example.com/a-page/');
+      await expect(page.locator('#validation')).toContainText('URL format is valid');
+    });
+
+    test('internationalised domains show in Unicode in the breadcrumb and social card', async ({ page }) => {
+      for (const typed of ['https://xn--caf-dma.com/the-menu/', 'https://caf\u00e9.com/the-menu/']) {
+        await page.locator('#serp-url').fill(typed);
+        await expect(page.locator('#preview-desktop .google-breadcrumb')).toHaveText('caf\u00e9.com \u203a The Menu');
+        await expect(page.locator('#preview-social .social-card-domain')).toHaveText('caf\u00e9.com');
+      }
+    });
+  });
+
+  test.describe('keyphrase bolding', () => {
+    test('bolds words with accents, symbols and non-ASCII letters', async ({ page }) => {
+      await page.locator('#serp-title').fill('Caf\u00e9 and C++ and \u00fcber things');
+      await page.locator('#serp-keyphrase').fill('Caf\u00e9 C++ \u00fcber');
+      const bolds = await page.locator('#preview-desktop .google-title b').allInnerTexts();
+      expect(bolds).toEqual(['Caf\u00e9', 'C++', '\u00fcber']);
+    });
+
+    test('does not bold inside a longer word', async ({ page }) => {
+      await page.locator('#serp-title').fill('Caf\u00e9s and \u00fcberall');
+      await page.locator('#serp-keyphrase').fill('Caf\u00e9 \u00fcber');
+      await expect(page.locator('#preview-desktop .google-title b')).toHaveCount(0);
+    });
+  });
+
+  for (const width of [360, 390, 1280]) {
+    test.describe(`layout and accessibility at ${width}px`, () => {
+      test.beforeEach(async ({ page }) => {
+        await page.setViewportSize({ width, height: 800 });
+        await accept(page);
+      });
+
+      test('every tab is fully inside the viewport', async ({ page }) => {
+        const tabs = page.locator('.serp-tab');
+        await expect(tabs).toHaveCount(4);
+        for (let i = 0; i < 4; i++) {
+          const box = await tabs.nth(i).boundingBox();
+          expect(box.x, `tab ${i} left`).toBeGreaterThanOrEqual(0);
+          expect(box.x + box.width, `tab ${i} right`).toBeLessThanOrEqual(width);
+        }
+        const strip = await page.locator('.serp-tabs').evaluate((e) => [e.scrollWidth, e.clientWidth]);
+        expect(strip[0]).toBeLessThanOrEqual(strip[1]);
+      });
+
+      test('a long unbroken word does not widen the page on any tab', async ({ page }) => {
+        const word = 'W'.repeat(120);
+        await page.locator('#serp-title').fill(word);
+        await page.locator('#serp-desc').fill(word);
+        await page.locator('#serp-sitename').fill(word);
+        for (const name of ['Desktop', 'Mobile', 'AI Overview', 'Social Card']) {
+          await page.getByRole('tab', { name }).click();
+          const w = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
+          expect(w[0], `${name} scrollWidth`).toBe(w[1]);
+        }
+      });
+
+      test('every interactive control is at least 44px tall', async ({ page }) => {
+        await page.locator('#serp-fetch-toggle').check();
+        const selectors = [
+          '.serp-tab', '#serp-keyphrase', '#serp-title', '#serp-url', '#serp-date', '#serp-desc',
+          '#serp-sitename', '#serp-image', '#serp-fetch-url', '#serp-fetch-btn', 'label[for="serp-fetch-toggle"]',
+        ];
+        for (const sel of selectors) {
+          const boxes = await page.locator(sel).evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));
+          expect(boxes.length, sel).toBeGreaterThan(0);
+          for (const h of boxes) expect(h, sel).toBeGreaterThanOrEqual(44);
+        }
+        // The checkbox itself sits inside that 44px label, so a tap on the label toggles it.
+        await page.locator('label[for="serp-fetch-toggle"]').click({ position: { x: 100, y: 40 } });
+        await expect(page.locator('#serp-fetch-toggle')).not.toBeChecked();
+      });
+    });
+  }
+
+  test.describe('accessibility', () => {
+    test('the fetch URL input has an accessible name', async ({ page }) => {
+      await accept(page);
+      await page.locator('#serp-fetch-toggle').check();
+      await expect(page.getByRole('textbox', { name: /URL of the page to load metadata from/ })).toBeVisible();
+    });
+
+    test('tabs expose the WAI-ARIA tabs pattern', async ({ page }) => {
+      await accept(page);
+      const names = ['desktop', 'mobile', 'ai-overview', 'social'];
+      for (const name of names) {
+        const tab = page.locator(`#tab-${name}`);
+        await expect(tab).toHaveAttribute('role', 'tab');
+        await expect(tab).toHaveAttribute('aria-controls', `panel-${name}`);
+        const panel = page.locator(`#panel-${name}`);
+        await expect(panel).toHaveAttribute('role', 'tabpanel');
+        await expect(panel).toHaveAttribute('aria-labelledby', `tab-${name}`);
+      }
+      const state = async () => page.locator('.serp-tab').evaluateAll((els) => els.map((e) => `${e.getAttribute('aria-selected')}/${e.tabIndex}`));
+      expect(await state()).toEqual(['true/0', 'false/-1', 'false/-1', 'false/-1']);
+
+      await page.locator('#tab-desktop').focus();
+      await page.keyboard.press('ArrowRight');
+      await expect(page.locator('#tab-mobile')).toBeFocused();
+      await expect(page.locator('#panel-mobile')).toBeVisible();
+      await expect(page.locator('#panel-desktop')).toBeHidden();
+      expect(await state()).toEqual(['false/-1', 'true/0', 'false/-1', 'false/-1']);
+
+      await page.keyboard.press('End');
+      await expect(page.locator('#tab-social')).toBeFocused();
+      await expect(page.locator('#panel-social')).toBeVisible();
+      await page.keyboard.press('ArrowRight');
+      await expect(page.locator('#tab-desktop')).toBeFocused();
+      await page.keyboard.press('ArrowLeft');
+      await expect(page.locator('#tab-social')).toBeFocused();
+      await page.keyboard.press('Home');
+      await expect(page.locator('#tab-desktop')).toBeFocused();
+      expect(await state()).toEqual(['true/0', 'false/-1', 'false/-1', 'false/-1']);
+    });
+
+    test('fetch status and validation are polite live regions', async ({ page }) => {
+      await expect(page.locator('#serp-fetch-status')).toHaveAttribute('aria-live', 'polite');
+      await expect(page.locator('#validation')).toHaveAttribute('aria-live', 'polite');
+    });
+
+    test('there is space between the validation list and the "How this works" heading', async ({ page }) => {
+      const gap = await page.evaluate(() => {
+        const v = document.querySelector('#validation').getBoundingClientRect();
+        const h = document.querySelector('.serp-methodology h3').getBoundingClientRect();
+        return h.top - v.bottom;
+      });
+      expect(gap).toBeGreaterThanOrEqual(24);
     });
   });
 });
