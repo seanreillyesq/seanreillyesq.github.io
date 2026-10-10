@@ -423,20 +423,6 @@ sitemap: true
         </div>
     </div>
 
-    <p class="tool-crosslink small mb-4">Implied ROAS here uses the same costs as break-even ROAS. Test them against actual ad spend: <a href="/roas-calculator/" id="tool-crosslink" data-tool-crosslink="roas-calculator">Check these costs against real ad results</a></p>
-    <script>
-    (function () {
-        // Built at click time so it carries whatever is in the inputs now. Same parameter names on both pages.
-        var link = document.getElementById('tool-crosslink');
-        function build() {
-            var p = new URLSearchParams();
-            var map = {cur: "currency-select", cancel: "cancel-rate", cogs: "cogs-rate", fulfil: "fulfil-rate", margin: "margin-rate"};
-            for (var k in map) { var f = document.getElementById(map[k]); if (f && f.value !== '') p.set(k, f.value); }
-            link.setAttribute('href', '/roas-calculator/?' + p.toString());
-        }
-        ['pointerdown', 'focus', 'click', 'contextmenu', 'touchstart'].forEach(function (ev) { link.addEventListener(ev, build); });
-    })();
-    </script>
     
 
     <!-- Extended payback toggle -->
@@ -481,6 +467,21 @@ sitemap: true
         </div>
     </div>
 </div>
+
+<p class="tool-crosslink small mb-4">Take your currency, return rate, COGS, fulfilment and margin to the ROAS calculator: <a href="/roas-calculator/" id="tool-crosslink" data-tool-crosslink="roas-calculator">Check these costs against real ad results</a></p>
+<script>
+(function () {
+    // Built at click time so it carries whatever is in the inputs now. Same parameter names on both pages.
+    var link = document.getElementById('tool-crosslink');
+    function build() {
+        var p = new URLSearchParams();
+        var map = {cur: "currency-select", cancel: "cancel-rate", cogs: "cogs-rate", fulfil: "fulfil-rate", margin: "margin-rate"};
+        for (var k in map) { var f = document.getElementById(map[k]); if (f && f.value !== '') p.set(k, f.value); }
+        link.setAttribute('href', '/roas-calculator/?' + p.toString());
+    }
+    ['pointerdown', 'focus', 'click', 'contextmenu', 'touchstart'].forEach(function (ev) { link.addEventListener(ev, build); });
+})();
+</script>
 
 <hr class="ce-divider">
 

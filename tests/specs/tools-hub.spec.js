@@ -31,6 +31,14 @@ test.describe('hub page', () => {
     for (const c of await cards.all()) await expect(c.locator('p').first()).not.toBeEmpty();
   });
 
+  test('intro makes no claim that typed input is never sent anywhere', async ({ page }) => {
+    await page.goto('/tools/');
+    const text = await page.locator('.page-content').innerText();
+    expect(text).not.toMatch(/sent anywhere/i);
+    expect(text).toMatch(/calculations run in your browser/i);
+    expect(text).toMatch(/Load from URL/);
+  });
+
   test('footer lists the tools and links to all tools', async ({ page }) => {
     await page.goto('/tools/');
     const links = await page.locator('footer a[href="/roas-calculator/"], footer a[href="/customer-economics/"], footer a[href="/serp-preview/"], footer a[href="/caffeine/"]').count();
@@ -79,6 +87,9 @@ test.describe('route to Sean', () => {
         await expect(cta).toHaveCount(1);
         await expect(cta).toBeVisible();
         await expect(cta.locator('a')).toHaveAttribute('href', '/work-with-me/');
+        // Quiet: no larger than the 16px body text.
+        const px = await cta.locator('p').evaluate((e) => parseFloat(getComputedStyle(e).fontSize));
+        expect(px).toBeLessThanOrEqual(16);
       } else {
         await expect(cta).toHaveCount(0);
       }
