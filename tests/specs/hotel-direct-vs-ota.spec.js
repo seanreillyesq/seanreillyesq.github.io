@@ -571,37 +571,63 @@ test.describe('Hotel direct vs OTA calculator', () => {
     });
   });
 
-  test.describe('tool events', () => {
-    test.beforeEach(async ({ page }) => {
-      await page.addInitScript(() => {
-        window.__events = [];
-        window.toolEvent = (name) => window.__events.push(name);
-      });
+  test.describe('tool events (real helper, via window.dataLayer)', () => {
+    test('tool_calculated fires once after the first real change and not on load; tool_shared on copy link', async ({ browser }) => {
+      const context = await browser.newContext();
+      await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'http://127.0.0.1:4173' });
+      const page = await context.newPage();
+      await page.route(/googletagmanager\.com/, (r) => r.abort());
+      const events = () => page.evaluate(() => (window.dataLayer || []).filter((e) => e && /^tool_/.test(e.event)).map((e) => e.event));
       await page.goto(URL);
       await expect(page.locator('#res-ota-net')).not.toHaveText('--');
-    });
-
-    test('calculated fires once, after the first real change, and not on load', async ({ page }) => {
-      expect(await page.evaluate(() => window.__events)).toEqual([]);
+      await page.waitForTimeout(1200);
+      expect(await events()).toEqual([]);
       await page.locator('#rooms').click();
       await page.locator('#rooms').pressSequentially('120');
       await page.locator('#adr').fill('199');
-      await page.waitForTimeout(1200);
+      await expect.poll(events).toEqual(['tool_calculated']);
       await page.locator('#occ').fill('70');
       await page.waitForTimeout(1200);
-      expect(await page.evaluate(() => window.__events)).toEqual(['calculated']);
-    });
-
-    test('toggling the VAT switch counts as a real change', async ({ page }) => {
-      await page.locator('#vatinc').uncheck();
-      await expect.poll(() => page.evaluate(() => window.__events)).toEqual(['calculated']);
-    });
-
-    test('shared fires on copy link and the status confirms', async ({ page, context }) => {
-      await context.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => {});
+      expect(await events()).toEqual(['tool_calculated']);
       await page.locator('#copy-link').click();
-      expect(await page.evaluate(() => window.__events)).toContain('shared');
-      await expect(page.locator('#copy-status')).toHaveText(/Link copied|Could not copy/);
+      await expect.poll(events).toEqual(['tool_calculated', 'tool_shared']);
+      const shared = await page.evaluate(() => window.dataLayer.find((e) => e.event === 'tool_shared'));
+      expect(shared.tool).toBe('hotel-direct-vs-ota');
+      expect(shared.method).toBe('copy_link');
+      await context.close();
+    });
+
+    test('toggling the VAT switch counts as a real change', async ({ browser }) => {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await page.route(/googletagmanager\.com/, (r) => r.abort());
+      await page.goto(URL);
+      await expect(page.locator('#res-ota-net')).not.toHaveText('--');
+      await page.locator('#vatinc').uncheck();
+      await expect.poll(() => page.evaluate(() => (window.dataLayer || []).filter((e) => /^tool_/.test(e.event || '')).map((e) => e.event))).toEqual(['tool_calculated']);
+      await context.close();
+    });
+
+    test('the Work with me link sends tool_cta_click', async ({ browser }) => {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      await page.route(/googletagmanager\.com/, (r) => r.abort());
+      await page.goto(URL);
+      await page.evaluate(() => document.querySelector('a[data-tool-cta]').addEventListener('click', (e) => e.preventDefault()));
+      await page.locator('a[data-tool-cta]').click();
+      expect(await page.evaluate(() => window.dataLayer.map((e) => e.event))).toContain('tool_cta_click');
+      await context.close();
+    });
+
+    test('the page works when window.toolEvent does not exist', async ({ page, pageErrors }) => {
+      await page.route(/tool-events\.js/, (r) => r.fulfill({ status: 200, contentType: 'application/javascript', body: '' }));
+      await page.goto(URL);
+      expect(await page.evaluate(() => typeof window.toolEvent)).toBe('undefined');
+      await page.locator('#adr').fill('199');
+      await page.locator('#copy-link').click();
+      await page.waitForTimeout(1000);
+      await expect(page.locator('#res-ota-net')).toHaveText(gbp(model({ adr: 199 }).otaNet, 2));
+      expect(pageErrors).toEqual([]);
     });
   });
 
@@ -668,12 +694,29 @@ test.describe('Hotel direct vs OTA calculator', () => {
       expect(await page.locator('#section-results [aria-live]').count()).toBe(2); // announcement + copy status only
     });
 
-    test('the tool-cta marker sits on its own line directly below the results section', () => {
-      const src = fs.readFileSync(path.join(__dirname, '..', '..', 'hotel-direct-vs-ota.html'), 'utf8').split('\n');
-      const i = src.findIndex((l) => l.trim() === '<!-- tool-cta -->');
-      expect(i).toBeGreaterThan(0);
-      expect(src[i]).toBe('<!-- tool-cta -->');
-      expect(src[i - 1]).toBe('</div>');
+    test('the Work with me line sits directly below the results section, and the hub links are wired', () => {
+      const src = fs.readFileSync(path.join(__dirname, '..', '..', 'hotel-direct-vs-ota.html'), 'utf8');
+      expect(src).toMatch(/<\/div>\n\{% include tool-cta\.html text="[^"]+that is what I do\." %\}\n/);
+      expect(src.indexOf('id="section-results"')).toBeLessThan(src.indexOf('include tool-cta'));
+      expect(src).not.toMatch(/<!-- tool-cta -->/);
+      expect(src).toMatch(/---\n\n<script src="\/js\/tool-events\.js" defer><\/script>\n/);
+      expect(src).toMatch(/<p class="text-muted small mb-4 tool-more"><a href="\/tools\/">More tools<\/a><\/p>\n\n<!-- Latest Writing -->/);
+    });
+
+    test('the built page shows the Work with me line and the More tools link', async ({ page }) => {
+      await expect(page.locator('aside.tool-cta a[href="/work-with-me/"]')).toBeVisible();
+      await expect(page.locator('aside.tool-cta')).toContainText('that is what I do.');
+      await expect(page.locator('.tool-more a[href="/tools/"]')).toBeVisible();
+    });
+
+    test('front matter carries the tool fields', () => {
+      const src = fs.readFileSync(path.join(__dirname, '..', '..', 'hotel-direct-vs-ota.html'), 'utf8');
+      const fm = src.split('---')[1];
+      for (const key of ['layout: page', 'permalink: /hotel-direct-vs-ota/', 'hidden: true', 'sitemap: true', 'tool: true', 'tool_group: business', 'tool_order: 6', 'header-img: "img/home-bg.jpg"']) {
+        expect(fm).toContain(key);
+      }
+      expect(fm).toMatch(/tool_summary: ".+"/);
+      expect(fm.match(/meta-description: "(.+)"/)[1].length).toBeLessThan(155);
     });
 
     test('how this works lists the formulas and the caveats', async ({ page }) => {

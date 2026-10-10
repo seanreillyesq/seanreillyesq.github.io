@@ -14,6 +14,8 @@ tool_summary: "What is it worth to move bookings from Booking.com and Expedia to
 tool_order: 6
 ---
 
+<script src="/js/tool-events.js" defer></script>
+
 <style>
 .hv-intro { margin-bottom: 1.5rem; }
 .hv-intro p { margin-bottom: 0.75rem; }
@@ -372,7 +374,7 @@ tool_order: 6
         <span class="hv-copy-status" id="copy-status" role="status" aria-live="polite"></span>
     </div>
 </div>
-<!-- tool-cta -->
+{% include tool-cta.html text="A saving on paper only counts if the direct channel can win those bookings at the cost you assumed. If you want help working out whether it can, that is what I do." %}
 
 <hr class="hv-divider">
 
@@ -402,6 +404,8 @@ tool_order: 6
     </ul>
     <p>Nothing you type leaves your browser. The link button copies a web address that contains your inputs, so anyone you send it to sees the same result.</p>
 </div>
+
+<p class="text-muted small mb-4 tool-more"><a href="/tools/">More tools</a></p>
 
 <!-- Latest Writing -->
 <section class="py-5 border-top" style="background-color: var(--color-surface);">
@@ -887,7 +891,7 @@ tool_order: 6
     }
 
     el('copy-link').addEventListener('click', function() {
-        if (window.toolEvent) window.toolEvent('shared');
+        if (window.toolEvent) window.toolEvent('shared', { method: 'copy_link' });
         var status = el('copy-status');
         var done = function(msg) { status.textContent = msg; };
         var p;
