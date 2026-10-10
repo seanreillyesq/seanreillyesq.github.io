@@ -56,6 +56,23 @@ tool_order: 5
     min-height: 44px;
     font-size: 1rem;
 }
+/* One strong focus ring around the whole field, addon included */
+.pbe-inputs .input-group { border-radius: 0.375rem; }
+.pbe-inputs .input-group:focus-within {
+    outline: 3px solid #2F5F8F;
+    outline-offset: 1px;
+}
+.pbe-inputs .input-group > .form-control:focus {
+    box-shadow: none;
+    outline: none;
+    border-color: #2F5F8F;
+}
+.pbe-inputs .row > [class*="col"] > .form-control:focus {
+    box-shadow: none;
+    outline: 3px solid #2F5F8F;
+    outline-offset: 1px;
+    border-color: #2F5F8F;
+}
 .pbe-inputs .input-group > .form-control:not(:first-child) { border-left: 0; }
 .pbe-inputs .input-group > .form-control:not(:last-child) { border-right: 0; }
 .pbe-inputs .input-group-text {
@@ -153,9 +170,9 @@ tool_order: 5
     justify-content: center;
     line-height: 1.3;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     color: var(--color-accent, #4A7BA7);
     margin-bottom: 0.125rem;
 }
@@ -192,7 +209,7 @@ tool_order: 5
     color: var(--color-text-muted, #6B7280);
     padding: 0 0 0.5rem;
 }
-.pbe-table th, .pbe-table td {
+.pbe-table th, .pbe-table td, .pbe-table tbody td {
     padding: 0.5rem 0.375rem;
     text-align: right;
     white-space: nowrap;
@@ -200,15 +217,18 @@ tool_order: 5
 }
 .pbe-table th:first-child, .pbe-table td:first-child { text-align: left; }
 .pbe-table thead th {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6875rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     color: var(--color-accent, #4A7BA7);
     white-space: normal;
     vertical-align: bottom;
     line-height: 1.3;
 }
+.pbe-table thead th { text-align: right; padding: 0.5rem 0.375rem; }
+.pbe-table thead th:first-child { text-align: left; }
 .pbe-table tr.pbe-chosen td, .pbe-table tr.pbe-chosen th {
     background: #e8f0f8;
     font-weight: 800;
@@ -237,10 +257,10 @@ tool_order: 5
 
 @media (max-width: 575.98px) {
     .pbe-card-value { font-size: clamp(0.9375rem, 4.6vw, 1.375rem); }
-    .pbe-card-label { font-size: 0.5625rem; letter-spacing: 0.5px; }
+    .pbe-card-label { min-height: 3.9em; }
     .pbe-table { font-size: 0.875rem; }
-    .pbe-table th, .pbe-table td { padding: 0.5rem 0.25rem; }
-    .pbe-table thead th { font-size: 0.6875rem; letter-spacing: 0; }
+    .pbe-table th, .pbe-table td, .pbe-table tbody td { padding: 0.5rem 0.25rem; }
+    .pbe-table thead th { font-size: 0.75rem; letter-spacing: 0; padding: 0.5rem 0.25rem; }
 }
 </style>
 
@@ -284,7 +304,7 @@ tool_order: 5
                 <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="vat-rate" value="20" aria-describedby="vat-rate-hint vat-rate-note">
                 <span class="input-group-text">%</span>
             </div>
-            <div class="pbe-hint" id="vat-rate-hint">UK standard rate for the 2026/27 tax year is 20%</div>
+            <div class="pbe-hint" id="vat-rate-hint">UK standard rate is 20%</div>
             <div class="pbe-note" id="vat-rate-note"></div>
         </div>
     </div>
@@ -483,14 +503,15 @@ tool_order: 5
         <li>Product cost and fulfilment per unit stay the same whatever you sell. There are no volume discounts from suppliers, no stock-outs and no extra shipping costs for a busier warehouse.</li>
         <li>If you enter gross margin instead of cost, the margin is measured on the price without VAT at full price and converted to a cost per unit. That cost then stays fixed when the discount applies.</li>
         <li>The figures are per unit. If shipping is charged per order and orders hold several units, use an average per unit.</li>
-        <li>The VAT rate is editable. 20% is the UK standard rate for the 2026/27 tax year; reduced and zero rates apply to some goods, and other countries differ. This is not tax advice.</li>
+        <li>The VAT rate is editable. The UK standard rate is 20%; reduced and zero rates apply to some goods, and other countries differ. This is not tax advice.</li>
         <li>The table and the headline use the same marketing assumption: if you enter marketing spend and normal units, the uplift includes the cost of that spend.</li>
     </ul>
     <p><strong>Not modelled, but they matter:</strong></p>
     <ul>
         <li><strong>Pull-forward and subsidised regulars.</strong> Some of the people who buy on promotion would have bought at full price anyway. You give them the discount and gain no extra sale. Others buy early and then buy less later.</li>
         <li><strong>Brand and reference price.</strong> Frequent discounting teaches customers what the real price is. The next sale has to be bigger, and full price gets harder to hold.</li>
-        <li><strong>Returns.</strong> Promotional orders often come back more than full-price ones, which eats the contribution you worked so hard to match.</li>
+        <li><strong>Returns.</strong> Promotional orders often come back more than full-price ones, which reduces the contribution you are trying to match.</li>
+        <li><strong>Delivery charges.</strong> Shipping charged to the customer and free-delivery thresholds are not modelled. A discount can push baskets over or under a threshold, which changes what you collect and what you pay to ship.</li>
         <li><strong>Halo and cannibalisation.</strong> A promotion can lift sales of other products, which helps, or pull sales away from products that are not discounted, which hurts. Neither is counted here.</li>
     </ul>
     <p>Treat the required uplift as the minimum you need, not a forecast. If it looks more than you could plausibly sell, the discount is probably too deep for the margin. Nothing you type leaves your browser; the link in the address bar is the only place the numbers are kept.</p>
@@ -599,7 +620,8 @@ tool_order: 5
             price: value('price'),
             vatOn: el('vat-incl').checked,
             vat: value('vat'),
-            costMode: el('mode-margin').checked ? 'margin' : 'cost',
+            // While a mode switch is waiting for a price, the field the user typed in stays the source
+            costMode: pendingFrom || (el('mode-margin').checked ? 'margin' : 'cost'),
             cost: value('cost'),
             margin: value('margin'),
             fee: value('fee'),
@@ -696,7 +718,7 @@ tool_order: 5
     }
 
     function per100(frac) {
-        var n = Math.round(frac * 100);
+        var n = Math.ceil(frac * 100 - 1e-9);
         if (n >= 1e6) return 'over 1,000,000';
         return '+' + n.toLocaleString('en-GB');
     }
@@ -746,7 +768,7 @@ tool_order: 5
         }
         if (r.impossible) {
             var deep = r.dmax !== null
-                ? ' The deepest discount that still leaves any contribution is about ' + plainPct(r.dmax) + ',. Discounts shallower than that leave some contribution, but the uplift needed climbs steeply as you approach it - see the table.'
+                ? ' The deepest discount that still leaves any contribution is about ' + plainPct(r.dmax) + '. Discounts shallower than that leave some contribution, but the uplift needed climbs steeply as you approach it - see the table.'
                 : '';
             return {
                 cls: 'bad', title: 'No volume can pay for this discount',
@@ -767,6 +789,15 @@ tool_order: 5
                 cls: 'warn', title: 'The discount does not cut your contribution',
                 body: 'Fees take at least as much of each price as the sale brings in, so each unit contributes ' + m(money(r.ca, 2)) + ' at ' + plainPct(s.disc) + ' off. Check the fee rate before relying on this.',
                 summary: 'At ' + plainPct(s.disc) + ' off each unit contributes ' + money(r.ca, 2) + ', no less than before.'
+            };
+        }
+        if (s.disc <= 0) {
+            // No discount: the only thing to recover is the marketing spend
+            return {
+                cls: 'warn', title: 'Sell ' + pct(req.head).replace('+', '') + ' more to cover the marketing',
+                body: 'With no discount each unit still contributes ' + m(money(r.cb, 2)) + ', so ' + m(money(s.mkt, 0)) + ' of marketing needs ' +
+                    whole(r.unitsNeeded) + ' units against ' + whole(s.units) + ' normally, ' + per100(req.head).replace('+', '') + ' extra for every 100, just to pay for itself.',
+                summary: 'With no discount, ' + money(s.mkt, 0) + ' of marketing needs ' + pct(req.head).replace('+', '') + ' more units to pay for itself.'
             };
         }
         var mult = (r.cb / r.ca);
@@ -790,7 +821,8 @@ tool_order: 5
         }
         var need = r.req ? ' The uplift needed to break even is ' + pct(r.req.head) + '.' : ' No uplift can break even at this discount.';
         var ch = r.change;
-        var small = Math.abs(ch) < 0.5;
+        // "About break-even" means within 1% of the contribution to match
+        var small = Math.abs(r.target) > EPS && Math.abs(ch) < 0.01 * Math.abs(r.target);
         if (small) {
             return { cls: 'warn', title: 'About break-even', body: 'An uplift of ' + plainPct(s.uplift) + ' leaves you roughly where you started.' + need + ' This assumes every extra sale is new demand.', summary: 'An uplift of ' + plainPct(s.uplift) + ' is about break-even against doing nothing.' };
         }
@@ -801,8 +833,10 @@ tool_order: 5
     }
 
     function renderCards(s, r) {
+        var panel = el('expected-panel');
         if (!r.ok) {
-            ['cb', 'ca', 'uplift', 'extra', 'units', 'target'].forEach(function(k) { setCard(k, '-', '', ''); });
+            ['cb', 'ca', 'uplift', 'extra', 'units', 'target', 'change', 'with'].forEach(function(k) { setCard(k, '-', '', ''); });
+            panel.hidden = true;
             return;
         }
         setCard('cb', money(r.cb, 2, true), colour(r.cb) === 'pbe-neg' ? 'pbe-neg' : '');
@@ -824,7 +858,6 @@ tool_order: 5
             setCard('target', 'Add units', '', 'normal units sold');
         }
 
-        var panel = el('expected-panel');
         panel.hidden = s.uplift === null;
         if (s.uplift !== null) {
             if (r.hasUnits) {
@@ -858,7 +891,7 @@ tool_order: 5
             var req = r.required(ca);
             var chosen = d === s.disc;
             var label = plainPct(d) + (chosen ? '<span class="visually-hidden"> (your discount)</span>' : '');
-            var tr = '<tr' + (chosen ? ' class="pbe-chosen" aria-current="true"' : '') + '><th scope="row">' + label + '</th><td>' + money(ca, 2) + '</td>';
+            var tr = '<tr' + (chosen ? ' class="pbe-chosen" aria-current="true"' : '') + '><th scope="row">' + label + '</th><td>' + money(ca, Math.abs(ca) >= 1000 ? 0 : 2) + '</td>';
             if (req) tr += '<td>' + pct(req.head) + '</td><td>' + per100(req.head) + '</td>';
             else tr += '<td class="pbe-no" colspan="2">Not possible</td>';
             return tr + '</tr>';
@@ -882,13 +915,17 @@ tool_order: 5
     function updateHints(s, r) {
         var costHint = el('cost-hint');
         var marginHint = el('margin-hint');
-        if (!r.ok) { costHint.textContent = ''; marginHint.textContent = ''; return; }
+        if (!r.ok) {
+            costHint.textContent = pendingFrom === 'margin' ? 'Your margin will be turned into a cost once there is a price' : '';
+            marginHint.textContent = pendingFrom === 'cost' ? 'Your cost will be turned into a margin once there is a price' : '';
+            return;
+        }
         if (s.costMode === 'cost') {
             marginHint.textContent = '';
             costHint.textContent = r.ex > 0 ? 'Gross margin at full price: ' + plainPct(((r.ex - r.costUnit) / r.ex) * 100) : '';
         } else {
             costHint.textContent = '';
-            marginHint.textContent = 'Works out as a cost of ' + money(r.costUnit, 2) + ' per unit, ex VAT';
+            marginHint.textContent = 'Works out as a cost of ' + money(r.costUnit, 2) + ' per unit, ex VAT. If you change VAT, this cost stays fixed and the margin updates.';
         }
     }
 
@@ -903,7 +940,7 @@ tool_order: 5
         el('margin-group').hidden = !margin;
         input('vat').disabled = !el('vat-incl').checked;
         el('vat-rate-hint').textContent = el('vat-incl').checked
-            ? 'UK standard rate for the 2026/27 tax year is 20%'
+            ? 'UK standard rate is 20%'
             : 'Not used: prices are treated as ex VAT';
         el('fee-hint').textContent = el('vat-incl').checked ? 'Charged on the price including VAT' : 'Charged on the price as entered';
         el('ship-hint').textContent = 'Per unit, ex VAT';
@@ -916,18 +953,20 @@ tool_order: 5
     function writeURL() {
         var s = readState();
         var p = new URLSearchParams();
+        // Blank or unreadable fields are left out so a link never turns them into a 0
+        var put = function(key, v) { if (parseRaw(input(key).value).state === 'ok' && v !== null) p.set(FIELDS[key].param, v); };
         p.set('cur', currency);
-        p.set('price', s.price);
+        put('price', s.price);
         if (!s.vatOn) p.set('vatincl', '0');
-        p.set('vat', s.vat);
+        put('vat', s.vat);
         p.set('mode', s.costMode);
-        if (s.costMode === 'margin') p.set('margin', s.margin); else p.set('cost', s.cost);
-        p.set('fee', s.fee);
-        p.set('ship', s.ship);
-        p.set('disc', s.disc);
-        p.set('units', s.units);
-        if (s.uplift !== null) p.set('uplift', s.uplift);
-        if (s.mkt > 0) p.set('mkt', s.mkt);
+        put(s.costMode === 'margin' ? 'margin' : 'cost', s.costMode === 'margin' ? s.margin : s.cost);
+        put('fee', s.fee);
+        put('ship', s.ship);
+        put('disc', s.disc);
+        put('units', s.units);
+        put('uplift', s.uplift);
+        if (s.mkt > 0) put('mkt', s.mkt);
         try { history.replaceState(null, '', '?' + p.toString()); } catch (e) { /* some browsers rate-limit replaceState */ }
     }
 
@@ -978,8 +1017,37 @@ tool_order: 5
         }, DEBOUNCE_EVENT);
     }
 
-    function update(userChange) {
+    // Cost and margin conversion. The product cost per unit is ex VAT and does not move with the VAT setting.
+    var pendingFrom = null;   // set when a mode switch could not convert yet (no valid price)
+    var heldCost = null;      // last known product cost per unit, ex VAT
+
+    function exPrice(s) { return s.vatOn ? s.price / (1 + s.vat / 100) : s.price; }
+
+    function setMarginFromCost(s, cost) {
+        var ex = exPrice(s);
+        var mg = ((ex - cost) / ex) * 100;
+        input('margin').value = String(+Math.max(FIELDS.margin.min, Math.min(FIELDS.margin.max, mg)).toFixed(4));
+    }
+
+    function setCostFromMargin(s) {
+        input('cost').value = String(+Math.max(0, exPrice(s) * (1 - s.margin / 100)).toFixed(4));
+    }
+
+    // Fill the visible field from the typed one once there is a price. The typed field stays the
+    // source until the user edits the visible one, so a price typed digit by digit cannot corrupt it.
+    function syncPending() {
+        if (!pendingFrom) return;
+        var s = readState();
+        if (!(s.price > 0)) return;
+        if (pendingFrom === 'cost') setMarginFromCost(s, s.cost); else setCostFromMargin(s);
+        checkNote('cost');
+        checkNote('margin');
+    }
+
+    function update(userChange, keepHeld) {
+        syncPending();
         var out = renderAll();
+        if (!keepHeld && out.r.ok) heldCost = out.r.costUnit;
         scheduleLive(out.summary);
         scheduleURL();
         if (userChange) scheduleCalculated();
@@ -987,14 +1055,18 @@ tool_order: 5
 
     // Switching how cost is entered keeps the same cost: the other field is filled in to match.
     function switchCostMode() {
+        var toMargin = el('mode-margin').checked;
         var s = readState();
-        var r = calc(s);
-        if (r.ok) {
-            if (s.costMode === 'margin') {
-                if (r.ex > 0) input('margin').value = String(+Math.max(FIELDS.margin.min, Math.min(FIELDS.margin.max, ((r.ex - s.cost) / r.ex) * 100)).toFixed(1));
-            } else {
-                input('cost').value = String(+Math.max(0, r.ex * (1 - s.margin / 100)).toFixed(2));
-            }
+        if (pendingFrom === (toMargin ? 'margin' : 'cost')) {
+            // Back to the field the typed figure is in: nothing to convert
+            pendingFrom = null;
+        } else if (s.price > 0) {
+            // Convert from the field the user was just using, at the current price and VAT
+            if (toMargin) setMarginFromCost(s, s.cost); else setCostFromMargin(s);
+            pendingFrom = null;
+        } else if (!pendingFrom) {
+            // No price to convert with: leave the typed figure alone and convert when a price arrives
+            pendingFrom = toMargin ? 'cost' : 'margin';
         }
         checkNote('cost');
         checkNote('margin');
@@ -1016,18 +1088,41 @@ tool_order: 5
         }
     }
 
+    // In margin mode, a VAT change keeps the product cost and recomputes the margin shown
+    function holdCostForVat() {
+        if (!el('mode-margin').checked || heldCost === null || pendingFrom) return;
+        var s = readState();
+        if (s.price > 0) setMarginFromCost(s, heldCost);
+    }
+
+    function onField(key, committed) {
+        // The user is editing a field by hand, so a pending conversion into it no longer applies
+        if (pendingFrom && ((key === 'cost' && pendingFrom === 'margin') || (key === 'margin' && pendingFrom === 'cost'))) pendingFrom = null;
+        var keepHeld = false;
+        if (key === 'vat') {
+            if (el('vat-incl').checked) {
+                // read the new VAT value without committing it to the margin field yet
+                holdCostForVat();
+                keepHeld = true;
+            }
+        }
+        checkNote(key);
+        if (committed) tidy(key);
+        update(true, keepHeld);
+    }
+
     function bind() {
         Object.keys(FIELDS).forEach(function(key) {
             var e = input(key);
-            e.addEventListener('input', function() { checkNote(key); update(true); });
-            e.addEventListener('change', function() { checkNote(key); tidy(key); update(true); });
+            e.addEventListener('input', function() { onField(key, false); });
+            e.addEventListener('change', function() { onField(key, true); });
         });
         el('currency-select').addEventListener('change', function() {
             currency = this.value;
             applyCurrency();
             update(true);
         });
-        el('vat-incl').addEventListener('change', function() { applyModes(); update(true); });
+        el('vat-incl').addEventListener('change', function() { holdCostForVat(); applyModes(); update(true, true); });
         el('mode-cost').addEventListener('change', switchCostMode);
         el('mode-margin').addEventListener('change', switchCostMode);
         el('share-btn').addEventListener('click', copyLink);
@@ -1040,6 +1135,7 @@ tool_order: 5
         applyModes();
         bind();
         var out = renderAll();
+        if (out.r.ok) heldCost = out.r.costUnit;
         lastLive = out.summary;
         el('live-summary').textContent = out.summary;
     }

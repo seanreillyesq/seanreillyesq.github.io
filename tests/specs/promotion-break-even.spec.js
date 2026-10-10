@@ -32,7 +32,8 @@ test.describe('Promotion break-even calculator', () => {
       await expect(page.locator('#res-ca')).toHaveText('£20.07');
       await expect(page.locator('#res-uplift')).toHaveText('+81.1%');
       await expect(page.locator('#sub-uplift')).toHaveText('1.81x the units');
-      await expect(page.locator('#res-extra')).toHaveText('+81');
+      // 81.07 per 100, rounded up like the units card (1,810.66 -> 1,811)
+      await expect(page.locator('#res-extra')).toHaveText('+82');
       // 1000 x 1.81066 = 1810.66, rounded up to whole units
       await expect(page.locator('#res-units')).toHaveText('1,811');
       // 1000 x 36.3333
@@ -114,6 +115,11 @@ test.describe('Promotion break-even calculator', () => {
       await expect(rows.nth(1).locator('td').nth(1)).toHaveText('+28.8%');
       // 40%: 50 - 46.2 = 3.8 -> 9.5614
       await expect(rows.nth(7).locator('td').nth(1)).toHaveText('+856.1%');
+      // per 100 is rounded up: 12.60 -> 13, 28.84 -> 29, 81.07 -> 82, 856.14 -> 857
+      await expect(rows.nth(0).locator('td').nth(2)).toHaveText('+13');
+      await expect(rows.nth(1).locator('td').nth(2)).toHaveText('+29');
+      await expect(page.locator('tr.pbe-chosen td').nth(2)).toHaveText('+82');
+      await expect(rows.nth(7).locator('td').nth(2)).toHaveText('+857');
     });
 
     test('deep discounts that cannot be recovered are marked as such', async ({ page }) => {
@@ -334,7 +340,7 @@ test.describe('Promotion break-even calculator', () => {
         });
         expect(t.scrollW).toBeLessThanOrEqual(t.wrapW);
         expect(t.tableW).toBeLessThanOrEqual(t.wrapW + 1);
-        expect(t.minFont).toBeGreaterThanOrEqual(11);
+        expect(t.minFont).toBeGreaterThanOrEqual(12);
         expect(t.clipped).toBe(0);
         expect(t.rowsWrapped).toBe(0);
       });
@@ -538,9 +544,236 @@ test.describe('Promotion break-even calculator', () => {
 
     test('the explainer names the caveats and the VAT tax year', async ({ page }) => {
       const how = await txt(page, '#how-this-works');
-      for (const phrase of ['Pull-forward', 'Brand and reference price', 'Returns', 'Halo', '2026/27', 'contribution before / contribution after']) {
+      for (const phrase of ['Pull-forward', 'Brand and reference price', 'Returns', 'Halo', 'The UK standard rate is 20%', 'contribution before / contribution after', 'Shipping charged to the customer and free-delivery thresholds are not modelled']) {
         expect(how).toContain(phrase);
       }
+      expect(how).not.toContain('worked so hard');
+      expect(how).not.toContain('tax year');
+      expect(await txt(page, '#vat-rate-hint')).toBe('UK standard rate is 20%');
+    });
+  });
+
+  test.describe('review fixes', () => {
+    test('expected-uplift panel is hidden and reset when the price is cleared', async ({ page }) => {
+      await setField(page, '#uplift', '60');
+      await expect(page.locator('#expected-panel')).toBeVisible();
+      await expect(page.locator('#res-change')).toHaveText('-£4,227');
+      await setField(page, '#price', '');
+      await expect(page.locator('#verdict')).toContainText('Enter a selling price');
+      await expect(page.locator('#expected-panel')).toBeHidden();
+      await expect(page.locator('#res-change')).toHaveText('-');
+      await setField(page, '#uplift', '');
+      await expect(page.locator('#expected-panel')).toBeHidden();
+      await setField(page, '#price', '100');
+      await expect(page.locator('#expected-panel')).toBeHidden();
+      await setField(page, '#uplift', '60');
+      await expect(page.locator('#expected-panel')).toBeVisible();
+      await expect(page.locator('#res-change')).toHaveText('-£4,227');
+    });
+
+    test('switching cost mode with no price keeps the typed cost and converts when the price returns', async ({ page }) => {
+      await setField(page, '#cost', '55');
+      await setField(page, '#price', '');
+      await page.locator('label[for="mode-margin"]').click();
+      await expect(page.locator('#cost')).toHaveValue('55');
+      await expect(page.locator('#margin-hint')).toContainText('turned into a margin');
+      // type the price key by key: the typed cost must survive the partial prices
+      await page.locator('#price').pressSequentially('100', { delay: 20 });
+      // ex 83.3333; margin (83.3333 - 55) / 83.3333 = 34%
+      await expect(page.locator('#margin')).toHaveValue('34');
+      // 83.3333 - 55 - 2 - 5 = 21.3333
+      await expect(page.locator('#res-cb')).toHaveText('£21.33');
+      await page.locator('label[for="mode-cost"]').click();
+      await expect(page.locator('#cost')).toHaveValue('55');
+      await expect(page.locator('#res-cb')).toHaveText('£21.33');
+    });
+
+    test('the same holds from margin to cost', async ({ page }) => {
+      await page.locator('label[for="mode-margin"]').click();
+      await setField(page, '#margin', '40');
+      await setField(page, '#price', '');
+      await page.locator('label[for="mode-cost"]').click();
+      await expect(page.locator('#margin')).toHaveValue('40');
+      await expect(page.locator('#cost-hint')).toContainText('turned into a cost');
+      await setField(page, '#price', '100');
+      // cost = 83.3333 x 0.6 = 50
+      await expect(page.locator('#cost')).toHaveValue('50');
+      await expect(page.locator('#res-cb')).toHaveText('£26.33');
+    });
+
+    test('no stray punctuation in the no-volume verdict', async ({ page }) => {
+      await setField(page, '#disc', '60');
+      const v = await txt(page, '#verdict');
+      expect(v).toContain('about 44.67%.');
+      expect(v).not.toMatch(/,\s*\./);
+      expect(v).not.toMatch(/\.\./);
+    });
+
+    test('0% discount with marketing reads as a marketing-only sentence', async ({ page }) => {
+      await setField(page, '#disc', '0');
+      await setField(page, '#mkt', '5000');
+      const v = await txt(page, '#verdict');
+      // 5000 / 36,333.33 = 13.76% -> 138 units on 1000? (1,137.6 -> 1,138 units)
+      expect(v).toContain('13.8%');
+      expect(v).toContain('1,138 units against 1,000');
+      expect(v).toContain('marketing');
+      expect(v).not.toContain('instead of');
+      expect(v).not.toContain('1.00 times');
+      await expect(page.locator('#res-uplift')).toHaveText('+13.8%');
+    });
+
+    for (const width of [360, 1280]) {
+      test(`table headers line up with their columns at ${width}px`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 800 });
+        await setField(page, '#disc', '17.5');
+        const cols = await page.evaluate(() => {
+          const edge = (cell) => { const r = document.createRange(); r.selectNodeContents(cell); const b = r.getBoundingClientRect(); return { l: b.left, r: b.right }; };
+          const heads = Array.from(document.querySelectorAll('#discount-table thead th'));
+          const first = Array.from(document.querySelectorAll('#discount-tbody tr:not(.pbe-chosen)'))[0];
+          const cells = Array.from(first.children);
+          return heads.map((h, i) => ({ h: edge(h), c: edge(cells[i]), align: getComputedStyle(h).textAlign, cellAlign: getComputedStyle(cells[i]).textAlign }));
+        });
+        cols.forEach((c, i) => {
+          expect(c.align, 'col ' + i).toBe(c.cellAlign);
+          if (i === 0) expect(Math.abs(c.h.l - c.c.l), 'left edge col 0').toBeLessThanOrEqual(2);
+          else expect(Math.abs(c.h.r - c.c.r), 'right edge col ' + i).toBeLessThanOrEqual(2);
+        });
+      });
+    }
+
+    test('the table fits its container at 360px with six-figure prices', async ({ page }) => {
+      await page.setViewportSize({ width: 360, height: 800 });
+      await setField(page, '#price', '999999');
+      await setField(page, '#cost', '1000');
+      await setField(page, '#disc', '17.5');
+      await setField(page, '#mkt', '50000');
+      const t = await page.evaluate(() => {
+        const table = document.getElementById('discount-table');
+        const wrap = table.parentElement;
+        return { tableW: table.getBoundingClientRect().width, wrapW: wrap.clientWidth, scrollW: wrap.scrollWidth, page: document.documentElement.scrollWidth - document.documentElement.clientWidth };
+      });
+      expect(t.tableW).toBeLessThanOrEqual(t.wrapW);
+      expect(t.scrollW).toBeLessThanOrEqual(t.wrapW);
+      expect(t.page).toBeLessThanOrEqual(0);
+    });
+
+    test('a blank or unreadable field is left out of the URL and comes back as the default, not 0', async ({ page }) => {
+      await setField(page, '#disc', '30');
+      await setField(page, '#price', '');
+      // typed but not yet blurred, so it is still unreadable text when the URL is written
+      await typeInto(page, '#fee', 'abc');
+      await expect.poll(() => /disc=30/.test(page.url()) && !/[?&]fee=/.test(page.url()) && !/[?&]price=/.test(page.url())).toBe(true);
+      const url = page.url();
+      expect(url).toMatch(/disc=30/);
+      expect(url).not.toMatch(/[?&]price=/);
+      expect(url).not.toMatch(/[?&]fee=/);
+      expect(url).not.toContain('price=0');
+      await page.goto(url);
+      await expect(page.locator('#price')).toHaveValue('100');
+      await expect(page.locator('#fee')).toHaveValue('2');
+      await expect(page.locator('#price-note')).toHaveText('');
+    });
+
+    test('margin mode: VAT changes hold the product cost and move the margin', async ({ page }) => {
+      await page.locator('label[for="mode-margin"]').click();
+      await expect(page.locator('#margin')).toHaveValue('52');
+      await page.locator('label[for="vat-incl"]').click();
+      // cost stays 40: margin on 100 ex VAT is 60%; before 100 - 40 - 2 - 5 = 53
+      await expect(page.locator('#margin')).toHaveValue('60');
+      await expect(page.locator('#res-cb')).toHaveText('£53.00');
+      await expect(page.locator('#margin-hint')).toContainText('£40.00');
+      await expect(page.locator('#margin-hint')).toContainText('stays fixed');
+      await page.locator('label[for="vat-incl"]').click();
+      await expect(page.locator('#margin')).toHaveValue('52');
+      await expect(page.locator('#res-cb')).toHaveText('£36.33');
+      // a different VAT rate typed key by key: ex 95.2381, margin (95.2381 - 40) / 95.2381 = 58%
+      await page.locator('#vat-rate').fill('');
+      await page.locator('#vat-rate').pressSequentially('5', { delay: 20 });
+      await expect(page.locator('#vat-rate')).toHaveValue('5');
+      await expect(page.locator('#margin')).toHaveValue('58');
+      await expect(page.locator('#res-cb')).toHaveText('£48.24');
+    });
+
+    test('margin mode: editing the margin then changing VAT still holds the resulting cost', async ({ page }) => {
+      await page.locator('label[for="mode-margin"]').click();
+      await setField(page, '#margin', '40');
+      // cost 50; VAT off: margin (100 - 50) / 100 = 50%
+      await page.locator('label[for="vat-incl"]').click();
+      await expect(page.locator('#margin')).toHaveValue('50');
+      await expect(page.locator('#res-cb')).toHaveText('£43.00');
+    });
+
+    test('about break-even is within 1 percent of the contribution to match', async ({ page }) => {
+      // contribution to match 36,333.33; 1% is 363.33; contribution per unit after is 20.0667
+      await setField(page, '#uplift', '80');
+      // 1,800 x 20.0667 = 36,120 -> -213: inside 1%
+      await expect(page.locator('#verdict-expected')).toContainText('About break-even');
+      await setField(page, '#uplift', '82');
+      // 1,820 x 20.0667 = 36,521 -> +188: inside 1%
+      await expect(page.locator('#verdict-expected')).toContainText('About break-even');
+      await setField(page, '#uplift', '83');
+      // 1,830 x 20.0667 = 36,722 -> +389: outside 1%
+      await expect(page.locator('#verdict-expected')).toContainText('Worth doing');
+      await setField(page, '#uplift', '78');
+      // 1,780 x 20.0667 = 35,719 -> -615: outside 1%
+      await expect(page.locator('#verdict-expected')).toContainText('Not worth it');
+    });
+
+    test('the break-even band scales with the money involved', async ({ page }) => {
+      // 100 times the units: the contribution to match is 3,633,333 so 1% is 36,333.
+      await setField(page, '#units', '100000');
+      await setField(page, '#uplift', '80');
+      // 180,000 x 20.0667 = 3,612,000 -> -21,333: inside 1%, though far over 50p
+      await expect(page.locator('#verdict-expected')).toContainText('About break-even');
+      await setField(page, '#uplift', '78');
+      // 178,000 x 20.0667 = 3,571,867 -> -61,467: outside 1%
+      await expect(page.locator('#verdict-expected')).toContainText('Not worth it');
+    });
+
+    test('card labels and table headers are at least 12px at 360px and fit', async ({ page }) => {
+      await page.setViewportSize({ width: 360, height: 800 });
+      await setField(page, '#uplift', '60');
+      await setField(page, '#mkt', '5000');
+      const r = await page.evaluate(() => {
+        const labels = Array.from(document.querySelectorAll('.pbe-card-label')).filter((e) => e.offsetParent);
+        const heads = Array.from(document.querySelectorAll('#discount-table thead th'));
+        return {
+          n: labels.length,
+          labelMin: Math.min(...labels.map((e) => parseFloat(getComputedStyle(e).fontSize))),
+          labelClipped: labels.filter((e) => e.scrollHeight > e.clientHeight + 1 || e.scrollWidth > e.clientWidth + 1).length,
+          headMin: Math.min(...heads.map((e) => parseFloat(getComputedStyle(e).fontSize))),
+        };
+      });
+      expect(r.n).toBeGreaterThanOrEqual(8);
+      expect(r.labelMin).toBeGreaterThanOrEqual(12);
+      expect(r.labelClipped).toBe(0);
+      expect(r.headMin).toBeGreaterThanOrEqual(12);
+    });
+
+    test('the focus ring wraps the whole input group, addon included', async ({ page }) => {
+      await page.locator('#disc').focus();
+      const g = await page.evaluate(() => {
+        const input = document.getElementById('disc');
+        const group = input.closest('.input-group');
+        const gs = getComputedStyle(group);
+        const is = getComputedStyle(input);
+        const addon = group.querySelector('.input-group-text').getBoundingClientRect();
+        const box = group.getBoundingClientRect();
+        return {
+          groupOutline: gs.outlineStyle, groupWidth: parseFloat(gs.outlineWidth),
+          inputOutline: is.outlineStyle, inputShadow: is.boxShadow,
+          addonInside: addon.right <= box.right + 0.5 && addon.left >= box.left - 0.5,
+        };
+      });
+      expect(g.groupOutline).toBe('solid');
+      expect(g.groupWidth).toBeGreaterThanOrEqual(2);
+      expect(g.inputOutline).toBe('none');
+      expect(g.inputShadow).toBe('none');
+      expect(g.addonInside).toBe(true);
+      // a lone input (no addon) also gets a strong ring
+      await page.locator('#units').focus();
+      const w = await page.locator('#units').evaluate((e) => parseFloat(getComputedStyle(e).outlineWidth) + (getComputedStyle(e).outlineStyle === 'solid' ? 0 : -99));
+      expect(w).toBeGreaterThanOrEqual(2);
     });
   });
 });
