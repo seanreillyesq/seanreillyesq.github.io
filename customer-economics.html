@@ -7,8 +7,14 @@ header-img: "img/home-bg.jpg"
 meta-description: "Model revenue from loyalty, acquisition and average spend. Calculate allowable cost per customer."
 permalink: /customer-economics/
 hidden: true
+tool: true
+tool_group: business
+tool_order: 2
+tool_summary: "How much can I afford to pay to win a customer, and which growth lever matters most?"
 sitemap: true
 ---
+
+<script src="/js/tool-events.js" defer></script>
 
 <style>
 .ce-intro { margin-bottom: 1.5rem; }
@@ -417,6 +423,22 @@ sitemap: true
         </div>
     </div>
 
+    <p class="tool-crosslink small mb-4">Implied ROAS here uses the same costs as break-even ROAS. Test them against actual ad spend: <a href="/roas-calculator/" id="tool-crosslink" data-tool-crosslink="roas-calculator">Check these costs against real ad results</a></p>
+    <script>
+    (function () {
+        // Built at click time so it carries whatever is in the inputs now. Same parameter names on both pages.
+        var link = document.getElementById('tool-crosslink');
+        function build() {
+            var p = new URLSearchParams();
+            var map = {cur: "currency-select", cancel: "cancel-rate", cogs: "cogs-rate", fulfil: "fulfil-rate", margin: "margin-rate"};
+            for (var k in map) { var f = document.getElementById(map[k]); if (f && f.value !== '') p.set(k, f.value); }
+            link.setAttribute('href', '/roas-calculator/?' + p.toString());
+        }
+        ['pointerdown', 'focus', 'click', 'contextmenu', 'touchstart'].forEach(function (ev) { link.addEventListener(ev, build); });
+    })();
+    </script>
+    
+
     <!-- Extended payback toggle -->
     <div class="ce-toggle-group">
         <label class="ce-check form-check-label" for="extended-payback">
@@ -552,6 +574,8 @@ sitemap: true
     </div>
 </div>
 
+{% include tool-cta.html text="Allowable cost is only useful if the plan around it holds up. If you want a second pair of eyes on yours, that is what I do." %}
+
 <hr class="ce-divider">
 
 <!-- Methodology -->
@@ -563,6 +587,8 @@ sitemap: true
     <p><strong>Growth scenario:</strong> The three sliders let you model "what if" changes to each lever independently. Changes are measured against next year with no change, not against this year. The lever breakdown shows how much of the total change comes from each adjustment. The contributions will not sum to the total delta because the levers interact multiplicatively - the gap grows when multiple levers change together.</p>
     <p>This is a simplified model. Real businesses have customer segments, seasonal variation, and non-linear cost structures. Use it to build intuition about where your growth leverage sits, not as a precise forecast.</p>
 </div>
+
+<p class="text-muted small mb-4 tool-more"><a href="/tools/">More tools</a></p>
 
 <!-- Latest Writing -->
 <section class="py-5 border-top" style="background-color: var(--color-surface);">

@@ -1,0 +1,44 @@
+---
+layout: page
+title: "Tools"
+header-title: "Tools"
+description: "Free calculators and previewers"
+header-img: "img/home-bg.jpg"
+nav_order: 3.5
+meta-description: "Free tools from Sean Reilly: a ROAS calculator, customer economics model, SERP preview and caffeine cut-off calculator. They run in your browser."
+permalink: /tools/
+---
+
+{% assign all_tools = site.pages | where: "tool", true | sort: "tool_order" %}
+{% assign business_tools = all_tools | where: "tool_group", "business" %}
+{% assign personal_tools = all_tools | where: "tool_group", "personal" %}
+
+<p class="mb-4">Free calculators I built because I kept doing these sums in spreadsheets for clients. They run in your browser and nothing you type is sent anywhere, with one exception: the SERP preview's optional "Load from URL" fetches that page's title and description for you.</p>
+
+<h2 class="mb-4">For your business</h2>
+<div class="row g-4 mb-5" id="tools-business">
+{% for t in business_tools %}
+    <div class="col-md-6">
+        <div class="card card-body h-100">
+            <h3 class="h5"><a href="{{ t.url }}">{{ t.header-title | default: t.title }}</a></h3>
+            <p>{{ t.tool_summary }}</p>
+            <p class="mt-auto mb-0"><a href="{{ t.url }}" class="btn btn-outline-accent btn-sm" aria-label="Use the tool: {{ t.header-title | default: t.title }}">Use the tool</a></p>
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% if personal_tools.size > 0 %}
+<h2 class="mb-4">Just for fun</h2>
+<div class="row g-4 mb-5" id="tools-personal">
+{% for t in personal_tools %}
+    <div class="col-md-6">
+        <div class="card card-body h-100">
+            <h3 class="h5"><a href="{{ t.url }}">{{ t.header-title | default: t.title }}</a></h3>
+            <p>{{ t.tool_summary }}</p>
+            <p class="mt-auto mb-0"><a href="{{ t.url }}" class="btn btn-outline-accent btn-sm" aria-label="Use the tool: {{ t.header-title | default: t.title }}">Use the tool</a></p>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endif %}

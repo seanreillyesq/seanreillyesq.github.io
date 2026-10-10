@@ -7,8 +7,14 @@ header-img: "img/home-bg.jpg"
 meta-description: "ROAS calculator that strips out VAT, returns, and fulfilment to show real profitability. Compare channels and see why chasing high ROAS can mean leaving money on the table."
 permalink: /roas-calculator/
 hidden: true
+tool: true
+tool_group: business
+tool_order: 1
+tool_summary: "Is my ad spend actually making money once VAT, returns and costs are out?"
 sitemap: true
 ---
+
+<script src="/js/tool-events.js" defer></script>
 
 <style>
 .roas-intro { margin-bottom: 1.5rem; }
@@ -494,6 +500,23 @@ sitemap: true
 
     <!-- Verdict -->
     <div class="roas-verdict" id="verdict" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <p class="tool-crosslink small mb-4">Break-even ROAS depends on these same costs. Same costs, per customer: <a href="/customer-economics/" id="tool-crosslink" data-tool-crosslink="customer-economics">Work out the allowable cost per customer</a></p>
+    <script>
+    (function () {
+        // Built at click time so it carries whatever is in the inputs now. Same parameter names on both pages.
+        var link = document.getElementById('tool-crosslink');
+        function build() {
+            var p = new URLSearchParams();
+            var map = {cur: "currency-select", cancel: "cancel-rate", cogs: "cogs-rate", fulfil: "fulfil-rate", margin: "margin-rate"};
+            for (var k in map) { var f = document.getElementById(map[k]); if (f && f.value !== '') p.set(k, f.value); }
+            link.setAttribute('href', '/customer-economics/?' + p.toString());
+        }
+        ['pointerdown', 'focus', 'click', 'contextmenu', 'touchstart'].forEach(function (ev) { link.addEventListener(ev, build); });
+    })();
+    </script>
+    
+
 </div>
 
 <hr class="roas-divider">
@@ -577,6 +600,8 @@ sitemap: true
     </div>
 </div>
 
+{% include tool-cta.html text="If the break-even figure is higher than you expected, the fix is rarely in the ads alone. I help businesses work out where the margin is going." %}
+
 <hr class="roas-divider">
 
 <!-- Methodology -->
@@ -587,6 +612,8 @@ sitemap: true
     <p><strong>The ROAS trap model:</strong> The diminishing returns curve is a simplification. Real diminishing returns depend on audience saturation, creative fatigue, and competitive pressure. But the core principle holds: optimising for ROAS alone leads to underspending. The optimal point is where marginal profit hits zero.</p>
     <p>Real advertising has attribution problems, cross-channel effects, and delayed conversions. Use this to build intuition about your unit economics, not as a precise forecast.</p>
 </div>
+
+<p class="text-muted small mb-4 tool-more"><a href="/tools/">More tools</a></p>
 
 <!-- Latest Writing -->
 <section class="py-5 border-top" style="background-color: var(--color-surface);">
