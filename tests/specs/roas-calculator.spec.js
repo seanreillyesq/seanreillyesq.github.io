@@ -373,14 +373,48 @@ test.describe('ROAS calculator: bugs', () => {
     await expect(wf).not.toContainText('Loss');
   });
 
-  test('the AOV label follows the input mode', async ({ page }) => {
-    const label = page.locator('#aov-input-group label');
-    await expect(label).toContainText('per-order figures');
+  test('the AOV label is plain words and its hint follows the input mode', async ({ page }) => {
+    const group = page.locator('#aov-input-group');
+    await expect(group.locator('label')).toHaveText('Average order value');
+    await expect(group.locator('.roas-field-hint')).toHaveText('Used for per-order figures');
     await page.locator('label[for="mode-orders"]').click();
-    await expect(label).toContainText('revenue');
-    await expect(label).not.toContainText('per-order figures');
+    await expect(group.locator('label')).toHaveText('Average order value');
+    await expect(group.locator('.roas-field-hint')).toContainText('revenue');
+    await expect(group.locator('.roas-field-hint')).not.toContainText('per-order figures');
     await page.locator('label[for="mode-revenue"]').click();
-    await expect(label).toContainText('per-order figures');
+    await expect(group.locator('.roas-field-hint')).toHaveText('Used for per-order figures');
+  });
+
+  test('per-order figures show N/A, like CPA, when there are no orders', async ({ page }) => {
+    await setValue(page, '#ad-revenue', 0);
+    await expect(page.locator('#res-cpa')).toHaveText('N/A');
+    await expect(page.locator('#res-profit-order')).toHaveText('N/A');
+    await setValue(page, '#ad-revenue', 25000);
+    await expect(page.locator('#res-profit-order')).not.toHaveText('N/A');
+
+    await setValue(page, '#aov', 0);
+    await expect(page.locator('#res-cpa')).toHaveText('N/A');
+    await expect(page.locator('#res-profit-order')).toHaveText('N/A');
+    await expect(page.locator('.ch-res-cpa')).toHaveText(['N/A', 'N/A']);
+    await expect(page.locator('.ch-res-ppo')).toHaveText(['N/A', 'N/A']);
+    await setValue(page, '#aov', 500);
+    await expect(page.locator('.ch-res-ppo').first()).not.toHaveText('N/A');
+
+    // a channel with no revenue has no orders either
+    await page.locator('.ch-revenue').first().fill('0');
+    await expect(page.locator('.ch-res-ppo').first()).toHaveText('N/A');
+    await expect(page.locator('.ch-res-ppo').nth(1)).not.toHaveText('N/A');
+  });
+
+  test('waterfall bar labels use the same money format as the legend', async ({ page }) => {
+    await setValue(page, '#ad-spend', 9999999);
+    await setValue(page, '#ad-revenue', 9999999);
+    const legend = await page.locator('.waterfall-legend').innerText();
+    const labels = (await page.locator('#cost-waterfall svg text').evaluateAll((ts) => ts.map((x) => x.textContent))).filter((x) => /^£/.test(x));
+    expect(labels.length).toBeGreaterThan(0);
+    for (const l of labels) expect(legend, l).toContain(l);
+    expect(labels).toContain('£10.0M');
+    expect(labels).not.toContain('£9,999,999');
   });
 });
 
@@ -453,6 +487,27 @@ for (const width of [360, 390, 1280]) {
       expect(result.uneven).toEqual([]);
       expect(result.unevenCards).toEqual([]);
     });
+  });
+}
+
+for (const width of [360, 1280]) {
+  test(`trap chart marker labels do not touch the axis labels at ${width}px`, async ({ page }) => {
+    await load(page, { spend: 5000, rev: 100000 }, width);   // 20x ROAS
+    await expect(page.locator('#trap-chart')).toContainText('You: 1.0x');
+    const clashes = await page.evaluate(() => {
+      const texts = [...document.querySelectorAll('#trap-chart text')].map((t) => ({ t: t.textContent, r: t.getBoundingClientRect() }));
+      const markers = texts.filter((x) => /^(You|Optimal):/.test(x.t));
+      const others = texts.filter((x) => !/^(You|Optimal):/.test(x.t));
+      const hit = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+      const out = [];
+      markers.forEach((m, i) => {
+        others.forEach((o) => { if (hit(m.r, o.r)) out.push(m.t + ' x ' + o.t); });
+        markers.slice(i + 1).forEach((o) => { if (hit(m.r, o.r)) out.push(m.t + ' x ' + o.t); });
+      });
+      return { out, markers: markers.length };
+    });
+    expect(clashes.markers).toBe(2);
+    expect(clashes.out).toEqual([]);
   });
 }
 
