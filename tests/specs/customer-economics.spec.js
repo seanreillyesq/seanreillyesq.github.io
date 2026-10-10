@@ -571,3 +571,75 @@ test.describe('Customer economics: accessible names', () => {
     await expect(live).toContainText('Allowable cost £333');
   });
 });
+
+test.describe('Customer economics: review fixes', () => {
+  for (const width of [360, 390]) {
+    for (const [name, query, setup] of [
+      ['-1,500 new customers', '', async (page) => { await setValue(page, '#new-delta-val', -1500); }],
+      ['the billions case', '?cust=999999&loyalty=100&new=999999&spend=999999', async () => {}],
+    ]) {
+      test(`result values stay on one line with ${name} at ${width}px`, async ({ page }) => {
+        await open(page, query, width);
+        await setup(page);
+        const bad = await page.evaluate(() => [...document.querySelectorAll('.result-value')].map((e) => {
+          const cs = getComputedStyle(e);
+          const line = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.2;
+          const r = e.getBoundingClientRect();
+          return { id: e.id, text: e.textContent, h: r.height, line, over: e.scrollWidth - e.clientWidth };
+        }).filter((v) => v.h > v.line + 1 || v.over > 1));
+        expect(bad).toEqual([]);
+      });
+    }
+  }
+
+  test('"No budget" stays on one line at 390px', async ({ page }) => {
+    await open(page, '?cancel=100&ep=1', 390);
+    for (const id of ['res-roas', 'res-extended-roas']) {
+      await expect(page.locator('#' + id)).toHaveText('No budget');
+      const h = await page.locator('#' + id).evaluate((e) => [e.getBoundingClientRect().height, parseFloat(getComputedStyle(e).lineHeight)]);
+      expect(h[0]).toBeLessThanOrEqual(h[1] + 1);
+    }
+  });
+
+  // Typed key by key, so the handler sees every partial value ("2.", "-", "-0.")
+  for (const [typed, pct] of [['2.5', 2.5], ['-0.5', -0.5], ['-25', -25]]) {
+    test(`typing ${typed} in the spend change box keeps what was typed and computes ${pct}%`, async ({ page }) => {
+      await open(page);
+      const box = page.locator('#spend-delta-val');
+      await box.click();
+      await box.fill('');
+      await page.keyboard.type(typed);
+      await expect(box).toHaveValue(typed);
+      const expected = 5800000 * pct / 100;
+      expect(Math.abs((await money(page, 'res-delta')) - expected)).toBeLessThanOrEqual(tol(expected) + 1);
+      await box.blur();
+      await expect(box).toHaveValue(typed);
+    });
+  }
+
+  for (const [box, typed] of [['#loyalty-delta-val', '2.5'], ['#new-delta-val', '-0.5']]) {
+    test(`typing ${typed} in ${box} is not rewritten mid-entry`, async ({ page }) => {
+      await open(page);
+      await page.locator(box).click();
+      await page.locator(box).fill('');
+      await page.keyboard.type(typed);
+      await expect(page.locator(box)).toHaveValue(typed);
+    });
+  }
+
+  test('the projected bar label is neutral at a zero delta, green up and red down', async ({ page }) => {
+    await open(page);
+    const fill = () => page.locator('#revenue-chart text', { hasText: /^£5\.\dM$|^£\d/ }).last().getAttribute('fill');
+    expect(await fill()).toBe('#6B7280');
+    await setValue(page, '#spend-delta-val', 10);
+    await expect.poll(fill).toBe('#16a34a');
+    await setValue(page, '#spend-delta-val', -10);
+    await expect.poll(fill).toBe('#dc2626');
+  });
+
+  test('the explainer says the figure still hits your margin', async ({ page }) => {
+    await open(page, '?ep=1');
+    await expect(page.locator('#ext-roas-note')).toContainText('still hits your margin');
+    await expect(page.locator('#ext-roas-note')).not.toContainText('pays back');
+  });
+});

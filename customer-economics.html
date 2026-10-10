@@ -102,7 +102,8 @@ sitemap: true
     font-weight: 800;
     color: var(--color-text, #2D2D2D);
     line-height: 1.2;
-    overflow-wrap: anywhere;
+    /* A money value never breaks inside itself; the font shrinks at narrow widths instead */
+    white-space: nowrap;
 }
 
 /* Projection card */
@@ -256,7 +257,7 @@ sitemap: true
 
 /* Mobile */
 @media (max-width: 575.98px) {
-    .result-value { font-size: 1.25rem; }
+    .result-value { font-size: clamp(0.875rem, 4.2vw, 1.25rem); }
     .result-label { letter-spacing: 0.5px; }
     .result-card { padding: 0.625rem 0.375rem; }
     .ce-projection-value { font-size: 1.125rem; }
@@ -454,7 +455,7 @@ sitemap: true
                     </div>
                 </div>
             </div>
-            <p class="ce-card-note" id="ext-roas-note">Min. first-order ROAS is the lowest return on ad spend your first order can deliver while the customer still pays back once repeat purchases are counted.</p>
+            <p class="ce-card-note" id="ext-roas-note">Min. first-order ROAS is the lowest return on ad spend your first order can deliver while the customer still hits your margin once repeat purchases are counted.</p>
         </div>
     </div>
 </div>
@@ -1148,7 +1149,7 @@ sitemap: true
         chartText(svg, cx + barWidth / 2, cBase - cNewH - cRetH - 6, fmtCurrency(data.baseRevenue),
             Object.assign({ fill: COL.returning }, revLabel));
         chartText(svg, px + barWidth / 2, cBase - pNewH - pRetH - 6, fmtCurrency(data.projRevenue),
-            Object.assign({ fill: data.delta >= 0 ? '#16a34a' : '#dc2626' }, revLabel));
+            Object.assign({ fill: data.delta > 0 ? '#16a34a' : (data.delta < 0 ? '#dc2626' : COL.text) }, revLabel));
 
         // Delta connector
         var cTop = cBase - cNewH - cRetH;
@@ -1343,11 +1344,10 @@ sitemap: true
                 recalculate();
             });
             el(pair.num).addEventListener('input', function() {
-                // Let the user type a leading minus / partial value without it being clobbered
+                // Leave the box exactly as typed ("2.", "-0.5"); readInputs parses and clamps it,
+                // and the change handler below tidies the text once editing finishes
                 if (this.value === '' || this.value === '-') return;
-                var clamped = clamp(+this.value || 0, +el(pair.range).min, +el(pair.range).max);
-                el(pair.range).value = clamped;
-                this.value = clamped;
+                el(pair.range).value = clamp(+this.value || 0, +el(pair.range).min, +el(pair.range).max);
                 recalculate();
             });
             el(pair.num).addEventListener('change', function() {
