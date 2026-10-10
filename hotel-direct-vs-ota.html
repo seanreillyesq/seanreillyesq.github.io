@@ -1,0 +1,937 @@
+---
+layout: page
+title: "Hotel Direct vs OTA Calculator"
+header-title: "Hotel Direct vs OTA"
+description: "What is it worth to move bookings from Booking.com and Expedia to your own website?"
+header-img: "img/home-bg.jpg"
+meta-description: "Free hotel calculator: compare what you keep from an OTA booking against a direct one, and see what moving a few points of room nights to direct is worth."
+permalink: /hotel-direct-vs-ota/
+hidden: true
+sitemap: true
+tool: true
+tool_group: business
+tool_summary: "What is it worth to move bookings from Booking.com and Expedia to my own website?"
+tool_order: 6
+---
+
+<script src="/js/tool-events.js" defer></script>
+
+<style>
+.hv-intro { margin-bottom: 1.5rem; }
+.hv-intro p { margin-bottom: 0.75rem; }
+
+.hv-currency-row { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
+.hv-currency-row select { width: auto; min-height: 44px; font-size: 0.875rem; }
+
+.hv-section { margin-bottom: 1rem; }
+.hv-section h3 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.25rem; margin-bottom: 0.5rem; }
+.hv-section-desc { font-size: 0.9375rem; color: var(--color-text-muted, #6B7280); margin-bottom: 1rem; }
+
+/* Inputs */
+.hv-inputs .form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-accent-text, #3F6E96);
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+}
+/* Rows reserve three label lines and sit the label on the bottom, so inputs share a top */
+.hv-field-row .form-label { min-height: 2.6em; display: flex; align-items: flex-end; }
+/* From xl the rows with short labels need only one line, so there is no empty gap above them */
+@media (min-width: 1200px) { .hv-row-short .form-label { min-height: 0; } }
+.hv-inputs .form-select { min-height: 44px; font-size: 1rem; }
+.hv-switch.form-check { padding-left: 0; display: flex; align-items: center; gap: 0.75rem; min-height: 44px; margin-bottom: 0; }
+.hv-switch .form-check-input { float: none; margin: 0; flex: 0 0 auto; width: 2.75rem; height: 1.5rem; }
+.hv-switch .form-check-label { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+.hv-switch .form-check-input:focus-visible { outline: 2px solid var(--color-accent, #4A7BA7); outline-offset: 2px; }
+.hv-inputs .form-control { min-height: 44px; font-size: 1rem; }
+.hv-inputs .input-group > .form-control { border-left: 0; border-right: 0; }
+.hv-inputs .input-group > .form-control:first-child { border-left: 1px solid var(--bs-border-color, #dee2e6); }
+.hv-inputs .input-group > .form-control:last-child { border-right: 1px solid var(--bs-border-color, #dee2e6); }
+.hv-inputs .input-group-text { min-height: 44px; font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; justify-content: center; }
+.hv-hint { color: var(--color-text-muted, #6B7280); font-size: 0.75rem; line-height: 1.3; margin-top: 0.25rem; }
+.hv-note { color: #b91c1c; font-size: 0.75rem; line-height: 1.3; margin-top: 0.25rem; font-weight: 600; }
+.hv-note[hidden] { display: none; }
+.hv-channels-note { font-size: 0.875rem; color: var(--color-text-muted, #6B7280); margin-bottom: 1rem; }
+
+/* Results */
+.result-card {
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.75rem;
+    padding: 0.875rem 0.5rem;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+.result-label {
+    min-height: 2.6em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-accent-text, #3F6E96);
+    margin-bottom: 0.125rem;
+}
+.result-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text, #2D2D2D);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.result-value.hv-small { font-size: 0.9375rem; white-space: normal; }
+.result-sub { font-size: 0.75rem; color: var(--color-text-muted, #6B7280); margin-top: 0.125rem; line-height: 1.3; }
+.delta-positive { color: #15803d; }
+.delta-negative { color: #b91c1c; }
+.delta-neutral { color: var(--color-text-muted, #6B7280); }
+
+/* Verdict */
+.hv-verdict { border-radius: 0.75rem; padding: 1rem; margin: 1rem 0; font-size: 0.9375rem; line-height: 1.6; }
+.hv-verdict strong { display: block; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1rem; margin-bottom: 0.25rem; }
+.hv-verdict p { margin: 0 0 0.5rem; }
+.hv-verdict p:last-child { margin-bottom: 0; }
+.hv-verdict-good { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+.hv-verdict-level { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+.hv-verdict-bad { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+.hv-verdict-empty { background: var(--color-surface, #FAFAF9); border: 1px solid var(--color-border, #E5E7EB); color: var(--color-text-muted, #6B7280); }
+
+/* Table */
+.hv-table-wrap { margin: 1rem 0; }
+.hv-table { width: 100%; font-size: 0.875rem; margin-bottom: 0; }
+.hv-table caption { caption-side: top; font-size: 0.875rem; font-weight: 700; color: var(--color-text, #2D2D2D); padding: 0 0 0.5rem; }
+.hv-table th, .hv-table td { padding: 0.5rem 0.375rem; vertical-align: baseline; }
+.hv-table thead th { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--color-accent-text, #3F6E96); }
+.hv-table td { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.hv-table thead th:not(:first-child) { text-align: right; }
+.hv-table tbody th { font-weight: 500; }
+.hv-table tr.hv-total th, .hv-table tr.hv-total td { font-weight: 800; border-top: 2px solid var(--color-border, #E5E7EB); }
+
+/* Chart */
+#hv-chart { margin: 1rem 0; }
+#hv-chart svg { display: block; width: 100%; height: auto; }
+
+/* Share */
+.hv-share { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 1rem 0; }
+.hv-share .btn { min-height: 44px; }
+.hv-share .btn:focus-visible, .hv-currency-row select:focus-visible, .hv-inputs .form-control:focus-visible {
+    outline: 2px solid var(--color-accent, #4A7BA7);
+    outline-offset: 2px;
+}
+.hv-copy-status { font-size: 0.875rem; color: var(--color-text-muted, #6B7280); }
+
+.hv-divider { border: 0; border-top: 1px solid var(--color-border, #E5E7EB); margin: 1.5rem 0; }
+
+/* Methodology */
+.hv-method p, .hv-method li { font-size: 0.875rem; color: var(--color-text-muted, #6B7280); line-height: 1.7; }
+.hv-method code { font-size: 0.8125rem; overflow-wrap: anywhere; }
+.hv-method li { margin-bottom: 0.5rem; }
+
+@media (max-width: 575.98px) {
+    .result-value { font-size: clamp(0.875rem, 4.6vw, 1.25rem); }
+    .result-label { letter-spacing: 0.5px; }
+    .result-card { padding: 0.625rem 0.375rem; }
+    .hv-table { font-size: 0.8125rem; }
+    .hv-table th, .hv-table td { padding: 0.5rem 0.25rem; }
+}
+</style>
+
+<div class="hv-intro">
+    <p>I ran digital for a luxury hotel group, and the question I heard most was whether pushing guests to book direct was worth the effort. Commission is easy to see on a statement. The cost of winning a direct booking is spread across search, metasearch, the booking engine and the rate you give away, so most comparisons flatter one side or the other.</p>
+    <p>This puts both channels on the same footing: what you keep from one room night once every cost is taken out. Then it asks what moving a few points of your mix is worth over a year.</p>
+</div>
+
+<div class="hv-currency-row">
+    <label class="visually-hidden" for="currency-select">Currency</label>
+    <select class="form-select form-select-sm" id="currency-select">
+        <option value="GBP" selected>&pound; GBP</option>
+        <option value="USD">$ USD</option>
+        <option value="EUR">&euro; EUR</option>
+    </select>
+</div>
+
+<div class="hv-section hv-inputs" id="section-inputs">
+    <p class="hv-channels-note">This model has two channels only: OTAs (Booking.com, Expedia and similar) and direct (your website, phone and email). Wholesale, corporate and group business are not modelled.</p>
+
+    <h3>Property</h3>
+        <div class="row g-2 g-md-3 mb-3 hv-field-row">
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="rooms">Rooms</label>
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="rooms" value="50" aria-describedby="rooms-hint rooms-note">
+                <div class="hv-hint" id="rooms-hint">Rooms available to sell</div>
+                <div class="hv-note" id="rooms-note" hidden></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="occ">Average occupancy</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="occ" value="75" aria-describedby="occ-hint occ-note"><span class="input-group-text" aria-hidden="true">%</span></div>
+                <div class="hv-hint" id="occ-hint">Across the year</div>
+                <div class="hv-note" id="occ-note" hidden></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="adr">Average daily rate (ADR)</label>
+                <div class="input-group"><span class="input-group-text" aria-hidden="true"><span class="hv-sym">&pound;</span></span><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="adr" value="180" aria-describedby="adr-hint adr-note"></div>
+                <div class="hv-hint" id="adr-hint">What the guest pays per night</div>
+                <div class="hv-note" id="adr-note" hidden></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <label class="form-label" for="los">Average length of stay</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="los" value="2" aria-describedby="los-hint los-note"><span class="input-group-text" aria-hidden="true">nights</span></div>
+                <div class="hv-hint" id="los-hint">Nights per booking</div>
+                <div class="hv-note" id="los-note" hidden></div>
+            </div>
+        </div>
+
+    <h3>VAT</h3>
+        <div class="row mb-2">
+            <div class="col-12">
+                <div class="form-check form-switch hv-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="vatinc" checked aria-describedby="vatinc-hint">
+                    <label class="form-check-label" for="vatinc">ADR includes VAT</label>
+                </div>
+                <div class="hv-hint" id="vatinc-hint">On: VAT is taken off before anything is netted, because the hotel does not keep it. Off: ADR is used as it stands, with no VAT adjustment (use this if VAT does not apply, or if your ADR is ex VAT and the percentages below apply to that figure).</div>
+            </div>
+        </div>
+        <div class="row g-2 g-md-3 mb-3 hv-field-row hv-row-short">
+            <div class="col-6 col-md-6">
+                <label class="form-label" for="vat">VAT rate</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="vat" value="20" aria-describedby="vat-hint vat-note"><span class="input-group-text" aria-hidden="true">%</span></div>
+                <div class="hv-hint" id="vat-hint">UK standard rate on hotel rooms is 20%. Edit it if yours differs</div>
+                <div class="hv-note" id="vat-note" hidden></div>
+            </div>
+            <div class="col-6 col-md-6">
+                <label class="form-label" for="cbase">OTA commission is charged on</label>
+                <select class="form-select" id="cbase" aria-describedby="cbase-hint cbase-note"><option value="inc" selected>Price including VAT</option><option value="ex">Price excluding VAT</option></select>
+                <div class="hv-hint" id="cbase-hint">Varies by OTA, contract and country. Check your contract</div>
+                <div class="hv-note" id="cbase-note" hidden></div>
+            </div>
+        </div>
+
+    <h3>Channel mix and OTA cost</h3>
+        <div class="row g-2 g-md-3 mb-3 hv-field-row hv-row-short">
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="share">Share of nights via OTAs</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="share" value="40" aria-describedby="share-hint share-note"><span class="input-group-text" aria-hidden="true">%</span></div>
+                <div class="hv-hint" id="share-hint">The rest counts as direct: website, phone, email</div>
+                <div class="hv-note" id="share-note" hidden></div>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="comm">OTA commission</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="comm" value="18" aria-describedby="comm-hint comm-note"><span class="input-group-text" aria-hidden="true">%</span></div>
+                <div class="hv-hint" id="comm-hint">15-25% is common, more with visibility programmes</div>
+                <div class="hv-note" id="comm-note" hidden></div>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="ofee">OTA-side fees (optional)</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="ofee" value="0" aria-describedby="ofee-hint ofee-note"><span class="input-group-text" aria-hidden="true">%</span></div>
+                <div class="hv-hint" id="ofee-hint">0 for OTA-collect (agency) bookings, where the OTA takes payment. For hotel-collect bookings set it to the card fee you pay, plus any channel manager fee. Taken from what is left after commission</div>
+                <div class="hv-note" id="ofee-note" hidden></div>
+            </div>
+        </div>
+
+    <h3>Direct cost</h3>
+        <div class="row g-2 g-md-3 mb-3 hv-field-row hv-row-short">
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="mkt">Direct marketing cost</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="mkt" value="8" aria-describedby="mkt-hint mkt-note"><span class="input-group-text" aria-hidden="true">%</span></div>
+                <div class="hv-hint" id="mkt-hint">The blended cost of winning a direct booking (paid search, metasearch, brand). The next booking usually costs more than the average</div>
+                <div class="hv-note" id="mkt-note" hidden></div>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="fee">Booking and payment fees</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="fee" value="3" aria-describedby="fee-hint fee-note"><span class="input-group-text" aria-hidden="true">%</span></div>
+                <div class="hv-hint" id="fee-hint">Booking engine and card fees, as % of room revenue</div>
+                <div class="hv-note" id="fee-note" hidden></div>
+            </div>
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="disc">Direct booking discount</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="disc" value="5" aria-describedby="disc-hint disc-note"><span class="input-group-text" aria-hidden="true">%</span></div>
+                <div class="hv-hint" id="disc-hint">The rate you offer to book direct, as a member or otherwise</div>
+                <div class="hv-note" id="disc-note" hidden></div>
+            </div>
+        </div>
+
+    <h3>Scenario</h3>
+        <div class="row g-2 g-md-3 mb-3 hv-field-row hv-row-short">
+            <div class="col-6 col-md-4">
+                <label class="form-label" for="shift">Shift from OTA to direct</label>
+                <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="shift" value="5" aria-describedby="shift-hint shift-note"><span class="input-group-text" aria-hidden="true">points</span></div>
+                <div class="hv-hint" id="shift-hint">Percentage points of room nights moved</div>
+                <div class="hv-note" id="shift-note" hidden></div>
+            </div>
+        </div>
+</div>
+
+<hr class="hv-divider">
+
+<div class="hv-section" id="section-results">
+    <h3>What each channel is worth</h3>
+    <p class="hv-section-desc">Net revenue is what you keep from a room night after <span class="hv-ex">VAT and </span>the channel's own costs. It is before housekeeping, utilities, staff and every other cost of running the room, which are the same whichever channel the guest came through.</p>
+
+    <div class="row g-2 g-md-3 mb-2">
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">OTA net per night<span class="hv-ex">, ex VAT</span></div>
+                <div class="result-value" id="res-ota-net">--</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Direct net per night<span class="hv-ex">, ex VAT</span></div>
+                <div class="result-value" id="res-direct-net">--</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Direct minus OTA, per night</div>
+                <div class="result-value" id="res-gap-night">--</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Direct minus OTA, per stay</div>
+                <div class="result-value" id="res-gap-stay">--</div>
+                <div class="result-sub" id="res-gap-stay-sub"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-2 g-md-3 mb-2">
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Room nights a year</div>
+                <div class="result-value" id="res-nights">--</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Net room revenue now<span class="hv-ex">, ex VAT</span></div>
+                <div class="result-value" id="res-total-now">--</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Annual gain from the shift</div>
+                <div class="result-value" id="res-gain">--</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Value of one point shifted</div>
+                <div class="result-value" id="res-point">--</div>
+                <div class="result-sub" id="res-point-sub">1% of all room nights, OTA to direct, a year</div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Break-even marketing</div>
+                <div class="result-value" id="res-be-mkt">--</div>
+                <div class="result-sub" id="res-be-mkt-sub"></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="result-card">
+                <div class="result-label">Break-even commission</div>
+                <div class="result-value" id="res-be-comm">--</div>
+                <div class="result-sub" id="res-be-comm-sub"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hv-note mb-2" id="ota-net-note" hidden>OTA commission and fees reach or exceed the room price, so an OTA booking nets nothing or loses money with these inputs.</div>
+    <div class="hv-verdict hv-verdict-empty" id="verdict"></div>
+    <div class="visually-hidden" id="hv-live" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="hv-table-wrap">
+        <table class="table hv-table" id="hv-table">
+            <caption>Before and after the shift, per year<span class="hv-ex">, ex VAT</span></caption>
+            <thead>
+                <tr><th scope="col">Channel</th><th scope="col">Now</th><th scope="col">After</th></tr>
+            </thead>
+            <tbody>
+                <tr><th scope="row">OTA room nights</th><td id="tb-ota-nights-now">--</td><td id="tb-ota-nights-after">--</td></tr>
+                <tr><th scope="row">Direct room nights</th><td id="tb-dir-nights-now">--</td><td id="tb-dir-nights-after">--</td></tr>
+                <tr><th scope="row">OTA net revenue</th><td id="tb-ota-net-now">--</td><td id="tb-ota-net-after">--</td></tr>
+                <tr><th scope="row">Direct net revenue</th><td id="tb-dir-net-now">--</td><td id="tb-dir-net-after">--</td></tr>
+                <tr class="hv-total"><th scope="row">Total net revenue</th><td id="tb-total-now">--</td><td id="tb-total-after">--</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="hv-chart"></div>
+
+    <div class="hv-share">
+        <button type="button" class="btn btn-outline-secondary" id="copy-link">Copy link to this result</button>
+        <span class="hv-copy-status" id="copy-status" role="status" aria-live="polite"></span>
+    </div>
+</div>
+{% include tool-cta.html text="A saving on paper only counts if the direct channel can win those bookings at the cost you assumed. If you want help working out whether it can, that is what I do." %}
+
+<hr class="hv-divider">
+
+<div class="hv-method mb-4">
+    <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
+    <p>Everything is worked out per room night first, then scaled up to a year. Net figures are ex VAT, because VAT is collected for the tax authority and the hotel never keeps it.</p>
+    <ul>
+        <li><strong>ADR ex VAT</strong> = <code>ADR / (1 + VAT rate)</code> when ADR includes VAT. With the switch off, ADR is used as it stands.</li>
+        <li><strong>OTA net per night</strong> = <code>(ADR ex VAT - commission) x (1 - OTA-side fees)</code>. Commission is the commission rate applied to either the VAT-inclusive price or the ex VAT price, whichever you choose.</li>
+        <li><strong>Direct net per night</strong> = <code>ADR ex VAT x (1 - discount) x (1 - marketing - fees)</code>. The discount comes off the rate first, and marketing and fees are then taken as a share of the discounted rate.</li>
+        <li><strong>Room nights a year</strong> = <code>rooms x 365 x occupancy</code></li>
+        <li><strong>Net revenue by channel</strong> = room nights in that channel x net per night. The OTA share is the percentage you enter and the rest is direct.</li>
+        <li><strong>Annual gain from the shift</strong> = <code>room nights x (shift / 100) x (direct net - OTA net)</code>. If direct nets less than OTA, this is a loss, and the page says so.</li>
+        <li><strong>Value of one point shifted</strong> = the same calculation for a shift of one percentage point, meaning 1% of all room nights moved from OTA to direct.</li>
+        <li><strong>Break-even marketing</strong> is the direct marketing cost at which the two channels net the same. <strong>Break-even commission</strong> is the OTA commission at which they net the same. Each holds every other input where you set it.</li>
+    </ul>
+    <p>The shift cannot be larger than the OTA share you start with, because you cannot move more room nights than you have there. Net revenue by channel is calculated from the numbers you enter and rounded to whole currency units once. The totals in the table add up those rounded figures and the annual gain is the difference between the two rounded totals, so what you see always adds up. The value of one point is worked out from unrounded figures.</p>
+    <p><strong>VAT and commission.</strong> Whether an OTA charges commission on the price including VAT or excluding it varies by OTA, by contract and by country, and I have not assumed what any of them does. Check your contract and set the choice to match. The 20% VAT rate is the UK standard rate on hotel rooms; change it if your rate or country differs. If your ADR is quoted ex VAT, or VAT does not apply to you, switch the VAT setting off.</p>
+    <p><strong>What the model leaves out.</strong> It is a model of mix, not of demand, so treat the answer as a guide to the order of magnitude rather than a forecast.</p>
+    <ul>
+        <li><strong>The billboard effect.</strong> OTA listings send people to your own website to book. Cut OTA exposure hard and you may lose some direct bookings too. The model assumes the direct room nights you win are extra to the ones you already have, and that nothing else falls. That flatters the shift.</li>
+        <li><strong>Occupancy is fixed.</strong> Moving a booking from one channel to another does not change the number of rooms sold. If the shift costs you volume, the gain here is overstated.</li>
+        <li><strong>Parity clauses and rate rules.</strong> Your contracts and local rules may limit how far below the OTA rate you can price direct, and how you can show member rates. The discount field is only useful if you are allowed to offer it.</li>
+        <li><strong>Cancellations and no-shows.</strong> These often differ by channel, and a booking that cancels earns nothing. The model treats every booking as stayed, which can cut either way depending on which channel cancels more.</li>
+        <li><strong>Guest lifetime value and data.</strong> A direct guest can be emailed, rebooked and sold extras without paying commission again. That value is real but is not in these figures, and it pulls the other way from the billboard effect and cancellations above. I would not assume the omissions cancel out.</li>
+        <li><strong>Extras and the blended marketing cost.</strong> Spend on breakfast, spa and parking, and any commission on those, is ignored. Marketing cost is one blended percentage, whereas the cost of the next direct booking is usually higher than the average, so the first points you shift are cheaper than the last.</li>
+    </ul>
+    <p>Nothing you type leaves your browser. The link button copies a web address that contains your inputs, so anyone you send it to sees the same result.</p>
+</div>
+
+<p class="text-muted small mb-4 tool-more"><a href="/tools/">More tools</a></p>
+
+<!-- Latest Writing -->
+<section class="py-5 border-top" style="background-color: var(--color-surface);">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4" style="font-size: 1.75rem;">Latest Writing</h2>
+        <div class="row g-4">
+            {% assign card_count = 0 %}
+            {% for post in site.posts %}{% unless post.hidden or card_count >= 3 %}
+            <div class="col-md-6 col-lg-4">
+                {% include post-card.html post=post %}
+            </div>
+            {% assign card_count = card_count | plus: 1 %}
+            {% endunless %}{% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    'use strict';
+
+    var CURRENCIES = { GBP: '£', USD: '$', EUR: '€' };
+    var NS = 'http://www.w3.org/2000/svg';
+    var LIVE_DELAY = 700;
+    var EVENT_DELAY = 800;
+
+    // lo is always 0. hi may depend on the values read so far (the shift cannot exceed the OTA share);
+    // max is the static ceiling used when tidying a box, so a typed value is kept if it could be valid.
+    var FIELDS = [
+        { id: 'rooms', param: 'rooms', hi: 10000 },
+        { id: 'occ', param: 'occ', hi: 100 },
+        { id: 'adr', param: 'adr', hi: 100000 },
+        { id: 'los', param: 'los', hi: 365 },
+        { id: 'vat', param: 'vat', hi: 100 },
+        { id: 'share', param: 'share', hi: 100 },
+        { id: 'comm', param: 'comm', hi: 100 },
+        { id: 'ofee', param: 'ofee', hi: 100 },
+        { id: 'mkt', param: 'mkt', hi: 100 },
+        { id: 'fee', param: 'fee', hi: 100 },
+        { id: 'disc', param: 'disc', hi: 100 },
+        { id: 'shift', param: 'shift', hi: function(v) { return v.share; }, max: 100, hiNote: ' (the current OTA share)' }
+    ];
+
+    var COL = { ota: '#b45309', direct: '#4A7BA7', track: '#F3F4F6', text: '#6B7280', value: '#2D2D2D' };
+
+    var currency = 'GBP';
+    var last = null;
+    var typed = {};
+    var liveTimer = null, eventTimer = null, eventSent = false, ready = false;
+    var lastLive = '';
+
+    function el(id) { return document.getElementById(id); }
+    function sym() { return CURRENCIES[currency]; }
+
+    // ---------- formatting ----------
+
+    function compact(abs) {
+        var s = sym();
+        if (abs >= 1e9) return s + (abs / 1e9).toFixed(1) + 'B';
+        if (abs >= 1e6) return s + (abs / 1e6).toFixed(1) + 'M';
+        return s + (abs / 1e3).toFixed(1) + 'k';
+    }
+
+    // Sign before the symbol; compact (k/M/B) only from compactFrom upwards; "-0" never appears.
+    // The 1e-9 stops 126.825 stored as 126.82499999 from rounding down.
+    function money(v, dp, compactFrom, plus) {
+        if (!isFinite(v)) return '--';
+        var f = Math.pow(10, dp);
+        var r = Math.round((Math.abs(v) + 1e-9) * f) / f;
+        var sign = r > 0 ? (v < 0 ? '-' : (plus ? '+' : '')) : '';
+        if (compactFrom && r >= compactFrom) return sign + compact(r);
+        return sign + sym() + r.toLocaleString('en-GB', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+    }
+    function moneyCard(v, dp, plus) { return money(v, dp, 1e9, plus); }
+    function moneyTable(v) { return money(v, 0, 1e7, false); }
+    function num(v) { return Math.round(v).toLocaleString('en-GB'); }
+    function pct(v) { return (Math.round(v * 10) / 10).toString() + '%'; }
+    function canon(v) { return String(+v.toFixed(6)); }
+
+    function deltaClass(v) {
+        if (v > 0.005) return 'delta-positive';
+        if (v < -0.005) return 'delta-negative';
+        return 'delta-neutral';
+    }
+
+    // ---------- reading fields ----------
+
+    function parse(raw) {
+        var s = String(raw).replace(/[£$€%,\s]/g, '');
+        if (s === '') return { blank: true };
+        var n = Number(s);
+        if (!isFinite(n)) return { bad: true };
+        return { n: n };
+    }
+
+    function setNote(id, text) {
+        var note = el(id + '-note');
+        note.textContent = text;
+        note.hidden = !text;
+    }
+
+    // v holds the values the maths uses (clamped). typed holds what the user entered, which is what
+    // goes in the URL: a shift of 5 stays 5 even while a 0% OTA share caps it to 0 in the maths.
+    function readAll() {
+        var v = {};
+        typed = {};
+        FIELDS.forEach(function(f) {
+            var input = el(f.id);
+            var hi = typeof f.hi === 'function' ? f.hi(v) : f.hi;
+            var p = parse(input.value);
+            var focused = document.activeElement === input;
+            var note = '', n;
+            typed[f.id] = p.n !== undefined ? p.n : 0;
+            if (p.blank) {
+                n = 0;
+                if (!focused) note = 'Blank - using 0.';
+            } else if (p.bad) {
+                n = 0;
+                if (!focused) note = 'That is not a number - using 0.';
+            } else if (p.n < 0) {
+                n = 0;
+                note = 'Negative values are not allowed - using 0.';
+            } else if (p.n > hi) {
+                n = hi;
+                note = 'Maximum is ' + num(hi) + (f.hiNote || '') + ' - using ' + num(hi) + '.';
+            } else {
+                n = p.n;
+            }
+            setNote(f.id, note);
+            v[f.id] = n;
+        });
+        v.vatinc = el('vatinc').checked;
+        v.cbase = el('cbase').value === 'ex' ? 'ex' : 'inc';
+        return v;
+    }
+
+    // ---------- model ----------
+
+    function whole(x) {
+        return (x < 0 ? -1 : 1) * Math.round(Math.abs(x) + 1e-9);
+    }
+
+    function calc(v) {
+        var comm = v.comm / 100, disc = v.disc / 100, mkt = v.mkt / 100, fee = v.fee / 100, ofee = v.ofee / 100;
+        var share = v.share / 100;
+        var vatRate = v.vatinc ? v.vat / 100 : 0;
+        var adrEx = v.adr / (1 + vatRate);
+        var commBase = v.cbase === 'ex' ? adrEx : v.adr;
+        var costShare = mkt + fee;
+        var directFactor = Math.max(0, 1 - costShare);
+        var otaNet = (adrEx - comm * commBase) * (1 - ofee);
+        var directNet = adrEx * (1 - disc) * directFactor;
+        var gap = directNet - otaNet;
+        var nights = v.rooms * 365 * (v.occ / 100);
+        var otaNights = nights * share;
+        var dirNights = nights - otaNights;
+        var shiftNights = nights * (v.shift / 100);
+        var afterOta = otaNights - shiftNights, afterDir = dirNights + shiftNights;
+        // Whole-currency values, rounded once. The totals are sums of the rounded cells and the gain
+        // is the difference between the rounded totals, so the table and the gain card always agree.
+        var otaRev = whole(otaNights * otaNet), dirRev = whole(dirNights * directNet);
+        var afterOtaRev = whole(afterOta * otaNet), afterDirRev = whole(afterDir * directNet);
+
+        // Where the two channels net the same, other inputs fixed.
+        var beMkt = (disc < 1 && adrEx > 0) ? (1 - fee - otaNet / (adrEx * (1 - disc))) * 100 : null;
+        var beComm = (ofee < 1 && commBase > 0) ? ((adrEx - directNet / (1 - ofee)) / commBase) * 100 : null;
+
+        return {
+            v: v, adrEx: adrEx, otaNet: otaNet, directNet: directNet, gap: gap, perStay: gap * v.los,
+            nights: nights, otaNights: otaNights, dirNights: dirNights,
+            shiftNights: shiftNights, afterOta: afterOta, afterDir: afterDir,
+            otaRev: otaRev, dirRev: dirRev, totalNow: otaRev + dirRev,
+            afterOtaRev: afterOtaRev, afterDirRev: afterDirRev, totalAfter: afterOtaRev + afterDirRev,
+            gain: (afterOtaRev + afterDirRev) - (otaRev + dirRev), point: nights * 0.01 * gap,
+            costsOver: costShare >= 1,
+            beMkt: beMkt, beComm: beComm,
+            beMktCapped: beMkt !== null && beMkt >= 100 - v.fee,
+            perNight: v.adr > 0,
+            annual: v.rooms > 0 && v.occ > 0
+        };
+    }
+
+    // ---------- verdict ----------
+
+    function biggestDriver(c) {
+        var v = c.v;
+        var parts = [
+            { name: 'direct booking discount', amount: c.adrEx * v.disc / 100, pct: v.disc },
+            { name: 'direct marketing cost', amount: c.adrEx * (1 - v.disc / 100) * v.mkt / 100, pct: v.mkt },
+            { name: 'booking and payment fees', amount: c.adrEx * (1 - v.disc / 100) * v.fee / 100, pct: v.fee }
+        ];
+        parts.sort(function(a, b) { return b.amount - a.amount; });
+        return parts[0];
+    }
+
+    function verdictFor(c) {
+        var v = c.v;
+        if (!c.perNight) {
+            return { cls: 'hv-verdict-empty', title: 'Nothing to compare yet',
+                paras: ['Enter an average daily rate to see what each channel is worth per room night.'] };
+        }
+        if (c.costsOver) {
+            return { cls: 'hv-verdict-bad', title: 'Direct costs take everything',
+                paras: ['Marketing and fees add up to 100% or more of direct room revenue, so a direct booking nets nothing. Lower one of them to get a meaningful comparison.'] };
+        }
+        var pts = +v.shift.toFixed(2);
+        var ptsWord = pts === 1 ? 'point' : 'points';
+        var ex = v.vatinc ? ', ex VAT,' : '';
+        var shiftLine;
+        if (!c.annual) shiftLine = 'Enter rooms and occupancy to see the annual figures. The per-night comparison does not need them.';
+        else if (c.v.share <= 0) shiftLine = 'There are no OTA room nights to move, so there is no annual gain to show. Raise the OTA share to see one.';
+        else if (v.shift <= 0) shiftLine = 'Set a shift above zero to see the annual figure. One percentage point of all room nights, moved from OTA to direct, is worth ' + money(c.point, 0, 1e9, true) + ' a year.';
+        else if (c.gain >= 0) shiftLine = 'Moving ' + pts + ' ' + ptsWord + ' of room nights from OTA to direct would add up to ' + money(c.gain, 0, 1e9, false) + ' a year.';
+        else shiftLine = 'Moving ' + pts + ' ' + ptsWord + ' of room nights from OTA to direct would cost ' + money(-c.gain, 0, 1e9, false) + ' a year.';
+
+        var gapTxt = money(Math.abs(c.gap), 2, 0, false);
+
+        if (c.gap < -0.005) {
+            var d = biggestDriver(c);
+            var paras = ['Direct nets ' + gapTxt + ' less per room night' + ex + ' than an OTA booking with these inputs, so moving bookings to direct would lose money. ' + shiftLine];
+            var why = 'The biggest direct cost is the ' + d.name + ' at ' + pct(d.pct) + ', worth ' + money(d.amount, 2, 0, false) + ' per night.';
+            var fixes = [];
+            if (c.beMkt !== null && c.beMkt >= 0) fixes.push('marketing cost fell to ' + pct(c.beMkt) + ' from ' + pct(v.mkt));
+            if (c.beComm !== null && c.beComm >= 0 && c.beComm <= 100) fixes.push('OTA commission rose to ' + pct(c.beComm) + ' from ' + pct(v.comm));
+            if (fixes.length) why += ' Direct would match the OTA if ' + fixes.join(', or if ') + '.';
+            if (c.beMkt !== null && c.beMkt < 0) why += ' Even with no marketing spend, the discount and fees together cost more than the OTA channel does, so one of those has to come down.';
+            paras.push(why);
+            return { cls: 'hv-verdict-bad', title: 'Direct nets less than OTA', paras: paras };
+        }
+
+        if (Math.abs(c.gap) <= 0.005) {
+            return { cls: 'hv-verdict-level', title: 'Level with the OTAs',
+                paras: ['Direct and OTA bookings net the same per room night' + ex + ' with these inputs, so shifting the mix changes nothing on this measure. The case for direct then rests on what the model leaves out, such as guest data and repeat stays.'] };
+        }
+
+        var out = ['Direct nets ' + gapTxt + ' more per room night' + ex + ' than an OTA booking. ' + shiftLine];
+        var holds = [];
+        if (c.beMktCapped) out.push('An OTA booking nets nothing or loses money here, so direct leads at any direct marketing cost.');
+        else if (c.beMkt !== null && c.beMkt >= 0) holds.push('while direct marketing stays below ' + pct(c.beMkt) + ' of room revenue (you have ' + pct(v.mkt) + ')');
+        if (c.beComm !== null && c.beComm > 0) holds.push('while OTA commission stays above ' + pct(c.beComm) + ' (you have ' + pct(v.comm) + ')');
+        if (holds.length) out.push('That holds ' + holds.join(' and ') + '.');
+        return { cls: 'hv-verdict-good', title: 'Direct nets more than OTA', paras: out };
+    }
+
+    // ---------- chart ----------
+
+    function svgEl(tag, attrs) {
+        var e = document.createElementNS(NS, tag);
+        for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]); }
+        return e;
+    }
+    function svgText(svg, x, y, text, attrs) {
+        var base = { x: x, y: y, 'font-size': '12', 'font-family': "'JetBrains Mono', monospace", fill: COL.text };
+        for (var k in attrs) { if (Object.prototype.hasOwnProperty.call(attrs, k)) base[k] = attrs[k]; }
+        var t = svgEl('text', base);
+        t.textContent = text;
+        svg.appendChild(t);
+    }
+
+    function drawChart() {
+        var box = el('hv-chart');
+        box.innerHTML = '';
+        if (!last || !last.perNight || last.costsOver) return;
+        var c = last;
+        var W = Math.round(box.getBoundingClientRect().width);
+        if (W < 120) return;
+        var vals = [money(c.otaNet, 2, 0), money(c.directNet, 2, 0)];
+        var valW = Math.ceil(Math.max(vals[0].length, vals[1].length) * 7.4) + 6;
+        var trackW = Math.max(60, W - valW - 8);
+        var scaleMax = c.adrEx;
+        var rows = [
+            { label: 'OTA net per night' + (c.v.vatinc ? ', ex VAT' : ''), val: c.otaNet, txt: vals[0], col: COL.ota },
+            { label: 'Direct net per night' + (c.v.vatinc ? ', ex VAT' : ''), val: c.directNet, txt: vals[1], col: COL.direct }
+        ];
+        var H = rows.length * 46 + 22;
+        var adrWord = c.v.vatinc ? 'ADR ex VAT' : 'ADR';
+        var svg = svgEl('svg', {
+            viewBox: '0 0 ' + W + ' ' + H, preserveAspectRatio: 'xMidYMid meet', role: 'img',
+            'aria-label': 'Bar chart of net revenue per room night' + (c.v.vatinc ? ', ex VAT,' : '') + ' from an ' + adrWord + ' of ' + money(c.adrEx, 2, 0) +
+                ': OTA ' + vals[0] + ', direct ' + vals[1] + '.'
+        });
+        rows.forEach(function(r, i) {
+            var y = i * 46;
+            svgText(svg, 0, y + 12, r.label);
+            svg.appendChild(svgEl('rect', { x: 0, y: y + 18, width: trackW, height: 22, fill: COL.track, rx: 3 }));
+            var w = Math.max(0, Math.min(trackW, trackW * r.val / scaleMax));
+            if (w > 0) svg.appendChild(svgEl('rect', { x: 0, y: y + 18, width: w, height: 22, fill: r.col, rx: 3 }));
+            svgText(svg, trackW + 8, y + 34, r.txt, { fill: COL.value, 'font-weight': '700' });
+        });
+        var cap = 'Full bar = ' + adrWord + ' (' + money(c.adrEx, 2, 0) + ')';
+        if (cap.length * 7.4 > W) cap = 'Full bar = ' + adrWord;
+        svgText(svg, 0, H - 4, cap);
+        box.appendChild(svg);
+    }
+
+    // ---------- render ----------
+
+    function setCard(id, text, delta, small) {
+        var e = el(id);
+        e.textContent = text;
+        e.className = 'result-value' + (delta ? ' ' + delta : '') + (small ? ' hv-small' : '');
+    }
+
+    function renderBreakEven(c) {
+        var m = c.beMkt, k = c.beComm;
+        if (!c.perNight || c.costsOver || m === null) {
+            setCard('res-be-mkt', 'Not defined', '', true);
+            el('res-be-mkt-sub').textContent = '';
+        } else if (c.beMktCapped) {
+            setCard('res-be-mkt', '-');
+            el('res-be-mkt-sub').textContent = 'an OTA booking nets nothing or loses money, so direct leads at any marketing cost';
+        } else if (m < 0) {
+            setCard('res-be-mkt', 'Not reachable', '', true);
+            el('res-be-mkt-sub').textContent = 'direct loses even with no marketing';
+        } else {
+            setCard('res-be-mkt', pct(m));
+            el('res-be-mkt-sub').textContent = 'direct leads below this';
+        }
+        if (!c.perNight || k === null) {
+            setCard('res-be-comm', 'Not defined', '', true);
+            el('res-be-comm-sub').textContent = '';
+        } else if (k <= 0) {
+            setCard('res-be-comm', 'Not needed', '', true);
+            el('res-be-comm-sub').textContent = 'direct leads even at 0% commission';
+        } else if (k > 100) {
+            setCard('res-be-comm', 'Not reachable', '', true);
+            el('res-be-comm-sub').textContent = 'direct loses even at 100% commission';
+        } else {
+            setCard('res-be-comm', pct(k));
+            el('res-be-comm-sub').textContent = 'direct leads above this';
+        }
+    }
+
+    function render(c, immediate) {
+        setCard('res-ota-net', moneyCard(c.otaNet, 2));
+        setCard('res-direct-net', moneyCard(c.directNet, 2));
+        setCard('res-gap-night', moneyCard(c.gap, 2, true), deltaClass(c.gap));
+        if (c.v.los > 0) {
+            setCard('res-gap-stay', moneyCard(c.perStay, 2, true), deltaClass(c.perStay));
+            el('res-gap-stay-sub').textContent = 'over ' + (+c.v.los.toFixed(2)) + (c.v.los === 1 ? ' night' : ' nights');
+        } else {
+            setCard('res-gap-stay', 'Set a stay length', '', true);
+            el('res-gap-stay-sub').textContent = '';
+        }
+        setCard('res-nights', num(c.nights));
+        if (c.annual) {
+            setCard('res-total-now', moneyCard(c.totalNow, 0));
+            setCard('res-gain', moneyCard(c.gain, 0, true), deltaClass(c.gain));
+            if (c.v.share > 0) {
+                setCard('res-point', moneyCard(c.point, 0, true), deltaClass(c.point));
+                el('res-point-sub').textContent = '1% of all room nights, OTA to direct, a year';
+            } else {
+                setCard('res-point', '-');
+                el('res-point-sub').textContent = 'no OTA nights to move';
+            }
+        } else {
+            setCard('res-total-now', 'Needs rooms and occupancy', '', true);
+            setCard('res-gain', 'Needs rooms and occupancy', '', true);
+            setCard('res-point', 'Needs rooms and occupancy', '', true);
+            el('res-point-sub').textContent = '';
+        }
+        renderBreakEven(c);
+        el('ota-net-note').hidden = !(c.perNight && c.otaNet <= 0.000001);
+
+        el('tb-ota-nights-now').textContent = num(c.otaNights);
+        el('tb-ota-nights-after').textContent = num(c.afterOta);
+        el('tb-dir-nights-now').textContent = num(c.dirNights);
+        el('tb-dir-nights-after').textContent = num(c.afterDir);
+        el('tb-ota-net-now').textContent = moneyTable(c.otaRev);
+        el('tb-ota-net-after').textContent = moneyTable(c.afterOtaRev);
+        el('tb-dir-net-now').textContent = moneyTable(c.dirRev);
+        el('tb-dir-net-after').textContent = moneyTable(c.afterDirRev);
+        el('tb-total-now').textContent = moneyTable(c.totalNow);
+        el('tb-total-after').textContent = moneyTable(c.totalAfter);
+
+        var vd = verdictFor(c);
+        var box = el('verdict');
+        box.className = 'hv-verdict ' + vd.cls;
+        box.innerHTML = '';
+        var strong = document.createElement('strong');
+        strong.textContent = vd.title;
+        box.appendChild(strong);
+        vd.paras.forEach(function(t) {
+            var p = document.createElement('p');
+            p.textContent = t;
+            box.appendChild(p);
+        });
+        scheduleLive(vd.title + '. ' + vd.paras[0], immediate);
+        drawChart();
+    }
+
+    // The live region is rewritten only once typing pauses, and only if the sentence changed.
+    // A discrete control (VAT switch, commission base, currency) is one change, not a burst of
+    // typing, so it updates the announcement in the same render as the figures and no stale wording
+    // (for example "ex VAT" after switching VAT off) is left in the live region.
+    function scheduleLive(text, immediate) {
+        clearTimeout(liveTimer);
+        if (immediate) {
+            lastLive = text;
+            el('hv-live').textContent = text;
+            return;
+        }
+        liveTimer = setTimeout(function() {
+            if (text === lastLive) return;
+            lastLive = text;
+            el('hv-live').textContent = text;
+        }, LIVE_DELAY);
+    }
+
+    // ---------- URL ----------
+
+    function writeURL(v) {
+        var p = new URLSearchParams();
+        p.set('cur', currency);
+        FIELDS.forEach(function(f) { p.set(f.param, canon(typed[f.id])); });
+        p.set('vatinc', v.vatinc ? '1' : '0');
+        p.set('cbase', v.cbase);
+        try { history.replaceState(null, '', '?' + p.toString()); } catch (e) { /* ignore */ }
+    }
+
+    function readURL() {
+        var p = new URLSearchParams(window.location.search);
+        if (p.has('cur') && CURRENCIES[p.get('cur')]) currency = p.get('cur');
+        FIELDS.forEach(function(f) {
+            if (!p.has(f.param)) return;
+            if (parse(p.get(f.param)).n !== undefined) el(f.id).value = p.get(f.param);
+        });
+        if (p.get('vatinc') === '0') el('vatinc').checked = false;
+        if (p.get('cbase') === 'ex' || p.get('cbase') === 'inc') el('cbase').value = p.get('cbase');
+        el('currency-select').value = currency;
+    }
+
+    // ---------- events ----------
+
+    function applyControls(v) {
+        var s = sym();
+        var syms = document.querySelectorAll('.hv-sym');
+        for (var i = 0; i < syms.length; i++) syms[i].textContent = s;
+        var ex = document.querySelectorAll('.hv-ex');
+        for (var j = 0; j < ex.length; j++) ex[j].hidden = !v.vatinc;
+        el('vat').disabled = !v.vatinc;
+        el('cbase').disabled = !v.vatinc;
+    }
+
+    function update(immediate) {
+        var v = readAll();
+        last = calc(v);
+        applyControls(v);
+        render(last, immediate);
+        writeURL(v);
+    }
+
+    function userChanged() {
+        if (!ready || eventSent) return;
+        clearTimeout(eventTimer);
+        eventTimer = setTimeout(function() {
+            if (eventSent) return;
+            eventSent = true;
+            if (window.toolEvent) window.toolEvent('calculated');
+        }, EVENT_DELAY);
+    }
+
+    FIELDS.forEach(function(f) {
+        var input = el(f.id);
+        input.addEventListener('input', function() { update(); userChanged(); });
+        // Tidy the box once the user has finished with it. A value that could be valid (up to the
+        // static ceiling) is kept as typed, so a capped shift is not lost when the OTA share changes.
+        input.addEventListener('change', function() {
+            update();
+            var ceiling = f.max !== undefined ? f.max : (typeof f.hi === 'function' ? 100 : f.hi);
+            var shown = canon(Math.min(Math.max(typed[f.id], 0), ceiling));
+            if (input.value !== shown) input.value = shown;
+        });
+    });
+
+    ['vatinc', 'cbase'].forEach(function(id) {
+        el(id).addEventListener('change', function() { update(true); userChanged(); });
+    });
+
+    el('currency-select').addEventListener('change', function() {
+        currency = this.value;
+        update(true);
+        userChanged();
+    });
+
+    function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(text);
+        }
+        return new Promise(function(resolve, reject) {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            var ok = false;
+            try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+            document.body.removeChild(ta);
+            if (ok) resolve(); else reject(new Error('copy failed'));
+        });
+    }
+
+    el('copy-link').addEventListener('click', function() {
+        if (window.toolEvent) window.toolEvent('shared', { method: 'copy_link' });
+        var status = el('copy-status');
+        var done = function(msg) { status.textContent = msg; };
+        var p;
+        try { p = copyText(window.location.href); } catch (e) { p = Promise.reject(e); }
+        p.then(function() { done('Link copied.'); }, function() { done('Could not copy. The address bar holds the same link.'); });
+    });
+
+    var resizeFrame = 0, lastW = 0;
+    window.addEventListener('resize', function() {
+        cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(function() {
+            var w = Math.round(el('hv-chart').getBoundingClientRect().width);
+            if (w !== lastW) { lastW = w; drawChart(); }
+        });
+    });
+
+    readURL();
+    update();
+    lastW = Math.round(el('hv-chart').getBoundingClientRect().width);
+    ready = true;
+})();
+</script>
