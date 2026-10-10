@@ -21,11 +21,17 @@ function model(o) {
   const otaNights = nights * v.share / 100;
   const dirNights = nights - otaNights;
   const moved = nights * v.shift / 100;
+  // Table cells are rounded once; totals add the rounded cells and the gain is the rounded difference.
+  const whole = (x) => (x < 0 ? -1 : 1) * Math.round(Math.abs(x) + 1e-9);
+  const otaRev = whole(otaNights * otaNet);
+  const dirRev = whole(dirNights * directNet);
+  const afterOtaRev = whole((otaNights - moved) * otaNet);
+  const afterDirRev = whole((dirNights + moved) * directNet);
   return {
     adrEx, otaNet, directNet, gap, perStay: gap * v.los, nights, otaNights, dirNights, moved,
-    otaRev: otaNights * otaNet, dirRev: dirNights * directNet,
-    totalNow: otaNights * otaNet + dirNights * directNet,
-    gain: moved * gap, point: nights * 0.01 * gap,
+    otaRev, dirRev, afterOtaRev, afterDirRev,
+    totalNow: otaRev + dirRev, totalAfter: afterOtaRev + afterDirRev,
+    gain: (afterOtaRev + afterDirRev) - (otaRev + dirRev), gainExact: moved * gap, point: nights * 0.01 * gap,
     beMkt: (1 - v.fee / 100 - otaNet / (adrEx * (1 - v.disc / 100))) * 100,
     beComm: ((adrEx - directNet / (1 - v.ofee / 100)) / base) * 100,
   };
@@ -51,6 +57,8 @@ async function setAll(page, o) {
   }
 }
 
+// Any percentage above 100: 100.1%, 101%, 118.1%, 250%
+const OVER_100 = /\b(?:100\.[1-9]|10[1-9]|1[1-9]\d|[2-9]\d\d)(?:\.\d)?%/;
 const TAB_ORDER = ['rooms', 'occ', 'adr', 'los', 'vatinc', 'vat', 'cbase', 'share', 'comm', 'ofee', 'mkt', 'fee', 'disc', 'shift'];
 const TEXT_IDS = ['rooms', 'occ', 'adr', 'los', 'vat', 'share', 'comm', 'ofee', 'mkt', 'fee', 'disc', 'shift'];
 
@@ -73,8 +81,10 @@ test.describe('Hotel direct vs OTA calculator', () => {
       const m = model({});
       expect(m.nights).toBeCloseTo(13687.5, 6);
       await expect(page.locator('#res-nights')).toHaveText('13,688');
-      // 684.375 nights x 9.225 = 6,313 a year; one point = 136.875 x 9.225 = 1,263
-      expect(Math.abs(parse(await txt(page, 'res-gain')) - 6313)).toBeLessThan(2);
+      // 684.375 nights x 9.225 = 6,313.36 exactly, but the page derives the gain from the rounded table
+      // totals (1,691,724 - 1,685,410 = 6,314) so the two always agree; one point = 136.875 x 9.225 = 1,263
+      expect(Math.abs(parse(await txt(page, 'res-gain')) - m.gainExact)).toBeLessThan(1);
+      await expect(page.locator('#res-gain')).toHaveText('+£6,314');
       await expect(page.locator('#res-gain')).toHaveText('+' + gbp(m.gain));
       expect(Math.abs(parse(await txt(page, 'res-point')) - 1263)).toBeLessThan(2);
       await expect(page.locator('#res-point')).toHaveText('+' + gbp(m.point));
@@ -89,7 +99,8 @@ test.describe('Hotel direct vs OTA calculator', () => {
       await expect(page.locator('#tb-ota-net-now')).toHaveText('£643,860');
       await expect(page.locator('#tb-dir-net-now')).toHaveText('£1,041,550');
       await expect(page.locator('#tb-total-now')).toHaveText('£1,685,410');
-      await expect(page.locator('#tb-total-after')).toHaveText(gbp(m.totalNow + m.gain));
+      await expect(page.locator('#tb-total-after')).toHaveText(gbp(m.totalAfter));
+      await expect(page.locator('#tb-total-after')).toHaveText('£1,691,724');
       await expect(page.locator('#hv-table caption')).toContainText('ex VAT');
     });
 
@@ -275,6 +286,147 @@ test.describe('Hotel direct vs OTA calculator', () => {
     });
   });
 
+  test.describe('break-even marketing is never 100% or more', () => {
+    test('at 100% commission the card shows a dash with a note, not 118.1%', async ({ page }) => {
+      await page.locator('#comm').fill('100');
+      await expect(page.locator('#res-ota-net')).toHaveText('-£30.00');
+      await expect(page.locator('#res-be-mkt')).toHaveText('-');
+      await expect(page.locator('#res-be-mkt-sub')).toContainText('any marketing cost');
+      const results = await page.locator('#section-results').innerText();
+      expect(results).not.toMatch(OVER_100);
+      expect(results).not.toContain('118.1');
+    });
+
+    test('the verdict agrees: direct leads at any marketing cost, with no percentage above 100', async ({ page }) => {
+      await page.locator('#comm').fill('100');
+      const verdict = page.locator('#verdict');
+      await expect(verdict).toContainText('Direct nets more than OTA');
+      await expect(verdict).toContainText('at any direct marketing cost');
+      await expect(verdict).not.toContainText('stays below');
+      expect(await txt(page, 'verdict')).not.toMatch(OVER_100);
+      // the commission clause is still given
+      await expect(verdict).toContainText('OTA commission stays above 12.9%');
+    });
+
+    test('marketing plus fees at 100% still reads as direct costs taking everything', async ({ page }) => {
+      await page.locator('#comm').fill('100');
+      await setAll(page, { mkt: 97 });
+      await expect(page.locator('#verdict')).toContainText('Direct costs take everything');
+      expect(await txt(page, 'section-results')).not.toMatch(OVER_100);
+    });
+
+    test('just below the cap the figure is still shown, and stays under 100% less the fees', async ({ page }) => {
+      // commission 80: OTA nets 150 - 144 = 6, so 1 - 0.03 - 6 / 142.5 = 92.8%
+      await page.locator('#comm').fill('80');
+      await expect(page.locator('#res-be-mkt')).toHaveText('92.8%');
+      await expect(page.locator('#verdict')).toContainText('stays below 92.8%');
+      // commission 90: OTA nets 150 - 162 = -12, so the cap applies
+      await page.locator('#comm').fill('90');
+      await expect(page.locator('#res-be-mkt')).toHaveText('-');
+    });
+
+    test('with OTA fees at 100% the OTA nets nothing and the figure is capped too', async ({ page }) => {
+      await page.locator('#ofee').fill('100');
+      await expect(page.locator('#res-be-mkt')).toHaveText('-');
+      await expect(page.locator('#verdict')).toContainText('at any direct marketing cost');
+    });
+  });
+
+  test.describe('OTA net zero or below', () => {
+    test('a note explains it at 100% commission on the VAT-inclusive price', async ({ page }) => {
+      const note = page.locator('#ota-net-note');
+      await expect(note).toBeHidden();
+      await page.locator('#comm').fill('100');
+      await expect(note).toBeVisible();
+      await expect(note).toContainText('commission and fees reach or exceed the room price');
+      await page.locator('#comm').fill('18');
+      await expect(note).toBeHidden();
+    });
+
+    test('also shown when OTA net is exactly zero, and when the VAT switch is off it has no VAT wording', async ({ page }) => {
+      await page.locator('#vatinc').uncheck();
+      await page.locator('#comm').fill('100');
+      await expect(page.locator('#res-ota-net')).toHaveText('£0.00');
+      await expect(page.locator('#ota-net-note')).toBeVisible();
+      expect(await txt(page, 'ota-net-note')).not.toMatch(/VAT/);
+    });
+
+    test('OTA-side fees of 100% trigger it, and a normal case does not', async ({ page }) => {
+      await page.locator('#ofee').fill('100');
+      await expect(page.locator('#ota-net-note')).toBeVisible();
+      await page.locator('#ofee').fill('3');
+      await expect(page.locator('#ota-net-note')).toBeHidden();
+    });
+
+    test('with no rate there is no OTA note', async ({ page }) => {
+      await page.locator('#adr').fill('0');
+      await expect(page.locator('#ota-net-note')).toBeHidden();
+    });
+  });
+
+  test.describe('table totals and the gain card agree', () => {
+    const cases = [
+      {},
+      { rooms: 37, occ: 68, adr: 143.5 },
+      { rooms: 120, occ: 82, adr: 245, share: 55, comm: 20, mkt: 11, fee: 2.5, disc: 10, shift: 8 },
+      { rooms: 9, occ: 61, adr: 99.99, share: 33, shift: 7.5, ofee: 1.5 },
+      { disc: 20 },
+      { vatinc: false, rooms: 77, adr: 199 },
+    ];
+    for (const [i, o] of cases.entries()) {
+      test(`case ${i + 1}: gain card equals the difference of the table totals, and the cells add up`, async ({ page }) => {
+        await setAll(page, o);
+        await expect(page.locator('#res-ota-net')).toHaveText(gbp(model(o).otaNet, 2));
+        const n = async (id) => parse(await txt(page, id));
+        const gain = await n('res-gain');
+        expect(gain).toBe((await n('tb-total-after')) - (await n('tb-total-now')));
+        expect(await n('tb-total-now')).toBe((await n('tb-ota-net-now')) + (await n('tb-dir-net-now')));
+        expect(await n('tb-total-after')).toBe((await n('tb-ota-net-after')) + (await n('tb-dir-net-after')));
+        expect(await n('res-total-now')).toBe(await n('tb-total-now'));
+        expect(gain).toBe(model(o).gain);
+        expect(Math.abs(gain - model(o).gainExact)).toBeLessThan(1.5);
+      });
+    }
+
+    test('the default table totals differ by exactly the gain shown (6,314)', async ({ page }) => {
+      await expect(page.locator('#tb-total-now')).toHaveText('£1,685,410');
+      await expect(page.locator('#tb-total-after')).toHaveText('£1,691,724');
+      await expect(page.locator('#res-gain')).toHaveText('+£6,314');
+    });
+  });
+
+  test.describe('wording', () => {
+    test('the verdict says the shift would add up to the figure, not that it adds it', async ({ page }) => {
+      await expect(page.locator('#verdict')).toContainText('would add up to £6,314 a year');
+      expect(await txt(page, 'verdict')).not.toMatch(/ adds /);
+    });
+
+    test('the one-point card says what a point is', async ({ page }) => {
+      const card = page.locator('#res-point').locator('xpath=ancestor::div[contains(@class,"result-card")]');
+      await expect(card).toContainText('Value of one point shifted');
+      await expect(card).toContainText('1% of all room nights, OTA to direct');
+    });
+
+    test('a zero shift explains the point in full in the verdict', async ({ page }) => {
+      await page.locator('#shift').fill('0');
+      await expect(page.locator('#verdict')).toContainText('One percentage point of all room nights, moved from OTA to direct, is worth');
+    });
+
+    test('the OTA-side fees hint explains the default of zero', async ({ page }) => {
+      const hint = await txt(page, 'ofee-hint');
+      expect(hint).toMatch(/0 for OTA-collect \(agency\) bookings/);
+      expect(hint).toMatch(/hotel-collect bookings set it to the card fee/);
+      expect(hint).toContain('channel manager');
+      await expect(page.locator('#ofee')).toHaveValue('0');
+    });
+
+    test('how this works explains the rounding of the table and gain', async ({ page }) => {
+      const t = await txt(page, 'section-results');
+      expect(t).toBeTruthy();
+      expect(await page.locator('.hv-method').innerText()).toContain('the annual gain is the difference between the two rounded totals');
+    });
+  });
+
   test.describe('typing', () => {
     test('decimals typed key by key are kept exactly and the field is not rebuilt', async ({ page }) => {
       const los = page.locator('#los');
@@ -430,7 +582,7 @@ test.describe('Hotel direct vs OTA calculator', () => {
       await page.locator('#share').fill('0');
       await expect(page.locator('#verdict')).toContainText('There are no OTA room nights to move');
       await expect(page.locator('#verdict')).not.toContainText('Set a shift above zero');
-      await expect(page.locator('#verdict')).not.toContainText('One point of room nights is worth');
+      await expect(page.locator('#verdict')).not.toContainText('One percentage point of all room nights');
       await expect(page.locator('#res-point')).toHaveText('-');
       await expect(page.locator('#res-gain')).toHaveText('£0');
       // the per-night comparison is unaffected

@@ -233,7 +233,7 @@ tool_order: 6
             <div class="col-6 col-md-4">
                 <label class="form-label" for="ofee">OTA-side fees (optional)</label>
                 <div class="input-group"><input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="ofee" value="0" aria-describedby="ofee-hint ofee-note"><span class="input-group-text" aria-hidden="true">%</span></div>
-                <div class="hv-hint" id="ofee-hint">Card fees on hotel-collect bookings and channel manager fees, taken from what is left after commission</div>
+                <div class="hv-hint" id="ofee-hint">0 for OTA-collect (agency) bookings, where the OTA takes payment. For hotel-collect bookings set it to the card fee you pay, plus any channel manager fee. Taken from what is left after commission</div>
                 <div class="hv-note" id="ofee-note" hidden></div>
             </div>
         </div>
@@ -325,9 +325,9 @@ tool_order: 6
         </div>
         <div class="col-6 col-md-3">
             <div class="result-card">
-                <div class="result-label">One point is worth</div>
+                <div class="result-label">Value of one point shifted</div>
                 <div class="result-value" id="res-point">--</div>
-                <div class="result-sub" id="res-point-sub">a year</div>
+                <div class="result-sub" id="res-point-sub">1% of all room nights, OTA to direct, a year</div>
             </div>
         </div>
     </div>
@@ -348,6 +348,7 @@ tool_order: 6
         </div>
     </div>
 
+    <div class="hv-note mb-2" id="ota-net-note" hidden>OTA commission and fees reach or exceed the room price, so an OTA booking nets nothing or loses money with these inputs.</div>
     <div class="hv-verdict hv-verdict-empty" id="verdict"></div>
     <div class="visually-hidden" id="hv-live" role="status" aria-live="polite" aria-atomic="true"></div>
 
@@ -388,10 +389,10 @@ tool_order: 6
         <li><strong>Room nights a year</strong> = <code>rooms x 365 x occupancy</code></li>
         <li><strong>Net revenue by channel</strong> = room nights in that channel x net per night. The OTA share is the percentage you enter and the rest is direct.</li>
         <li><strong>Annual gain from the shift</strong> = <code>room nights x (shift / 100) x (direct net - OTA net)</code>. If direct nets less than OTA, this is a loss, and the page says so.</li>
-        <li><strong>One point is worth</strong> = the same calculation for a shift of one percentage point.</li>
+        <li><strong>Value of one point shifted</strong> = the same calculation for a shift of one percentage point, meaning 1% of all room nights moved from OTA to direct.</li>
         <li><strong>Break-even marketing</strong> is the direct marketing cost at which the two channels net the same. <strong>Break-even commission</strong> is the OTA commission at which they net the same. Each holds every other input where you set it.</li>
     </ul>
-    <p>The shift cannot be larger than the OTA share you start with, because you cannot move more room nights than you have there. Figures are calculated from the numbers you enter, not from rounded ones, and only the display is rounded.</p>
+    <p>The shift cannot be larger than the OTA share you start with, because you cannot move more room nights than you have there. Net revenue by channel is calculated from the numbers you enter and rounded to whole currency units once. The totals in the table add up those rounded figures and the annual gain is the difference between the two rounded totals, so what you see always adds up. The value of one point is worked out from unrounded figures.</p>
     <p><strong>VAT and commission.</strong> Whether an OTA charges commission on the price including VAT or excluding it varies by OTA, by contract and by country, and I have not assumed what any of them does. Check your contract and set the choice to match. The 20% VAT rate is the UK standard rate on hotel rooms; change it if your rate or country differs. If your ADR is quoted ex VAT, or VAT does not apply to you, switch the VAT setting off.</p>
     <p><strong>What the model leaves out.</strong> It is a model of mix, not of demand, so treat the answer as a guide to the order of magnitude rather than a forecast.</p>
     <ul>
@@ -544,6 +545,10 @@ tool_order: 6
 
     // ---------- model ----------
 
+    function whole(x) {
+        return (x < 0 ? -1 : 1) * Math.round(Math.abs(x) + 1e-9);
+    }
+
     function calc(v) {
         var comm = v.comm / 100, disc = v.disc / 100, mkt = v.mkt / 100, fee = v.fee / 100, ofee = v.ofee / 100;
         var share = v.share / 100;
@@ -560,8 +565,10 @@ tool_order: 6
         var dirNights = nights - otaNights;
         var shiftNights = nights * (v.shift / 100);
         var afterOta = otaNights - shiftNights, afterDir = dirNights + shiftNights;
-        var otaRev = otaNights * otaNet, dirRev = dirNights * directNet;
-        var afterOtaRev = afterOta * otaNet, afterDirRev = afterDir * directNet;
+        // Whole-currency values, rounded once. The totals are sums of the rounded cells and the gain
+        // is the difference between the rounded totals, so the table and the gain card always agree.
+        var otaRev = whole(otaNights * otaNet), dirRev = whole(dirNights * directNet);
+        var afterOtaRev = whole(afterOta * otaNet), afterDirRev = whole(afterDir * directNet);
 
         // Where the two channels net the same, other inputs fixed.
         var beMkt = (disc < 1 && adrEx > 0) ? (1 - fee - otaNet / (adrEx * (1 - disc))) * 100 : null;
@@ -573,9 +580,10 @@ tool_order: 6
             shiftNights: shiftNights, afterOta: afterOta, afterDir: afterDir,
             otaRev: otaRev, dirRev: dirRev, totalNow: otaRev + dirRev,
             afterOtaRev: afterOtaRev, afterDirRev: afterDirRev, totalAfter: afterOtaRev + afterDirRev,
-            gain: shiftNights * gap, point: nights * 0.01 * gap,
+            gain: (afterOtaRev + afterDirRev) - (otaRev + dirRev), point: nights * 0.01 * gap,
             costsOver: costShare >= 1,
             beMkt: beMkt, beComm: beComm,
+            beMktCapped: beMkt !== null && beMkt >= 100 - v.fee,
             perNight: v.adr > 0,
             annual: v.rooms > 0 && v.occ > 0
         };
@@ -610,8 +618,8 @@ tool_order: 6
         var shiftLine;
         if (!c.annual) shiftLine = 'Enter rooms and occupancy to see the annual figures. The per-night comparison does not need them.';
         else if (c.v.share <= 0) shiftLine = 'There are no OTA room nights to move, so there is no annual gain to show. Raise the OTA share to see one.';
-        else if (v.shift <= 0) shiftLine = 'Set a shift above zero to see the annual figure. One point of room nights is worth ' + money(c.point, 0, 1e9, true) + ' a year.';
-        else if (c.gain >= 0) shiftLine = 'Moving ' + pts + ' ' + ptsWord + ' of room nights from OTA to direct adds ' + money(c.gain, 0, 1e9, false) + ' a year.';
+        else if (v.shift <= 0) shiftLine = 'Set a shift above zero to see the annual figure. One percentage point of all room nights, moved from OTA to direct, is worth ' + money(c.point, 0, 1e9, true) + ' a year.';
+        else if (c.gain >= 0) shiftLine = 'Moving ' + pts + ' ' + ptsWord + ' of room nights from OTA to direct would add up to ' + money(c.gain, 0, 1e9, false) + ' a year.';
         else shiftLine = 'Moving ' + pts + ' ' + ptsWord + ' of room nights from OTA to direct would cost ' + money(-c.gain, 0, 1e9, false) + ' a year.';
 
         var gapTxt = money(Math.abs(c.gap), 2, 0, false);
@@ -636,9 +644,10 @@ tool_order: 6
 
         var out = ['Direct nets ' + gapTxt + ' more per room night' + ex + ' than an OTA booking. ' + shiftLine];
         var holds = [];
-        if (c.beMkt !== null && c.beMkt >= 0) holds.push('direct marketing stays below ' + pct(c.beMkt) + ' of room revenue (you have ' + pct(v.mkt) + ')');
-        if (c.beComm !== null && c.beComm > 0) holds.push('OTA commission stays above ' + pct(c.beComm) + ' (you have ' + pct(v.comm) + ')');
-        if (holds.length) out.push('That holds while ' + holds.join(' and while ') + '.');
+        if (c.beMktCapped) holds.push('at any direct marketing cost, because an OTA booking nets nothing here');
+        else if (c.beMkt !== null && c.beMkt >= 0) holds.push('while direct marketing stays below ' + pct(c.beMkt) + ' of room revenue (you have ' + pct(v.mkt) + ')');
+        if (c.beComm !== null && c.beComm > 0) holds.push('while OTA commission stays above ' + pct(c.beComm) + ' (you have ' + pct(v.comm) + ')');
+        if (holds.length) out.push('That holds ' + holds.join(' and ') + '.');
         return { cls: 'hv-verdict-good', title: 'Direct nets more than OTA', paras: out };
     }
 
@@ -706,6 +715,9 @@ tool_order: 6
         if (!c.perNight || c.costsOver || m === null) {
             setCard('res-be-mkt', 'Not defined', '', true);
             el('res-be-mkt-sub').textContent = '';
+        } else if (c.beMktCapped) {
+            setCard('res-be-mkt', '-');
+            el('res-be-mkt-sub').textContent = 'an OTA booking nets nothing, so direct leads at any marketing cost';
         } else if (m < 0) {
             setCard('res-be-mkt', 'Not reachable', '', true);
             el('res-be-mkt-sub').textContent = 'direct loses even with no marketing';
@@ -745,7 +757,7 @@ tool_order: 6
             setCard('res-gain', moneyCard(c.gain, 0, true), deltaClass(c.gain));
             if (c.v.share > 0) {
                 setCard('res-point', moneyCard(c.point, 0, true), deltaClass(c.point));
-                el('res-point-sub').textContent = 'a year';
+                el('res-point-sub').textContent = '1% of all room nights, OTA to direct, a year';
             } else {
                 setCard('res-point', '-');
                 el('res-point-sub').textContent = 'no OTA nights to move';
@@ -757,6 +769,7 @@ tool_order: 6
             el('res-point-sub').textContent = '';
         }
         renderBreakEven(c);
+        el('ota-net-note').hidden = !(c.perNight && c.otaNet <= 0.000001);
 
         el('tb-ota-nights-now').textContent = num(c.otaNights);
         el('tb-ota-nights-after').textContent = num(c.afterOta);
