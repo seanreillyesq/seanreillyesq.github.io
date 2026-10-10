@@ -11,7 +11,8 @@ for (const width of WIDTHS) {
     const imgs = page.locator('.hp-logo-cell img');
     await expect(imgs).toHaveCount(9);
 
-    // Lazy or async images may not have decoded yet; wait so boxes are final.
+    // The strip is below the fold and lazy-loaded: scroll each logo into view, then wait for decode.
+    for (let i = 0; i < 9; i++) await imgs.nth(i).scrollIntoViewIfNeeded();
     await page.evaluate(() => Promise.all(
       [...document.querySelectorAll('.hp-logo-cell img')].map((i) => i.decode().catch(() => {}))
     ));
