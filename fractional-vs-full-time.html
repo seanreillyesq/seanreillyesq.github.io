@@ -82,6 +82,15 @@ tool_order: 4
     line-height: 1.3;
     margin-top: 0.25rem;
 }
+.fvf-check {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    font-size: 0.9375rem;
+    cursor: pointer;
+}
+.fvf-check input { width: 1.375rem; height: 1.375rem; flex: none; accent-color: var(--color-accent, #4A7BA7); }
 .fvf-note {
     color: #b91c1c;
     font-size: 0.75rem;
@@ -291,9 +300,13 @@ tool_order: 4
         </div>
         <div class="col-6 col-md-3">
             <label class="form-label" for="p-st">Start time (weeks)</label>
-            <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="p-st" data-key="fst" value="2">
+            <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="p-st" data-key="fst" value="4">
             <div class="fvf-note" id="p-st-note" hidden></div>
-            <div class="fvf-hint" id="p-st-hint">From saying yes to the first day</div>
+            <div class="fvf-hint" id="p-st-hint">From deciding to the first day, including finding and choosing someone</div>
+        </div>
+        <div class="col-12">
+            <label class="fvf-check" for="p-ir35"><input type="checkbox" id="p-ir35" aria-describedby="p-ir35-hint"> Inside IR35 (the client pays employer NI on the fees)</label>
+            <div class="fvf-hint" id="p-ir35-hint">Optional. Adds employer NI at the rate above to the fractional cost, on the full fee with no threshold.</div>
         </div>
     </div>
 </div>
@@ -362,13 +375,13 @@ tool_order: 4
 <div class="methodology mb-4">
     <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
     <p><strong>Full-time:</strong> annual cost is salary, plus employer National Insurance on the salary above the threshold, plus employer pension, plus one figure for benefits and overheads. The recruiter fee is a percentage of salary and is added to the first year only. Cost per working day is the annual cost divided by the working days you enter.</p>
-    <p><strong>Fractional:</strong> annual cost is the day rate multiplied by days per month and by twelve. The day rate is treated as excluding VAT; if you cannot reclaim VAT, add it yourself. The per-day comparison is the point to look at: a fractional day costs more than a day of the salaried hire, and the saving comes entirely from buying fewer days.</p>
+    <p><strong>Fractional:</strong> annual cost is the day rate multiplied by days per month and by twelve. The day rate is treated as excluding VAT; if you cannot reclaim VAT, add it yourself. The IR35 box is optional and off by default. The per-day comparison is the point to look at: a fractional day costs more than a day of the salaried hire, and the saving comes entirely from buying fewer days.</p>
     <p><strong>Break-even:</strong> the annual cost of the hire divided by (12 x day rate). Above that many days a month, the hire is cheaper. If the figure is higher than the working days in a month, the hire's days cannot beat fractional on cost at that day rate. The first-12-month break-even uses the same idea on the cash spent in the first 12 months from today.</p>
     <p><strong>First 12 months from today:</strong> for the hire, the annual cost for the weeks left after the time to hire (52 minus those weeks, over 52), plus the recruiter fee if the hire starts inside the year. For fractional, the annual cost for the weeks after its start time. With the defaults that is &pound;119,250 x 40/52 + &pound;19,000 = &pound;110,731.</p>
     <p><strong>Time to up to speed:</strong> calendar time until someone is in post and up to speed. For the hire, time to hire plus ramp-up (months converted at 52 weeks over 12 months). For fractional, start time plus ramp-up. A fractional leader delivers fewer hours each week, so these two figures are not a like-for-like measure of output. Both are your estimates, not predictions.</p>
     <p><strong>Statutory figures:</strong> employer National Insurance is 15% above a secondary threshold of &pound;5,000 a year, the rates for the 2026/27 tax year (GOV.UK, rates and thresholds for employers). Both are editable. The calculator ignores the Employment Allowance, which can reduce employer National Insurance for some employers, and any reduced rates for particular employees.</p>
     <p><strong>What it leaves out:</strong> the cost of a bad hire or a bad fractional fit, bonus, salary growth, redundancy risk, the management time either option needs from you, and the cost of a vacancy while you wait. Class 1A National Insurance on benefits is a small omission. Nothing you type leaves your browser.</p>
-    <p><strong>IR35 and flexibility:</strong> for a medium or large client, the client decides the contractor's employment status. If the engagement is judged to be inside IR35, the client owes employer National Insurance and other costs on the fees, and this tool does not model that. On the other side, a short notice period is a real benefit of fractional: you can scale back or stop in weeks, where ending a hire takes months and costs more.</p>
+    <p><strong>IR35 and flexibility:</strong> for a medium or large client, the client decides the contractor's employment status. If the engagement is judged to be inside IR35, the client owes employer National Insurance and other costs on the fees, and this tool does not model that unless you tick the box. The box is a rough guide: it adds employer National Insurance at the rate you entered to the full fee, with no threshold and no Employment Allowance, and it ignores any other costs. On the other side, a short notice period is a real benefit of fractional: you can scale back or stop in weeks, where ending a hire takes months and costs more.</p>
 
     <p><strong>When full-time is the right choice:</strong></p>
     <ul>
@@ -419,7 +432,7 @@ tool_order: 4
         dr:   { id: 'p-dr',   def: 850,   min: 0, max: 10000 },
         dpm:  { id: 'p-dpm',  def: 4,     min: 0, max: 22 },
         frup: { id: 'p-rup',  def: 6,     min: 0, max: 52 },
-        fst:  { id: 'p-st',   def: 2,     min: 0, max: 52 }
+        fst:  { id: 'p-st',   def: 4,     min: 0, max: 52 }
     };
 
     var currency = 'GBP';
@@ -431,6 +444,7 @@ tool_order: 4
     var lastLive = '';
 
     function el(id) { return document.getElementById(id); }
+    function readIr35() { vals.ir35 = el('p-ir35').checked ? 1 : 0; }
 
     // ---------- formatting ----------
     function sym() { return SYM[currency]; }
@@ -443,7 +457,7 @@ tool_order: 4
     function money(v) {
         if (!isFinite(v)) return '--';
         var a = Math.abs(v);
-        var r = Math.round(a);
+        var r = Math.round(a + 1e-9); // 850 x 1.15 is 977.4999... in floats; keep exact halves rounding up
         var sign = (v < 0 && r !== 0) ? '-' : '';
         if (a >= 1e9) return sign + sym() + trimNum(a / 1e9, 1) + 'B';
         if (a >= 1e7) return sign + sym() + trimNum(a / 1e6, 1) + 'M';
@@ -520,9 +534,11 @@ tool_order: 4
         var pen = v.sal * v.pen / 100;
         var annual = v.sal + ni + pen + v.ben;
         var rec = v.sal * v.rec / 100;
-        var fr = v.dr * v.dpm * 12;
+        // Inside IR35: the client owes employer NI on the whole fee (no threshold).
+        var rate = v.dr * (1 + (v.ir35 ? v.ni / 100 : 0));
+        var fr = rate * v.dpm * 12;
         var ftDay = annual / v.wd;
-        var breakEven = v.dr > 0 ? annual / (v.dr * 12) : null;
+        var breakEven = v.dr > 0 ? annual / (rate * 12) : null;
         var ftWeeks = v.tth + v.rup * 52 / 12;
         var frWeeks = v.fst + v.frup;
         // First 12 months from today: only the weeks after each option starts are paid for.
@@ -530,9 +546,9 @@ tool_order: 4
         var frActive = Math.max(0, 52 - v.fst);
         var ftFirst = annual * ftActive / 52 + (ftActive > 0 ? rec : 0);
         var frFirst = fr * frActive / 52;
-        var breakEvenFirst = (v.dr > 0 && frActive > 0) ? ftFirst / (v.dr * 12 * frActive / 52) : null;
+        var breakEvenFirst = (v.dr > 0 && frActive > 0) ? ftFirst / (rate * 12 * frActive / 52) : null;
         return {
-            ni: ni, pen: pen, annual: annual, rec: rec, fr: fr, ftDay: ftDay,
+            ni: ni, pen: pen, annual: annual, rec: rec, fr: fr, rate: rate, ftDay: ftDay,
             ftActive: ftActive, frActive: frActive, first: ftFirst, frFirst: frFirst,
             breakEven: breakEven, breakEvenFirst: breakEvenFirst,
             ftWeeks: ftWeeks, frWeeks: frWeeks,
@@ -579,25 +595,28 @@ tool_order: 4
         }
         var d = vals.dpm;
         var save = c.annual - c.fr;
+        var hours = ', though a fractional leader delivers fewer hours each week.';
         var speed = c.gap > 0
-            ? ' A fractional leader would be in post and up to speed ' + weeksTxt(c.gap) + ' sooner, though they deliver fewer hours each week.'
+            ? 'a fractional leader would be in post and up to speed ' + weeksTxt(c.gap) + ' sooner' + hours
             : c.gap < 0
-                ? ' The hire would be in post and up to speed ' + weeksTxt(-c.gap) + ' sooner.'
-                : ' Both would be in post and up to speed at about the same time, though a fractional leader delivers fewer hours each week.';
+                ? 'the hire would be in post and up to speed ' + weeksTxt(-c.gap) + ' sooner.'
+                : 'both would be in post and up to speed at about the same time' + hours;
+        var speedLead = ' ' + speed.charAt(0).toUpperCase() + speed.slice(1);
+        var speedSide = ' Separately, ' + speed;
         if (c.breakEven > c.monthDays) {
             return { title: 'Fractional is cheaper at any level of cover',
-                body: 'Even buying every working day, fractional costs less than the hire at this day rate.' + speed + caveat };
+                body: 'Even buying every working day, fractional costs less than the hire at this day rate.' + speedLead + caveat };
         }
         if (d >= c.breakEven) {
             return { title: 'Full-time looks like the better buy',
-                body: 'At ' + trimNum(d, 1) + ' days a month fractional costs ' + money(c.fr) + ' a year against ' + money(c.annual) + ' for the hire, and the hire gives you ' + trimNum(round1(c.monthDays), 1) + ' days a month for that money.' + speed + caveat };
+                body: 'At ' + trimNum(d, 1) + ' days a month fractional costs ' + money(c.fr) + ' a year against ' + money(c.annual) + ' for the hire, and the hire gives you ' + trimNum(round1(c.monthDays), 1) + ' days a month for that money.' + caveat + speedSide };
         }
         if (d >= c.breakEven * 0.75) {
             return { title: 'A close call',
-                body: 'Fractional saves ' + money(save) + ' a year, but that buys ' + trimNum(d, 1) + ' days a month against about ' + trimNum(round1(c.monthDays), 1) + ' from the hire. If you would use more of that time, full-time may be the better value.' + speed + caveat };
+                body: 'Fractional saves ' + money(save) + ' a year, but that buys ' + trimNum(d, 1) + ' days a month against about ' + trimNum(round1(c.monthDays), 1) + ' from the hire. If you would use more of that time, full-time may be the better value.' + speedLead + caveat };
         }
         return { title: 'Fractional is cheaper for this amount of time',
-            body: 'At ' + trimNum(d, 1) + ' days a month fractional saves ' + money(save) + ' a year, and costs more per day but far less in total.' + speed + caveat };
+            body: 'At ' + trimNum(d, 1) + ' days a month fractional saves ' + money(save) + ' a year, and costs more per day but ' + (save >= c.annual / 2 ? 'far less' : 'less') + ' in total.' + speedLead + caveat };
     }
 
     // ---------- chart ----------
@@ -642,7 +661,7 @@ tool_order: 4
     // ---------- render ----------
     // Positive figure, label flips with the direction.
     function showDiff(valId, labelId, show, diff, suffix) {
-        var who = Math.round(diff) < 0 ? 'Full-time saves' : Math.round(diff) === 0 ? 'Difference' : 'Fractional saves';
+        var who = !show ? 'Difference' : Math.round(diff) < 0 ? 'Full-time saves' : Math.round(diff) === 0 ? 'Difference' : 'Fractional saves';
         el(labelId).textContent = who + ', ' + suffix;
         el(valId).textContent = show ? money(Math.abs(diff)) : '-';
     }
@@ -655,9 +674,9 @@ tool_order: 4
         el('res-fr-annual').textContent = c.frOk ? money(c.fr) : '-';
         el('res-fr-first').textContent = c.frOk ? money(c.frFirst) : '-';
         showDiff('res-diff', 'res-diff-label', ok && c.frOk, c.annual - c.fr, 'a year');
-        showDiff('res-first-diff', 'res-first-diff-label', ok && c.frOk, c.first - c.frFirst, 'first 12 months');
+        showDiff('res-first-diff', 'res-first-diff-label', ok && c.frOk && c.ftActive > 0 && c.frActive > 0, c.first - c.frFirst, 'first 12 months');
         el('res-ft-day').textContent = ok ? money(c.ftDay) : '-';
-        el('res-fr-day').textContent = c.hasRate ? money(vals.dr) : '-';
+        el('res-fr-day').textContent = c.hasRate ? money(c.rate) : '-';
         el('res-ft-weeks').textContent = weeksTxt(c.ftWeeks);
         el('res-fr-weeks').textContent = weeksTxt(c.frWeeks);
         el('res-gap').textContent = c.gap === 0 ? '0 weeks' : weeksTxt(Math.abs(c.gap));
@@ -665,10 +684,10 @@ tool_order: 4
 
         var perDay = el('fvf-perday-note');
         if (ok && c.hasRate) {
-            var rel = vals.dr > c.ftDay ? 'more' : vals.dr < c.ftDay ? 'less' : 'the same';
-            perDay.textContent = ['A fractional day costs ' + money(vals.dr) + ' against ' + money(c.ftDay) + ' for a day of the hire' +
+            var rel = c.rate > c.ftDay ? 'more' : c.rate < c.ftDay ? 'less' : 'the same';
+            perDay.textContent = ['A fractional day costs ' + money(c.rate) + (vals.ir35 ? ' (day rate plus employer NI)' : '') + ' against ' + money(c.ftDay) + ' for a day of the hire' +
                 (rel === 'the same' ? '.' : ', so ' + rel + ' per day.'),
-                rel === 'more' && c.hasDays ? 'The saving comes from buying fewer days: ' + trimNum(vals.dpm * 12, 1) + ' days a year against ' + fmtLimit(vals.wd) + '.' : ''].filter(Boolean).join(' ');
+                rel === 'more' && c.frOk && c.fr < c.annual ? 'The saving comes from buying fewer days: ' + trimNum(vals.dpm * 12, 1) + ' days a year against ' + fmtLimit(vals.wd) + '.' : ''].filter(Boolean).join(' ');
         } else {
             perDay.textContent = 'Enter a salary and a day rate to compare cost per day.';
         }
@@ -711,6 +730,7 @@ tool_order: 4
         var p = new URLSearchParams();
         p.set('cur', currency);
         Object.keys(FIELDS).forEach(function(k) { p.set(k, vals[k]); });
+        p.set('ir35', vals.ir35);
         try { history.replaceState(null, '', '?' + p.toString()); } catch (e) {}
     }
 
@@ -723,6 +743,7 @@ tool_order: 4
         Object.keys(FIELDS).forEach(function(k) {
             if (p.has(k)) el(FIELDS[k].id).value = p.get(k);
         });
+        el('p-ir35').checked = p.get('ir35') === '1';
     }
 
     function applyCurrency() {
@@ -775,6 +796,13 @@ tool_order: 4
             readField(k, input.value !== String(FIELDS[k].def));
             input.addEventListener('input', function() { onInput(k); });
             input.addEventListener('change', function() { onChange(k); });
+        });
+        readIr35();
+        el('p-ir35').addEventListener('change', function() {
+            readIr35();
+            track();
+            render();
+            writeURL();
         });
         el('fvf-currency').addEventListener('change', function(e) {
             currency = e.target.value;

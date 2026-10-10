@@ -5,9 +5,9 @@ const URL = '/fractional-vs-full-time/';
 // Hand-computed defaults (see the brief): NI 15% x (95,000 - 5,000), pension 5%, benefits 6,000.
 const D = {
   ni: 13500, pension: 4750, annual: 119250, recruiter: 19000, first: 138250,
-  perDay: 530, fractional: 40800, breakEven: 11.7, ftWeeks: 25, frWeeks: 8, gap: 17,
-  // first 12 months from today: 119,250 x 40/52 + 19,000 and 40,800 x 50/52
-  ftFirst: 110731, frFirst: 39231, firstBreakEven: 11.3,
+  perDay: 530, fractional: 40800, breakEven: 11.7, ftWeeks: 25, frWeeks: 10, gap: 15,
+  // first 12 months from today: 119,250 x 40/52 + 19,000 and 40,800 x 48/52
+  ftFirst: 110731, frFirst: 37662, firstBreakEven: 11.8,
 };
 
 const text = (page, id) => page.locator('#' + id).innerText();
@@ -32,8 +32,8 @@ test.describe('Fractional vs full-time', () => {
     await load(page);
     await expect(page.locator('#res-ft-annual')).toHaveText('£119,250');
     await expect(page.locator('#res-ft-first')).toHaveText('£110,731');
-    await expect(page.locator('#res-fr-first')).toHaveText('£39,231');
-    await expect(page.locator('#res-first-diff')).toHaveText('£71,500');
+    await expect(page.locator('#res-fr-first')).toHaveText('£37,662');
+    await expect(page.locator('#res-first-diff')).toHaveText('£73,069');
     await expect(page.locator('#res-first-diff-label')).toHaveText('Fractional saves, first 12 months');
     await expect(page.locator('#res-fr-annual')).toHaveText('£40,800');
     await expect(page.locator('#res-diff')).toHaveText('£78,450');
@@ -52,11 +52,11 @@ test.describe('Fractional vs full-time', () => {
     await load(page);
     await expect(page.locator('#fvf-breakeven')).toHaveText('Over a full year, the hire is cheaper above 11.7 days a month.');
     expect(119250 / (850 * 12)).toBeCloseTo(D.breakEven, 1);
-    await expect(page.locator('#fvf-breakeven-first')).toHaveText('Over the first 12 months from today, the hire is cheaper above 11.3 days a month.');
-    expect(D.ftFirst / (850 * 12 * 50 / 52)).toBeCloseTo(D.firstBreakEven, 1);
+    await expect(page.locator('#fvf-breakeven-first')).toHaveText('Over the first 12 months from today, the hire is cheaper above 11.8 days a month.');
+    expect(D.ftFirst / (850 * 12 * 48 / 52)).toBeCloseTo(D.firstBreakEven, 1);
     await expect(page.locator('#res-ft-weeks')).toHaveText('25 weeks');
-    await expect(page.locator('#res-fr-weeks')).toHaveText('8 weeks');
-    await expect(page.locator('#res-gap')).toHaveText('17 weeks');
+    await expect(page.locator('#res-fr-weeks')).toHaveText('10 weeks');
+    await expect(page.locator('#res-gap')).toHaveText('15 weeks');
     await expect(page.locator('#res-gap-sub')).toHaveText('fractional is sooner');
   });
 
@@ -142,6 +142,8 @@ test.describe('Fractional vs full-time', () => {
     await expect(page.locator('#res-fr-annual')).toHaveText('-');
     await expect(page.locator('#res-diff')).toHaveText('-');
     await expect(page.locator('#res-first-diff')).toHaveText('-');
+    await expect(page.locator('#res-diff-label')).toHaveText('Difference, a year');
+    await expect(page.locator('#res-first-diff-label')).toHaveText('Difference, first 12 months');
     await expect(page.locator('#fvf-live')).not.toContainText('£0');
     const all = await body.innerText();
     expect(all).not.toMatch(/NaN|Infinity|undefined|N\/A/);
@@ -244,9 +246,15 @@ test.describe('Fractional vs full-time', () => {
   test('every control is at least 44px tall and has a visible label', async ({ page }) => {
     await load(page);
     const controls = await page.locator('#fvf-inputs input, #fvf-inputs select, .fvf-top-row select, .fvf-top-row button').evaluateAll((nodes) =>
-      nodes.map((n) => ({ id: n.id, h: n.getBoundingClientRect().height, label: n.id ? !!document.querySelector('label[for="' + n.id + '"]') : false, text: n.textContent.trim() })));
-    expect(controls.length).toBeGreaterThanOrEqual(15);
+      nodes.map((n) => ({ id: n.id, type: n.type, labelH: (n.closest('label') || n).getBoundingClientRect().height, h: n.getBoundingClientRect().height, label: n.id ? !!document.querySelector('label[for="' + n.id + '"]') : false, text: n.textContent.trim() })));
+    expect(controls.length).toBeGreaterThanOrEqual(16);
+    expect(controls.some((c) => c.id === 'p-ir35')).toBe(true);
     for (const c of controls) {
+      if (c.type === 'checkbox') {
+        // the checkbox sits inside a 44px-tall label that is the real tap target
+        expect(c.labelH, c.id).toBeGreaterThanOrEqual(44);
+        continue;
+      }
       expect(c.h, c.id).toBeGreaterThanOrEqual(44);
       if (c.id !== 'fvf-copy') expect(c.label, c.id).toBe(true);
     }
@@ -301,7 +309,7 @@ test.describe('Fractional vs full-time', () => {
     expect(widths).toHaveLength(4);
     expect(widths[2] / widths[0]).toBeCloseTo(110731 / 119250, 2);
     expect(widths[1] / widths[0]).toBeCloseTo(40800 / 119250, 2);
-    expect(widths[3] / widths[0]).toBeCloseTo(39231 / 119250, 2);
+    expect(widths[3] / widths[0]).toBeCloseTo(37662 / 119250, 2);
   });
 
   test('page source includes the tool CTA below the results and links to more tools', async ({ request }) => {
@@ -341,6 +349,9 @@ test.describe('Fractional vs full-time', () => {
     await expect(page.locator('#res-fr-first')).toHaveText('£20,400');
     await typeInto(page, '#f-tth', '60');
     await expect(page.locator('#res-ft-first')).toHaveText('£0');
+    // nothing to compare against: no "saves" claim, and a neutral label
+    await expect(page.locator('#res-first-diff')).toHaveText('-');
+    await expect(page.locator('#res-first-diff-label')).toHaveText('Difference, first 12 months');
     await expect(page.locator('#fvf-breakeven-first')).toContainText('would not start inside the first 12 months');
   });
 
@@ -414,5 +425,57 @@ test.describe('Fractional vs full-time', () => {
     expect(how).toContain('short notice period');
     expect(how).toContain('Class 1A');
     expect(how).toContain('annual cost of the hire divided by (12 x day rate)');
+  });
+
+  test('start time defaults to 4 weeks and says it includes finding someone', async ({ page }) => {
+    await load(page);
+    await expect(page.locator('#p-st')).toHaveValue('4');
+    await expect(page.locator('#p-st-hint')).toContainText('including finding and choosing someone');
+    await expect(page.locator('#res-fr-weeks')).toHaveText('10 weeks');
+  });
+
+  test('the saving sentence only appears when fractional costs less in total', async ({ page }) => {
+    await load(page);
+    await expect(page.locator('#fvf-perday-note')).toContainText('The saving comes from buying fewer days');
+    // 10,000 x 22 x 12 is far more than the hire: still dearer per day, but no saving
+    await load(page, '?dr=10000&dpm=22');
+    const note = await text(page, 'fvf-perday-note');
+    expect(note).toContain('so more per day.');
+    expect(note).not.toContain('saving');
+  });
+
+  test('verdict wording: time is secondary when full-time wins, and "far less" needs half', async ({ page }) => {
+    await load(page, '?dpm=15');
+    const v = await text(page, 'fvf-verdict');
+    expect(v).toContain('Full-time looks like the better buy');
+    expect(v).toMatch(/Separately, a fractional leader would be in post and up to speed 15 weeks sooner/);
+    expect(v.indexOf('daily line management')).toBeLessThan(v.indexOf('Separately'));
+    await load(page);
+    expect(await text(page, 'fvf-verdict')).toContain('costs more per day but far less in total.');
+    // 850 x 7 x 12 = 71,400; saving 47,850 is under half of 119,250
+    await load(page, '?dpm=7');
+    const mid = await text(page, 'fvf-verdict');
+    expect(mid).toContain('costs more per day but less in total.');
+    expect(mid).not.toContain('far less');
+  });
+
+  test('IR35 box adds employer NI to the fees and moves the break-even', async ({ page }) => {
+    await load(page);
+    const box = page.locator('#p-ir35');
+    await expect(box).not.toBeChecked();
+    await expect(page.locator('#res-fr-annual')).toHaveText('£40,800');
+    await box.check();
+    // 850 x 1.15 = 977.50 a day; x 4 x 12 = 46,920
+    await expect(page.locator('#res-fr-annual')).toHaveText('£46,920');
+    await expect(page.locator('#res-fr-day')).toHaveText('£978');
+    // 119,250 / (977.5 x 12) = 10.17
+    await expect(page.locator('#fvf-breakeven')).toHaveText('Over a full year, the hire is cheaper above 10.2 days a month.');
+    await expect(page).toHaveURL(/ir35=1/);
+    await page.goto(page.url());
+    await expect(page.locator('#p-ir35')).toBeChecked();
+    await expect(page.locator('#res-fr-annual')).toHaveText('£46,920');
+    await typeInto(page, '#f-ni', '0');
+    await expect(page.locator('#res-fr-annual')).toHaveText('£40,800');
+    await expect(page.locator('.methodology')).toContainText('no threshold');
   });
 });
