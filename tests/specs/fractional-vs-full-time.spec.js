@@ -195,24 +195,28 @@ test.describe('Fractional vs full-time', () => {
     expect(stored.c).not.toMatch(/fvf|fractional|sal=/);
   });
 
-  test('toolEvent: calculated once after the first input, shared on copy', async ({ page, context }) => {
-    await context.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => {});
-    await page.addInitScript(() => {
-      window.__events = [];
-      window.toolEvent = (n) => window.__events.push(n);
-    });
-    await load(page);
-    expect(await page.evaluate(() => window.__events)).toEqual([]);
+  test('toolEvent: calculated once after the first input, shared on copy', async ({ browser }) => {
+    const context = await browser.newContext();
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'http://127.0.0.1:4173' });
+    const page = await context.newPage();
+    await page.route(/googletagmanager\.com/, (r) => r.abort());
+    const events = () => page.evaluate(() => (window.dataLayer || []).filter((e) => e && /^tool_/.test(e.event)).map((e) => e.event));
+    await page.goto(URL);
+    await expect(page.locator('#res-ft-annual')).not.toHaveText('--');
+    await page.waitForTimeout(1200);
+    expect(await events()).toEqual([]);
     await typeInto(page, '#p-dpm', '6');
     await typeInto(page, '#p-dpm', '7');
-    await expect.poll(() => page.evaluate(() => window.__events.slice())).toEqual(['calculated']);
+    await expect.poll(events).toEqual(['tool_calculated']);
     await page.waitForTimeout(1200);
-    expect(await page.evaluate(() => window.__events.slice())).toEqual(['calculated']);
+    expect(await events()).toEqual(['tool_calculated']);
     await page.locator('#fvf-copy').click();
-    expect(await page.evaluate(() => window.__events.slice())).toEqual(['calculated', 'shared']);
+    await expect.poll(events).toEqual(['tool_calculated', 'tool_shared']);
+    await context.close();
   });
 
   test('works without window.toolEvent', async ({ page, pageErrors }) => {
+    await page.route(/tool-events\.js/, (r) => r.abort());
     await load(page);
     await typeInto(page, '#p-dpm', '6');
     await page.locator('#fvf-copy').click();
@@ -299,14 +303,20 @@ test.describe('Fractional vs full-time', () => {
     expect(widths[3] / widths[0]).toBeCloseTo(39231 / 119250, 2);
   });
 
-  test('page source carries the tool-cta marker below the results', async ({ request }) => {
+  test('page source includes the tool CTA below the results and links to more tools', async ({ request }) => {
     const html = await (await request.get(URL)).text();
+    const src = require('fs').readFileSync(require('path').join(__dirname, '../../fractional-vs-full-time.html'), 'utf8');
     const results = html.indexOf('id="fvf-results"');
-    const marker = html.indexOf('<!-- tool-cta -->');
+    const cta = html.indexOf('class="tool-cta');
     const how = html.indexOf('How this works');
     expect(results).toBeGreaterThan(-1);
-    expect(marker).toBeGreaterThan(results);
-    expect(marker).toBeLessThan(how);
+    expect(cta).toBeGreaterThan(results);
+    expect(cta).toBeLessThan(how);
+    expect(html).toContain('that is what I do.');
+    expect(src).toMatch(/\n\{% include tool-cta\.html text="[^"]+" %\}\n/);
+    expect(src).not.toMatch(/<!-- tool-cta -->/);
+    expect(html).toContain('href="/tools/">More tools');
+    expect(html).toContain('/js/tool-events.js');
     expect(html).toContain('2026/27');
   });
 

@@ -14,6 +14,8 @@ tool_summary: "What does a senior digital leader really cost me, full-time versu
 tool_order: 4
 ---
 
+<script src="/js/tool-events.js" defer></script>
+
 <style>
 .fvf-intro { margin-bottom: 1.5rem; }
 .fvf-top-row {
@@ -353,7 +355,7 @@ tool_order: 4
         <svg id="fvf-chart" viewBox="0 0 320 240" role="img" aria-label="Bar chart comparing full-time and fractional cost"></svg>
     </div>
 </div>
-<!-- tool-cta -->
+{% include tool-cta.html text="Whether a fractional leader or a full-time hire is the better buy depends on the days you really need. If you want an honest view on yours, that is what I do." %}
 
 <hr class="fvf-divider">
 
@@ -378,6 +380,24 @@ tool_order: 4
     </ul>
     <p><strong>When fractional tends to fit:</strong> you need senior judgement but not five days a week, you cannot wait for a hiring process, or you want to test what the role should be before committing to a salary.</p>
 </div>
+
+<p class="text-muted small mb-4 tool-more"><a href="/tools/">More tools</a></p>
+
+<!-- Latest Writing -->
+<section class="py-5 border-top" style="background-color: var(--color-surface);">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4" style="font-size: 1.75rem;">Latest Writing</h2>
+        <div class="row g-4">
+            {% assign card_count = 0 %}
+            {% for post in site.posts %}{% unless post.hidden or card_count >= 3 %}
+            <div class="col-md-6 col-lg-4">
+                {% include post-card.html post=post %}
+            </div>
+            {% assign card_count = card_count | plus: 1 %}
+            {% endunless %}{% endfor %}
+        </div>
+    </div>
+</section>
 
 <script>
 (function() {
