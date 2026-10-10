@@ -1,0 +1,1053 @@
+---
+layout: page
+title: "Promotion Break-Even Calculator"
+header-title: "Promotion Break-Even"
+description: "If I run 20% off, how much more do I need to sell to make the same profit?"
+header-img: "img/home-bg.jpg"
+meta-description: "Work out how much extra you must sell to make the same profit after a discount. Allows for VAT, fees and shipping, with a 5% to 50% table."
+permalink: /promotion-break-even/
+hidden: true
+sitemap: true
+tool: true
+tool_group: business
+tool_summary: "If I run a discount, how much more do I need to sell just to make the same profit?"
+tool_order: 5
+---
+
+<style>
+.pbe-intro { margin-bottom: 1.5rem; }
+
+/* Top row: currency and share */
+.pbe-top-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+.pbe-top-row .pbe-currency { min-width: 9rem; }
+.pbe-share-wrap { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.pbe-share-status { font-size: 0.8125rem; color: var(--color-text-muted, #6B7280); }
+.pbe-top-row select,
+.pbe-share-btn { min-height: 44px; }
+.pbe-share-btn { font-size: 0.875rem; padding: 0.25rem 1rem; }
+
+/* Inputs */
+.pbe-inputs .form-label,
+.pbe-inputs legend.form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-accent);
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+    float: none;
+    width: auto;
+}
+/* Rows of fields reserve two label lines and sit the label on the bottom, so inputs share a top */
+.pbe-field-row .form-label {
+    min-height: 2.6em;
+    display: flex;
+    align-items: flex-end;
+}
+.pbe-inputs .form-control {
+    min-height: 44px;
+    font-size: 1rem;
+}
+.pbe-inputs .input-group > .form-control:not(:first-child) { border-left: 0; }
+.pbe-inputs .input-group > .form-control:not(:last-child) { border-right: 0; }
+.pbe-inputs .input-group-text {
+    min-height: 44px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    min-width: 1.75rem;
+    justify-content: center;
+}
+.pbe-hint {
+    color: var(--color-text-muted, #6B7280);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    margin-top: 0.25rem;
+}
+.pbe-note {
+    color: #b91c1c;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    margin-top: 0.25rem;
+}
+.pbe-note:empty { display: none; }
+
+/* Button-style toggles */
+.pbe-inputs fieldset { border: 0; padding: 0; margin: 0 0 0.75rem; min-width: 0; }
+.pbe-toggle .btn-check:checked + .btn {
+    background-color: var(--color-accent, #4A7BA7);
+    border-color: var(--color-accent, #4A7BA7);
+    color: #fff;
+}
+.pbe-toggle .btn-check:focus-visible + .btn {
+    outline: 2px solid var(--color-accent, #4A7BA7);
+    outline-offset: 2px;
+}
+.pbe-toggle .btn {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.75rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+}
+#vat-incl:not(:checked) + .btn .pbe-on { display: none; }
+#vat-incl:checked + .btn .pbe-off { display: none; }
+
+.pbe-section-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+.pbe-divider {
+    border: 0;
+    border-top: 1px solid var(--color-border, #E5E7EB);
+    margin: 1.5rem 0;
+}
+
+/* Verdict */
+.pbe-verdict {
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+.pbe-verdict strong {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+.pbe-verdict-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; }
+.pbe-verdict-good { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+.pbe-verdict-warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+.pbe-verdict-bad { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+.pbe-money { white-space: nowrap; }
+
+/* Result cards */
+.pbe-card {
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-width: 0;
+}
+.pbe-card-label {
+    min-height: 2.6em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-accent, #4A7BA7);
+    margin-bottom: 0.125rem;
+}
+.pbe-card-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: var(--color-text, #2D2D2D);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.pbe-card-sub {
+    font-size: 0.75rem;
+    line-height: 1.3;
+    color: var(--color-text-muted, #6B7280);
+    margin-top: 0.25rem;
+    min-height: 1.3em;
+}
+.pbe-pos { color: #15803d; }
+.pbe-neg { color: #b91c1c; }
+
+/* Discount table */
+.pbe-table-wrap { margin: 1rem 0 0.5rem; }
+.pbe-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+}
+.pbe-table caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted, #6B7280);
+    padding: 0 0 0.5rem;
+}
+.pbe-table th, .pbe-table td {
+    padding: 0.5rem 0.375rem;
+    text-align: right;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--color-border, #E5E7EB);
+}
+.pbe-table th:first-child, .pbe-table td:first-child { text-align: left; }
+.pbe-table thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-accent, #4A7BA7);
+    white-space: normal;
+    vertical-align: bottom;
+    line-height: 1.3;
+}
+.pbe-table tr.pbe-chosen td, .pbe-table tr.pbe-chosen th {
+    background: #e8f0f8;
+    font-weight: 800;
+    color: #1e3a5f;
+}
+.pbe-table tr.pbe-chosen th:first-child { box-shadow: inset 4px 0 0 var(--color-accent, #4A7BA7); }
+.pbe-table td.pbe-no { color: #b91c1c; font-weight: 600; text-align: right; }
+
+/* Explainer */
+.pbe-explainer p, .pbe-explainer li {
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #6B7280);
+    line-height: 1.7;
+}
+.pbe-explainer code { white-space: normal; }
+.pbe-formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8125rem;
+    background: var(--color-surface, #FAFAF9);
+    border: 1px solid var(--color-border, #E5E7EB);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 575.98px) {
+    .pbe-card-value { font-size: clamp(0.9375rem, 4.6vw, 1.375rem); }
+    .pbe-card-label { font-size: 0.5625rem; letter-spacing: 0.5px; }
+    .pbe-table { font-size: 0.875rem; }
+    .pbe-table th, .pbe-table td { padding: 0.5rem 0.25rem; }
+    .pbe-table thead th { font-size: 0.6875rem; letter-spacing: 0; }
+}
+</style>
+
+<p class="pbe-intro">I built this because the question comes up before every sale and the answer is usually a guess. A discount cuts the margin on every unit, so the extra volume needed to stand still is much bigger than the discount itself. With the defaults below, 20% off needs about 81% more units just to make the same money. Change the numbers to match your product.</p>
+
+<div class="pbe-top-row">
+    <div class="pbe-currency pbe-inputs">
+        <label class="form-label" for="currency-select">Currency</label>
+        <select class="form-select" id="currency-select">
+            <option value="GBP" selected>&pound; GBP</option>
+            <option value="USD">$ USD</option>
+            <option value="EUR">&euro; EUR</option>
+        </select>
+    </div>
+    <div class="pbe-share-wrap">
+        <span class="pbe-share-status" id="share-status" role="status"></span>
+        <button type="button" class="btn btn-outline-secondary pbe-share-btn" id="share-btn">Copy link</button>
+    </div>
+</div>
+
+<div class="pbe-inputs" id="pbe-inputs">
+    <fieldset class="pbe-toggle">
+        <legend class="form-label">VAT</legend>
+        <input type="checkbox" class="btn-check" id="vat-incl" checked>
+        <label class="btn btn-outline-secondary" for="vat-incl">Prices include VAT: <span class="pbe-on">&nbsp;on</span><span class="pbe-off">&nbsp;off</span></label>
+    </fieldset>
+
+    <div class="row g-2 g-md-3 mb-2 pbe-field-row">
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="price">Selling price</label>
+            <div class="input-group">
+                <span class="input-group-text pbe-cur">&pound;</span>
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="price" value="100" aria-describedby="price-hint price-note">
+            </div>
+            <div class="pbe-hint" id="price-hint">Per unit, as the customer sees it</div>
+            <div class="pbe-note" id="price-note"></div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="vat-rate">VAT rate</label>
+            <div class="input-group">
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="vat-rate" value="20" aria-describedby="vat-rate-hint vat-rate-note">
+                <span class="input-group-text">%</span>
+            </div>
+            <div class="pbe-hint" id="vat-rate-hint">UK standard rate for the 2026/27 tax year is 20%</div>
+            <div class="pbe-note" id="vat-rate-note"></div>
+        </div>
+    </div>
+
+    <fieldset class="pbe-toggle">
+        <legend class="form-label">Product cost entered as</legend>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="costMode" id="mode-cost" value="cost" checked>
+            <label class="btn btn-outline-secondary" for="mode-cost">Cost per unit</label>
+            <input type="radio" class="btn-check" name="costMode" id="mode-margin" value="margin">
+            <label class="btn btn-outline-secondary" for="mode-margin">Gross margin %</label>
+        </div>
+    </fieldset>
+
+    <div class="row g-2 g-md-3 mb-2 pbe-field-row">
+        <div class="col-6 col-md-4" id="cost-group">
+            <label class="form-label" for="cost">Product cost per unit (ex VAT)</label>
+            <div class="input-group">
+                <span class="input-group-text pbe-cur">&pound;</span>
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="cost" value="40" aria-describedby="cost-hint cost-note">
+            </div>
+            <div class="pbe-hint" id="cost-hint"></div>
+            <div class="pbe-note" id="cost-note"></div>
+        </div>
+        <div class="col-6 col-md-4" id="margin-group" hidden>
+            <label class="form-label" for="margin">Gross margin at full price</label>
+            <div class="input-group">
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="margin" value="52" aria-describedby="margin-hint margin-note">
+                <span class="input-group-text">%</span>
+            </div>
+            <div class="pbe-hint" id="margin-hint"></div>
+            <div class="pbe-note" id="margin-note"></div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="fee">Payment fees (% of price paid)</label>
+            <div class="input-group">
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="fee" value="2" aria-describedby="fee-hint fee-note">
+                <span class="input-group-text">%</span>
+            </div>
+            <div class="pbe-hint" id="fee-hint">Charged on the price including VAT</div>
+            <div class="pbe-note" id="fee-note"></div>
+        </div>
+        <div class="col-6 col-md-4">
+            <label class="form-label" for="ship">Fulfilment and shipping per unit</label>
+            <div class="input-group">
+                <span class="input-group-text pbe-cur">&pound;</span>
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="ship" value="5" aria-describedby="ship-hint ship-note">
+            </div>
+            <div class="pbe-hint" id="ship-hint">Per unit, ex VAT</div>
+            <div class="pbe-note" id="ship-note"></div>
+        </div>
+    </div>
+
+    <div class="row g-2 g-md-3 mb-3 pbe-field-row">
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="disc">Discount</label>
+            <div class="input-group">
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="disc" value="20" aria-describedby="disc-note">
+                <span class="input-group-text">%</span>
+            </div>
+            <div class="pbe-note" id="disc-note"></div>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="units">Normal units sold in the period</label>
+            <input type="text" inputmode="numeric" autocomplete="off" class="form-control" id="units" value="1000" aria-describedby="units-hint units-note">
+            <div class="pbe-hint" id="units-hint">Only used for the money figures</div>
+            <div class="pbe-note" id="units-note"></div>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="uplift">Expected sales uplift (optional)</label>
+            <div class="input-group">
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="uplift" value="" aria-describedby="uplift-hint uplift-note">
+                <span class="input-group-text">%</span>
+            </div>
+            <div class="pbe-hint" id="uplift-hint">Leave blank to skip</div>
+            <div class="pbe-note" id="uplift-note"></div>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label" for="mkt">Extra marketing spend</label>
+            <div class="input-group">
+                <span class="input-group-text pbe-cur">&pound;</span>
+                <input type="text" inputmode="decimal" autocomplete="off" class="form-control" id="mkt" value="0" aria-describedby="mkt-hint mkt-note">
+            </div>
+            <div class="pbe-hint" id="mkt-hint">For the promotion only</div>
+            <div class="pbe-note" id="mkt-note"></div>
+        </div>
+    </div>
+</div>
+
+<section id="pbe-results" aria-labelledby="pbe-results-title">
+    <h2 class="pbe-section-title" id="pbe-results-title">What you need to sell</h2>
+
+    <div class="pbe-verdict pbe-verdict-info" id="verdict"></div>
+    <div class="visually-hidden" id="live-summary" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="row g-2 g-md-3 mb-3">
+        <div class="col-6 col-md-4">
+            <div class="pbe-card">
+                <div class="pbe-card-label">Contribution per unit, before</div>
+                <div class="pbe-card-value" id="res-cb">-</div>
+                <div class="pbe-card-sub">ex VAT, after costs</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="pbe-card">
+                <div class="pbe-card-label">Contribution per unit, after discount</div>
+                <div class="pbe-card-value" id="res-ca">-</div>
+                <div class="pbe-card-sub" id="sub-ca">&nbsp;</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="pbe-card">
+                <div class="pbe-card-label">Sales uplift needed</div>
+                <div class="pbe-card-value" id="res-uplift">-</div>
+                <div class="pbe-card-sub" id="sub-uplift">&nbsp;</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="pbe-card">
+                <div class="pbe-card-label">Extra units per 100 sold normally</div>
+                <div class="pbe-card-value" id="res-extra">-</div>
+                <div class="pbe-card-sub" id="sub-extra">&nbsp;</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="pbe-card">
+                <div class="pbe-card-label">Units needed in the period</div>
+                <div class="pbe-card-value" id="res-units">-</div>
+                <div class="pbe-card-sub" id="sub-units">&nbsp;</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="pbe-card">
+                <div class="pbe-card-label">Contribution to match</div>
+                <div class="pbe-card-value" id="res-target">-</div>
+                <div class="pbe-card-sub" id="sub-target">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="expected-panel" hidden>
+        <h3 class="pbe-section-title" style="font-size: 1.0625rem;">If your expected uplift happens</h3>
+        <div class="row g-2 g-md-3 mb-3">
+            <div class="col-6">
+                <div class="pbe-card">
+                    <div class="pbe-card-label">Profit change vs no promotion</div>
+                    <div class="pbe-card-value" id="res-change">-</div>
+                    <div class="pbe-card-sub" id="sub-change">&nbsp;</div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="pbe-card">
+                    <div class="pbe-card-label">Contribution with the promotion</div>
+                    <div class="pbe-card-value" id="res-with">-</div>
+                    <div class="pbe-card-sub" id="sub-with">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+        <div class="pbe-verdict pbe-verdict-info" id="verdict-expected"></div>
+    </div>
+
+    <h3 class="pbe-section-title" style="font-size: 1.0625rem;">Uplift needed at each discount</h3>
+    <div class="pbe-table-wrap">
+        <table class="pbe-table" id="discount-table">
+            <caption id="table-caption">Extra sales needed to match your current contribution.</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Discount</th>
+                    <th scope="col">Per unit</th>
+                    <th scope="col" id="th-uplift">Uplift needed</th>
+                    <th scope="col">Extra per 100</th>
+                </tr>
+            </thead>
+            <tbody id="discount-tbody"></tbody>
+        </table>
+    </div>
+</section>
+<!-- tool-cta -->
+
+<hr class="pbe-divider">
+
+<div class="pbe-explainer mb-4" id="how-this-works">
+    <h2 class="pbe-section-title">How this works</h2>
+    <p>Everything is worked per unit, on the price without VAT, because VAT is not yours to keep. The measure is contribution: what each unit earns after product cost, payment fees and fulfilment. Fixed costs such as rent and salaries are left out because a promotion does not change them.</p>
+    <div class="pbe-formula">
+        price ex VAT = price paid / (1 + VAT rate), or the price as entered if VAT is off<br>
+        contribution per unit = price ex VAT - product cost - fees % x price paid - fulfilment<br>
+        units multiplier = contribution before / contribution after<br>
+        uplift needed = multiplier - 1<br>
+        with marketing: units needed = (normal units x contribution before + marketing) / contribution after
+    </div>
+    <p class="mt-3">The default numbers: a &pound;100 price including 20% VAT is &pound;83.33 without it. Fees of 2% are charged on the full &pound;100, so &pound;2.00. Contribution is &pound;83.33 - &pound;40 - &pound;2.00 - &pound;5 = &pound;36.33. At 20% off the price paid is &pound;80, which is &pound;66.67 without VAT, fees fall to &pound;1.60, and contribution is &pound;66.67 - &pound;40 - &pound;1.60 - &pound;5 = &pound;20.07. That is 1.81 times as many units, an uplift of 81.1%. The page uses unrounded figures, so working it by hand with pennies rounded first can land a tenth of a point away.</p>
+    <p><strong>Assumptions you should check:</strong></p>
+    <ul>
+        <li>Payment fees are a percentage of the price the customer pays, VAT included. Real fees often add a fixed amount per transaction; if yours do, fold it into the fulfilment figure.</li>
+        <li>Product cost and fulfilment per unit stay the same whatever you sell. There are no volume discounts from suppliers, no stock-outs and no extra shipping costs for a busier warehouse.</li>
+        <li>If you enter gross margin instead of cost, the margin is measured on the price without VAT at full price and converted to a cost per unit. That cost then stays fixed when the discount applies.</li>
+        <li>The figures are per unit. If shipping is charged per order and orders hold several units, use an average per unit.</li>
+        <li>The VAT rate is editable. 20% is the UK standard rate for the 2026/27 tax year; reduced and zero rates apply to some goods, and other countries differ. This is not tax advice.</li>
+        <li>The table and the headline use the same marketing assumption: if you enter marketing spend and normal units, the uplift includes the cost of that spend.</li>
+    </ul>
+    <p><strong>Not modelled, but they matter:</strong></p>
+    <ul>
+        <li><strong>Pull-forward and subsidised regulars.</strong> Some of the people who buy on promotion would have bought at full price anyway. You give them the discount and gain no extra sale. Others buy early and then buy less later.</li>
+        <li><strong>Brand and reference price.</strong> Frequent discounting teaches customers what the real price is. The next sale has to be bigger, and full price gets harder to hold.</li>
+        <li><strong>Returns.</strong> Promotional orders often come back more than full-price ones, which eats the contribution you worked so hard to match.</li>
+        <li><strong>Halo and cannibalisation.</strong> A promotion can lift sales of other products, which helps, or pull sales away from products that are not discounted, which hurts. Neither is counted here.</li>
+    </ul>
+    <p>Treat the required uplift as the minimum you need, not a forecast. If it looks more than you could plausibly sell, the discount is probably too deep for the margin. Nothing you type leaves your browser; the link in the address bar is the only place the numbers are kept.</p>
+</div>
+
+<!-- Latest Writing -->
+<section class="py-5 border-top" style="background-color: var(--color-surface);">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4" style="font-size: 1.75rem;">Latest Writing</h2>
+        <div class="row g-4">
+            {% assign card_count = 0 %}
+            {% for post in site.posts %}{% unless post.hidden or card_count >= 3 %}
+            <div class="col-md-6 col-lg-4">
+                {% include post-card.html post=post %}
+            </div>
+            {% assign card_count = card_count | plus: 1 %}
+            {% endunless %}{% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    'use strict';
+
+    var SYMBOLS = { GBP: '£', USD: '$', EUR: '€' };
+    var EPS = 1e-8;
+    var TABLE_STEPS = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+    var DEBOUNCE_LIVE = 800;
+    var DEBOUNCE_URL = 300;
+    var DEBOUNCE_EVENT = 800;
+
+    // Fields: id, parameter name, range, and whether blank means "not given"
+    var FIELDS = {
+        price:  { id: 'price',    param: 'price',  min: 0,     max: 1000000,    def: 100 },
+        vat:    { id: 'vat-rate', param: 'vat',    min: 0,     max: 100,        def: 20 },
+        cost:   { id: 'cost',     param: 'cost',   min: 0,     max: 1000000,    def: 40 },
+        margin: { id: 'margin',   param: 'margin', min: -1000, max: 100,        def: 52 },
+        fee:    { id: 'fee',      param: 'fee',    min: 0,     max: 100,        def: 2 },
+        ship:   { id: 'ship',     param: 'ship',   min: 0,     max: 1000000,    def: 5 },
+        disc:   { id: 'disc',     param: 'disc',   min: 0,     max: 100,        def: 20 },
+        units:  { id: 'units',    param: 'units',  min: 0,     max: 100000000,  def: 1000 },
+        uplift: { id: 'uplift',   param: 'uplift', min: 0,     max: 100000,     def: null, optional: true },
+        mkt:    { id: 'mkt',      param: 'mkt',    min: 0,     max: 1000000000, def: 0 }
+    };
+
+    function el(id) { return document.getElementById(id); }
+    function input(key) { return el(FIELDS[key].id); }
+
+    // ========== PARSING ==========
+
+    // Accepts "1200", "1,200", "£1,200", "12.5%", ".5". Returns a state rather than guessing:
+    // blank and half-typed values ("-", ".") are not errors, anything else unreadable is.
+    function parseRaw(raw) {
+        var s = String(raw).replace(/[£€$,%\s]/g, '');
+        if (s === '') return { state: 'blank' };
+        if (/^[+-]?\.?$/.test(s)) return { state: 'incomplete' };
+        if (/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) return { state: 'ok', n: parseFloat(s) };
+        return { state: 'bad' };
+    }
+
+    // The number the calculation uses for a field, after clamping. null means "not given".
+    function value(key) {
+        var f = FIELDS[key];
+        var p = parseRaw(input(key).value);
+        if (p.state !== 'ok') return f.optional ? null : 0;
+        return Math.max(f.min, Math.min(f.max, p.n));
+    }
+
+    function plain(n) {
+        return n.toLocaleString('en-GB', { maximumFractionDigits: 2 });
+    }
+
+    function noteFor(key) {
+        var f = FIELDS[key];
+        var p = parseRaw(input(key).value);
+        if (p.state === 'bad') return 'That is not a number - ' + (f.optional ? 'ignoring it.' : 'using 0.');
+        if (p.state !== 'ok') return '';
+        if (p.n < f.min) {
+            return f.min === 0 ? 'Negative values are not allowed - using 0.' : 'Minimum is ' + plain(f.min) + ' - using ' + plain(f.min) + '.';
+        }
+        if (p.n > f.max) return 'Maximum is ' + plain(f.max) + ' - using ' + plain(f.max) + '.';
+        return '';
+    }
+
+    function checkNote(key) {
+        el(FIELDS[key].id + '-note').textContent = noteFor(key);
+    }
+
+    // Replace what is shown with the number being used. Only called on change (blur / Enter).
+    function tidy(key) {
+        var f = FIELDS[key];
+        var p = parseRaw(input(key).value);
+        if (p.state === 'blank') return;
+        var v = value(key);
+        if (v === null) { input(key).value = ''; return; }
+        input(key).value = String(+v.toFixed(6));
+    }
+
+    // ========== STATE ==========
+
+    var currency = 'GBP';
+
+    function readState() {
+        return {
+            price: value('price'),
+            vatOn: el('vat-incl').checked,
+            vat: value('vat'),
+            costMode: el('mode-margin').checked ? 'margin' : 'cost',
+            cost: value('cost'),
+            margin: value('margin'),
+            fee: value('fee'),
+            ship: value('ship'),
+            disc: value('disc'),
+            units: value('units'),
+            uplift: value('uplift'),
+            mkt: value('mkt')
+        };
+    }
+
+    function r8(x) { return Math.round(x * 1e8) / 1e8; }
+
+    function calc(s) {
+        var out = { ok: s.price > 0 };
+        if (!out.ok) return out;
+
+        var gross = s.price;
+        var ex = s.vatOn ? gross / (1 + s.vat / 100) : gross;
+        var costUnit = s.costMode === 'margin' ? ex * (1 - s.margin / 100) : s.cost;
+        var feeRate = s.fee / 100;
+
+        function contributionAt(discPct) {
+            var k = 1 - discPct / 100;
+            return r8(ex * k - costUnit - feeRate * gross * k - s.ship);
+        }
+
+        out.gross = gross;
+        out.ex = ex;
+        out.costUnit = costUnit;
+        out.contributionAt = contributionAt;
+        out.cb = contributionAt(0);
+        out.ca = contributionAt(s.disc);
+        out.noMargin = out.cb <= EPS;
+        out.impossible = !out.noMargin && out.ca <= EPS;
+        out.hasUnits = s.units > 0;
+        out.hasMkt = s.mkt > 0 && out.hasUnits;
+
+        // Price left per pound of price paid after fees; the deepest discount that keeps any contribution
+        var pm = ex - feeRate * gross;
+        out.dmax = pm > 0 ? Math.min(100, (out.cb / pm) * 100) : null;
+
+        out.required = function(ca) {
+            if (out.noMargin || ca <= EPS) return null;
+            var base = Math.max(0, out.cb / ca - 1);
+            var withMkt = null;
+            if (out.hasMkt) withMkt = Math.max(0, (s.units * out.cb + s.mkt) / ca / s.units - 1);
+            return { base: base, withMkt: withMkt, head: withMkt === null ? base : withMkt };
+        };
+        out.req = out.required(out.ca);
+
+        out.target = s.units * out.cb + s.mkt;
+        if (out.req) out.unitsNeeded = s.units * (1 + out.req.head);
+
+        if (s.uplift !== null) {
+            out.withPromo = s.units * (1 + s.uplift / 100) * out.ca - s.mkt;
+            out.change = out.withPromo - s.units * out.cb;
+        }
+        return out;
+    }
+
+    // ========== FORMATTING ==========
+
+    function sym() { return SYMBOLS[currency]; }
+
+    function signOf(v, rounded) { return v < 0 && rounded !== 0 ? '-' : ''; }
+
+    // Sign before the symbol, thousands separators. Compact M/B only for the tight result cards.
+    function money(v, dp, compact) {
+        var a = Math.abs(v);
+        var body;
+        if (compact && a >= 1e9) {
+            body = (a / 1e9).toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'B';
+            return signOf(v, 1) + sym() + body;
+        }
+        if (compact && a >= 1e6) {
+            body = (a / 1e6).toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'M';
+            return signOf(v, 1) + sym() + body;
+        }
+        body = a.toLocaleString('en-GB', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+        return signOf(v, parseFloat(a.toFixed(dp))) + sym() + body;
+    }
+
+    function signedMoney(v, dp, compact) {
+        var m = money(v, dp, compact);
+        return (v > 0 && m.charAt(0) !== '-' && parseFloat(Math.abs(v).toFixed(dp)) !== 0 ? '+' : '') + m;
+    }
+
+    function pct(frac) {
+        var p = frac * 100;
+        if (p >= 1e6) return 'over +1,000,000%';
+        if (p >= 1000) return '+' + Math.round(p).toLocaleString('en-GB') + '%';
+        return '+' + p.toFixed(1) + '%';
+    }
+
+    function per100(frac) {
+        var n = Math.round(frac * 100);
+        if (n >= 1e6) return 'over 1,000,000';
+        return '+' + n.toLocaleString('en-GB');
+    }
+
+    function plainPct(n) {
+        return (+n.toFixed(2)).toLocaleString('en-GB') + '%';
+    }
+
+    function whole(n) {
+        if (n >= 1e9) return 'over 1,000,000,000';
+        return Math.ceil(n - 1e-9).toLocaleString('en-GB');
+    }
+
+    function m(text) { return '<span class="pbe-money">' + text + '</span>'; }
+
+    // ========== RENDERING ==========
+
+    function setCard(id, text, cls, sub) {
+        var v = el('res-' + id);
+        v.textContent = text;
+        v.className = 'pbe-card-value' + (cls ? ' ' + cls : '');
+        if (sub !== undefined && el('sub-' + id)) el('sub-' + id).textContent = sub || ' ';
+    }
+
+    function colour(v) { return v > EPS ? 'pbe-pos' : v < -EPS ? 'pbe-neg' : ''; }
+
+    function setVerdict(id, cls, title, bodyHtml) {
+        var e = el(id);
+        e.className = 'pbe-verdict pbe-verdict-' + cls;
+        e.innerHTML = '<strong>' + title + '</strong>' + bodyHtml;
+    }
+
+    function describe(s, r) {
+        if (!r.ok) {
+            return {
+                cls: 'info', title: 'Enter a selling price',
+                body: 'Add a selling price above zero and the calculator will work out what the discount costs you.',
+                summary: 'Enter a selling price above zero to see the result.'
+            };
+        }
+        if (r.noMargin) {
+            return {
+                cls: 'bad', title: 'There is no margin to discount',
+                body: 'At full price each unit contributes ' + m(money(r.cb, 2)) + ' after cost, fees and shipping, so any discount only makes that worse and extra volume cannot fix it. Look at price or costs before running a promotion.',
+                summary: 'At full price each unit contributes ' + money(r.cb, 2) + ', so no discount can pay for itself.'
+            };
+        }
+        if (r.impossible) {
+            var deep = r.dmax !== null
+                ? ' The deepest discount that still leaves any contribution is about ' + plainPct(r.dmax) + ',. Discounts shallower than that leave some contribution, but the uplift needed climbs steeply as you approach it - see the table.'
+                : '';
+            return {
+                cls: 'bad', title: 'No volume can pay for this discount',
+                body: 'At ' + plainPct(s.disc) + ' off each unit contributes ' + m(money(r.ca, 2)) + ' instead of ' + m(money(r.cb, 2)) + '. No amount of extra volume can pay for it, because every extra sale loses or earns nothing.' + deep,
+                summary: 'At ' + plainPct(s.disc) + ' off each unit contributes ' + money(r.ca, 2) + ', so no amount of extra volume can pay for it.'
+            };
+        }
+        var req = r.req;
+        if (s.disc <= 0 && !r.hasMkt) {
+            return {
+                cls: 'info', title: 'No discount entered',
+                body: 'Enter a discount above 0% to see how much extra you need to sell to make the same contribution.',
+                summary: 'No discount entered. Enter one above 0% to see the uplift needed.'
+            };
+        }
+        if (r.ca >= r.cb - EPS && s.disc > 0) {
+            return {
+                cls: 'warn', title: 'The discount does not cut your contribution',
+                body: 'Fees take at least as much of each price as the sale brings in, so each unit contributes ' + m(money(r.ca, 2)) + ' at ' + plainPct(s.disc) + ' off. Check the fee rate before relying on this.',
+                summary: 'At ' + plainPct(s.disc) + ' off each unit contributes ' + money(r.ca, 2) + ', no less than before.'
+            };
+        }
+        var mult = (r.cb / r.ca);
+        var body = 'At ' + plainPct(s.disc) + ' off each unit contributes ' + m(money(r.ca, 2)) + ' instead of ' + m(money(r.cb, 2)) +
+            ', so you need ' + (mult < 1000 ? mult.toFixed(2) + ' times' : 'over 1,000 times') + ' the units, ' + per100(req.base).replace('+', '') +
+            ' extra for every 100 you sell now, to make the same total contribution.';
+        var summary = 'At ' + plainPct(s.disc) + ' off you need ' + pct(req.head).replace('+', '') + ' more units to make the same contribution.';
+        if (r.hasMkt) {
+            body += ' With ' + m(money(s.mkt, 0)) + ' of marketing the bar rises to ' + m(pct(req.withMkt)) + ', which is ' + whole(r.unitsNeeded) + ' units against ' + whole(s.units) + ' normally.';
+        } else if (s.mkt > 0) {
+            body += ' Add the units you normally sell to include the marketing spend.';
+        }
+        return { cls: 'warn', title: 'Sell ' + pct(req.head).replace('+', '') + ' more to stand still', body: body, summary: summary };
+    }
+
+    function describeExpected(s, r) {
+        if (s.uplift === null) return null;
+        if (!r.ok) return { cls: 'info', title: 'Enter a selling price', body: 'The comparison needs a selling price above zero.', summary: '' };
+        if (!r.hasUnits) {
+            return { cls: 'info', title: 'Enter your normal units', body: 'Add the units you normally sell in the period to see the money figures for an uplift of ' + plainPct(s.uplift) + '.', summary: 'Enter normal units to see the profit change.' };
+        }
+        var need = r.req ? ' The uplift needed to break even is ' + pct(r.req.head) + '.' : ' No uplift can break even at this discount.';
+        var ch = r.change;
+        var small = Math.abs(ch) < 0.5;
+        if (small) {
+            return { cls: 'warn', title: 'About break-even', body: 'An uplift of ' + plainPct(s.uplift) + ' leaves you roughly where you started.' + need + ' This assumes every extra sale is new demand.', summary: 'An uplift of ' + plainPct(s.uplift) + ' is about break-even against doing nothing.' };
+        }
+        if (ch > 0) {
+            return { cls: 'good', title: 'Worth doing on these numbers', body: 'An uplift of ' + plainPct(s.uplift) + ' leaves you ' + m(money(ch, 0)) + ' better off than not running the promotion.' + need + ' This assumes every extra sale is new demand.', summary: 'An uplift of ' + plainPct(s.uplift) + ' gives ' + signedMoney(ch, 0) + ' against doing nothing.' };
+        }
+        return { cls: 'bad', title: 'Not worth it on these numbers', body: 'An uplift of ' + plainPct(s.uplift) + ' leaves you ' + m(money(-ch, 0)) + ' worse off than not running the promotion.' + need, summary: 'An uplift of ' + plainPct(s.uplift) + ' gives ' + signedMoney(ch, 0) + ' against doing nothing.' };
+    }
+
+    function renderCards(s, r) {
+        if (!r.ok) {
+            ['cb', 'ca', 'uplift', 'extra', 'units', 'target'].forEach(function(k) { setCard(k, '-', '', ''); });
+            return;
+        }
+        setCard('cb', money(r.cb, 2, true), colour(r.cb) === 'pbe-neg' ? 'pbe-neg' : '');
+        setCard('ca', money(r.ca, 2, true), colour(r.ca) === 'pbe-neg' ? 'pbe-neg' : '',
+            s.disc > 0 ? 'at ' + plainPct(s.disc) + ' off' : 'no discount');
+        if (r.req) {
+            setCard('uplift', pct(r.req.head), '', r.hasMkt ? 'before marketing: ' + pct(r.req.base) : (r.cb / r.ca < 1000 ? (r.cb / r.ca).toFixed(2) + 'x the units' : ''));
+            setCard('extra', per100(r.req.head), '', r.hasMkt ? 'with marketing' : 'on top of every 100');
+            if (r.hasUnits) setCard('units', whole(r.unitsNeeded), '', 'against ' + whole(s.units) + ' normally');
+            else setCard('units', 'Add units', '', 'normal units sold');
+        } else {
+            setCard('uplift', 'Not possible', 'pbe-neg', 'no volume covers it');
+            setCard('extra', 'Not possible', 'pbe-neg', '');
+            setCard('units', 'Not possible', 'pbe-neg', '');
+        }
+        if (r.hasUnits) {
+            setCard('target', money(r.target, 0, true), '', r.hasMkt ? 'includes ' + money(s.mkt, 0) + ' marketing' : 'what the period earns now');
+        } else {
+            setCard('target', 'Add units', '', 'normal units sold');
+        }
+
+        var panel = el('expected-panel');
+        panel.hidden = s.uplift === null;
+        if (s.uplift !== null) {
+            if (r.hasUnits) {
+                setCard('change', signedMoney(r.change, 0, true), colour(r.change), 'versus doing nothing');
+                setCard('with', money(r.withPromo, 0, true), '', 'after marketing, at ' + plainPct(s.uplift) + ' uplift');
+            } else {
+                setCard('change', 'Add units', '', 'normal units sold');
+                setCard('with', 'Add units', '', 'normal units sold');
+            }
+        }
+    }
+
+    function renderTable(s, r) {
+        var tbody = el('discount-tbody');
+        var steps = TABLE_STEPS.slice();
+        var chosenIn = steps.indexOf(s.disc) !== -1;
+        if (!chosenIn && s.disc > 0) {
+            steps.push(s.disc);
+            steps.sort(function(a, b) { return a - b; });
+        }
+        el('th-uplift').textContent = r.ok && r.hasMkt ? 'Uplift needed, with marketing' : 'Uplift needed';
+        el('table-caption').textContent = r.ok && r.hasMkt
+            ? 'Extra sales needed to match your current contribution, including your marketing spend.'
+            : 'Extra sales needed to match your current contribution.';
+        if (!r.ok) {
+            tbody.innerHTML = '<tr><td colspan="4">Enter a selling price to see the table.</td></tr>';
+            return;
+        }
+        var rows = steps.map(function(d) {
+            var ca = r.contributionAt(d);
+            var req = r.required(ca);
+            var chosen = d === s.disc;
+            var label = plainPct(d) + (chosen ? '<span class="visually-hidden"> (your discount)</span>' : '');
+            var tr = '<tr' + (chosen ? ' class="pbe-chosen" aria-current="true"' : '') + '><th scope="row">' + label + '</th><td>' + money(ca, 2) + '</td>';
+            if (req) tr += '<td>' + pct(req.head) + '</td><td>' + per100(req.head) + '</td>';
+            else tr += '<td class="pbe-no" colspan="2">Not possible</td>';
+            return tr + '</tr>';
+        });
+        tbody.innerHTML = rows.join('');
+    }
+
+    function renderAll() {
+        var s = readState();
+        var r = calc(s);
+        var d = describe(s, r);
+        setVerdict('verdict', d.cls, d.title, ' ' + d.body);
+        var ex = describeExpected(s, r);
+        if (ex) setVerdict('verdict-expected', ex.cls, ex.title, ' ' + ex.body);
+        renderCards(s, r);
+        renderTable(s, r);
+        updateHints(s, r);
+        return { s: s, r: r, summary: d.summary + (ex && ex.summary && r.ok ? ' ' + ex.summary : '') };
+    }
+
+    function updateHints(s, r) {
+        var costHint = el('cost-hint');
+        var marginHint = el('margin-hint');
+        if (!r.ok) { costHint.textContent = ''; marginHint.textContent = ''; return; }
+        if (s.costMode === 'cost') {
+            marginHint.textContent = '';
+            costHint.textContent = r.ex > 0 ? 'Gross margin at full price: ' + plainPct(((r.ex - r.costUnit) / r.ex) * 100) : '';
+        } else {
+            costHint.textContent = '';
+            marginHint.textContent = 'Works out as a cost of ' + money(r.costUnit, 2) + ' per unit, ex VAT';
+        }
+    }
+
+    function applyCurrency() {
+        var cur = document.querySelectorAll('.pbe-cur');
+        for (var i = 0; i < cur.length; i++) cur[i].textContent = sym();
+    }
+
+    function applyModes() {
+        var margin = el('mode-margin').checked;
+        el('cost-group').hidden = margin;
+        el('margin-group').hidden = !margin;
+        input('vat').disabled = !el('vat-incl').checked;
+        el('vat-rate-hint').textContent = el('vat-incl').checked
+            ? 'UK standard rate for the 2026/27 tax year is 20%'
+            : 'Not used: prices are treated as ex VAT';
+        el('fee-hint').textContent = el('vat-incl').checked ? 'Charged on the price including VAT' : 'Charged on the price as entered';
+        el('ship-hint').textContent = 'Per unit, ex VAT';
+    }
+
+    // ========== URL STATE ==========
+
+    var urlTimer = null;
+
+    function writeURL() {
+        var s = readState();
+        var p = new URLSearchParams();
+        p.set('cur', currency);
+        p.set('price', s.price);
+        if (!s.vatOn) p.set('vatincl', '0');
+        p.set('vat', s.vat);
+        p.set('mode', s.costMode);
+        if (s.costMode === 'margin') p.set('margin', s.margin); else p.set('cost', s.cost);
+        p.set('fee', s.fee);
+        p.set('ship', s.ship);
+        p.set('disc', s.disc);
+        p.set('units', s.units);
+        if (s.uplift !== null) p.set('uplift', s.uplift);
+        if (s.mkt > 0) p.set('mkt', s.mkt);
+        try { history.replaceState(null, '', '?' + p.toString()); } catch (e) { /* some browsers rate-limit replaceState */ }
+    }
+
+    function scheduleURL() {
+        clearTimeout(urlTimer);
+        urlTimer = setTimeout(writeURL, DEBOUNCE_URL);
+    }
+
+    function readURL() {
+        var p = new URLSearchParams(window.location.search);
+        if (p.has('cur') && SYMBOLS[p.get('cur')]) {
+            currency = p.get('cur');
+            el('currency-select').value = currency;
+        }
+        if (p.get('vatincl') === '0') el('vat-incl').checked = false;
+        if (p.get('mode') === 'margin') el('mode-margin').checked = true;
+        Object.keys(FIELDS).forEach(function(key) {
+            var param = FIELDS[key].param;
+            if (!p.has(param)) return;
+            if (key === 'cost' && p.get('mode') === 'margin' && !p.has('cost')) return;
+            input(key).value = p.get(param).slice(0, 24);
+        });
+    }
+
+    // ========== EVENTS ==========
+
+    var liveTimer = null;
+    var lastLive = '';
+    var eventTimer = null;
+    var calcSent = false;
+
+    function scheduleLive(summary) {
+        clearTimeout(liveTimer);
+        liveTimer = setTimeout(function() {
+            if (summary === lastLive) return;
+            lastLive = summary;
+            el('live-summary').textContent = summary;
+        }, DEBOUNCE_LIVE);
+    }
+
+    function scheduleCalculated() {
+        if (calcSent) return;
+        clearTimeout(eventTimer);
+        eventTimer = setTimeout(function() {
+            if (calcSent) return;
+            calcSent = true;
+            if (window.toolEvent) window.toolEvent('calculated');
+        }, DEBOUNCE_EVENT);
+    }
+
+    function update(userChange) {
+        var out = renderAll();
+        scheduleLive(out.summary);
+        scheduleURL();
+        if (userChange) scheduleCalculated();
+    }
+
+    // Switching how cost is entered keeps the same cost: the other field is filled in to match.
+    function switchCostMode() {
+        var s = readState();
+        var r = calc(s);
+        if (r.ok) {
+            if (s.costMode === 'margin') {
+                if (r.ex > 0) input('margin').value = String(+Math.max(FIELDS.margin.min, Math.min(FIELDS.margin.max, ((r.ex - s.cost) / r.ex) * 100)).toFixed(1));
+            } else {
+                input('cost').value = String(+Math.max(0, r.ex * (1 - s.margin / 100)).toFixed(2));
+            }
+        }
+        checkNote('cost');
+        checkNote('margin');
+        applyModes();
+        update(true);
+    }
+
+    function copyLink() {
+        writeURL();
+        var done = function(msg) { el('share-status').textContent = msg; };
+        if (window.toolEvent) window.toolEvent('shared');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(window.location.href).then(
+                function() { done('Link copied'); },
+                function() { done('Could not copy - use the address bar'); }
+            );
+        } else {
+            done('Could not copy - use the address bar');
+        }
+    }
+
+    function bind() {
+        Object.keys(FIELDS).forEach(function(key) {
+            var e = input(key);
+            e.addEventListener('input', function() { checkNote(key); update(true); });
+            e.addEventListener('change', function() { checkNote(key); tidy(key); update(true); });
+        });
+        el('currency-select').addEventListener('change', function() {
+            currency = this.value;
+            applyCurrency();
+            update(true);
+        });
+        el('vat-incl').addEventListener('change', function() { applyModes(); update(true); });
+        el('mode-cost').addEventListener('change', switchCostMode);
+        el('mode-margin').addEventListener('change', switchCostMode);
+        el('share-btn').addEventListener('click', copyLink);
+    }
+
+    function init() {
+        readURL();
+        Object.keys(FIELDS).forEach(checkNote);
+        applyCurrency();
+        applyModes();
+        bind();
+        var out = renderAll();
+        lastLive = out.summary;
+        el('live-summary').textContent = out.summary;
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
