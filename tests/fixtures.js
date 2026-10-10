@@ -60,11 +60,11 @@ const test = base.test.extend({
   },
 });
 
-// Parse the page's currency formatting: "+£300,000", "£-300", "-£1.2M", "£6.7M" -> number.
+// Parse the page's currency formatting: "+£300,000", "£-300", "-£1.2M", "£6.7M", "£2,000.0B" -> number.
 function parseMoney(text) {
   const t = text.replace(/[£€$A,+\s]/g, '');
-  const mult = /M$/.test(t) ? 1e6 : 1;
-  const n = parseFloat(t.replace(/M$/, ''));
+  const mult = /B$/.test(t) ? 1e9 : /M$/.test(t) ? 1e6 : /k$/.test(t) ? 1e3 : 1;
+  const n = parseFloat(t.replace(/[BMk]$/, ''));
   return n * mult;
 }
 
