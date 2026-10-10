@@ -5,7 +5,9 @@ const URL = '/fractional-vs-full-time/';
 // Hand-computed defaults (see the brief): NI 15% x (95,000 - 5,000), pension 5%, benefits 6,000.
 const D = {
   ni: 13500, pension: 4750, annual: 119250, recruiter: 19000, first: 138250,
-  perDay: 530, fractional: 40800, breakEven: 11.7, ftWeeks: 25, frWeeks: 4, gap: 21,
+  perDay: 530, fractional: 40800, breakEven: 11.7, ftWeeks: 25, frWeeks: 8, gap: 17,
+  // first 12 months from today: 119,250 x 40/52 + 19,000 and 40,800 x 50/52
+  ftFirst: 110731, frFirst: 39231, firstBreakEven: 11.3,
 };
 
 const text = (page, id) => page.locator('#' + id).innerText();
@@ -29,9 +31,13 @@ test.describe('Fractional vs full-time', () => {
   test('default inputs give the hand-computed costs', async ({ page, pageErrors }) => {
     await load(page);
     await expect(page.locator('#res-ft-annual')).toHaveText('£119,250');
-    await expect(page.locator('#res-ft-first')).toHaveText('£138,250');
+    await expect(page.locator('#res-ft-first')).toHaveText('£110,731');
+    await expect(page.locator('#res-fr-first')).toHaveText('£39,231');
+    await expect(page.locator('#res-first-diff')).toHaveText('£71,500');
+    await expect(page.locator('#res-first-diff-label')).toHaveText('Fractional saves, first 12 months');
     await expect(page.locator('#res-fr-annual')).toHaveText('£40,800');
     await expect(page.locator('#res-diff')).toHaveText('£78,450');
+    await expect(page.locator('#res-diff-label')).toHaveText('Fractional saves, a year');
     await expect(page.locator('#res-ft-day')).toHaveText('£530');
     await expect(page.locator('#res-fr-day')).toHaveText('£850');
     await expect(page.locator('#bu-ni')).toHaveText('£13,500');
@@ -44,11 +50,13 @@ test.describe('Fractional vs full-time', () => {
 
   test('break-even sentence and time to productive match the maths', async ({ page }) => {
     await load(page);
-    await expect(page.locator('#fvf-breakeven')).toHaveText('Above 11.7 days a month, a full-time hire is cheaper.');
+    await expect(page.locator('#fvf-breakeven')).toHaveText('Over a full year, the hire is cheaper above 11.7 days a month.');
     expect(119250 / (850 * 12)).toBeCloseTo(D.breakEven, 1);
+    await expect(page.locator('#fvf-breakeven-first')).toHaveText('Over the first 12 months from today, the hire is cheaper above 11.3 days a month.');
+    expect(D.ftFirst / (850 * 12 * 50 / 52)).toBeCloseTo(D.firstBreakEven, 1);
     await expect(page.locator('#res-ft-weeks')).toHaveText('25 weeks');
-    await expect(page.locator('#res-fr-weeks')).toHaveText('4 weeks');
-    await expect(page.locator('#res-gap')).toHaveText('21 weeks');
+    await expect(page.locator('#res-fr-weeks')).toHaveText('8 weeks');
+    await expect(page.locator('#res-gap')).toHaveText('17 weeks');
     await expect(page.locator('#res-gap-sub')).toHaveText('fractional is sooner');
   });
 
@@ -98,7 +106,7 @@ test.describe('Fractional vs full-time', () => {
     await expect(page.locator('#res-fr-annual')).toHaveText('£57,600');
     await input.blur();
     await expect(input).toHaveValue('1200');
-    await expect(page.locator('#fvf-breakeven')).toHaveText('Above 8.3 days a month, a full-time hire is cheaper.');
+    await expect(page.locator('#fvf-breakeven')).toHaveText('Over a full year, the hire is cheaper above 8.3 days a month.');
   });
 
   test('verdict changes with the numbers and says when full-time is better', async ({ page }) => {
@@ -128,19 +136,24 @@ test.describe('Fractional vs full-time', () => {
     await typeInto(page, '#f-wd', '225');
     await typeInto(page, '#f-sal', '1000000');
     await typeInto(page, '#p-dr', '1');
-    await expect(page.locator('#fvf-breakeven')).toContainText('even at 18.8 days a month');
+    await expect(page.locator('#fvf-breakeven')).toContainText('even if you bought every working day (about 18.8 days a month).');
     await typeInto(page, '#p-dpm', '0');
     await expect(page.locator('#fvf-verdict')).toContainText('No fractional days entered');
+    await expect(page.locator('#res-fr-annual')).toHaveText('-');
+    await expect(page.locator('#res-diff')).toHaveText('-');
+    await expect(page.locator('#res-first-diff')).toHaveText('-');
+    await expect(page.locator('#fvf-live')).not.toContainText('£0');
     const all = await body.innerText();
     expect(all).not.toMatch(/NaN|Infinity|undefined|N\/A/);
   });
 
   test('money has sign before the symbol and never wraps', async ({ page }) => {
     await load(page, '?sal=95000&dr=10000&dpm=22');
-    // 10,000 x 22 x 12 = 2,640,000 against 119,250 -> fractional dearer by 2,520,750
+    // 10,000 x 22 x 12 = 2,640,000 against 119,250 -> full-time saves 2,520,750, shown positive
     await expect(page.locator('#res-fr-annual')).toHaveText('£2,640,000');
-    await expect(page.locator('#res-diff')).toHaveText('-£2,520,750');
-    for (const id of ['res-ft-annual', 'res-ft-first', 'res-fr-annual', 'res-diff', 'res-ft-day', 'res-fr-day']) {
+    await expect(page.locator('#res-diff')).toHaveText('£2,520,750');
+    await expect(page.locator('#res-diff-label')).toHaveText('Full-time saves, a year');
+    for (const id of ['res-ft-annual', 'res-ft-first', 'res-fr-first', 'res-first-diff', 'res-fr-annual', 'res-diff', 'res-ft-day', 'res-fr-day']) {
       const lines = await page.locator('#' + id).evaluate((n) => {
         const lh = parseFloat(getComputedStyle(n).lineHeight);
         return Math.round(n.getBoundingClientRect().height / lh);
@@ -211,13 +224,15 @@ test.describe('Fractional vs full-time', () => {
     await load(page);
     const live = page.locator('#fvf-live');
     await expect(live).toHaveAttribute('aria-live', 'polite');
-    await expect(live).toContainText('Full-time £119,250 a year, fractional £40,800 a year.');
+    // nothing is announced on page load
+    await page.waitForTimeout(1000);
+    await expect(live).toHaveText('');
     await page.evaluate(() => {
       window.__mut = 0;
       new MutationObserver(() => window.__mut++).observe(document.getElementById('fvf-live'), { childList: true, characterData: true, subtree: true });
     });
     await typeInto(page, '#p-dpm', '12');
-    await expect(live).toContainText('Full-time looks like the better buy');
+    await expect(live).toContainText('Full-time £119,250 a year, fractional £122,400 a year. Full-time looks like the better buy');
     expect(await page.evaluate(() => window.__mut)).toBeLessThanOrEqual(2);
   });
 
@@ -279,8 +294,9 @@ test.describe('Fractional vs full-time', () => {
     await load(page);
     const widths = await page.locator('#fvf-chart rect').evaluateAll((rs) => rs.map((r) => parseFloat(r.getAttribute('width'))));
     expect(widths).toHaveLength(4);
-    expect(widths[2] / widths[0]).toBeCloseTo(138250 / 119250, 2);
+    expect(widths[2] / widths[0]).toBeCloseTo(110731 / 119250, 2);
     expect(widths[1] / widths[0]).toBeCloseTo(40800 / 119250, 2);
+    expect(widths[3] / widths[0]).toBeCloseTo(39231 / 119250, 2);
   });
 
   test('page source carries the tool-cta marker below the results', async ({ request }) => {
@@ -292,5 +308,100 @@ test.describe('Fractional vs full-time', () => {
     expect(marker).toBeGreaterThan(results);
     expect(marker).toBeLessThan(how);
     expect(html).toContain('2026/27');
+  });
+
+  test('the savings card flips direction and stays positive', async ({ page }) => {
+    await load(page, '?sal=60000&dpm=8');
+    // 60,000 + 15% x 55,000 + 3,000 + 6,000 = 77,250; fractional 850 x 8 x 12 = 81,600
+    await expect(page.locator('#res-diff-label')).toHaveText('Full-time saves, a year');
+    await expect(page.locator('#res-diff')).toHaveText('£4,350');
+    await typeInto(page, '#p-dpm', '4');
+    await expect(page.locator('#res-diff-label')).toHaveText('Fractional saves, a year');
+    await expect(page.locator('#res-diff')).toHaveText('£36,450');
+  });
+
+  test('first 12 months counts only the weeks after each option starts', async ({ page }) => {
+    await load(page);
+    await typeInto(page, '#f-tth', '26');
+    // 119,250 x 26/52 + 19,000
+    await expect(page.locator('#res-ft-first')).toHaveText('£78,625');
+    await typeInto(page, '#p-st', '26');
+    // 40,800 x 26/52
+    await expect(page.locator('#res-fr-first')).toHaveText('£20,400');
+    await typeInto(page, '#f-tth', '60');
+    await expect(page.locator('#res-ft-first')).toHaveText('£0');
+    await expect(page.locator('#fvf-breakeven-first')).toContainText('would not start inside the first 12 months');
+  });
+
+  test('gap card and verdict agree on the number of weeks', async ({ page }) => {
+    await load(page, '?rup=0.5&frup=2.5&tth=0&fst=0');
+    // hire 0 + 0.5 x 52/12 = 2.17 -> 2 weeks; fractional 2.5 -> 3 weeks (rounds half up)
+    const gap = parseInt((await text(page, 'res-gap')).split(' ')[0], 10);
+    const ft = parseInt((await text(page, 'res-ft-weeks')).split(' ')[0], 10);
+    const fr = parseInt((await text(page, 'res-fr-weeks')).split(' ')[0], 10);
+    expect(gap).toBe(Math.abs(ft - fr));
+    await load(page, '?rup=2.5&frup=0.5&tth=0&fst=0');
+    const g2 = parseInt((await text(page, 'res-gap')).split(' ')[0], 10);
+    const v = await text(page, 'fvf-verdict');
+    expect(v).toContain(g2 + (g2 === 1 ? ' week' : ' weeks') + ' sooner');
+  });
+
+  test('weeks cards stay on one line and inside the card at 360px', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 800 });
+    await load(page, '?tth=104&rup=24&fst=52&frup=52');
+    await expect(page.locator('#res-ft-weeks')).toHaveText('208 weeks');
+    for (const id of ['res-ft-weeks', 'res-fr-weeks', 'res-gap']) {
+      const m = await page.locator('#' + id).evaluate((n) => {
+        const r = document.createRange(); r.selectNodeContents(n);
+        return { text: r.getBoundingClientRect().width, box: n.getBoundingClientRect().width, h: n.getBoundingClientRect().height, lh: parseFloat(getComputedStyle(n).lineHeight) };
+      });
+      expect(m.text, id).toBeLessThanOrEqual(m.box);
+      expect(Math.round(m.h / m.lh), id).toBe(1);
+    }
+  });
+
+  test('copy glitches are gone', async ({ page }) => {
+    await load(page);
+    await typeInto(page, '#f-wd', '1');
+    await page.locator('#f-wd').blur();
+    const be = await text(page, 'fvf-breakeven');
+    expect(be).not.toMatch(/0\.1 days/);
+    expect(be).toContain('even if you bought every working day.');
+    await load(page, '?dr=400');
+    const note = await page.locator('#fvf-perday-note').evaluate((n) => n.textContent);
+    expect(note).toBe(note.trim());
+    expect(note).toContain('so less per day.');
+    await load(page);
+    expect(await text(page, 'fvf-perday-note')).toContain('48 days a year against 225.');
+  });
+
+  test('result labels are at least 12px and hints are tied to inputs', async ({ page }) => {
+    await load(page);
+    const sizes = await page.locator('.result-label').evaluateAll((ns) => ns.map((n) => parseFloat(getComputedStyle(n).fontSize)));
+    expect(sizes.length).toBeGreaterThan(8);
+    for (const sz of sizes) expect(sz).toBeGreaterThanOrEqual(12);
+    await expect(page.locator('#f-pen')).toHaveAttribute('aria-describedby', 'f-pen-hint');
+    await typeInto(page, '#f-pen', '500');
+    await expect(page.locator('#f-pen')).toHaveAttribute('aria-describedby', 'f-pen-hint f-pen-note');
+    await expect(page.locator('#f-pen-hint')).toContainText('legal minimum is 3%');
+  });
+
+  test('every verdict uses the same neutral style', async ({ page }) => {
+    await load(page);
+    const styles = [];
+    for (const d of ['4', '9', '15']) {
+      await typeInto(page, '#p-dpm', d);
+      styles.push(await page.locator('#fvf-verdict').evaluate((n) => n.className + '|' + getComputedStyle(n).backgroundColor));
+    }
+    expect(new Set(styles).size).toBe(1);
+  });
+
+  test('methodology covers IR35, notice period and the break-even definition', async ({ page }) => {
+    await load(page);
+    const how = await page.locator('.methodology').innerText();
+    expect(how).toContain('IR35');
+    expect(how).toContain('short notice period');
+    expect(how).toContain('Class 1A');
+    expect(how).toContain('annual cost of the hire divided by (12 x day rate)');
   });
 });
