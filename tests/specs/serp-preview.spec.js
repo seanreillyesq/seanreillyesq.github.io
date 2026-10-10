@@ -377,6 +377,25 @@ test.describe('SERP preview', () => {
     });
   });
 
+  test.describe('breadcrumb capitalisation', () => {
+    const cases = [
+      ['/%C3%BCber-uns/', '\u00dcber Uns'],
+      ['/na%C3%AFve-guide/', 'Na\u00efve Guide'],
+      ['/it%27s-here/', "It's Here"],
+      ['/the-2026-guide/', 'The 2026 Guide'],
+    ];
+    for (const [path, expected] of cases) {
+      test(`${path} is capitalised word by word`, async ({ page }) => {
+        await page.locator('#serp-url').fill('https://example.com' + path);
+        await expect(page.locator('#preview-desktop .google-breadcrumb')).toHaveText('example.com \u203A ' + expected);
+      });
+    }
+    test('accented letters typed directly are capitalised', async ({ page }) => {
+      await page.locator('#serp-url').fill('https://example.com/\u00fcber-uns/');
+      await expect(page.locator('#preview-desktop .google-breadcrumb')).toHaveText('example.com \u203A \u00dcber Uns');
+    });
+  });
+
   test.describe('keyphrase bolding', () => {
     test('bolds words with accents, symbols and non-ASCII letters', async ({ page }) => {
       await page.locator('#serp-title').fill('Caf\u00e9 and C++ and \u00fcber things');
@@ -481,9 +500,42 @@ test.describe('SERP preview', () => {
       expect(await state()).toEqual(['true/0', 'false/-1', 'false/-1', 'false/-1']);
     });
 
-    test('fetch status and validation are polite live regions', async ({ page }) => {
+    test('the fetch status is a polite live region and the validation list is not', async ({ page }) => {
       await expect(page.locator('#serp-fetch-status')).toHaveAttribute('aria-live', 'polite');
-      await expect(page.locator('#validation')).toHaveAttribute('aria-live', 'polite');
+      await expect(page.locator('#validation')).not.toHaveAttribute('aria-live', /.*/);
+      await expect(page.locator('#validation [aria-live], #validation[role="status"], #validation[role="alert"]')).toHaveCount(0);
+      const status = page.locator('#validation-status');
+      await expect(status).toHaveAttribute('aria-live', 'polite');
+      const box = await status.evaluate((e) => { const r = e.getBoundingClientRect(); return [r.width, r.height]; });
+      expect(Math.max(...box)).toBeLessThanOrEqual(1);
+    });
+
+    test('the validation status announces a short summary only when the set of messages changes', async ({ page }) => {
+      const status = page.locator('#validation-status');
+      await expect(status).toHaveText('2 problems, 1 warning');
+      await page.locator('#serp-title').fill('Short title');
+      await expect(status).toHaveText('1 problem, 1 warning');
+
+      // Typing more keeps every check in the same state, so only the pixel figures change.
+      await page.evaluate(() => {
+        window.__announced = 0;
+        new MutationObserver((list) => { window.__announced += list.length; })
+          .observe(document.getElementById('validation-status'), { childList: true, characterData: true, subtree: true });
+      });
+      await page.locator('#serp-title').pressSequentially(' with a few more words');
+      await expect(page.locator('#validation')).toContainText('Title length is good');
+      expect(await page.evaluate(() => window.__announced)).toBe(0);
+
+      // A change in which messages apply is announced.
+      await page.locator('#serp-title').fill('An extremely long page title that keeps going and going well past any sensible search result width limit');
+      await expect(status).toHaveText('2 problems, 2 warnings');
+      expect(await page.evaluate(() => window.__announced)).toBeGreaterThan(0);
+
+      await page.locator('#serp-title').fill('Short title');
+      await page.locator('#serp-desc').fill('Coffee and sleep, explained with a calculator that shows how long caffeine stays in your system.');
+      await page.locator('#serp-url').fill('https://www.example.com/page/');
+      await page.locator('#serp-image').fill('https://www.example.com/i.jpg');
+      await expect(status).toHaveText('All checks pass');
     });
 
     test('there is space between the validation list and the "How this works" heading', async ({ page }) => {

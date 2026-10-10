@@ -522,7 +522,8 @@ sitemap: true
 </div>
 
 <!-- Validation -->
-<div class="serp-validation" id="validation" aria-live="polite"></div>
+<div class="visually-hidden" id="validation-status" aria-live="polite" aria-atomic="true"></div>
+<div class="serp-validation" id="validation"></div>
 
 <!-- How this works -->
 <div class="serp-methodology mb-4">
@@ -698,7 +699,9 @@ sitemap: true
         var host = unicodeHost(parsed.hostname);
         var parts = parsed.pathname.split('/').filter(Boolean).map(function(s) {
             try { s = decodeURIComponent(s); } catch(e) {}
-            return s.replace(/-/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+            // Capitalise the first letter of each space-separated word only (\b\w breaks on
+            // accents and apostrophes).
+            return s.replace(/-/g, ' ').replace(/(^|\s)(\p{L})/gu, function(m, sp, c) { return sp + c.toUpperCase(); });
         });
         if (parts.length === 0) return host;
         return host + ' \u203a ' + parts.join(' \u203a ');
@@ -926,6 +929,8 @@ sitemap: true
     }
 
     var lastValidationHtml = '';
+    var lastValidationSignature = null;
+    var validationStatus = document.getElementById('validation-status');
     function renderValidation() {
         var m = metrics();
         var title = m.title;
@@ -939,47 +944,47 @@ sitemap: true
 
         // Title
         if (!title) {
-            checks.push({ s: 'red', t: 'Title tag is empty' });
+            checks.push({ s: 'red', k: 'title-empty', t: 'Title tag is empty' });
         } else if (titlePx > TITLE_MAX_PX) {
-            checks.push({ s: 'red', t: 'Title will truncate on desktop (' + titlePx + 'px exceeds ' + TITLE_MAX_PX + 'px)' });
+            checks.push({ s: 'red', k: 'title-over', t: 'Title will truncate on desktop (' + titlePx + 'px exceeds ' + TITLE_MAX_PX + 'px)' });
         } else if (titlePx > TITLE_WARN_PX) {
-            checks.push({ s: 'amber', t: 'Title is close to the truncation limit (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
+            checks.push({ s: 'amber', k: 'title-warn', t: 'Title is close to the truncation limit (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
         } else {
-            checks.push({ s: 'green', t: 'Title length is good (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
+            checks.push({ s: 'green', k: 'title-good', t: 'Title length is good (' + titlePx + 'px / ' + TITLE_MAX_PX + 'px)' });
         }
 
         // Mobile title
         if (title && titlePx > TITLE_MOBILE_MAX_PX) {
-            checks.push({ s: 'amber', t: 'Title will truncate on mobile (' + titlePx + 'px exceeds ' + TITLE_MOBILE_MAX_PX + 'px)' });
+            checks.push({ s: 'amber', k: 'title-mobile', t: 'Title will truncate on mobile (' + titlePx + 'px exceeds ' + TITLE_MOBILE_MAX_PX + 'px)' });
         }
 
         // Description
         if (!desc) {
-            checks.push({ s: 'red', t: 'Meta description is empty - Google will pull text from the page' });
+            checks.push({ s: 'red', k: 'desc-empty', t: 'Meta description is empty - Google will pull text from the page' });
         } else if (descPx > DESC_MAX_PX) {
-            checks.push({ s: 'red', t: 'Description will truncate (' + descPx + 'px exceeds ' + DESC_MAX_PX + 'px)' });
+            checks.push({ s: 'red', k: 'desc-over', t: 'Description will truncate (' + descPx + 'px exceeds ' + DESC_MAX_PX + 'px)' });
         } else if (descPx < 200) {
-            checks.push({ s: 'amber', t: 'Description may be too short to fill the snippet' });
+            checks.push({ s: 'amber', k: 'desc-short', t: 'Description may be too short to fill the snippet' });
         } else if (descPx > DESC_WARN_PX) {
-            checks.push({ s: 'amber', t: 'Description is close to truncation (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
+            checks.push({ s: 'amber', k: 'desc-warn', t: 'Description is close to truncation (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
         } else {
-            checks.push({ s: 'green', t: 'Description length is good (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
+            checks.push({ s: 'green', k: 'desc-good', t: 'Description length is good (' + descPx + 'px / ' + DESC_MAX_PX + 'px)' });
         }
 
         // URL
         if (!url) {
-            checks.push({ s: 'grey', t: 'No URL provided' });
+            checks.push({ s: 'grey', k: 'url-none', t: 'No URL provided' });
         } else if (parseHttpUrl(url)) {
-            checks.push({ s: 'green', t: 'URL format is valid' });
+            checks.push({ s: 'green', k: 'url-ok', t: 'URL format is valid' });
         } else {
-            checks.push({ s: 'amber', t: 'URL does not appear to be valid (use a full http or https address)' });
+            checks.push({ s: 'amber', k: 'url-bad', t: 'URL does not appear to be valid (use a full http or https address)' });
         }
 
         // Image
         if (!image) {
-            checks.push({ s: 'amber', t: 'No OG image - social shares will lack a preview image' });
+            checks.push({ s: 'amber', k: 'image-none', t: 'No OG image - social shares will lack a preview image' });
         } else {
-            checks.push({ s: 'green', t: 'OG image is set' });
+            checks.push({ s: 'green', k: 'image-ok', t: 'OG image is set' });
         }
 
         var html =
@@ -995,6 +1000,25 @@ sitemap: true
             validationEl.innerHTML = html;
             lastValidationHtml = html;
         }
+
+        // The list changes with every keystroke (pixel figures), so it is not a live region.
+        // This hidden status announces a short summary only when the set of messages changes
+        // (which check, and its status), never for a change in the numbers alone.
+        var signature = checks.map(function(c) { return c.k + ':' + c.s; }).join('|');
+        if (signature !== lastValidationSignature) {
+            lastValidationSignature = signature;
+            validationStatus.textContent = summariseChecks(checks);
+        }
+    }
+
+    function plural(n, word) { return n + ' ' + word + (n === 1 ? '' : 's'); }
+    function summariseChecks(checks) {
+        var red = checks.filter(function(c) { return c.s === 'red'; }).length;
+        var amber = checks.filter(function(c) { return c.s === 'amber'; }).length;
+        var parts = [];
+        if (red) parts.push(plural(red, 'problem'));
+        if (amber) parts.push(plural(amber, 'warning'));
+        return parts.length ? parts.join(', ') : 'All checks pass';
     }
 
     function update() {
