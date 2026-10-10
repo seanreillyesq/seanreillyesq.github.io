@@ -728,7 +728,7 @@ tool_order: 6
         }
     }
 
-    function render(c) {
+    function render(c, immediate) {
         setCard('res-ota-net', moneyCard(c.otaNet, 2));
         setCard('res-direct-net', moneyCard(c.directNet, 2));
         setCard('res-gap-night', moneyCard(c.gap, 2, true), deltaClass(c.gap));
@@ -781,13 +781,21 @@ tool_order: 6
             p.textContent = t;
             box.appendChild(p);
         });
-        scheduleLive(vd.title + '. ' + vd.paras[0]);
+        scheduleLive(vd.title + '. ' + vd.paras[0], immediate);
         drawChart();
     }
 
     // The live region is rewritten only once typing pauses, and only if the sentence changed.
-    function scheduleLive(text) {
+    // A discrete control (VAT switch, commission base, currency) is one change, not a burst of
+    // typing, so it updates the announcement in the same render as the figures and no stale wording
+    // (for example "ex VAT" after switching VAT off) is left in the live region.
+    function scheduleLive(text, immediate) {
         clearTimeout(liveTimer);
+        if (immediate) {
+            lastLive = text;
+            el('hv-live').textContent = text;
+            return;
+        }
         liveTimer = setTimeout(function() {
             if (text === lastLive) return;
             lastLive = text;
@@ -830,11 +838,11 @@ tool_order: 6
         el('cbase').disabled = !v.vatinc;
     }
 
-    function update() {
+    function update(immediate) {
         var v = readAll();
         last = calc(v);
         applyControls(v);
-        render(last);
+        render(last, immediate);
         writeURL(v);
     }
 
@@ -862,12 +870,12 @@ tool_order: 6
     });
 
     ['vatinc', 'cbase'].forEach(function(id) {
-        el(id).addEventListener('change', function() { update(); userChanged(); });
+        el(id).addEventListener('change', function() { update(true); userChanged(); });
     });
 
     el('currency-select').addEventListener('change', function() {
         currency = this.value;
-        update();
+        update(true);
         userChanged();
     });
 

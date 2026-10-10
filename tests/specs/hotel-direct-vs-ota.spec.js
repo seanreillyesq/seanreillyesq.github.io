@@ -172,30 +172,62 @@ test.describe('Hotel direct vs OTA calculator', () => {
 
     test('with VAT off the results drop the ex VAT wording and it returns when VAT is on', async ({ page }) => {
       const section = page.locator('#section-results');
+      const sectionText = () => section.innerText();
       await expect(section).toContainText('ex VAT');
       await page.locator('#vatinc').uncheck();
+      // Wait for the final state, not just the first figure to change
+      await expect.poll(sectionText).not.toMatch(/ex VAT|after VAT/i);
       await expect(page.locator('#res-ota-net')).toHaveText('£147.60');
-      const text = await section.innerText();
-      expect(text).not.toMatch(/ex VAT/i);
-      expect(text).not.toMatch(/after VAT/);
+      const text = await sectionText();
       expect(text).toContain('OTA net per night');
       expect(text).toContain('Direct nets more than OTA');
       await expect(page.locator('#hv-chart svg')).not.toHaveAttribute('aria-label', /VAT/);
       expect(await page.locator('#hv-chart svg text').allInnerTexts().then((t) => t.join(' '))).not.toMatch(/VAT/);
-      // and in the less-than and level verdicts
+      // and in the less-than verdict
       await page.locator('#disc').fill('30');
       await expect(page.locator('#verdict')).toContainText('Direct nets less than OTA');
-      expect(await txt(page, 'verdict')).not.toMatch(/VAT/);
+      await expect.poll(sectionText).not.toMatch(/VAT/);
       await page.locator('#vatinc').check();
-      await expect(section).toContainText('ex VAT');
+      await expect.poll(sectionText).toMatch(/ex VAT/);
       await expect(page.locator('#verdict')).toContainText('ex VAT');
+      await expect.poll(() => txt(page, 'hv-live')).toMatch(/ex VAT/);
+    });
+
+    test('the announcement carries the new ex VAT wording in the same render as the figures', async ({ page }) => {
+      await expect(page.locator('#hv-live')).toContainText('ex VAT'); // the first announcement, after load
+      // Switch and read back in one task, so no timer can have run in between
+      const during = await page.evaluate(() => {
+        const box = document.getElementById('vatinc');
+        const out = {};
+        box.click();
+        out.liveOff = document.getElementById('hv-live').textContent;
+        out.verdictOff = document.getElementById('verdict').textContent;
+        box.click();
+        out.liveOn = document.getElementById('hv-live').textContent;
+        return out;
+      });
+      expect(during.liveOff).not.toMatch(/VAT/);
+      expect(during.verdictOff).not.toMatch(/VAT/);
+      expect(during.liveOn).toMatch(/ex VAT/);
+    });
+
+    test('currency changes update the announcement at once, like the ex VAT switch', async ({ page }) => {
+      await expect(page.locator('#hv-live')).toContainText('more per room night');
+      const live = await page.evaluate(() => {
+        const sel = document.getElementById('currency-select');
+        sel.value = 'USD';
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        return document.getElementById('hv-live').textContent;
+      });
+      expect(live).toContain('$');
+      expect(live).not.toContain('£');
     });
 
     test('with VAT off the level verdict has no ex VAT wording either', async ({ page }) => {
       await page.locator('#vatinc').uncheck();
       await setAll(page, { comm: 10, disc: 0, mkt: 7, fee: 3 });
       await expect(page.locator('#verdict')).toContainText('Level with the OTAs');
-      expect(await txt(page, 'verdict')).not.toMatch(/VAT/);
+      await expect.poll(() => txt(page, 'verdict')).not.toMatch(/VAT/);
     });
 
     test('the VAT switch is a labelled switch, on by default, at least 44px to tap', async ({ page }) => {
