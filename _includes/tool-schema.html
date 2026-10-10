@@ -1,0 +1,23 @@
+{%- comment -%} WebApplication JSON-LD for pages with tool: true. Included from head.html. {%- endcomment -%}
+{%- assign _tool_desc = page.meta-description | strip_newlines | strip -%}
+<script type="application/ld+json" id="tool-schema">
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": {{ page.title | jsonify }},
+    "description": {{ _tool_desc | jsonify }},
+    "url": {{ page.url | prepend: site.url | jsonify }},
+    "applicationCategory": "{% if page.tool_group == 'personal' %}HealthApplication{% else %}BusinessApplication{% endif %}",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "GBP"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Sean Reilly",
+        "url": {{ site.url | jsonify }}
+    }
+}
+</script>

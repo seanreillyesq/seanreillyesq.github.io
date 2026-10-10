@@ -20,10 +20,10 @@
             <div class="col-6 col-lg-2">
                 <h6 class="font-mono">Tools</h6>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="/roas-calculator/">ROAS Calculator</a></li>
-                    <li class="mb-2"><a href="/customer-economics/">Customer Economics</a></li>
-                    <li class="mb-2"><a href="/serp-preview/">SERP Preview</a></li>
-                    <li class="mb-2"><a href="/caffeine/">Caffeine Calculator</a></li>
+                    {% assign footer_tools = site.pages | where: "tool", true | sort: "tool_order" %}{% for t in footer_tools %}
+                    <li class="mb-2"><a href="{{ t.url }}">{{ t.menu | default: t.header-title | default: t.title }}</a></li>
+                    {% endfor %}
+                    <li class="mb-2"><a href="/tools/">All tools</a></li>
                 </ul>
             </div>
             <div class="col-lg-4">
