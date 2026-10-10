@@ -348,7 +348,7 @@ test.describe('Fractional vs full-time', () => {
     // 40,800 x 26/52
     await expect(page.locator('#res-fr-first')).toHaveText('£20,400');
     await typeInto(page, '#f-tth', '60');
-    await expect(page.locator('#res-ft-first')).toHaveText('£0');
+    await expect(page.locator('#res-ft-first')).toHaveText('-');
     // nothing to compare against: no "saves" claim, and a neutral label
     await expect(page.locator('#res-first-diff')).toHaveText('-');
     await expect(page.locator('#res-first-diff-label')).toHaveText('Difference, first 12 months');
@@ -449,7 +449,12 @@ test.describe('Fractional vs full-time', () => {
     const v = await text(page, 'fvf-verdict');
     expect(v).toContain('Full-time looks like the better buy');
     expect(v).toMatch(/Separately, a fractional leader would be in post and up to speed 15 weeks sooner/);
-    expect(v.indexOf('daily line management')).toBeLessThan(v.indexOf('Separately'));
+    // time is a side point in the middle, and the verdict ends on a neutral line
+    expect(v.indexOf('Separately')).toBeLessThan(v.indexOf('daily line management'));
+    expect(v.trim().endsWith('change them to see how the answer moves.')).toBe(true);
+    await load(page);
+    expect((await text(page, 'fvf-verdict')).trim().endsWith('change them to see how the answer moves.')).toBe(true);
+    await load(page, '?dpm=15');
     await load(page);
     expect(await text(page, 'fvf-verdict')).toContain('costs more per day but far less in total.');
     // 850 x 7 x 12 = 71,400; saving 47,850 is under half of 119,250
@@ -477,5 +482,33 @@ test.describe('Fractional vs full-time', () => {
     await typeInto(page, '#f-ni', '0');
     await expect(page.locator('#res-fr-annual')).toHaveText('£40,800');
     await expect(page.locator('.methodology')).toContainText('no threshold');
+  });
+
+  for (const weeks of ['52', '60']) {
+    test(`a hire that starts at ${weeks} weeks does not look free in the first 12 months`, async ({ page }) => {
+      await load(page, '?tth=' + weeks);
+      await expect(page.locator('#res-ft-first')).toHaveText('-');
+      await expect(page.locator('#res-ft-first-label')).toHaveText('Full-time, starts after 12 months');
+      await expect(page.locator('#bu-first')).toHaveText('-');
+      await expect(page.locator('#res-first-diff')).toHaveText('-');
+      // the chart leaves the bar out and says why, instead of drawing a zero-cost bar
+      const label = await page.locator('#fvf-chart').getAttribute('aria-label');
+      expect(label).toContain('First 12 months: full-time starts after 12 months');
+      expect(label).not.toContain('First 12 months: full-time £0');
+      const widths = await page.locator('#fvf-chart rect').evaluateAll((rs) => rs.map((r) => parseFloat(r.getAttribute('width'))));
+      expect(widths[2]).toBe(0);
+      const texts = await page.locator('#fvf-chart text').evaluateAll((ns) => ns.map((n) => n.textContent));
+      expect(texts).toContain('starts after 12 months');
+      expect(texts).not.toContain('£0');
+      // the verdict says the hire falls outside the window
+      await expect(page.locator('#fvf-verdict')).toContainText('The full-time hire would not start until after the first 12 months.');
+    });
+  }
+
+  test('a hire inside the window keeps its normal first-12-month label and bar', async ({ page }) => {
+    await load(page, '?tth=51');
+    await expect(page.locator('#res-ft-first-label')).toHaveText('Full-time, first 12 months');
+    await expect(page.locator('#res-ft-first')).not.toHaveText('-');
+    await expect(page.locator('#fvf-verdict')).not.toContainText('would not start until after');
   });
 });

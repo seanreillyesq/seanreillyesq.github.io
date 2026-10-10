@@ -324,8 +324,8 @@ tool_order: 4
     <div class="fvf-group-title">First 12 months from today</div>
     <p class="fvf-group-note">Cash spent from the day you decide: the hire's salary and on-costs only start after the time to hire, plus the recruiter fee. Fractional starts after its start weeks.</p>
     <div class="row g-2 g-md-3 mb-2">
-        <div class="col-6 col-md-4"><div class="result-card"><div class="result-label">Full-time, first 12 months</div><div class="result-value" id="res-ft-first">--</div></div></div>
-        <div class="col-6 col-md-4"><div class="result-card"><div class="result-label">Fractional, first 12 months</div><div class="result-value" id="res-fr-first">--</div></div></div>
+        <div class="col-6 col-md-4"><div class="result-card"><div class="result-label" id="res-ft-first-label">Full-time, first 12 months</div><div class="result-value" id="res-ft-first">--</div></div></div>
+        <div class="col-6 col-md-4"><div class="result-card"><div class="result-label" id="res-fr-first-label">Fractional, first 12 months</div><div class="result-value" id="res-fr-first">--</div></div></div>
         <div class="col-12 col-md-4"><div class="result-card"><div class="result-label" id="res-first-diff-label">Fractional saves, first 12 months</div><div class="result-value" id="res-first-diff">--</div></div></div>
     </div>
 
@@ -601,22 +601,25 @@ tool_order: 4
             : c.gap < 0
                 ? 'the hire would be in post and up to speed ' + weeksTxt(-c.gap) + ' sooner.'
                 : 'both would be in post and up to speed at about the same time' + hours;
-        var speedLead = ' ' + speed.charAt(0).toUpperCase() + speed.slice(1);
-        var speedSide = ' Separately, ' + speed;
+        // Time is always a secondary point, placed before the caveat and a neutral closing line,
+        // so no verdict ends on an argument for one side.
+        var outside = c.ftActive <= 0 ? ' The full-time hire would not start until after the first 12 months.' : '';
+        var speedSide = ' Separately, ' + speed + outside;
+        var close = ' These are estimates from your inputs; change them to see how the answer moves.';
         if (c.breakEven > c.monthDays) {
             return { title: 'Fractional is cheaper at any level of cover',
-                body: 'Even buying every working day, fractional costs less than the hire at this day rate.' + speedLead + caveat };
+                body: 'Even buying every working day, fractional costs less than the hire at this day rate.' + speedSide + caveat + close };
         }
         if (d >= c.breakEven) {
             return { title: 'Full-time looks like the better buy',
-                body: 'At ' + trimNum(d, 1) + ' days a month fractional costs ' + money(c.fr) + ' a year against ' + money(c.annual) + ' for the hire, and the hire gives you ' + trimNum(round1(c.monthDays), 1) + ' days a month for that money.' + caveat + speedSide };
+                body: 'At ' + trimNum(d, 1) + ' days a month fractional costs ' + money(c.fr) + ' a year against ' + money(c.annual) + ' for the hire, and the hire gives you ' + trimNum(round1(c.monthDays), 1) + ' days a month for that money.' + speedSide + caveat + close };
         }
         if (d >= c.breakEven * 0.75) {
             return { title: 'A close call',
-                body: 'Fractional saves ' + money(save) + ' a year, but that buys ' + trimNum(d, 1) + ' days a month against about ' + trimNum(round1(c.monthDays), 1) + ' from the hire. If you would use more of that time, full-time may be the better value.' + speedLead + caveat };
+                body: 'Fractional saves ' + money(save) + ' a year, but that buys ' + trimNum(d, 1) + ' days a month against about ' + trimNum(round1(c.monthDays), 1) + ' from the hire. If you would use more of that time, full-time may be the better value.' + speedSide + caveat + close };
         }
         return { title: 'Fractional is cheaper for this amount of time',
-            body: 'At ' + trimNum(d, 1) + ' days a month fractional saves ' + money(save) + ' a year, and costs more per day but ' + (save >= c.annual / 2 ? 'far less' : 'less') + ' in total.' + speedLead + caveat };
+            body: 'At ' + trimNum(d, 1) + ' days a month fractional saves ' + money(save) + ' a year, and costs more per day but ' + (save >= c.annual / 2 ? 'far less' : 'less') + ' in total.' + speedSide + caveat + close };
     }
 
     // ---------- chart ----------
@@ -630,17 +633,18 @@ tool_order: 4
         var rows = [
             ['Annual: full-time', c.annual, '#4A7BA7'],
             ['Annual: fractional', c.frOk ? c.fr : null, '#b45309'],
-            ['First 12 months: full-time', c.first, '#4A7BA7'],
-            ['First 12 months: fractional', c.frOk ? c.frFirst : null, '#b45309']
+            ['First 12 months: full-time', c.ftActive > 0 ? c.first : null, '#4A7BA7', 'starts after 12 months'],
+            ['First 12 months: fractional', (c.frOk && c.frActive > 0) ? c.frFirst : null, '#b45309', c.frOk ? 'starts after 12 months' : '-']
         ];
-        function rowMoney(x) { return x === null ? '-' : money(x); }
-        var maxV = Math.max(c.annual, c.first, c.frOk ? c.fr : 0, 1);
+        // A missing value is never drawn as a zero-cost bar.
+        function rowMoney(r) { return r[1] === null ? (r[3] || '-') : money(r[1]); }
+        var maxV = Math.max(c.annual, c.ftActive > 0 ? c.first : 0, c.frOk ? c.fr : 0, 1);
         var gutter = 78, rowH = 46, barH = 18;
         var H = rows.length * rowH + 8;
         var barMax = W - gutter;
         while (svg.firstChild) svg.removeChild(svg.firstChild);
         svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-        svg.setAttribute('aria-label', 'Bar chart. ' + rows.map(function(r) { return r[0] + ' ' + rowMoney(r[1]); }).join('. ') + '.');
+        svg.setAttribute('aria-label', 'Bar chart. ' + rows.map(function(r) { return r[0] + ' ' + rowMoney(r); }).join('. ') + '.');
         var NS = 'http://www.w3.org/2000/svg';
         function add(tag, attrs, text) {
             var e = document.createElementNS(NS, tag);
@@ -654,7 +658,7 @@ tool_order: 4
             var val = r[1] === null ? 0 : r[1];
             var w = Math.max(val > 0 ? 2 : 0, val / maxV * barMax);
             add('rect', { x: 0, y: y + 20, width: w, height: barH, fill: r[2], rx: 2 });
-            add('text', { x: w + 6, y: y + 20 + 13, 'font-size': 12, 'font-family': "'JetBrains Mono', monospace", fill: '#374151', 'font-weight': 700 }, r[1] === null ? '-' : moneyAxis(r[1]));
+            add('text', { x: w + 6, y: y + 20 + 13, 'font-size': 12, 'font-family': "'JetBrains Mono', monospace", fill: '#374151', 'font-weight': 700 }, r[1] === null ? (r[3] || '-') : moneyAxis(r[1]));
         });
     }
 
@@ -670,9 +674,13 @@ tool_order: 4
         var c = calc();
         var ok = c.hasSalary && c.annual > 0;
         el('res-ft-annual').textContent = ok ? money(c.annual) : '-';
-        el('res-ft-first').textContent = ok ? money(c.first) : '-';
+        var ftFirstOk = ok && c.ftActive > 0;
+        var frFirstOk = c.frOk && c.frActive > 0;
+        el('res-ft-first').textContent = ftFirstOk ? money(c.first) : '-';
+        el('res-ft-first-label').textContent = (ok && !ftFirstOk) ? 'Full-time, starts after 12 months' : 'Full-time, first 12 months';
+        el('res-fr-first-label').textContent = (c.frOk && !frFirstOk) ? 'Fractional, starts after 12 months' : 'Fractional, first 12 months';
         el('res-fr-annual').textContent = c.frOk ? money(c.fr) : '-';
-        el('res-fr-first').textContent = c.frOk ? money(c.frFirst) : '-';
+        el('res-fr-first').textContent = frFirstOk ? money(c.frFirst) : '-';
         showDiff('res-diff', 'res-diff-label', ok && c.frOk, c.annual - c.fr, 'a year');
         showDiff('res-first-diff', 'res-first-diff-label', ok && c.frOk && c.ftActive > 0 && c.frActive > 0, c.first - c.frFirst, 'first 12 months');
         el('res-ft-day').textContent = ok ? money(c.ftDay) : '-';
@@ -707,7 +715,7 @@ tool_order: 4
         el('bu-annual').textContent = money(c.annual);
         el('bu-rec').textContent = money(c.rec);
         el('bu-weeks').textContent = trimNum(c.ftActive, 1) + ' of 52';
-        el('bu-first').textContent = money(c.first);
+        el('bu-first').textContent = c.ftActive > 0 ? money(c.first) : '-';
 
         drawChart(c);
         scheduleLive(c, vd);
