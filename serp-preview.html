@@ -8,8 +8,14 @@ header_overlay: true
 meta-description: "Preview titles, meta descriptions and images across Google Search, AI Overviews and social cards. Pixel-accurate truncation."
 permalink: /serp-preview/
 hidden: true
+tool: true
+tool_group: business
+tool_order: 3
+tool_summary: "Will Google cut off my title and description, and how will the page look when shared?"
 sitemap: true
 ---
+
+<script src="/js/tool-events.js" defer></script>
 
 <style>
 /* Input section */
@@ -525,6 +531,8 @@ sitemap: true
 <div class="visually-hidden" id="validation-status" aria-live="polite" aria-atomic="true"></div>
 <div class="serp-validation" id="validation"></div>
 
+{% include tool-cta.html text="A preview only shows how a page will look in results. If you want someone to look at why it isn't ranking or getting clicks, that is what I do." %}
+
 <!-- How this works -->
 <div class="serp-methodology mb-4">
     <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
@@ -535,6 +543,7 @@ sitemap: true
     <p><strong>Social cards:</strong> Facebook and LinkedIn use Open Graph tags (og:title, og:description, og:image) to render link previews. The recommended OG image ratio is 1.91:1 (1200x630px). Without an image, social shares look significantly less engaging.</p>
 </div>
 
+<p class="text-muted small mb-4 tool-more"><a href="/tools/">More tools</a></p>
 
 <script>
 (function() {

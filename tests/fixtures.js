@@ -16,6 +16,10 @@ function isLocal(url) {
   try { return LOCAL_HOSTS.has(new URL(url).hostname); } catch (e) { return false; }
 }
 
+// Tag-manager and analytics hosts. Tests must not depend on them: when they load (as on CI) GTM
+// adds keys such as gtm.uniqueEventId to every dataLayer push and its container can inject overlays.
+const TAG_HOSTS = /(^|\.)(googletagmanager\.com|google-analytics\.com|analytics\.google\.com|doubleclick\.net|googleadservices\.com|googlesyndication\.com|facebook\.net|facebook\.com|clarity\.ms|hotjar\.com)$/;
+
 const test = base.test.extend({
   page: async ({ page }, use) => {
     const offline = process.env.TEST_OFFLINE_ASSETS;
@@ -37,6 +41,8 @@ const test = base.test.extend({
         return route.fulfill({ status: 200, contentType: type, body: '' });
       });
     }
+    // Registered after the offline handler so it takes precedence for these hosts.
+    await page.route((url) => TAG_HOSTS.test(url.hostname), (route) => route.abort());
     await use(page);
   },
 
