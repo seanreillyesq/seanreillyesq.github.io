@@ -4,3 +4,13 @@
 # Unlisted files shared by direct URL only - keep them out of search results
 /files/*
   X-Robots-Tag: noindex, nofollow, noarchive
+
+# Versioned, never-changing assets: safe to cache for a year. A changed file
+# must get a new name (fonts/v2/, bootstrap-<version>) - css/fonts.css is NOT
+# versioned and so must not appear here.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/css/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+/js/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
