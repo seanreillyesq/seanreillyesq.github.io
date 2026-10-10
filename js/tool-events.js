@@ -10,7 +10,8 @@
  *
  * Events (create one GTM Custom Event trigger per name, or a regex trigger on ^tool_):
  *   tool_calculated   First time the user changes any input on the page, once per page view,
- *                     after a 800 ms pause in typing. Params: none.
+ *                     after a 800 ms pause in typing. Params: none. A page may also call
+ *                     toolEvent('calculated') itself; either way it is sent once.
  *   tool_shared       A share or copy-link action. Params: method (e.g. 'copy_link'). No tool has
  *                     such an action yet; call window.toolEvent('shared', {method: '...'}) when one
  *                     is added.
@@ -28,7 +29,14 @@
 
   window.dataLayer = window.dataLayer || [];
 
+  // tool_calculated is sent at most once per page view, whether it comes from the listener
+  // below or from a page that calls toolEvent('calculated') itself.
+  var calculated = false;
   window.toolEvent = function (name, params) {
+    if (name === 'calculated') {
+      if (calculated) return;
+      calculated = true;
+    }
     var payload = { event: 'tool_' + name, tool: slug };
     if (params) {
       for (var k in params) {
@@ -41,7 +49,6 @@
   };
 
   // tool_calculated: once per page view, after the first input change settles.
-  var calculated = false;
   var timer = null;
   function onInput(e) {
     if (calculated) return;
@@ -49,8 +56,6 @@
     if (!t || !t.closest || !/^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName) || !t.closest('.page-content')) return;
     clearTimeout(timer);
     timer = setTimeout(function () {
-      if (calculated) return;
-      calculated = true;
       window.toolEvent('calculated');
     }, 800);
   }

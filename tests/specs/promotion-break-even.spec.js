@@ -497,21 +497,19 @@ test.describe('Promotion break-even calculator', () => {
       const context = await browser.newContext();
       await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'http://127.0.0.1:4173' });
       const page = await context.newPage();
-      await page.addInitScript(() => {
-        window.__events = [];
-        window.toolEvent = (n) => window.__events.push(n);
-      });
+      await page.route(/googletagmanager\.com/, (r) => r.abort());
+      const events = () => page.evaluate(() => (window.dataLayer || []).filter((e) => e && /^tool_/.test(e.event)).map((e) => e.event));
       await page.goto(URL);
       await expect(page.locator('#res-cb')).toHaveText('£36.33');
       await page.waitForTimeout(1200);
-      expect(await page.evaluate(() => window.__events)).toEqual([]);
+      expect(await events()).toEqual([]);
       await typeInto(page, '#disc', '25');
-      await expect.poll(() => page.evaluate(() => window.__events.slice())).toEqual(['calculated']);
+      await expect.poll(events).toEqual(['tool_calculated']);
       await typeInto(page, '#disc', '30');
       await page.waitForTimeout(1200);
-      expect(await page.evaluate(() => window.__events.slice())).toEqual(['calculated']);
+      expect(await events()).toEqual(['tool_calculated']);
       await page.locator('#share-btn').click();
-      await expect.poll(() => page.evaluate(() => window.__events.slice())).toEqual(['calculated', 'shared']);
+      await expect.poll(events).toEqual(['tool_calculated', 'tool_shared']);
       await expect(page.locator('#share-status')).toHaveText('Link copied');
       expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('disc=30');
       await context.close();
@@ -524,11 +522,11 @@ test.describe('Promotion break-even calculator', () => {
       expect(pageErrors).toEqual([]);
     });
 
-    test('the tool-cta marker sits directly below the results section', async () => {
+    test('the Work with me line sits directly below the results section', async () => {
       const src = fs.readFileSync(PAGE_FILE, 'utf8');
-      expect(src).toMatch(/<\/section>\n<!-- tool-cta -->\n/);
-      expect(src.indexOf('id="pbe-results"')).toBeLessThan(src.indexOf('<!-- tool-cta -->'));
-      expect(src).not.toMatch(/include tool-cta/);
+      expect(src).toMatch(/<\/section>\n\{% include tool-cta\.html text="[^"]+" %\}\n/);
+      expect(src.indexOf('id="pbe-results"')).toBeLessThan(src.indexOf('include tool-cta'));
+      expect(src).not.toMatch(/<!-- tool-cta -->/);
     });
 
     test('front matter carries the tool fields', async () => {

@@ -14,6 +14,8 @@ tool_summary: "If I run a discount, how much more do I need to sell just to make
 tool_order: 5
 ---
 
+<script src="/js/tool-events.js" defer></script>
+
 <style>
 .pbe-intro { margin-bottom: 1.5rem; }
 
@@ -482,7 +484,7 @@ tool_order: 5
         </table>
     </div>
 </section>
-<!-- tool-cta -->
+{% include tool-cta.html text="Discounting is usually the most expensive lever you can pull. If you want help finding the ones that cost less, that is what I do." %}
 
 <hr class="pbe-divider">
 
@@ -516,6 +518,8 @@ tool_order: 5
     </ul>
     <p>Treat the required uplift as the minimum you need, not a forecast. If it looks more than you could plausibly sell, the discount is probably too deep for the margin. Nothing you type leaves your browser; the link in the address bar is the only place the numbers are kept.</p>
 </div>
+
+<p class="text-muted small mb-4 tool-more"><a href="/tools/">More tools</a></p>
 
 <!-- Latest Writing -->
 <section class="py-5 border-top" style="background-color: var(--color-surface);">

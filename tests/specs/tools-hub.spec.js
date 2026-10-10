@@ -1,24 +1,35 @@
 // The Tools hub, the route to /work-with-me/, cross-links between tools, usage events and JSON-LD.
 const { test, expect } = require('../fixtures');
 
-const TOOLS = [
-  { slug: 'roas-calculator', group: 'business' },
-  { slug: 'customer-economics', group: 'business' },
-  { slug: 'serp-preview', group: 'business' },
-  { slug: 'caffeine', group: 'personal' },
-];
+// Every page with `tool: true` in its front matter, read from the source so the hub test
+// follows new tools instead of hard-coding the count. Business first, then personal, each by tool_order.
+const fs = require('fs');
+const path = require('path');
+const ROOT = path.resolve(__dirname, '..', '..');
+const TOOLS = fs.readdirSync(ROOT)
+  .filter((f) => f.endsWith('.html'))
+  .map((f) => {
+    const m = fs.readFileSync(path.join(ROOT, f), 'utf8').match(/^---\n([\s\S]*?)\n---/);
+    const fm = m ? m[1] : '';
+    const get = (k) => (fm.match(new RegExp('^' + k + ':\\s*"?([^"\\n]*)"?', 'm')) || [])[1];
+    return { tool: get('tool') === 'true', slug: (get('permalink') || '').replace(/\//g, ''), group: get('tool_group'), order: Number(get('tool_order')) };
+  })
+  .filter((t) => t.tool)
+  .sort((a, b) => (a.group === b.group ? a.order - b.order : a.group === 'business' ? -1 : 1));
+const BUSINESS = TOOLS.filter((t) => t.group === 'business').length;
 
 const toolEvents = (page) => page.evaluate(() => window.dataLayer.filter((e) => e && /^tool_/.test(e.event)));
 
 test.describe('hub page', () => {
-  test('lists all four tools with working links, business before personal', async ({ page, request }) => {
+  test('lists every tool page with working links, business before personal', async ({ page, request }) => {
     await page.goto('/tools/');
     const cards = page.locator('.card.card-body');
-    await expect(cards).toHaveCount(4);
+    expect(TOOLS.length).toBeGreaterThanOrEqual(4);
+    await expect(cards).toHaveCount(TOOLS.length);
     const hrefs = await cards.evaluateAll((els) => els.map((c) => c.querySelector('a.btn').getAttribute('href')));
     expect(hrefs).toEqual(TOOLS.map((t) => '/' + t.slug + '/'));
-    await expect(page.locator('#tools-business .card')).toHaveCount(3);
-    await expect(page.locator('#tools-personal .card')).toHaveCount(1);
+    await expect(page.locator('#tools-business .card')).toHaveCount(BUSINESS);
+    await expect(page.locator('#tools-personal .card')).toHaveCount(TOOLS.length - BUSINESS);
     const order = await page.evaluate(() => {
       const b = document.getElementById('tools-business'), p = document.getElementById('tools-personal');
       return !!(b.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_FOLLOWING);
@@ -41,8 +52,7 @@ test.describe('hub page', () => {
 
   test('footer lists the tools and links to all tools', async ({ page }) => {
     await page.goto('/tools/');
-    const links = await page.locator('footer a[href="/roas-calculator/"], footer a[href="/customer-economics/"], footer a[href="/serp-preview/"], footer a[href="/caffeine/"]').count();
-    expect(links).toBe(4);
+    for (const t of TOOLS) await expect(page.locator(`footer a[href="/${t.slug}/"]`)).toHaveCount(1);
     await expect(page.locator('footer a[href="/tools/"]')).toHaveText('All tools');
   });
 
@@ -186,6 +196,14 @@ test.describe('usage events', () => {
     expect(await toolEvents(page)).toContainEqual(expect.objectContaining({ event: 'tool_cta_click' }));
   });
 
+  test('tool_calculated is sent once even when the page also calls it', async ({ page }) => {
+    await page.goto('/roas-calculator/');
+    await page.evaluate(() => { window.toolEvent('calculated'); window.toolEvent('calculated'); });
+    await page.locator('#cancel-rate').pressSequentially('7');
+    await page.waitForTimeout(1200);
+    const ev = await toolEvents(page);
+    expect(ev.filter((e) => e.event === 'tool_calculated')).toHaveLength(1);
+  });
   test('the script is not loaded on the hub', async ({ page }) => {
     await page.goto('/tools/');
     expect(await page.evaluate(() => typeof window.toolEvent)).toBe('undefined');
