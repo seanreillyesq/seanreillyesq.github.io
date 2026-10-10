@@ -132,8 +132,9 @@ test.describe('usage events', () => {
     await page.goto('/roas-calculator/');
     await page.evaluate(() => { window.toolEvent('shared', { method: 'copy_link' }); window.toolEvent('x', { event: 'evil', tool: 'evil' }); });
     const ev = await toolEvents(page);
-    expect(ev).toContainEqual({ event: 'tool_shared', tool: 'roas-calculator', method: 'copy_link' });
-    expect(ev).toContainEqual({ event: 'tool_x', tool: 'roas-calculator' });
+    expect(ev).toContainEqual(expect.objectContaining({ event: 'tool_shared', tool: 'roas-calculator', method: 'copy_link' }));
+    expect(ev).toContainEqual(expect.objectContaining({ event: 'tool_x', tool: 'roas-calculator' }));
+    expect(ev.some((e) => e.event === 'tool_x' && (e.tool !== 'roas-calculator'))).toBe(false);
   });
 
   test('tool_calculated fires once after several keystrokes, with no typed values', async ({ page }) => {
@@ -146,8 +147,10 @@ test.describe('usage events', () => {
     await expect.poll(async () => (await toolEvents(page)).length).toBe(1);
     await page.waitForTimeout(1500);
     const ev = await toolEvents(page);
-    expect(ev).toEqual([{ event: 'tool_calculated', tool: 'roas-calculator' }]);
+    expect(ev).toHaveLength(1);
+    expect(ev[0]).toEqual(expect.objectContaining({ event: 'tool_calculated', tool: 'roas-calculator' }));
     const text = JSON.stringify(ev);
+    // Only our own keys are compared, so any extra key a tag manager adds cannot break this.
     for (const v of ['7654321', '1234567', '44']) expect(text).not.toContain(v);
   });
 
@@ -157,8 +160,19 @@ test.describe('usage events', () => {
     await page.locator('.tool-cta a').click();
     await page.locator('#tool-crosslink').click();
     const ev = await toolEvents(page);
-    expect(ev).toContainEqual({ event: 'tool_cta_click', tool: 'roas-calculator' });
-    expect(ev).toContainEqual({ event: 'tool_crosslink', tool: 'roas-calculator', to: 'customer-economics' });
+    expect(ev).toContainEqual(expect.objectContaining({ event: 'tool_cta_click', tool: 'roas-calculator' }));
+    expect(ev).toContainEqual(expect.objectContaining({ event: 'tool_crosslink', tool: 'roas-calculator', to: 'customer-economics' }));
+  });
+
+  test('CTA is clickable for a first-time visitor once the consent banner is dealt with', async ({ page }) => {
+    // The consent library hides itself from automated browsers; hide that flag so the banner shows as it does for a person.
+    await page.addInitScript(() => { Object.defineProperty(navigator, 'webdriver', { get: () => false }); });
+    await page.goto('/roas-calculator/');
+    await expect(page.locator('#cc-main .cm')).toBeVisible();
+    await page.evaluate(() => { CookieConsent.acceptCategory([]); CookieConsent.hide(); });
+    await page.evaluate(() => document.addEventListener('click', (e) => { if (e.target.closest('a')) e.preventDefault(); }));
+    await page.locator('.tool-cta a').click();
+    expect(await toolEvents(page)).toContainEqual(expect.objectContaining({ event: 'tool_cta_click' }));
   });
 
   test('the script is not loaded on the hub', async ({ page }) => {
