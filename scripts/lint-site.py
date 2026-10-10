@@ -17,7 +17,7 @@ from html.parser import HTMLParser
 # Checks listed here report WARN instead of FAIL until the existing content
 # has been cleaned up. Remove a name from this set to promote the check.
 # Run with --strict to treat every WARN as FAIL.
-WARN_CHECKS = {"banned"}
+WARN_CHECKS = set()
 
 BANNED_WORDS = [
     "delve", "leverage", "tapestry", "multifaceted", "transformative",
@@ -135,6 +135,10 @@ class RefParser(HTMLParser):
         a = dict(attrs)
         if tag == "a" and a.get("href"):
             self.refs.append(("a", a["href"]))
+        elif tag == "link" and a.get("href"):
+            self.refs.append(("link", a["href"]))
+        elif tag == "script" and a.get("src"):
+            self.refs.append(("script", a["src"]))
         elif tag == "img":
             if a.get("src"):
                 self.refs.append(("img", a["src"]))
@@ -179,11 +183,32 @@ def check_site(site):
                     continue
                 seen.add((tag, parts.path))
                 if not resolves(site, parts.path):
-                    check = "broken-img" if tag == "img" else "broken-link"
-                    report(check, rel, "%s %s does not resolve in built site" % (
-                        "<img src>" if tag == "img" else "<a href>", url))
+                    check = {"img": "broken-img", "link": "broken-asset", "script": "broken-asset"}.get(tag, "broken-link")
+                    label = {"img": "<img src>", "link": "<link href>", "script": "<script src>"}.get(tag, "<a href>")
+                    report(check, rel, "%s %s does not resolve in built site" % (label, url))
             for src in parser.bad_alt:
                 report("alt", rel, "<img> without non-empty alt: %s" % src)
+
+
+CSS_URL_RE = re.compile(r"""url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s'"]+))\s*\)""")
+
+
+def check_css_assets(site):
+    """Every local url(...) in the built stylesheets (fonts, images) must exist in _site."""
+    for path in sorted(glob.glob(os.path.join(site, "css", "**", "*.css"), recursive=True)):
+        rel = os.path.relpath(path, site)
+        with open(path, encoding="utf-8", errors="replace") as f:
+            css = f.read()
+        for m in CSS_URL_RE.finditer(css):
+            url = (m.group(1) or m.group(2) or m.group(3) or "").strip()
+            if url.startswith(("data:", "#", "http:", "https:", "//")):
+                continue
+            target = urllib.parse.urlsplit(url).path
+            if not target.startswith("/"):
+                target = "/" + os.path.relpath(
+                    os.path.join(os.path.dirname(path), target), site).replace(os.sep, "/")
+            if not resolves(site, target):
+                report("broken-asset", rel, "url(%s) does not resolve in built site" % url)
 
 
 def slugify(name):
@@ -249,6 +274,8 @@ def main():
     check_source(args.source)
     check_site(args.site)
     check_archives(args.source, args.site)
+    if os.path.isdir(args.site):
+        check_css_assets(args.site)
 
     if args.strict:
         findings[:] = [("FAIL",) + f[1:] for f in findings]

@@ -81,7 +81,7 @@ Think of it like engine size: more power doesn't always mean a better ride. My s
 
 ## Why This All Matters
 
-- Google has **begun surfacing Gemini activity in Search Console**, but only for AI Overview impressions. I was at Google's offices in June for the Amadeus Google Summit and spoke directly with a Senior Product Manager about this - it's early days, and far from comprehensive.
+- Google has **begun surfacing Gemini activity in Search Console**, but only for AI Overview impressions. I was at Google's offices in June for the Amadeus Google Summit and spoke directly with a Senior Product Manager about this - it's early days, and far from complete.
 - There are now a few unofficial tools that let you peek into Gemini or ChatGPT behaviour. I spoke with a large SEO agency who'd just built and launched one - they were honest that it's useful for investigation but fragile, manually operated, and nowhere near scalable.
 - Crucially: **AI models don't retrieve results like search engines**. They **generate** responses based on data, prompts, and model behaviour - not a ranked list of pages.
 
