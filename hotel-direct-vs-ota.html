@@ -644,7 +644,7 @@ tool_order: 6
 
         var out = ['Direct nets ' + gapTxt + ' more per room night' + ex + ' than an OTA booking. ' + shiftLine];
         var holds = [];
-        if (c.beMktCapped) holds.push('at any direct marketing cost, because an OTA booking nets nothing here');
+        if (c.beMktCapped) out.push('An OTA booking nets nothing or loses money here, so direct leads at any direct marketing cost.');
         else if (c.beMkt !== null && c.beMkt >= 0) holds.push('while direct marketing stays below ' + pct(c.beMkt) + ' of room revenue (you have ' + pct(v.mkt) + ')');
         if (c.beComm !== null && c.beComm > 0) holds.push('while OTA commission stays above ' + pct(c.beComm) + ' (you have ' + pct(v.comm) + ')');
         if (holds.length) out.push('That holds ' + holds.join(' and ') + '.');
@@ -717,7 +717,7 @@ tool_order: 6
             el('res-be-mkt-sub').textContent = '';
         } else if (c.beMktCapped) {
             setCard('res-be-mkt', '-');
-            el('res-be-mkt-sub').textContent = 'an OTA booking nets nothing, so direct leads at any marketing cost';
+            el('res-be-mkt-sub').textContent = 'an OTA booking nets nothing or loses money, so direct leads at any marketing cost';
         } else if (m < 0) {
             setCard('res-be-mkt', 'Not reachable', '', true);
             el('res-be-mkt-sub').textContent = 'direct loses even with no marketing';

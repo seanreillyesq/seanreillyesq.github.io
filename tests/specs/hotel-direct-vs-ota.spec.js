@@ -304,8 +304,10 @@ test.describe('Hotel direct vs OTA calculator', () => {
       await expect(verdict).toContainText('at any direct marketing cost');
       await expect(verdict).not.toContainText('stays below');
       expect(await txt(page, 'verdict')).not.toMatch(OVER_100);
-      // the commission clause is still given
-      await expect(verdict).toContainText('OTA commission stays above 12.9%');
+      // the commission clause is still given, as its own sentence
+      await expect(verdict).toContainText('That holds while OTA commission stays above 12.9%');
+      await expect(verdict).toContainText('nets nothing or loses money');
+      await expect(verdict).not.toContainText('here and while');
     });
 
     test('marketing plus fees at 100% still reads as direct costs taking everything', async ({ page }) => {
