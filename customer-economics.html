@@ -20,6 +20,7 @@ sitemap: true
     margin-bottom: 1rem;
 }
 .ce-currency-row select { width: auto; font-size: 0.875rem; }
+.ce-currency-row .form-select { min-height: 44px; }
 
 /* Inputs */
 .ce-inputs .form-label {
@@ -30,9 +31,18 @@ sitemap: true
     color: var(--color-accent);
     margin-bottom: 0.25rem;
 }
-.ce-inputs .input-group .form-control {
-    border-left: 0;
-    border-right: 0;
+/* Keep the outer border of every control; only drop the edge that touches an addon */
+.ce-inputs .input-group .input-group-text + .form-control { border-left: 0; }
+.ce-inputs .input-group .form-control:not(:last-child) { border-right: 0; }
+.ce-inputs .form-control,
+.ce-inputs .form-select,
+.ce-toggle-group .form-select { min-height: 44px; }
+.ce-inputs .input-group-text { min-height: 44px; }
+/* Columns hold a label and a control: pin the control to the bottom so wrapped labels do not misalign a row */
+.ce-inputs .row > [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 .ce-inputs .input-group .btn {
     min-width: 2.5rem;
@@ -68,14 +78,23 @@ sitemap: true
     border-radius: 0.75rem;
     padding: 0.875rem 0.5rem;
     text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 .result-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     color: var(--color-accent, #4A7BA7);
     margin-bottom: 0.125rem;
+    /* Labels may wrap; sit them on the bottom so the values line up across a row */
+    flex: 1 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    text-align: center;
 }
 .result-value {
     font-family: 'Inter', sans-serif;
@@ -83,6 +102,7 @@ sitemap: true
     font-weight: 800;
     color: var(--color-text, #2D2D2D);
     line-height: 1.2;
+    overflow-wrap: anywhere;
 }
 
 /* Projection card */
@@ -96,9 +116,9 @@ sitemap: true
 }
 .ce-projection-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.625rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     color: var(--color-accent, #4A7BA7);
     margin-bottom: 0.25rem;
 }
@@ -150,6 +170,26 @@ sitemap: true
     margin-top: 0.75rem;
 }
 .ce-extended-inputs.visible { display: block; }
+.ce-check {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    margin: 0;
+    cursor: pointer;
+}
+.ce-check .form-check-input {
+    flex: 0 0 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    cursor: pointer;
+}
+.ce-card-note {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted, #6B7280);
+    margin: 0.5rem 0 0;
+}
 
 /* Slider groups */
 .ce-slider-group {
@@ -162,18 +202,26 @@ sitemap: true
 }
 .ce-slider-row input[type="range"] {
     flex: 1;
+    min-width: 0;
+    height: 44px;
+    margin: 0;
+    padding: 0;
     accent-color: var(--color-accent, #4A7BA7);
+}
+.ce-slider-input {
+    width: 9rem;
+    flex: 0 0 auto;
 }
 .ce-slider-value {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.875rem;
-    width: 5.5rem;
     text-align: center;
-    flex-shrink: 0;
 }
+.ce-slider-input .input-group-text { font-size: 0.75rem; }
 
 /* Chart */
 #chart-container { margin: 1.5rem 0; width: 100%; }
+#cost-waterfall { width: 100%; }
 #revenue-chart { display: block; width: 100%; height: auto; }
 
 /* Lever breakdown */
@@ -208,19 +256,23 @@ sitemap: true
 
 /* Mobile */
 @media (max-width: 575.98px) {
-    .result-value { font-size: 1.375rem; }
-    .result-label { font-size: 0.5625rem; letter-spacing: 1px; }
+    .result-value { font-size: 1.25rem; }
+    .result-label { letter-spacing: 0.5px; }
     .result-card { padding: 0.625rem 0.375rem; }
     .ce-projection-value { font-size: 1.125rem; }
-    .ce-slider-row { flex-wrap: wrap; }
-    .ce-slider-value { width: 100%; text-align: left; }
+    /* Range on its own line; the number box and its unit stay together underneath */
+    .ce-slider-row { flex-wrap: wrap; gap: 0 0.75rem; }
+    .ce-slider-row input[type="range"] { flex: 1 1 100%; }
 }
 </style>
+
+<div id="ce-live" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <p class="ce-intro">Model the three levers that drive your revenue, calculate how much you can afford to acquire a customer, and plan growth scenarios. Adjust any input and everything recalculates instantly.</p>
 
 <!-- Currency selector -->
 <div class="ce-currency-row">
+    <label class="visually-hidden" for="currency-select">Currency</label>
     <select class="form-select form-select-sm" id="currency-select" style="width: auto;">
         <option value="GBP" selected>&pound; GBP</option>
         <option value="EUR">&euro; EUR</option>
@@ -302,7 +354,7 @@ sitemap: true
                 <label class="form-label" for="avg-booking">Avg order value</label>
                 <div class="input-group input-group-sm">
                     <span class="input-group-text booking-currency">&pound;</span>
-                    <input type="number" class="form-control" id="avg-booking" value="500" min="1" max="999999" step="10">
+                    <input type="number" class="form-control" id="avg-booking" value="500" min="0" max="999999" step="10">
                 </div>
             </div>
             <div class="col-6 col-md-4">
@@ -366,11 +418,11 @@ sitemap: true
 
     <!-- Extended payback toggle -->
     <div class="ce-toggle-group">
-        <label class="form-check-label" style="cursor: pointer;">
-            <input type="checkbox" id="extended-payback" class="form-check-input" style="cursor: pointer;">
-            Factor in repeat purchases (increases allowable cost)
+        <label class="ce-check form-check-label" for="extended-payback">
+            <input type="checkbox" id="extended-payback" class="form-check-input">
+            <span>Factor in repeat purchases (increases allowable cost)</span>
         </label>
-        <div class="ce-extended-inputs" id="extended-inputs">
+        <div class="ce-extended-inputs ce-inputs" id="extended-inputs">
             <div class="row g-2 g-md-3">
                 <div class="col-6">
                     <label class="form-label" for="payback-months">Payback period</label>
@@ -397,11 +449,12 @@ sitemap: true
                 </div>
                 <div class="col-6">
                     <div class="result-card">
-                        <div class="result-label">Extended ROAS</div>
+                        <div class="result-label">Min. first-order ROAS</div>
                         <div class="result-value" id="res-extended-roas">--</div>
                     </div>
                 </div>
             </div>
+            <p class="ce-card-note" id="ext-roas-note">Min. first-order ROAS is the lowest return on ad spend your first order can deliver while the customer still pays back once repeat purchases are counted.</p>
         </div>
     </div>
 </div>
@@ -411,30 +464,39 @@ sitemap: true
 <!-- Section 3: Growth Scenario -->
 <div class="ce-section" id="section-growth">
     <h3>Growth Scenario</h3>
-    <p class="ce-section-desc">Adjust the three levers to model a growth plan. See how each change contributes to projected revenue.</p>
+    <p class="ce-section-desc">Adjust the three levers to model a growth plan. Changes are measured against next year if nothing changes, so all-zero sliders give a delta of zero.</p>
     <div class="ce-inputs">
         <div class="ce-slider-group">
-            <label class="form-label">Loyalty rate change</label>
+            <label class="form-label" for="loyalty-delta">Loyalty rate change</label>
             <div class="ce-slider-row">
                 <input type="range" id="loyalty-delta" min="-30" max="30" value="0" step="1">
-                <input type="number" class="form-control form-control-sm ce-slider-value" id="loyalty-delta-val" value="0" min="-30" max="30" step="1">
-                <span class="input-group-text" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">pp</span>
+                <label class="visually-hidden" for="loyalty-delta-val">Loyalty rate change in percentage points</label>
+                <div class="input-group input-group-sm ce-slider-input">
+                    <input type="number" class="form-control ce-slider-value" id="loyalty-delta-val" value="0" min="-30" max="30" step="1">
+                    <span class="input-group-text">pp</span>
+                </div>
             </div>
         </div>
         <div class="ce-slider-group">
-            <label class="form-label">New customer change</label>
+            <label class="form-label" for="new-delta">New customer change</label>
             <div class="ce-slider-row">
-                <input type="range" id="new-delta" min="-5000" max="5000" value="0" step="100">
-                <input type="number" class="form-control form-control-sm ce-slider-value" id="new-delta-val" value="0" min="-5000" max="5000" step="100">
-                <span class="input-group-text" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">/ yr</span>
+                <input type="range" id="new-delta" min="-5000" max="5000" value="0" step="50">
+                <label class="visually-hidden" for="new-delta-val">New customer change per year</label>
+                <div class="input-group input-group-sm ce-slider-input">
+                    <input type="number" class="form-control ce-slider-value" id="new-delta-val" value="0" min="-5000" max="5000" step="1">
+                    <span class="input-group-text">/ yr</span>
+                </div>
             </div>
         </div>
         <div class="ce-slider-group">
-            <label class="form-label">Spend per customer change</label>
+            <label class="form-label" for="spend-delta">Spend per customer change</label>
             <div class="ce-slider-row">
                 <input type="range" id="spend-delta" min="-50" max="50" value="0" step="1">
-                <input type="number" class="form-control form-control-sm ce-slider-value" id="spend-delta-val" value="0" min="-50" max="50" step="1">
-                <span class="input-group-text" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">%</span>
+                <label class="visually-hidden" for="spend-delta-val">Spend per customer change in percent</label>
+                <div class="input-group input-group-sm ce-slider-input">
+                    <input type="number" class="form-control ce-slider-value" id="spend-delta-val" value="0" min="-50" max="50" step="1">
+                    <span class="input-group-text">%</span>
+                </div>
             </div>
         </div>
     </div>
@@ -463,7 +525,7 @@ sitemap: true
 
     <!-- Chart -->
     <div id="chart-container">
-        <svg id="revenue-chart" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet"></svg>
+        <svg id="revenue-chart" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bar chart comparing next year revenue with no change against projected revenue"></svg>
     </div>
 
     <!-- Lever breakdown -->
@@ -496,8 +558,8 @@ sitemap: true
     <h3 class="fw-bold mb-3" style="font-size: 1.25rem;">How this works</h3>
     <p><strong>Three-lever revenue model:</strong> Every business generates revenue from the same three levers: how many customers return (loyalty rate), how many new customers you acquire, and how much each customer spends. This model lets you see which lever has the most impact on your specific numbers.</p>
     <p><strong>Allowable acquisition cost:</strong> This works backwards from your average order value, subtracting cancellations and returns, product costs, fulfilment costs, and your required margin to find the maximum you can spend on marketing per customer. The implied ROAS (return on ad spend) follows directly from this figure.</p>
-    <p><strong>Extended payback:</strong> When toggled on, the calculation factors in expected repeat purchases over the payback period. A customer who orders again is worth more than their first transaction, so you can afford to spend more to acquire them. The model compounds the repeat rate annually.</p>
-    <p><strong>Growth scenario:</strong> The three sliders let you model "what if" changes to each lever independently. The lever breakdown shows how much of the total change comes from each adjustment. The contributions will not sum to the total delta because the levers interact multiplicatively - the gap grows when multiple levers change together.</p>
+    <p><strong>Extended payback:</strong> When toggled on, the calculation factors in expected repeat purchases over the payback period. A customer who orders again is worth more than their first transaction, so you can afford to spend more to acquire them. The model compounds the repeat rate annually. The minimum first-order ROAS is the order value divided by this larger allowable cost: the lowest return the first order alone can deliver once repeat purchases are counted.</p>
+    <p><strong>Growth scenario:</strong> The three sliders let you model "what if" changes to each lever independently. Changes are measured against next year with no change, not against this year. The lever breakdown shows how much of the total change comes from each adjustment. The contributions will not sum to the total delta because the levers interact multiplicatively - the gap grows when multiple levers change together.</p>
     <p>This is a simplified model. Real businesses have customer segments, seasonal variation, and non-linear cost structures. Use it to build intuition about where your growth leverage sits, not as a precise forecast.</p>
 </div>
 
@@ -529,14 +591,17 @@ sitemap: true
         AUD: 'A$'
     };
 
-    // Chart dimensions (viewBox coords)
+    // Chart dimensions (viewBox coords). The viewBox width follows the rendered width so that
+    // one viewBox unit is one CSS pixel and the chart text stays readable on phones.
     var W = 800, H = 320;
-    var M = { top: 20, right: 20, bottom: 40, left: 70 };
+    var M = { top: 20, right: 20, bottom: 60, left: 70 };
     var PW = W - M.left - M.right;
     var PH = H - M.top - M.bottom;
+    var MAX_CHART_W = 800, MIN_CHART_W = 280;
 
     // Waterfall dimensions
-    var WF_W = 800, WF_H = 60;
+    var WF_H = 60;
+    var lastGrowth = null, lastBreakdown = null;
 
     var NS = 'http://www.w3.org/2000/svg';
 
@@ -597,12 +662,19 @@ sitemap: true
 
     function sym() { return CURRENCIES[state.currency]; }
 
+    function fmtScaled(abs, divisor) {
+        return (abs / divisor).toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    }
+
+    // Sign goes before the symbol: -£750,000, -£2.8M. Millions and billions use one decimal place.
     function fmtCurrency(v) {
-        var s = sym();
         var abs = Math.abs(v);
-        if (abs >= 1000000) return s + (v / 1000000).toFixed(1) + 'M';
-        if (abs >= 1000) return s + Math.round(v).toLocaleString('en-GB');
-        return s + Math.round(v);
+        var sign = Math.round(abs) === 0 ? '' : (v < 0 ? '-' : '');
+        var body;
+        if (abs >= 999950000) body = fmtScaled(abs, 1e9) + 'B';
+        else if (abs >= 1000000) body = fmtScaled(abs, 1e6) + 'M';
+        else body = Math.round(abs).toLocaleString('en-GB');
+        return sign + sym() + body;
     }
 
     function fmtNumber(v) {
@@ -618,6 +690,21 @@ sitemap: true
         if (v > 0) return 'delta-positive';
         if (v < 0) return 'delta-negative';
         return 'delta-neutral';
+    }
+
+    // The new-customer slider scales with the new-customers input: +/-100% of it, never
+    // narrower than +/-20, with a step that gives about 100 stops across the range.
+    function niceStep(x) {
+        var p = Math.pow(10, Math.floor(Math.log10(x)));
+        var m = x / p;
+        var n = m <= 1 ? 1 : (m <= 2 ? 2 : (m <= 5 ? 5 : 10));
+        return Math.max(1, n * p);
+    }
+
+    function newDeltaScale(newCustomers) {
+        var range = Math.max(newCustomers, 20);
+        var step = niceStep(range / 100);
+        return { step: step, max: Math.ceil(range / step) * step };
     }
 
     // ========== COOKIE ==========
@@ -659,7 +746,7 @@ sitemap: true
             if (d.lr !== undefined) state.loyaltyRate = clamp(d.lr, 0, 100);
             if (d.nc !== undefined) state.newCustomers = clamp(d.nc, 0, 999999);
             if (d.as !== undefined) state.avgSpend = clamp(d.as, 0, 999999);
-            if (d.bv !== undefined) state.avgBookingValue = clamp(d.bv, 1, 999999);
+            if (d.bv !== undefined) state.avgBookingValue = clamp(d.bv, 0, 999999);
             if (d.cr !== undefined) state.cancellationRate = clamp(d.cr, 0, 100);
             if (d.cg !== undefined) state.cogsRate = clamp(d.cg, 0, 100);
             if (d.fr !== undefined) state.fulfilmentRate = clamp(d.fr, 0, 100);
@@ -681,7 +768,7 @@ sitemap: true
         if (p.has('loyalty')) { state.loyaltyRate = clamp(+p.get('loyalty'), 0, 100); found = true; }
         if (p.has('new')) { state.newCustomers = clamp(+p.get('new'), 0, 999999); found = true; }
         if (p.has('spend')) { state.avgSpend = clamp(+p.get('spend'), 0, 999999); found = true; }
-        if (p.has('bv')) { state.avgBookingValue = clamp(+p.get('bv'), 1, 999999); found = true; }
+        if (p.has('bv')) { state.avgBookingValue = clamp(+p.get('bv') || 0, 0, 999999); found = true; }
         if (p.has('cancel')) { state.cancellationRate = clamp(+p.get('cancel'), 0, 100); found = true; }
         if (p.has('cogs')) { state.cogsRate = clamp(+p.get('cogs'), 0, 100); found = true; }
         if (p.has('fulfil')) { state.fulfilmentRate = clamp(+p.get('fulfil'), 0, 100); found = true; }
@@ -690,7 +777,7 @@ sitemap: true
         if (p.has('pm') && (+p.get('pm') === 12 || +p.get('pm') === 24 || +p.get('pm') === 36)) { state.paybackMonths = +p.get('pm'); found = true; }
         if (p.has('rr')) { state.repeatRate = clamp(+p.get('rr') || 0, 0, 100); found = true; }
         if (p.has('ld')) { state.loyaltyDelta = clamp(+p.get('ld'), -30, 30); found = true; }
-        if (p.has('nd')) { state.newCustDelta = clamp(+p.get('nd'), -5000, 5000); found = true; }
+        if (p.has('nd')) { state.newCustDelta = clamp(+p.get('nd') || 0, -newDeltaScale(state.newCustomers).max, newDeltaScale(state.newCustomers).max); found = true; }
         if (p.has('sd')) { state.spendDelta = clamp(+p.get('sd'), -50, 50); found = true; }
         return found;
     }
@@ -745,12 +832,14 @@ sitemap: true
         var fulfilAmount = netBooking * (state.fulfilmentRate / 100);
         var marginAmount = netBooking * (state.requiredMargin / 100);
         var rawAllowable = netBooking - cogsAmount - fulfilAmount - marginAmount;
-        var overBudget = rawAllowable < 0;
-        var allowable = Math.max(0, rawAllowable);
+        // No budget left when costs reach (not only exceed) the order value
+        var overBudget = bv > 0 && rawAllowable <= bv * 1e-9;
+        var allowable = overBudget ? 0 : rawAllowable;
 
         var cancelAmount = bv * (state.cancellationRate / 100);
 
         var impliedROAS = allowable > 0 ? bv / allowable : Infinity;
+        var hasOrderValue = bv > 0;
         var costPct = bv > 0 ? (allowable / bv) * 100 : 0;
 
         // Extended payback
@@ -770,13 +859,17 @@ sitemap: true
             var repeatNet = repeatNetBooking - repeatNetBooking * (state.cogsRate / 100) - repeatNetBooking * (state.fulfilmentRate / 100) - repeatNetBooking * (state.requiredMargin / 100);
             extAllowable = allowable + Math.max(0, repeatNet);
         }
-        var extROAS = extAllowable > 0 ? (bv + repeatRevenue) / extAllowable : Infinity;
+        // Minimum first-order ROAS once repeat purchases are counted. Dividing first-order
+        // revenue plus repeat revenue by the extended allowable would just return the implied
+        // ROAS, because both scale by the same factor.
+        var extROAS = extAllowable > 0 ? bv / extAllowable : Infinity;
 
         return {
             allowable: allowable,
             impliedROAS: impliedROAS,
             costPct: costPct,
             overBudget: overBudget,
+            hasOrderValue: hasOrderValue,
             extAllowable: extAllowable,
             extROAS: extROAS,
             breakdown: {
@@ -789,28 +882,30 @@ sitemap: true
         };
     }
 
+    // Levers are applied to next year's starting base, the same baseline as
+    // "If nothing changes next year", so all-zero sliders give a delta of zero.
     function calcGrowthScenario() {
         var current = calcCurrentState();
         var newLoyalty = clamp(state.loyaltyRate + state.loyaltyDelta, 0, 100);
         var newNew = Math.max(0, state.newCustomers + state.newCustDelta);
         var newSpend = state.avgSpend * (1 + state.spendDelta / 100);
 
-        var projReturning = Math.round(state.activeCustomers * (newLoyalty / 100));
+        var projReturning = Math.round(current.total * (newLoyalty / 100));
         var projTotal = projReturning + newNew;
         var projRevenue = projTotal * newSpend;
-        var delta = projRevenue - current.revenue;
-        var growthPct = current.revenue > 0 ? (delta / current.revenue) * 100 : 0;
+        var base = current.nextRevenue;
+        var delta = projRevenue - base;
+        var growthPct = base > 0 ? (delta / base) * 100 : 0;
 
         // Isolate lever contributions
-        var base = current.revenue;
-        var loyaltyOnly = (Math.round(state.activeCustomers * (newLoyalty / 100)) + state.newCustomers) * state.avgSpend - base;
-        var newOnly = (current.returning + newNew) * state.avgSpend - base;
-        var spendOnly = current.total * newSpend - base;
+        var loyaltyOnly = (projReturning + state.newCustomers) * state.avgSpend - base;
+        var newOnly = (current.nextReturning + newNew) * state.avgSpend - base;
+        var spendOnly = current.nextTotal * newSpend - base;
 
         return {
-            currentRevenue: base,
-            currentReturning: current.returning,
-            currentNew: state.newCustomers,
+            baseRevenue: base,
+            baseReturning: current.nextReturning,
+            baseNew: state.newCustomers,
             projRevenue: projRevenue,
             projReturning: projReturning,
             projNew: newNew,
@@ -841,18 +936,39 @@ sitemap: true
 
     function renderUnitResults() {
         var r = calcUnitEconomics();
+        var warn = el('cost-warning');
+
+        if (!r.hasOrderValue) {
+            // No order value: show an explicit state instead of figures computed from a placeholder
+            ['res-allowable', 'res-roas', 'res-cost-pct', 'res-extended-allowable', 'res-extended-roas'].forEach(function(id) {
+                el(id).textContent = '--';
+            });
+            warn.textContent = 'Enter an order value to see the allowable acquisition cost.';
+            warn.classList.add('visible');
+            el('cost-waterfall').innerHTML = '';
+            lastBreakdown = null;
+            return r;
+        }
+
         el('res-allowable').textContent = r.allowable > 0 ? fmtCurrency(r.allowable) : sym() + '0';
-        el('res-roas').textContent = r.impliedROAS === Infinity ? 'N/A' : r.impliedROAS.toFixed(1) + 'x';
+        el('res-roas').textContent = r.impliedROAS === Infinity ? 'No budget' : r.impliedROAS.toFixed(1) + 'x';
         el('res-cost-pct').textContent = r.costPct.toFixed(1) + '%';
 
-        var warn = el('cost-warning');
+        warn.textContent = 'Your costs use 100% or more of the order value. There is nothing left for marketing.';
         if (r.overBudget) warn.classList.add('visible');
         else warn.classList.remove('visible');
 
         el('res-extended-allowable').textContent = fmtCurrency(r.extAllowable);
-        el('res-extended-roas').textContent = r.extROAS === Infinity ? 'N/A' : r.extROAS.toFixed(1) + 'x';
+        el('res-extended-roas').textContent = r.extROAS === Infinity ? 'No budget' : r.extROAS.toFixed(1) + 'x';
 
+        lastBreakdown = r.breakdown;
         renderWaterfall(r.breakdown);
+        return r;
+    }
+
+    function containerWidth(id) {
+        var w = el(id).clientWidth;
+        return clamp(w > 0 ? Math.round(w) : MAX_CHART_W, MIN_CHART_W, MAX_CHART_W);
     }
 
     function renderWaterfall(bd) {
@@ -862,10 +978,11 @@ sitemap: true
         var bv = state.avgBookingValue;
         if (bv <= 0) return;
 
-        var svg = svgEl('svg', { viewBox: '0 0 ' + WF_W + ' ' + WF_H, preserveAspectRatio: 'xMidYMid meet' });
+        var wfW = containerWidth('cost-waterfall');
+        var svg = svgEl('svg', { viewBox: '0 0 ' + wfW + ' ' + WF_H, preserveAspectRatio: 'xMidYMid meet', role: 'img' });
         var barY = 5, barH = 30;
         var total = bd.cancel + bd.cogs + bd.fulfil + bd.margin + bd.allowable;
-        var scale = total > 0 ? WF_W / total : 0;
+        var scale = total > 0 ? wfW / total : 0;
 
         var segments = [
             { val: bd.cancel, col: COL.cancel, label: 'Cancels / Returns' },
@@ -883,7 +1000,10 @@ sitemap: true
                 x: x, y: barY, width: w, height: barH,
                 fill: seg.col, rx: x === 0 ? 4 : 0
             }));
-            if (w > 40) {
+            var text = fmtCurrency(seg.val);
+            // 11px monospace is about 6.7 units a character; label the segment only if it fits.
+            // Every segment, however narrow, also has a value in the legend below.
+            if (w >= text.length * 6.7 + 6) {
                 var txt = svgEl('text', {
                     x: x + w / 2, y: barY + barH + 14,
                     'text-anchor': 'middle',
@@ -891,22 +1011,29 @@ sitemap: true
                     'font-size': '11',
                     'font-family': "'JetBrains Mono', monospace"
                 });
-                txt.textContent = sym() + Math.round(seg.val);
+                txt.textContent = text;
                 svg.appendChild(txt);
             }
             x += w;
         });
 
+        svg.setAttribute('aria-label', 'Order value breakdown: ' + segments.map(function(seg) {
+            return seg.label + ' ' + fmtCurrency(seg.val);
+        }).join(', '));
         container.appendChild(svg);
 
-        // Legend
+        // Legend: name and value for each segment
         var legend = document.createElement('div');
         legend.className = 'waterfall-legend';
         segments.forEach(function(seg) {
             if (seg.val <= 0) return;
             var item = document.createElement('span');
             item.className = 'waterfall-legend-item';
-            item.innerHTML = '<span class="waterfall-legend-swatch" style="background:' + seg.col + '"></span> ' + seg.label;
+            var swatch = document.createElement('span');
+            swatch.className = 'waterfall-legend-swatch';
+            swatch.style.background = seg.col;
+            item.appendChild(swatch);
+            item.appendChild(document.createTextNode(' ' + seg.label + ' ' + fmtCurrency(seg.val)));
             legend.appendChild(item);
         });
         container.appendChild(legend);
@@ -914,6 +1041,7 @@ sitemap: true
 
     function renderGrowthResults() {
         var r = calcGrowthScenario();
+        lastGrowth = r;
         el('res-projected').textContent = fmtCurrency(r.projRevenue);
         var deltaEl = el('res-delta');
         deltaEl.textContent = fmtDelta(r.delta);
@@ -936,12 +1064,33 @@ sitemap: true
         renderChart(r);
     }
 
+    function chartText(svg, x, y, str, attrs) {
+        var base = { x: x, y: y, fill: COL.text, 'font-size': '11', 'font-family': "'JetBrains Mono', monospace" };
+        for (var k in attrs) { if (attrs.hasOwnProperty(k)) base[k] = attrs[k]; }
+        var t = svgEl('text', base);
+        t.textContent = str;
+        svg.appendChild(t);
+        return t;
+    }
+
     function renderChart(data) {
         var svg = el('revenue-chart');
         while (svg.firstChild) svg.removeChild(svg.firstChild);
 
-        var maxVal = Math.max(data.currentRevenue, data.projRevenue) * 1.15;
+        var maxVal = Math.max(data.baseRevenue, data.projRevenue) * 1.15;
         if (maxVal <= 0) return;
+
+        // Layout follows the rendered width; the left margin fits the widest axis label
+        W = containerWidth('chart-container');
+        H = W < 500 ? 300 : 320;
+        var widest = fmtCurrency(maxVal).length;
+        M.left = Math.max(50, Math.ceil(widest * 6.7 + 16));
+        M.right = W < 500 ? 10 : 20;
+        PW = W - M.left - M.right;
+        PH = H - M.top - M.bottom;
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+        svg.setAttribute('aria-label', 'Bar chart of annual revenue: ' + fmtCurrency(data.baseRevenue)
+            + ' next year if nothing changes, ' + fmtCurrency(data.projRevenue) + ' projected with your changes.');
 
         var yScale = function(v) { return M.top + PH - (v / maxVal) * PH; };
 
@@ -954,13 +1103,7 @@ sitemap: true
                 x1: M.left, y1: gy, x2: W - M.right, y2: gy,
                 stroke: COL.grid, 'stroke-width': 1
             }));
-            var label = svgEl('text', {
-                x: M.left - 8, y: gy + 4,
-                'text-anchor': 'end', fill: COL.text,
-                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
-            });
-            label.textContent = fmtCurrency(gv);
-            svg.appendChild(label);
+            chartText(svg, M.left - 8, gy + 4, fmtCurrency(gv), { 'text-anchor': 'end' });
         }
 
         // Bars
@@ -968,9 +1111,9 @@ sitemap: true
         var cx = M.left + PW * 0.2;
         var px = M.left + PW * 0.55;
 
-        // Current bar - stacked: new (bottom) + returning (top)
-        var cNewH = (data.currentNew * state.avgSpend / maxVal) * PH;
-        var cRetH = (data.currentReturning * state.avgSpend / maxVal) * PH;
+        // Baseline bar - stacked: new (bottom) + returning (top)
+        var cNewH = (data.baseNew * state.avgSpend / maxVal) * PH;
+        var cRetH = (data.baseReturning * state.avgSpend / maxVal) * PH;
         var cBase = M.top + PH;
 
         svg.appendChild(svgEl('rect', {
@@ -996,71 +1139,95 @@ sitemap: true
         }));
 
         // Bar labels
-        var clbl = svgEl('text', {
-            x: cx + barWidth / 2, y: M.top + PH + 20,
-            'text-anchor': 'middle', fill: COL.text,
-            'font-size': '12', 'font-family': "'Inter', sans-serif", 'font-weight': '600'
-        });
-        clbl.textContent = 'Current';
-        svg.appendChild(clbl);
-
-        var plbl = svgEl('text', {
-            x: px + barWidth / 2, y: M.top + PH + 20,
-            'text-anchor': 'middle', fill: COL.text,
-            'font-size': '12', 'font-family': "'Inter', sans-serif", 'font-weight': '600'
-        });
-        plbl.textContent = 'Projected';
-        svg.appendChild(plbl);
+        var barLabel = { 'text-anchor': 'middle', 'font-size': '12', 'font-family': "'Inter', sans-serif", 'font-weight': '600' };
+        chartText(svg, cx + barWidth / 2, M.top + PH + 20, 'No change', barLabel);
+        chartText(svg, px + barWidth / 2, M.top + PH + 20, 'Projected', barLabel);
 
         // Revenue labels on top of bars
-        var cRevLbl = svgEl('text', {
-            x: cx + barWidth / 2, y: cBase - cNewH - cRetH - 6,
-            'text-anchor': 'middle', fill: COL.returning,
-            'font-size': '13', 'font-weight': '700', 'font-family': "'Inter', sans-serif"
-        });
-        cRevLbl.textContent = fmtCurrency(data.currentRevenue);
-        svg.appendChild(cRevLbl);
-
-        var pRevLbl = svgEl('text', {
-            x: px + barWidth / 2, y: cBase - pNewH - pRetH - 6,
-            'text-anchor': 'middle', fill: data.delta >= 0 ? '#16a34a' : '#dc2626',
-            'font-size': '13', 'font-weight': '700', 'font-family': "'Inter', sans-serif"
-        });
-        pRevLbl.textContent = fmtCurrency(data.projRevenue);
-        svg.appendChild(pRevLbl);
+        var revLabel = { 'text-anchor': 'middle', 'font-size': '13', 'font-weight': '700', 'font-family': "'Inter', sans-serif" };
+        chartText(svg, cx + barWidth / 2, cBase - cNewH - cRetH - 6, fmtCurrency(data.baseRevenue),
+            Object.assign({ fill: COL.returning }, revLabel));
+        chartText(svg, px + barWidth / 2, cBase - pNewH - pRetH - 6, fmtCurrency(data.projRevenue),
+            Object.assign({ fill: data.delta >= 0 ? '#16a34a' : '#dc2626' }, revLabel));
 
         // Delta connector
         var cTop = cBase - cNewH - cRetH;
         var pTop = cBase - pNewH - pRetH;
-        var midY = Math.min(cTop, pTop) - 2;
         svg.appendChild(svgEl('line', {
             x1: cx + barWidth, y1: cTop,
             x2: px, y2: pTop,
             stroke: COL.axis, 'stroke-width': 1, 'stroke-dasharray': '4,3'
         }));
 
-        // Legend below chart
-        var legY = M.top + PH + 34;
+        // Legend below chart, inside the viewBox (the bottom margin leaves room for it)
+        var legY = M.top + PH + 36;
         var items = [
             { col: COL.returning, label: 'Returning' },
             { col: COL.newCust, label: 'New / Reactivated' }
         ];
-        var legX = M.left;
+        var legX = Math.min(M.left, 16);
         items.forEach(function(item) {
             svg.appendChild(svgEl('rect', {
                 x: legX, y: legY, width: 10, height: 10, fill: item.col, rx: 2
             }));
-            var t = svgEl('text', {
-                x: legX + 14, y: legY + 9, fill: COL.text,
-                'font-size': '11', 'font-family': "'JetBrains Mono', monospace"
-            });
-            t.textContent = item.label;
-            svg.appendChild(t);
-            legX += 14 + item.label.length * 6.5 + 20;
+            chartText(svg, legX + 14, legY + 9, item.label, {});
+            legX += 14 + item.label.length * 6.7 + 20;
         });
     }
 
+    // Short plain-text summary for screen readers, set after typing pauses
+    var liveTimer = null;
+    function announceResults(unit, growth) {
+        var parts;
+        if (!unit.hasOrderValue) {
+            parts = ['Enter an order value to see the allowable acquisition cost.'];
+        } else if (unit.overBudget) {
+            parts = ['Nothing is left for marketing: costs use 100% or more of the order value.'];
+        } else {
+            parts = ['Allowable cost ' + fmtCurrency(unit.allowable) + ', implied ROAS ' + unit.impliedROAS.toFixed(1) + 'x.'];
+            if (state.extendedPayback) {
+                parts.push('With repeat purchases, allowable cost ' + fmtCurrency(unit.extAllowable) + ', minimum first-order ROAS '
+                    + (unit.extROAS === Infinity ? 'not available' : unit.extROAS.toFixed(1) + 'x') + '.');
+            }
+        }
+        parts.push('Projected revenue ' + fmtCurrency(growth.projRevenue) + ', ' + fmtDelta(growth.delta) + ' against no change.');
+        var text = parts.join(' ');
+        var live = el('ce-live');
+        if (!live.textContent) { live.textContent = text; return; }
+        clearTimeout(liveTimer);
+        liveTimer = setTimeout(function() { live.textContent = text; }, 600);
+    }
+
     // ========== STATE FROM DOM ==========
+
+    // Input id -> state key, for the plain number fields
+    var FIELDS = [
+        ['active-customers', 'activeCustomers'],
+        ['loyalty-rate', 'loyaltyRate'],
+        ['new-customers', 'newCustomers'],
+        ['avg-spend', 'avgSpend'],
+        ['avg-booking', 'avgBookingValue'],
+        ['cancel-rate', 'cancellationRate'],
+        ['cogs-rate', 'cogsRate'],
+        ['fulfil-rate', 'fulfilmentRate'],
+        ['margin-rate', 'requiredMargin'],
+        ['repeat-rate', 'repeatRate']
+    ];
+
+    function applyNewDeltaScale() {
+        var scale = newDeltaScale(state.newCustomers);
+        var range = el('new-delta'), box = el('new-delta-val');
+        range.min = -scale.max; range.max = scale.max; range.step = scale.step;
+        box.min = -scale.max; box.max = scale.max;
+        return scale;
+    }
+
+    // Slider position, unless the number box is mid-edit (blank or just a minus sign)
+    function readDelta(rangeId, numId, lo, hi) {
+        var typed = el(numId).value;
+        var raw = (typed === '' || typed === '-') ? +el(rangeId).value : +typed;
+        return clamp(raw || 0, lo, hi);
+    }
 
     function readInputs() {
         state.currency = el('currency-select').value;
@@ -1068,7 +1235,7 @@ sitemap: true
         state.loyaltyRate = clamp(+el('loyalty-rate').value || 0, 0, 100);
         state.newCustomers = clamp(+el('new-customers').value || 0, 0, 999999);
         state.avgSpend = clamp(+el('avg-spend').value || 0, 0, 999999);
-        state.avgBookingValue = clamp(+el('avg-booking').value || 0, 1, 999999);
+        state.avgBookingValue = clamp(+el('avg-booking').value || 0, 0, 999999);
         state.cancellationRate = clamp(+el('cancel-rate').value || 0, 0, 100);
         state.cogsRate = clamp(+el('cogs-rate').value || 0, 0, 100);
         state.fulfilmentRate = clamp(+el('fulfil-rate').value || 0, 0, 100);
@@ -1076,25 +1243,33 @@ sitemap: true
         state.extendedPayback = el('extended-payback').checked;
         state.paybackMonths = +el('payback-months').value;
         state.repeatRate = clamp(+el('repeat-rate').value || 0, 0, 100);
-        state.loyaltyDelta = clamp(+el('loyalty-delta').value || 0, -30, 30);
-        state.newCustDelta = clamp(+el('new-delta').value || 0, -5000, 5000);
-        state.spendDelta = clamp(+el('spend-delta').value || 0, -50, 50);
+        var scale = applyNewDeltaScale();
+        state.loyaltyDelta = readDelta('loyalty-delta', 'loyalty-delta-val', -30, 30);
+        state.newCustDelta = readDelta('new-delta', 'new-delta-val', -scale.max, scale.max);
+        state.spendDelta = readDelta('spend-delta', 'spend-delta-val', -50, 50);
+    }
+
+    // Show the value the calculator actually used, once the user has finished editing a field
+    function writeBackClamped() {
+        readInputs();
+        FIELDS.forEach(function(f) {
+            var node = el(f[0]);
+            if (node.value !== String(state[f[1]])) node.value = state[f[1]];
+        });
+        [['loyalty-delta', 'loyalty-delta-val', 'loyaltyDelta'],
+         ['new-delta', 'new-delta-val', 'newCustDelta'],
+         ['spend-delta', 'spend-delta-val', 'spendDelta']].forEach(function(f) {
+            if (el(f[1]).value !== String(state[f[2]])) el(f[1]).value = state[f[2]];
+            el(f[0]).value = state[f[2]];
+        });
     }
 
     function writeInputs() {
         el('currency-select').value = state.currency;
-        el('active-customers').value = state.activeCustomers;
-        el('loyalty-rate').value = state.loyaltyRate;
-        el('new-customers').value = state.newCustomers;
-        el('avg-spend').value = state.avgSpend;
-        el('avg-booking').value = state.avgBookingValue;
-        el('cancel-rate').value = state.cancellationRate;
-        el('cogs-rate').value = state.cogsRate;
-        el('fulfil-rate').value = state.fulfilmentRate;
-        el('margin-rate').value = state.requiredMargin;
+        FIELDS.forEach(function(f) { el(f[0]).value = state[f[1]]; });
         el('extended-payback').checked = state.extendedPayback;
         el('payback-months').value = state.paybackMonths;
-        el('repeat-rate').value = state.repeatRate;
+        applyNewDeltaScale();
         el('loyalty-delta').value = state.loyaltyDelta;
         el('loyalty-delta-val').value = state.loyaltyDelta;
         el('new-delta').value = state.newCustDelta;
@@ -1114,9 +1289,10 @@ sitemap: true
         }
     }
 
+    // Follows the checkbox itself, not state, which is only refreshed in recalculate()
     function toggleExtended() {
         var ext = el('extended-inputs');
-        if (state.extendedPayback) ext.classList.add('visible');
+        if (el('extended-payback').checked) ext.classList.add('visible');
         else ext.classList.remove('visible');
     }
 
@@ -1125,8 +1301,9 @@ sitemap: true
     function recalculate() {
         readInputs();
         renderCurrentResults();
-        renderUnitResults();
+        var unit = renderUnitResults();
         renderGrowthResults();
+        announceResults(unit, lastGrowth);
         updateURL();
         savePrefs();
     }
@@ -1139,6 +1316,14 @@ sitemap: true
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].addEventListener('input', recalculate);
         }
+
+        // Out-of-range or blank values are corrected on blur / Enter, not on every keystroke
+        FIELDS.forEach(function(f) {
+            el(f[0]).addEventListener('change', function() {
+                writeBackClamped();
+                recalculate();
+            });
+        });
 
         // Extended payback toggle
         el('extended-payback').addEventListener('change', function() {
@@ -1165,12 +1350,30 @@ sitemap: true
                 this.value = clamped;
                 recalculate();
             });
+            el(pair.num).addEventListener('change', function() {
+                writeBackClamped();
+                recalculate();
+            });
         });
 
         // Currency selector
         el('currency-select').addEventListener('change', function() {
             updateCurrencySymbols();
             recalculate();
+        });
+
+        // Charts are drawn at the rendered width, so redraw when it changes
+        var lastW = el('chart-container').clientWidth;
+        var resizeTimer = null;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                var w = el('chart-container').clientWidth;
+                if (w === lastW) return;
+                lastW = w;
+                if (lastGrowth) renderChart(lastGrowth);
+                if (lastBreakdown) renderWaterfall(lastBreakdown);
+            }, 100);
         });
     }
 
