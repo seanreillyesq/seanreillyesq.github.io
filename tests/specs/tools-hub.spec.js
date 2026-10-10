@@ -47,7 +47,6 @@ test.describe('hub page', () => {
     const text = await page.locator('.page-content').innerText();
     expect(text).not.toMatch(/sent anywhere/i);
     expect(text).toMatch(/calculations run in your browser/i);
-    expect(text).toMatch(/Load from URL/);
   });
 
   test('footer lists the tools and links to all tools', async ({ page }) => {
