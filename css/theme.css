@@ -532,12 +532,12 @@ hr.small {
 }
 
 /* ---- Scroll Reveal ---- */
-.reveal {
+.js-reveal .reveal {
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.6s ease, transform 0.6s ease;
 }
-.reveal.visible {
+.js-reveal .reveal.visible {
     opacity: 1;
     transform: translateY(0);
 }
@@ -546,7 +546,7 @@ hr.small {
 .reveal-stagger > .reveal:nth-child(3) { transition-delay: 0.16s; }
 
 @media (prefers-reduced-motion: reduce) {
-    .reveal, .reveal.visible {
+    .js-reveal .reveal, .js-reveal .reveal.visible {
         transition: none;
         opacity: 1;
         transform: none;
@@ -605,27 +605,25 @@ hr.small {
 .hp-logos {
     display: flex;
     flex-wrap: nowrap;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
+    gap: 1.75rem;
     margin: 0 auto;
 }
+/* Each cell's share of the row is the square root of its logo's aspect ratio
+   (--logo-w), so every logo covers about the same area whatever its shape. */
 .hp-logo-cell {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 60px;
-    flex: 1 1 0;
+    flex: var(--logo-w) 1 0;
     min-width: 0;
-    padding: 0 0.5rem;
 }
 .hp-logo-cell img {
-    max-height: 56px;
-    max-width: min(150px, 100%);
-    min-width: 0;
-    width: auto;
+    width: 100%;
     height: auto;
-    object-fit: contain;
     filter: grayscale(100%);
+    mix-blend-mode: multiply;
     opacity: 0.55;
     transition: opacity 0.3s ease;
 }
@@ -636,17 +634,11 @@ hr.small {
     .hp-logos {
         flex-wrap: wrap;
         justify-content: center;
-        gap: 1.5rem 0.75rem;
+        gap: 1.5rem 1.75rem;
     }
     .hp-logo-cell {
-        flex: 0 0 30%;
-        height: auto;
-        min-width: auto;
-        padding: 0;
-    }
-    .hp-logo-cell img {
-        max-height: 28px;
-        max-width: 100%;
+        flex: 0 0 auto;
+        width: calc(var(--logo-w) * 2.25rem);
     }
 }
 
@@ -680,13 +672,17 @@ hr.small {
     flex-direction: column;
     flex: 1;
 }
+/* The global p margin would otherwise stack on the card padding */
+.hp-card-body p {
+    margin-top: 0;
+}
 .hp-card-excerpt {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-.hp-card-date {
+.hp-card-body .hp-card-date {
     margin-top: auto;
     font-family: 'Inter', sans-serif;
     font-weight: 400;
@@ -768,6 +764,38 @@ hr.small {
     .hp-hero > .container {
         position: relative;
         z-index: 1;
+    }
+}
+
+/* Temporary: candidate hero backgrounds, switched on by ?=a or ?=b on the home page.
+   a = plain white with a solid menu bar, b = soft blue tint fading to white. */
+@media (min-width: 992px) {
+    .hp-bg-a .hp-hero,
+    .hp-bg-b .hp-hero {
+        padding-top: 8rem;
+    }
+    .hp-bg-a .hp-hero { background: #fff; }
+    .hp-bg-b .hp-hero { background: linear-gradient(180deg, #e9f0f7 0%, #f4f7fa 55%, #fff 100%); }
+    .hp-bg-a .hp-hero::before,
+    .hp-bg-b .hp-hero::before {
+        display: none;
+    }
+    .hp-bg-a .navbar-transparent {
+        background-color: #fff !important;
+        border-bottom: 1px solid var(--color-border) !important;
+    }
+    .hp-bg-a .navbar-transparent .navbar-brand,
+    .hp-bg-a .navbar-transparent .nav-link,
+    .hp-bg-b .navbar-transparent .navbar-brand,
+    .hp-bg-b .navbar-transparent .nav-link {
+        color: var(--color-text) !important;
+        text-shadow: none;
+    }
+    .hp-bg-a .navbar-transparent .navbar-brand:hover,
+    .hp-bg-a .navbar-transparent .nav-link:hover,
+    .hp-bg-b .navbar-transparent .navbar-brand:hover,
+    .hp-bg-b .navbar-transparent .nav-link:hover {
+        color: var(--color-accent) !important;
     }
 }
 

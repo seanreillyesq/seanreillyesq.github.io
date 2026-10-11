@@ -5,6 +5,14 @@ description: "Digital leader, founder & occasional adventurer"
 meta-description: "Digital marketing consultant with 18+ years across agency, in-house, start-ups and scale-ups. Sean Reilly's blog and portfolio."
 ---
 
+<!-- Temporary: preview the two candidate hero backgrounds with ?=a or ?=b (also ?bg=a, ?bg=b) -->
+<script>
+(function() {
+    var m = /[?&](?:bg)?=([ab])(?:&|$)/i.exec(location.search);
+    if (m) document.documentElement.classList.add('hp-bg-' + m[1].toLowerCase());
+})();
+</script>
+
 <!-- ==================== HERO ==================== -->
 <section class="hp-hero" id="hp-hero">
     <div class="container">
@@ -20,14 +28,11 @@ meta-description: "Digital marketing consultant with 18+ years across agency, in
                 <h1 class="hp-name mb-2 reveal">Sean Reilly</h1>
                 <p class="hp-tagline mb-4 reveal">Digital leader, founder & occasional adventurer</p>
                 <div class="hp-bio mb-4 reveal">
-                    {% include career-years.html %}<p class="mb-3">I'm a digital marketing leader, entrepreneur, and investor with over {{ career_years }} years' experience building and scaling digital businesses across luxury hospitality, ecommerce, and SaaS.</p>
-                    <p class="mb-0">Currently working as a digital marketing consultant, helping brands with digital strategy, performance marketing, and martech.</p>
+                    <p class="mb-0">I'm a digital marketing consultant, helping brands with digital strategy, performance marketing, and martech.</p>
                 </div>
                 <div class="d-flex gap-3 flex-wrap align-items-center reveal">
-                    <a href="/blog/" class="btn btn-accent text-uppercase fw-bold">Read my blog</a>
-                    <a href="/work-with-me/" class="btn btn-outline-accent text-uppercase fw-bold">Work with me</a>
-                    <a href="/contact/" class="btn btn-outline-accent text-uppercase fw-bold">Get in touch</a>
-                    <a href="https://www.linkedin.com/in/seanreillyesq" target="_blank" class="btn btn-outline-accent text-uppercase fw-bold d-inline-flex align-items-center gap-2" aria-label="Connect on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> Connect</a>
+                    <a href="/work-with-me/" class="btn btn-accent text-uppercase fw-bold">Work with me</a>
+                    <a href="/blog/" class="btn btn-outline-accent text-uppercase fw-bold">Read my blog</a>
                 </div>
             </div>
         </div>
@@ -39,17 +44,17 @@ meta-description: "Digital marketing consultant with 18+ years across agency, in
     <div class="container">
         <p class="font-mono text-uppercase text-center mb-4 small" style="letter-spacing: 2px; color: var(--color-text-muted);">Brands I've worked with</p>
         <div class="hp-logos mb-4">
-            <div class="hp-logo-cell"><img src="/img/logos/watchfinder.png" width="1054" height="91" loading="lazy" decoding="async" alt="Watchfinder"></div>
-            <div class="hp-logo-cell"><img src="/img/logos/hand-picked-hotels.svg" width="400" height="108" loading="lazy" decoding="async" alt="Hand Picked Hotels"></div>
-            <div class="hp-logo-cell"><img src="/img/logos/tusting.png" width="375" height="120" loading="lazy" decoding="async" alt="Tusting"></div>
-            <div class="hp-logo-cell"><img src="/img/logos/budd.svg" width="140" height="64" loading="lazy" decoding="async" alt="Budd"></div>
-            <div class="hp-logo-cell"><img src="/img/logos/ally-capellino.svg" width="721" height="163" loading="lazy" decoding="async" alt="Ally Capellino"></div>
-            <div class="hp-logo-cell"><img src="/img/logos/protolabs.svg" width="361" height="82" loading="lazy" decoding="async" alt="Protolabs"></div>
-            <div class="hp-logo-cell"><img src="/img/logos/vinci.svg" width="512" height="200" loading="lazy" decoding="async" alt="Vinci Hair Clinic"></div>
-            <div class="hp-logo-cell"><img src="/img/logos/10cc.svg" width="842" height="402" loading="lazy" decoding="async" alt="10cc"></div>
-            <div class="hp-logo-cell"><img src="/img/logos/view.gif" width="390" height="150" loading="lazy" decoding="async" alt="View"></div>
+            <div class="hp-logo-cell" style="--logo-w: 3.4"><img src="/img/logos/watchfinder.png" width="1054" height="91" loading="lazy" decoding="async" alt="Watchfinder"></div>
+            <div class="hp-logo-cell" style="--logo-w: 2.11"><img src="/img/logos/hand-picked-hotels.svg" width="400" height="108" loading="lazy" decoding="async" alt="Hand Picked Hotels"></div>
+            <div class="hp-logo-cell" style="--logo-w: 2.04"><img src="/img/logos/tusting.png" width="375" height="120" loading="lazy" decoding="async" alt="Tusting"></div>
+            <div class="hp-logo-cell" style="--logo-w: 1.41"><img src="/img/logos/budd.svg" width="140" height="64" loading="lazy" decoding="async" alt="Budd"></div>
+            <div class="hp-logo-cell" style="--logo-w: 2.1"><img src="/img/logos/ally-capellino.svg" width="721" height="163" loading="lazy" decoding="async" alt="Ally Capellino"></div>
+            <div class="hp-logo-cell" style="--logo-w: 2.1"><img src="/img/logos/protolabs.svg" width="361" height="82" loading="lazy" decoding="async" alt="Protolabs"></div>
+            <div class="hp-logo-cell" style="--logo-w: 1.76"><img src="/img/logos/vinci.svg" width="512" height="200" loading="lazy" decoding="async" alt="Vinci Hair Clinic"></div>
+            <div class="hp-logo-cell" style="--logo-w: 1.45"><img src="/img/logos/10cc.svg" width="842" height="402" loading="lazy" decoding="async" alt="10cc"></div>
+            <div class="hp-logo-cell" style="--logo-w: 1.61"><img src="/img/logos/view.gif" width="390" height="150" loading="lazy" decoding="async" alt="View"></div>
         </div>
-        <p class="text-center mb-0" style="color: var(--color-text-muted); max-width: 720px; margin-left: auto; margin-right: auto; font-size: 0.9375rem;">I was previously Head of Digital Marketing at Hand Picked Hotels, Digital Marketing Manager at Watchfinder, and Head of Ecommerce at Authentic Bespoke (Ally Capellino, Budd, Tusting, Sterling & Burke). I've worked agency side (ExtraDigital, MCM Net, Basetouch) with clients including Protolabs, Vinci Hair Clinic, and 10cc.</p>
+        <p class="text-center mb-0" style="color: var(--color-text-muted); max-width: 720px; margin-left: auto; margin-right: auto; font-size: 0.9375rem;">In-house at Hand Picked Hotels, Watchfinder and Authentic Bespoke. Agency side for clients including Protolabs, Vinci Hair Clinic and 10cc.</p>
     </div>
 </section>
 
@@ -95,9 +100,9 @@ meta-description: "Digital marketing consultant with 18+ years across agency, in
     <div class="container">
         <div class="row gy-4">
             <div class="col-lg-6 reveal">
-                <h2 class="fw-bold mb-3" style="font-size: 1.75rem; line-height: 1.3;">{{ career_years }}+ years building digital businesses</h2>
+                {% include career-years.html %}<h2 class="fw-bold mb-3" style="font-size: 1.75rem; line-height: 1.3;">{{ career_years }}+ years building digital businesses</h2>
                 <div style="color: var(--color-text-muted); font-size: 1.0625rem; line-height: 1.6;">
-                    <p class="mb-3">From scaling Watchfinder's ecommerce to leading digital marketing for Hand Picked Hotels, I've spent my career at the intersection of strategy, technology, and commercial growth.</p>
+                    <p class="mb-3">From scaling Watchfinder's ecommerce to leading digital marketing for Hand Picked Hotels, I've spent my career at the intersection of strategy, technology, and commercial growth, across luxury hospitality, ecommerce, and SaaS.</p>
                     <p class="mb-4">I run CanMarket, a marketing consultancy, alongside several other ventures in hosting, running, and investment.</p>
                 </div>
                 <a href="/about/" class="fw-bold text-uppercase small" style="color: var(--color-accent); letter-spacing: 1px; text-decoration: none;">More about me &rarr;</a>
