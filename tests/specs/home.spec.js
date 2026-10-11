@@ -75,34 +75,3 @@ test.describe('without JavaScript', () => {
     }
   });
 });
-
-test.describe('hero background preview', () => {
-  const hero = (page) => page.locator('.hp-hero').evaluate((el) => getComputedStyle(el).backgroundImage);
-  const navColour = (page) => page.locator('#mainNav .nav-link').first().evaluate((el) => getComputedStyle(el).color);
-
-  test.beforeEach(async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-  });
-
-  test('the plain address keeps the sky photo and white menu text', async ({ page }) => {
-    await page.goto('/');
-    expect(await hero(page)).toContain('digital-marketing-consultant.jpg');
-    expect(await navColour(page)).toBe('rgb(255, 255, 255)');
-  });
-
-  for (const query of ['?=a', '?bg=a']) {
-    test(`${query} shows plain white with dark menu text`, async ({ page }) => {
-      await page.goto('/' + query);
-      expect(await hero(page)).toBe('none');
-      expect(await navColour(page)).toBe('rgb(45, 45, 45)');
-    });
-  }
-
-  for (const query of ['?=b', '?bg=B']) {
-    test(`${query} shows the tint with dark menu text`, async ({ page }) => {
-      await page.goto('/' + query);
-      expect(await hero(page)).toContain('linear-gradient');
-      expect(await navColour(page)).toBe('rgb(45, 45, 45)');
-    });
-  }
-});

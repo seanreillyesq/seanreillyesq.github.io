@@ -767,38 +767,6 @@ hr.small {
     }
 }
 
-/* Temporary: candidate hero backgrounds, switched on by ?=a or ?=b on the home page.
-   a = plain white with a solid menu bar, b = soft blue tint fading to white. */
-@media (min-width: 992px) {
-    .hp-bg-a .hp-hero,
-    .hp-bg-b .hp-hero {
-        padding-top: 8rem;
-    }
-    .hp-bg-a .hp-hero { background: #fff; }
-    .hp-bg-b .hp-hero { background: linear-gradient(180deg, #e9f0f7 0%, #f4f7fa 55%, #fff 100%); }
-    .hp-bg-a .hp-hero::before,
-    .hp-bg-b .hp-hero::before {
-        display: none;
-    }
-    .hp-bg-a .navbar-transparent {
-        background-color: #fff !important;
-        border-bottom: 1px solid var(--color-border) !important;
-    }
-    .hp-bg-a .navbar-transparent .navbar-brand,
-    .hp-bg-a .navbar-transparent .nav-link,
-    .hp-bg-b .navbar-transparent .navbar-brand,
-    .hp-bg-b .navbar-transparent .nav-link {
-        color: var(--color-text) !important;
-        text-shadow: none;
-    }
-    .hp-bg-a .navbar-transparent .navbar-brand:hover,
-    .hp-bg-a .navbar-transparent .nav-link:hover,
-    .hp-bg-b .navbar-transparent .navbar-brand:hover,
-    .hp-bg-b .navbar-transparent .nav-link:hover {
-        color: var(--color-accent) !important;
-    }
-}
-
 /* ---- About Page ---- */
 .about-photo img {
     border-radius: 1rem;
