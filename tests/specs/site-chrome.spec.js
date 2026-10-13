@@ -41,6 +41,21 @@ test.describe('current page marker', () => {
     });
   }
 
+  test('home marks Home', async ({ page }) => {
+    await page.goto('/');
+    const current = page.locator('#mainNav a[aria-current="page"]');
+    await expect(current).toHaveCount(1);
+    await expect(current).toHaveText('Home');
+    await expect(current).toHaveClass(/active/);
+  });
+
+  test('no page marks more than one link', async ({ page }) => {
+    for (const url of ['/', '/about/', '/blog/', '/contact/', '/work-with-me/', '/tools/', '/roas-calculator/', '/large-ecommerce-sitemap-specification-20170528/']) {
+      await page.goto(url);
+      expect(await page.locator('#mainNav a[aria-current="page"]').count(), url).toBeLessThanOrEqual(1);
+    }
+  });
+
   test('a post marks Blog', async ({ page }) => {
     await page.goto('/large-ecommerce-sitemap-specification-20170528/');
     const current = page.locator('#mainNav a[aria-current="page"]');
