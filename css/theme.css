@@ -927,3 +927,53 @@ hr.small {
 .site-footer-enhanced .social-icon:hover svg {
     opacity: 0.8;
 }
+
+/* ---- Current page marker in the menu ---- */
+.navbar .nav-link.active {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.4em;
+}
+/* Keep Bootstrap's darker .active colour from leaking in: the underline is the only marker */
+.navbar .nav-link.active:not(:hover):not(:focus) {
+    color: var(--color-text);
+}
+
+/* ---- Keyboard focus (focus-visible only, so mouse clicks show nothing) ---- */
+.btn:focus-visible,
+.btn-accent:focus-visible,
+.btn-outline-accent:focus-visible,
+.navbar .nav-link:focus-visible,
+.navbar .navbar-brand:focus-visible {
+    outline: 3px solid var(--color-accent-hover);
+    outline-offset: 3px;
+    box-shadow: none;
+}
+/* Transparent navbar sits over any photo, light or dark: two-tone ring (white inside, dark outside) */
+.navbar-transparent:not(.scrolled) .nav-link:focus-visible,
+.navbar-transparent:not(.scrolled) .navbar-brand:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 0;
+    box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.75);
+}
+/* Dark footer: every footer link and social icon */
+.site-footer-enhanced a:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+}
+/* Open phone menu has a white panel behind the links */
+.navbar-transparent .navbar-collapse.show .nav-link:focus-visible {
+    outline-color: var(--color-accent-hover);
+    outline-offset: 3px;
+    box-shadow: none;
+}
+
+/* ---- Long words in prose (not tools, tables or code) ---- */
+article p,
+article li,
+article blockquote,
+.page-content > p,
+.page-content > ul > li,
+.page-content > ol > li {
+    overflow-wrap: anywhere;
+}
