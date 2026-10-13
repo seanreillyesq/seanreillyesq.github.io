@@ -5,6 +5,7 @@ header-title: "Tools"
 description: "Free calculators and previewers"
 header-img: "img/home-bg.jpg"
 nav_order: 3.5
+nav: false
 meta-description: "Free tools from Sean Reilly: a ROAS calculator, customer economics model, SERP preview and caffeine cut-off calculator. They run in your browser."
 permalink: /tools/
 ---
@@ -19,10 +20,9 @@ permalink: /tools/
 <div class="row g-4 mb-5" id="tools-business">
 {% for t in business_tools %}
     <div class="col-md-6">
-        <div class="card card-body h-100">
-            <h3 class="h5"><a href="{{ t.url }}">{{ t.header-title | default: t.title }}</a></h3>
+        <div class="venture-card position-relative">
+            <h3 class="mb-2"><a href="{{ t.url }}" class="stretched-link">{{ t.header-title | default: t.title }}</a></h3>
             <p>{{ t.tool_summary }}</p>
-            <p class="mt-auto mb-0"><a href="{{ t.url }}" class="btn btn-outline-accent btn-sm" aria-label="Use the tool: {{ t.header-title | default: t.title }}">Use the tool</a></p>
         </div>
     </div>
 {% endfor %}
@@ -33,10 +33,9 @@ permalink: /tools/
 <div class="row g-4 mb-5" id="tools-personal">
 {% for t in personal_tools %}
     <div class="col-md-6">
-        <div class="card card-body h-100">
-            <h3 class="h5"><a href="{{ t.url }}">{{ t.header-title | default: t.title }}</a></h3>
+        <div class="venture-card position-relative">
+            <h3 class="mb-2"><a href="{{ t.url }}" class="stretched-link">{{ t.header-title | default: t.title }}</a></h3>
             <p>{{ t.tool_summary }}</p>
-            <p class="mt-auto mb-0"><a href="{{ t.url }}" class="btn btn-outline-accent btn-sm" aria-label="Use the tool: {{ t.header-title | default: t.title }}">Use the tool</a></p>
         </div>
     </div>
 {% endfor %}

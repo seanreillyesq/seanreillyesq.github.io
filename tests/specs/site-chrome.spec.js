@@ -128,17 +128,13 @@ test.describe('focus and marker details', () => {
       const other = links.find((l) => !l.classList.contains('active'));
       return { active: c(active), other: c(other) };
     });
-    // /adventures/ has a solid (non-transparent) navbar, where the old accent rule did apply
-    await page.goto('/adventures/');
-    let c = await colours();
-    expect(c.active).toBe(c.other);
     await page.goto('/about/');
     const mobile = info.project.name === 'mobile-390';
     if (mobile) {
       await page.locator('.navbar-toggler').click();
       await page.waitForTimeout(500);
     }
-    c = await colours();
+    let c = await colours();
     expect(c.active).toBe(c.other);
     await page.evaluate(() => { document.getElementById('mainNav').classList.add('scrolled'); });
     c = await colours();

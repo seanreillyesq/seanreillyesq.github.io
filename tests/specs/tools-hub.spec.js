@@ -23,13 +23,13 @@ const toolEvents = (page) => page.evaluate(() => window.dataLayer.filter((e) => 
 test.describe('hub page', () => {
   test('lists every tool page with working links, business before personal', async ({ page, request }) => {
     await page.goto('/tools/');
-    const cards = page.locator('.card.card-body');
+    const cards = page.locator('.venture-card');
     expect(TOOLS.length).toBeGreaterThanOrEqual(4);
     await expect(cards).toHaveCount(TOOLS.length);
-    const hrefs = await cards.evaluateAll((els) => els.map((c) => c.querySelector('a.btn').getAttribute('href')));
+    const hrefs = await cards.evaluateAll((els) => els.map((c) => c.querySelector('h3 a').getAttribute('href')));
     expect(hrefs).toEqual(TOOLS.map((t) => '/' + t.slug + '/'));
-    await expect(page.locator('#tools-business .card')).toHaveCount(BUSINESS);
-    await expect(page.locator('#tools-personal .card')).toHaveCount(TOOLS.length - BUSINESS);
+    await expect(page.locator('#tools-business .venture-card')).toHaveCount(BUSINESS);
+    await expect(page.locator('#tools-personal .venture-card')).toHaveCount(TOOLS.length - BUSINESS);
     const order = await page.evaluate(() => {
       const b = document.getElementById('tools-business'), p = document.getElementById('tools-personal');
       return !!(b.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_FOLLOWING);
@@ -55,13 +55,15 @@ test.describe('hub page', () => {
     await expect(page.locator('footer a[href="/tools/"]')).toHaveText('All tools');
   });
 
-  test('"Tools" is in the nav between Work With Me and Ventures', async ({ page }) => {
+  test('top menu is Home, About, Blog, Work With Me, Contact; Tools, Ventures and Adventures stay in the footer', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/');
     const labels = (await page.locator('#navbarNav .nav-link').allTextContents()).map((l) => l.trim());
-    expect(labels).toContain('Tools');
-    expect(labels.indexOf('Tools')).toBe(labels.indexOf('Work With Me') + 1);
-    expect(labels.indexOf('Ventures')).toBe(labels.indexOf('Tools') + 1);
+    expect(labels).toEqual(['Home', 'About', 'Blog', 'Work With Me', 'Contact']);
+    for (const href of ['/tools/', '/ventures/', '/adventures/']) {
+      await expect(page.locator(`footer a[href="${href}"]`)).toHaveCount(1);
+      expect((await page.request.get(href)).status()).toBe(200);
+    }
   });
 
   for (const w of [992, 1280]) {
