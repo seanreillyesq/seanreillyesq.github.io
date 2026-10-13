@@ -17,7 +17,9 @@ from html.parser import HTMLParser
 # Checks listed here report WARN instead of FAIL until the existing content
 # has been cleaned up. Remove a name from this set to promote the check.
 # Run with --strict to treat every WARN as FAIL.
-WARN_CHECKS = set()
+# iframe-title is listed because two older pages still have untitled iframes;
+# promote it once they are fixed. iframe-lazy is advisory and stays a WARN.
+WARN_CHECKS = {"iframe-title", "iframe-lazy"}
 
 BANNED_WORDS = [
     "delve", "leverage", "tapestry", "multifaceted", "transformative",
@@ -130,6 +132,7 @@ class RefParser(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.refs = []      # (tag, url)
         self.bad_alt = []   # src of images lacking alt
+        self.iframes = []   # (src, has_title, is_lazy)
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -144,6 +147,13 @@ class RefParser(HTMLParser):
                 self.refs.append(("img", a["src"]))
             if not (a.get("alt") or "").strip():
                 self.bad_alt.append(a.get("src") or "(no src)")
+
+        elif tag == "iframe":
+            self.iframes.append((
+                a.get("src") or "(no src)",
+                bool((a.get("title") or "").strip()),
+                (a.get("loading") or "").strip().lower() == "lazy",
+            ))
 
     handle_startendtag = handle_starttag
 
@@ -188,6 +198,11 @@ def check_site(site):
                     report(check, rel, "%s %s does not resolve in built site" % (label, url))
             for src in parser.bad_alt:
                 report("alt", rel, "<img> without non-empty alt: %s" % src)
+            for src, has_title, is_lazy in parser.iframes:
+                if not has_title:
+                    report("iframe-title", rel, "<iframe> without non-empty title: %s" % src)
+                if not is_lazy:
+                    report("iframe-lazy", rel, '<iframe> without loading="lazy": %s' % src)
 
 
 CSS_URL_RE = re.compile(r"""url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s'"]+))\s*\)""")
