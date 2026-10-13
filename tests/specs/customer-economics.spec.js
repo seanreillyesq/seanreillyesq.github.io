@@ -643,3 +643,53 @@ test.describe('Customer economics: review fixes', () => {
     await expect(page.locator('#ext-roas-note')).not.toContainText('pays back');
   });
 });
+
+// iOS Safari zooms the page when a focused field is under 16px.
+for (const width of [360, 390]) {
+  test.describe('Customer economics: form fields on a phone at ' + width + 'px', () => {
+    test('every visible input, select and textarea is at least 16px and nothing overflows sideways', async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/customer-economics/');
+      const result = await page.evaluate(() => {
+        const small = [];
+        document.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=range]), select, textarea').forEach((e) => {
+          if (e.offsetParent === null || e.type === 'hidden') return;
+          const fs = parseFloat(getComputedStyle(e).fontSize);
+          if (fs < 16) small.push((e.id || e.className) + ' ' + fs + 'px');
+        });
+        return { small, scroll: document.documentElement.scrollWidth, inner: window.innerWidth };
+      });
+      expect(result.small).toEqual([]);
+      expect(result.scroll).toBeLessThanOrEqual(result.inner);
+    });
+  });
+}
+
+// A select must show its whole selected option: text + padding (which holds the arrow) fits the box.
+test.describe('Customer economics: selects show their whole selected option', () => {
+  for (const width of [360, 390, 576, 768, 900, 992, 1100, 1280]) {
+    test('at ' + width + 'px', async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/customer-economics/');
+      const cut = await page.evaluate(() => {
+        const ctx = document.createElement('canvas').getContext('2d');
+        const out = [];
+        document.querySelectorAll('select').forEach((s) => {
+          if (s.offsetParent === null) return;
+          const cs = getComputedStyle(s);
+          ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+          const chrome = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+          const keep = s.selectedIndex;
+          for (let i = 0; i < s.options.length; i++) {
+            s.selectedIndex = i;
+            const need = ctx.measureText(s.options[i].text).width + chrome;
+            if (need > s.getBoundingClientRect().width) out.push(s.id + ' "' + s.options[i].text + '" needs ' + Math.ceil(need) + ' has ' + Math.floor(s.getBoundingClientRect().width));
+          }
+          s.selectedIndex = keep;
+        });
+        return out;
+      });
+      expect(cut).toEqual([]);
+    });
+  }
+});

@@ -29,7 +29,7 @@ sitemap: true
 }
 .serp-inputs .form-control,
 .serp-inputs .form-select {
-    font-size: 0.9375rem;
+    font-size: 1rem;
     min-height: 44px;
 }
 .serp-inputs textarea.form-control {
@@ -435,6 +435,9 @@ sitemap: true
     .serp-tab { padding: 0.5rem 0.5rem; font-size: 0.6875rem; letter-spacing: 0.5px; }
     .google-result { padding: 1rem; }
 }
+
+/* iOS Safari zooms the page when a focused field is under 16px, so every field is at least 16px */
+input:not([type=checkbox]):not([type=radio]):not([type=range]), select.form-select, select, textarea.form-control, textarea { font-size: 1rem; }
 </style>
 
 <p>Preview how your content appears across Google's search surfaces. Pixel widths use canvas text rendering for accuracy, not character counting.</p>

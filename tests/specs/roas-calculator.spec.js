@@ -539,3 +539,103 @@ test.describe('ROAS calculator: accessibility', () => {
     }
   });
 });
+
+// iOS Safari zooms the page when a focused field is under 16px.
+for (const width of [360, 390]) {
+  test.describe('ROAS calculator: form fields on a phone at ' + width + 'px', () => {
+    test('every visible input, select and textarea is at least 16px and nothing overflows sideways', async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/roas-calculator/');
+      const result = await page.evaluate(() => {
+        const small = [];
+        document.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=range]), select, textarea').forEach((e) => {
+          if (e.offsetParent === null || e.type === 'hidden') return;
+          const fs = parseFloat(getComputedStyle(e).fontSize);
+          if (fs < 16) small.push((e.id || e.className) + ' ' + fs + 'px');
+        });
+        return { small, scroll: document.documentElement.scrollWidth, inner: window.innerWidth };
+      });
+      expect(result.small).toEqual([]);
+      expect(result.scroll).toBeLessThanOrEqual(result.inner);
+    });
+  });
+}
+
+for (const width of [360, 390, 1280]) {
+  test.describe(`ROAS calculator: result labels at ${width}px`, () => {
+    test('labels are at least 12px, nothing clips or wraps, and cards in a row share a top', async ({ page }) => {
+      await load(page, { spend: 86952, rev: 0 }, width);
+      await page.locator('.ch-spend').first().fill('0');
+      await page.locator('.ch-revenue').first().fill('143109');
+      await page.locator('.ch-spend').nth(1).fill('86952');
+      await page.locator('.ch-revenue').nth(1).fill('0');
+      await expect(page.locator('.ch-res-profit').first()).toHaveText('£62,312');
+      await expect(page.locator('.ch-res-profit').nth(1)).toHaveText('-£86,952');
+      const r = await page.evaluate(() => {
+        const out = { small: [], colour: [], clipped: [], wrapped: [], uneven: [] };
+        const vis = (e) => e.offsetParent !== null;
+        document.querySelectorAll('.result-label').forEach((e) => {
+          if (!vis(e)) return;
+          const cs = getComputedStyle(e);
+          if (parseFloat(cs.fontSize) < 12) out.small.push(e.textContent + ' ' + cs.fontSize);
+          if (cs.color !== 'rgb(63, 110, 150)') out.colour.push(e.textContent + ' ' + cs.color);
+          if (e.scrollWidth > e.clientWidth) out.clipped.push('label ' + e.textContent);
+        });
+        document.querySelectorAll('.result-value').forEach((e) => {
+          if (!vis(e)) return;
+          if (e.scrollWidth > e.clientWidth) out.clipped.push('value ' + e.textContent);
+          const range = document.createRange();
+          range.selectNodeContents(e);
+          const tops = new Set([...range.getClientRects()].map((q) => Math.round(q.top)));
+          if (tops.size > 1) out.wrapped.push(e.textContent);
+        });
+        document.querySelectorAll('.row').forEach((row) => {
+          const cards = [...row.querySelectorAll(':scope > [class*="col"] > .result-card')].filter(vis);
+          const byLine = {};
+          cards.forEach((c) => { const t = Math.round(c.getBoundingClientRect().top); (byLine[t] = byLine[t] || []).push(c); });
+          // Cards that sit on the same visual row must share a top within a pixel.
+          const tops = cards.map((c) => c.getBoundingClientRect().top).sort((a, b) => a - b);
+          for (let i = 1; i < tops.length; i++) {
+            const d = tops[i] - tops[i - 1];
+            if (d > 1 && d < 20) out.uneven.push(row.className + ' ' + d);
+          }
+        });
+        return out;
+      });
+      expect(r.small).toEqual([]);
+      expect(r.colour).toEqual([]);
+      expect(r.clipped).toEqual([]);
+      expect(r.wrapped).toEqual([]);
+      expect(r.uneven).toEqual([]);
+    });
+  });
+}
+
+// A select must show its whole selected option: text + padding (which holds the arrow) fits the box.
+test.describe('ROAS calculator: selects show their whole selected option', () => {
+  for (const width of [360, 390, 576, 768, 900, 992, 1100, 1280]) {
+    test('at ' + width + 'px', async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/roas-calculator/');
+      const cut = await page.evaluate(() => {
+        const ctx = document.createElement('canvas').getContext('2d');
+        const out = [];
+        document.querySelectorAll('select').forEach((s) => {
+          if (s.offsetParent === null) return;
+          const cs = getComputedStyle(s);
+          ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+          const chrome = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+          const keep = s.selectedIndex;
+          for (let i = 0; i < s.options.length; i++) {
+            s.selectedIndex = i;
+            const need = ctx.measureText(s.options[i].text).width + chrome;
+            if (need > s.getBoundingClientRect().width) out.push(s.id + ' "' + s.options[i].text + '" needs ' + Math.ceil(need) + ' has ' + Math.floor(s.getBoundingClientRect().width));
+          }
+          s.selectedIndex = keep;
+        });
+        return out;
+      });
+      expect(cut).toEqual([]);
+    });
+  }
+});
