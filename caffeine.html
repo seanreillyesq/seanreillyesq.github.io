@@ -250,6 +250,9 @@ sitemap: true
     .result-label { letter-spacing: 0.5px; }
     .result-card { padding: 0.625rem 0.375rem; }
 }
+
+/* iOS Safari zooms the page when a focused field is under 16px, so every field is at least 16px */
+input:not([type=checkbox]):not([type=radio]):not([type=range]), select.form-select, select, textarea { font-size: 1rem; }
 </style>
 
 <p class="caffeine-intro">Work out the latest time to have your coffee and tea before bed, using cut-offs from sleep research. Adjust the inputs and everything recalculates instantly. If you like to time caffeine around your cortisol rhythm, the graph also shows optional preferred windows.</p>

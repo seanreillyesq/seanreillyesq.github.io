@@ -1057,3 +1057,70 @@ test.describe('Hotel direct vs OTA calculator', () => {
     });
   });
 });
+
+// iOS Safari zooms the page when a focused field is under 16px.
+for (const width of [360, 390]) {
+  test.describe('Hotel direct vs OTA: form fields on a phone at ' + width + 'px', () => {
+    test('every visible input, select and textarea is at least 16px and nothing overflows sideways', async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/hotel-direct-vs-ota/');
+      const result = await page.evaluate(() => {
+        const small = [];
+        document.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=range]), select, textarea').forEach((e) => {
+          if (e.offsetParent === null || e.type === 'hidden') return;
+          const fs = parseFloat(getComputedStyle(e).fontSize);
+          if (fs < 16) small.push((e.id || e.className) + ' ' + fs + 'px');
+        });
+        return { small, scroll: document.documentElement.scrollWidth, inner: window.innerWidth };
+      });
+      expect(result.small).toEqual([]);
+      expect(result.scroll).toBeLessThanOrEqual(result.inner);
+    });
+  });
+}
+
+for (const width of [360, 390, 1280]) {
+  test.describe(`Hotel direct vs OTA: result labels at ${width}px`, () => {
+    test('labels flow as one run of text and the select shows its whole option', async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(URL);
+      const labels = await page.evaluate(() =>
+        [...document.querySelectorAll('.result-label')].filter((l) => l.querySelector('.hv-ex')).map((l) => ({
+          display: getComputedStyle(l).display,
+          text: l.innerText.replace(/\s+/g, ' ').trim().toUpperCase(),
+        })));
+      expect(labels.length).toBe(3);
+      for (const l of labels) {
+        expect(['flex', 'inline-flex', 'grid', 'inline-grid']).not.toContain(l.display);
+        expect(l.text).toMatch(/^(OTA NET PER NIGHT|DIRECT NET PER NIGHT|NET ROOM REVENUE NOW), EX VAT$/);
+      }
+      const sel = await page.evaluate(() => {
+        const s = document.getElementById('cbase');
+        return { scroll: s.scrollWidth, client: s.clientWidth };
+      });
+      expect(sel.scroll).toBeLessThanOrEqual(sel.client);
+      // The visible text of the selected option must fit: measure it against the content box.
+      const fits = await page.evaluate(() => {
+        const s = document.getElementById('cbase');
+        const cs = getComputedStyle(s);
+        const c = document.createElement('canvas').getContext('2d');
+        c.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+        const longest = Math.max(...[...s.options].map((o) => c.measureText(o.text).width));
+        const room = s.getBoundingClientRect().width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        return { longest, room };
+      });
+      expect(fits.room).toBeGreaterThanOrEqual(fits.longest);
+    });
+
+    test('with VAT switched off the ex VAT text is hidden', async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(URL);
+      const toggle = page.locator('#vatinc');
+      await toggle.setChecked(false, { force: true });
+      const shown = await page.evaluate(() => [...document.querySelectorAll('.result-label .hv-ex')].map((e) => e.offsetParent !== null || getComputedStyle(e).display !== 'none'));
+      expect(shown.some(Boolean)).toBe(false);
+      const text = await page.locator('.result-label').first().innerText();
+      expect(text.toLowerCase()).not.toContain('ex vat');
+    });
+  });
+}

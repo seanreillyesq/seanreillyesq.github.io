@@ -1264,3 +1264,24 @@ function contrast(fg, bg) {
   const a = lum(fg), b = lum(bg);
   return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
+
+// iOS Safari zooms the page when a focused field is under 16px.
+for (const width of [360, 390]) {
+  test.describe('Caffeine: form fields on a phone at ' + width + 'px', () => {
+    test('every visible input, select and textarea is at least 16px and nothing overflows sideways', async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/caffeine/');
+      const result = await page.evaluate(() => {
+        const small = [];
+        document.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=range]), select, textarea').forEach((e) => {
+          if (e.offsetParent === null || e.type === 'hidden') return;
+          const fs = parseFloat(getComputedStyle(e).fontSize);
+          if (fs < 16) small.push((e.id || e.className) + ' ' + fs + 'px');
+        });
+        return { small, scroll: document.documentElement.scrollWidth, inner: window.innerWidth };
+      });
+      expect(result.small).toEqual([]);
+      expect(result.scroll).toBeLessThanOrEqual(result.inner);
+    });
+  });
+}
