@@ -98,6 +98,67 @@ test.describe('keyboard focus', () => {
   });
 });
 
+test.describe('focus and marker details', () => {
+  async function tabTo(page, selector) {
+    for (let i = 0; i < 80; i++) {
+      await page.keyboard.press('Tab');
+      if (await page.evaluate((s) => document.activeElement && document.activeElement.matches(s), selector)) return;
+    }
+    throw new Error('never focused ' + selector);
+  }
+
+  test('home brand focus is a two-tone ring at 1280', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/');
+    await tabTo(page, '.navbar-brand');
+    const cs = await page.evaluate(() => {
+      const s = getComputedStyle(document.activeElement);
+      return { style: s.outlineStyle, width: parseFloat(s.outlineWidth), shadow: s.boxShadow };
+    });
+    expect(cs.style).not.toBe('none');
+    expect(cs.width).toBeGreaterThanOrEqual(2);
+    expect(cs.shadow).not.toBe('none');
+  });
+
+  test('active link colour matches inactive links at top, scrolled and in the open menu', async ({ page }, info) => {
+    const colours = () => page.evaluate(() => {
+      const c = (el) => getComputedStyle(el).color;
+      const links = [...document.querySelectorAll('#mainNav .nav-link')];
+      const active = links.find((l) => l.classList.contains('active'));
+      const other = links.find((l) => !l.classList.contains('active'));
+      return { active: c(active), other: c(other) };
+    });
+    // /adventures/ has a solid (non-transparent) navbar, where the old accent rule did apply
+    await page.goto('/adventures/');
+    let c = await colours();
+    expect(c.active).toBe(c.other);
+    await page.goto('/about/');
+    const mobile = info.project.name === 'mobile-390';
+    if (mobile) {
+      await page.locator('.navbar-toggler').click();
+      await page.waitForTimeout(500);
+    }
+    c = await colours();
+    expect(c.active).toBe(c.other);
+    await page.evaluate(() => { document.getElementById('mainNav').classList.add('scrolled'); });
+    c = await colours();
+    expect(c.active).toBe(c.other);
+  });
+
+  test('footer links show a light solid keyboard outline', async ({ page }) => {
+    await page.goto('/about/');
+    await tabTo(page, '.site-footer-enhanced a');
+    const o = await page.evaluate(() => {
+      const s = getComputedStyle(document.activeElement);
+      return { style: s.outlineStyle, width: parseFloat(s.outlineWidth), colour: s.outlineColor };
+    });
+    expect(o.style).toBe('solid');
+    expect(o.width).toBeGreaterThanOrEqual(2);
+    const [r, g, b] = o.colour.match(/\d+/g).map(Number);
+    expect(Math.min(r, g, b)).toBeGreaterThanOrEqual(200);
+  });
+});
+
 test.describe('long words', () => {
   for (const width of [390, 360]) {
     test(`sitemap post does not overflow at ${width}`, async ({ page }) => {
