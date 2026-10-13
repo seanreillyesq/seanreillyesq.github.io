@@ -569,3 +569,32 @@ for (const width of [360, 390]) {
     });
   });
 }
+
+// A select must show its whole selected option: text + padding (which holds the arrow) fits the box.
+test.describe('SERP preview: selects show their whole selected option', () => {
+  for (const width of [360, 390, 576, 768, 900, 992, 1100, 1280]) {
+    test('at ' + width + 'px', async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/serp-preview/');
+      const cut = await page.evaluate(() => {
+        const ctx = document.createElement('canvas').getContext('2d');
+        const out = [];
+        document.querySelectorAll('select').forEach((s) => {
+          if (s.offsetParent === null) return;
+          const cs = getComputedStyle(s);
+          ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+          const chrome = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+          const keep = s.selectedIndex;
+          for (let i = 0; i < s.options.length; i++) {
+            s.selectedIndex = i;
+            const need = ctx.measureText(s.options[i].text).width + chrome;
+            if (need > s.getBoundingClientRect().width) out.push(s.id + ' "' + s.options[i].text + '" needs ' + Math.ceil(need) + ' has ' + Math.floor(s.getBoundingClientRect().width));
+          }
+          s.selectedIndex = keep;
+        });
+        return out;
+      });
+      expect(cut).toEqual([]);
+    });
+  }
+});
