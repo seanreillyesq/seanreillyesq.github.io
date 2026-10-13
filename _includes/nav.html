@@ -8,11 +8,12 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ site.baseurl }}/">Home</a>
+                    <a class="nav-link{% if current_url == '/' %} active{% endif %}"{% if current_url == '/' %} aria-current="page"{% endif %} href="{{ site.baseurl }}/">Home</a>
                 </li>
-                {% assign sorted_pages = site.pages | sort: "nav_order" %}{% for p in sorted_pages %}{% if p.title %}{% unless p.hidden or p.layout == 'archive' or p.url contains '/page/' or p.url == '/' or p.url == '/index.html' %}
+                {% assign current_url = page.url | replace: '/index.html', '/' %}{% assign sorted_pages = site.pages | sort: "nav_order" %}{% for p in sorted_pages %}{% if p.title %}{% unless p.hidden or p.layout == 'archive' or p.url contains '/page/' or p.url == '/' or p.url == '/index.html' %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ p.url | replace: '/index.html', '/' | prepend: site.baseurl }}">{{ p.menu | default: p.title }}</a>
+                    {% assign p_url = p.url | replace: '/index.html', '/' %}{% assign is_current = false %}{% if p_url == current_url %}{% assign is_current = true %}{% elsif p_url == '/blog/' and page.layout == 'post' %}{% assign is_current = true %}{% elsif p_url == '/blog/' and current_url contains '/page/' %}{% assign is_current = true %}{% elsif p_url == '/tools/' and page.tool %}{% assign is_current = true %}{% endif %}
+                    <a class="nav-link{% if is_current %} active{% endif %}"{% if is_current %} aria-current="page"{% endif %} href="{{ p_url | prepend: site.baseurl }}">{{ p.menu | default: p.title }}</a>
                 </li>
                 {% endunless %}{% endif %}{% endfor %}
             </ul>

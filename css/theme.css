@@ -927,3 +927,46 @@ hr.small {
 .site-footer-enhanced .social-icon:hover svg {
     opacity: 0.8;
 }
+
+/* ---- Current page marker in the menu ---- */
+.navbar .nav-link.active {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.4em;
+}
+.navbar:not(.navbar-transparent) .nav-link.active,
+.navbar-transparent.scrolled .nav-link.active {
+    color: var(--color-accent-hover);
+}
+
+/* ---- Keyboard focus (focus-visible only, so mouse clicks show nothing) ---- */
+.btn:focus-visible,
+.btn-accent:focus-visible,
+.btn-outline-accent:focus-visible,
+.navbar .nav-link:focus-visible,
+.navbar .navbar-brand:focus-visible {
+    outline: 3px solid var(--color-accent-hover);
+    outline-offset: 3px;
+    box-shadow: none;
+}
+/* Light outline where the background is a photo or dark */
+.navbar-transparent:not(.scrolled) .nav-link:focus-visible,
+.navbar-transparent:not(.scrolled) .navbar-brand:focus-visible,
+.site-footer-enhanced .btn:focus-visible,
+.site-footer-enhanced .nav-link:focus-visible {
+    outline-color: #fff;
+}
+/* Open phone menu has a white panel behind the links */
+.navbar-transparent .navbar-collapse.show .nav-link:focus-visible {
+    outline-color: var(--color-accent-hover);
+}
+
+/* ---- Long words in prose (not tools, tables or code) ---- */
+article p,
+article li,
+article blockquote,
+.page-content > p,
+.page-content > ul > li,
+.page-content > ol > li {
+    overflow-wrap: anywhere;
+}
