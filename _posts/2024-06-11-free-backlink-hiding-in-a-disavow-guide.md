@@ -15,7 +15,7 @@ hidden: true
 robots: noindex
 ---
 
-There's a UK agency guide to Google's disavow tool that I've pointed clients at for years. It's clear, it's sensible, and it's quietly handing out free backlinks to anyone who reads it closely enough. In April I took two of them.
+There's a UK agency guide to Google's disavow tool that I came across a couple of months ago. It's clear, it's sensible, and it's quietly handing out free backlinks to anyone who reads it closely enough. In April I took two of them.
 
 ## The worked example
 
