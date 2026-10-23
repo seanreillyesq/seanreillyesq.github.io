@@ -19,12 +19,11 @@ There's a UK agency guide to Google's disavow tool that I came across a couple o
 
 Like most good how-tos, the guide includes a worked example. To show the format of a disavow file, it walks through disavowing three made-up "bad" domains:
 
-> If, for example, you wanted to disavow three backlinks from: www.badlinks.com, www.disavowthislink.com and www.theworstbacklinkever.com
+> If, for example, you wanted to disavow three backlinks from: [a generic bad-links domain], www.disavowthislink.com and www.theworstbacklinkever.com
 
-...and then shows the text file you'd upload to Google:
+...and then shows the text file you'd upload to Google (the two that matter here):
 
 ```text
-domain:badlinks.com
 domain:disavowthislink.com
 domain:theworstbacklinkever.com
 ```
@@ -33,7 +32,7 @@ Perfectly reasonable. Here's the problem: in the published article, all three ex
 
 ## Two of the three were going spare
 
-Naturally I checked. `badlinks.com` was already registered to someone else. The other two - `disavowthislink.com` and `theworstbacklinkever.com` - belonged to nobody.
+Naturally I checked. One of the three was already registered to someone else. The other two - `disavowthislink.com` and `theworstbacklinkever.com` - belonged to nobody.
 
 So for the price of two domain registrations I now hold a followed link from an established, well-regarded SEO domain. From its own guide about backlinks. I'd like to say there was a grand plan. There wasn't. The idea of harvesting a free backlink out of an article on killing bad backlinks was simply too good to leave sitting there.
 
