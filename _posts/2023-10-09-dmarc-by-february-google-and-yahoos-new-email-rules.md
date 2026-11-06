@@ -45,8 +45,8 @@ And the requirements are exactly what every sender should have anyway. SPF, DKIM
 
 If this is the post you found and the other two are new to you:
 
-- **SPF** ([2014](/why-your-email-needs-an-spf-record-20140428/)) lists which servers may send as you.
-- **DKIM** ([2016](/why-you-need-dkim-as-well-as-spf-20160215/)) signs each message so a receiver can prove it really came from you, unchanged.
+- **[SPF](/why-your-email-needs-an-spf-record-20140428/)** (2014) lists which servers may send as you.
+- **[DKIM](/why-you-need-dkim-as-well-as-spf-20160215/)** (2016) signs each message so a receiver can prove it really came from you, unchanged.
 - **DMARC** ties both of those to the From address your readers actually see, tells receivers what to do when a message fails (`none`, `quarantine` or `reject`), and sends you reports listing everything sending mail as your domain.
 
 That last part is the quiet reason to do this even without a deadline. The first time you switch DMARC on in reporting mode for a domain, you almost always find legitimate systems nobody remembered were sending, an old form plugin, a finance tool, a newsletter from three jobs ago, and fairly often, someone spoofing you outright. The first time I switched a client to reporting mode, that is exactly what the reports showed: a steady trickle of mail going out to the world from servers that had nothing to do with them, their domain sitting in the From line. They had no idea it was happening. That is the normal state of affairs, because until you turn DMARC reporting on, nothing tells you.
