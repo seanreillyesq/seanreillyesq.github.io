@@ -57,7 +57,7 @@ Honestly, the reports alone are worth it, deadline or not. The first time you sw
 2. **Publish a DMARC record at `p=none`.** That switches on reporting without touching delivery:
 
 ```text
-v=DMARC1; p=none; rua=mailto:dmarc@yourdomain.com
+v=DMARC1; p=none; rua=mailto:dmarc@example.com
 ```
 
 3. **Read the reports for a few weeks.** Authorise or fix every legitimate sender you find.

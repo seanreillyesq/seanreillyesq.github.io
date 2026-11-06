@@ -42,7 +42,7 @@ You want both answered yes. Gmail's new question mark appears when it can't get 
 
 ## Setting it up, honestly less fun than SPF
 
-Your sending platform generates a key pair and hands you a DNS record to publish, usually under a name like `selector._domainkey.yourdomain.com`. Google Apps, MailChimp and the rest all have a DKIM or "authenticate your domain" setting now; you turn it on, copy the record into DNS, and the platform starts signing.
+Your sending platform generates a key pair and hands you a DNS record to publish, usually under a name like `selector._domainkey.example.com`. Google Apps, MailChimp and the rest all have a DKIM or "authenticate your domain" setting now; you turn it on, copy the record into DNS, and the platform starts signing.
 
 Two things make it more fiddly than SPF:
 
