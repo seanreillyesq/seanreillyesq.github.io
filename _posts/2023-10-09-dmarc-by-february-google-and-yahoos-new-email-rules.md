@@ -11,8 +11,6 @@ categories:
 tags:
 - Email
 - Deliverability
-hidden: true
-robots: noindex
 ---
 
 For years, advising someone to sort out their email authentication has meant arguing from best practice. "You should, because it helps deliverability, because it's the right thing." Reasonable, and easy to put off. As of last week there is a date on it instead.

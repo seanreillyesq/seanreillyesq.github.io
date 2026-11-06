@@ -11,8 +11,6 @@ categories:
 tags:
 - Email
 - Deliverability
-hidden: true
-robots: noindex
 ---
 
 Last week Gmail started showing a little question mark where a sender's photo or logo should be, on any message it can't authenticate. It is warnings-only for now, nothing gets blocked. But providers don't put a question mark next to your email and then forget about it. This won't stay cosmetic for long.

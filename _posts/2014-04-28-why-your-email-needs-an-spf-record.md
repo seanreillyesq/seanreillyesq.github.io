@@ -11,8 +11,6 @@ categories:
 tags:
 - Email
 - Deliverability
-hidden: true
-robots: noindex
 ---
 
 For something that has been around for a decade, SPF gets skipped by a lot of businesses that send real email every day. A good chunk of my work is working out why a client's perfectly ordinary newsletter has dropped into the junk folder, and the trail usually starts here.
