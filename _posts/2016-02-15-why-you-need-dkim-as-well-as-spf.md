@@ -15,7 +15,7 @@ hidden: true
 robots: noindex
 ---
 
-Last week Gmail started showing a little question mark where a sender's photo or logo should be, on any message it can't authenticate. It is warnings-only for now, nothing gets blocked. But providers don't paint a question mark next to your email and then quietly forget about it. The direction is not subtle.
+Last week Gmail started showing a little question mark where a sender's photo or logo should be, on any message it can't authenticate. It is warnings-only for now, nothing gets blocked. But providers don't put a question mark next to your email and then forget about it. This won't stay cosmetic for long.
 
 A couple of years ago I wrote about [SPF](/why-your-email-needs-an-spf-record-20140428/), the record that tells the world which servers may send mail for your domain. If you haven't done that yet, start there, because what follows sits on top of it. SPF is necessary. It is just no longer sufficient.
 
@@ -33,7 +33,7 @@ DomainKeys Identified Mail attaches a cryptographic signature to the message whe
 
 Because the signature covers the content and headers rather than the connection, it travels with the message. Forward it, and the signature still checks out. That is the whole point: DKIM proves the message really came from your domain and hasn't been tampered with on the way, which is a different question from the one SPF answers.
 
-A tidy way to hold the two in your head:
+The way I keep the two straight:
 
 - **SPF** asks: was this server allowed to send for the domain?
 - **DKIM** asks: was this message actually produced by the domain, and is it unchanged?
@@ -49,11 +49,11 @@ Two things make it more fiddly than SPF:
 - **Every sender signs separately.** With SPF you list all your services in one record. With DKIM, each platform that sends as you needs its own key and its own selector published. More records to keep track of.
 - **Long records trip up some DNS panels.** A 2048-bit key (and you should use 2048, not 1024) produces a TXT value long enough that older registrar interfaces mangle it or force you to split it across quoted strings. If DKIM "isn't working" an hour after you set it up, this is the first thing to check.
 
-The real ongoing cost is discipline. Change email provider, rotate a key, add a new tool, and if the DNS doesn't keep step you start failing silently. Nothing bounces. Your mail just drifts quietly toward the spam folder while everything looks fine from your side.
+The thing that bites you later is maintenance. Change email provider, rotate a key, add a new tool, and if the DNS doesn't keep step you start failing silently. Nothing bounces. Your mail just starts sliding into spam while everything looks fine from your side.
 
 ## Why this matters now rather than later
 
-The question mark is cosmetic today. What it tells you is where this is heading: authentication is moving from a thing the careful senders do to a thing receivers assume, and mail without it will keep losing ground in the inbox.
+The question mark does nothing today. But it tells you where things are going. Authentication used to be something only the careful senders bothered with. Now receivers expect it, and mail that skips it will keep losing ground in the inbox.
 
 There is a third piece that sits on top of SPF and DKIM, called DMARC. It lets you tell receivers what to do when a message fails both checks, and, usefully, it reports back who is sending mail as your domain. It is the natural next step once SPF and DKIM are both in place. Another post, another day.
 

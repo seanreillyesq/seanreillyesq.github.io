@@ -37,7 +37,7 @@ The threshold sounds like it lets small businesses off the hook. In practice I w
 
 It is easier to cross than you think. One decent promotional send to a mid-sized list, or a busy transactional system on a good day, and you are over it. The line is counted on a given day, not averaged.
 
-The enforcement is gradual and quiet. Non-compliant mail starts getting temporary errors on a slice of traffic, then more. You don't get a warning letter; your numbers just soften.
+The enforcement is gradual and easy to miss. Non-compliant mail starts getting temporary errors on a slice of traffic, then more. You don't get a warning letter; your numbers just soften.
 
 And the requirements are exactly what every sender should have anyway. SPF, DKIM and a DMARC record aren't a tax Google invented. They are the baseline for not being trivially impersonated. My honest advice: ignore the threshold and treat all of it as the new normal.
 
@@ -49,7 +49,7 @@ If this is the post you found and the other two are new to you:
 - **[DKIM](/why-you-need-dkim-as-well-as-spf-20160215/)** (2016) signs each message so a receiver can prove it really came from you, unchanged.
 - **DMARC** ties both of those to the From address your readers actually see, tells receivers what to do when a message fails (`none`, `quarantine` or `reject`), and sends you reports listing everything sending mail as your domain.
 
-That last part is the quiet reason to do this even without a deadline. The first time you switch DMARC on in reporting mode for a domain, you almost always find legitimate systems nobody remembered were sending, an old form plugin, a finance tool, a newsletter from three jobs ago, and fairly often, someone spoofing you outright. The first time I switched a client to reporting mode, that is exactly what the reports showed: a steady trickle of mail going out to the world from servers that had nothing to do with them, their domain sitting in the From line. They had no idea it was happening. That is the normal state of affairs, because until you turn DMARC reporting on, nothing tells you.
+Honestly, the reports alone are worth it, deadline or not. The first time you switch DMARC on in reporting mode for a domain, you almost always find legitimate systems nobody remembered were sending, an old form plugin, a finance tool, a newsletter from three jobs ago, and fairly often, someone spoofing you outright. The first time I switched a client to reporting mode, that is exactly what the reports showed: a steady trickle of mail going out to the world from servers that had nothing to do with them, their domain sitting in the From line. They had no idea it was happening. And why would they; until you turn DMARC reporting on, there is nothing to tell you.
 
 ## What to do before February
 

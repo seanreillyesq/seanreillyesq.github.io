@@ -53,15 +53,15 @@ Start with `~all`. Once you are certain every legitimate sending source is in th
 
 ## Two things that will bite you
 
-**The ten-lookup limit.** An SPF record is only allowed to trigger ten DNS lookups when it is evaluated. Every `include:` counts, and some providers' includes contain further includes of their own. Stack up enough services and you quietly blow the limit, at which point the whole record is treated as broken rather than strict. If you lean on a lot of third-party senders, this is the trap.
+**The ten-lookup limit.** An SPF record is only allowed to trigger ten DNS lookups when it is evaluated. Every `include:` counts, and some providers' includes contain further includes of their own. Stack up enough services and you go over the limit without noticing, at which point the whole record is treated as broken rather than strict. If you lean on a lot of third-party senders, this is the trap.
 
 **Forwarding breaks it.** This is the honest limitation of SPF, and worth understanding before you rely on it too heavily. When someone forwards your email, the forwarding server is not in your SPF record, so the forwarded copy fails the check. SPF verifies the sending server, not the message, so it has no way of knowing the content started life as a legitimate mail from you.
 
-That second problem is exactly why SPF is not the end of the story. There is a companion standard, DKIM, that signs the message itself rather than checking the server, and it survives being forwarded. I will come back to it in another post, because it earns its own.
+That second problem is exactly why SPF is not the end of the story. There is a companion standard, DKIM, that signs the message itself rather than checking the server, and it survives being forwarded. I will come back to DKIM in a post of its own.
 
 ## Worth doing this month
 
-SPF has been usable for years, but this month it finally graduated from an experimental specification to a proper standards-track document, <a href="https://datatracker.ietf.org/doc/html/rfc7208" target="_blank">RFC 7208</a>. That changes nothing overnight. What it signals is that the thing is settled, the providers are building around it, and "we'll sort email authentication later" is getting harder to justify with a straight face.
+SPF has been usable for years, but this month it finally graduated from an experimental specification to a proper standards-track document, <a href="https://datatracker.ietf.org/doc/html/rfc7208" target="_blank">RFC 7208</a>. That changes nothing overnight. But it means the thing is settled now; the providers are building around it, and "we'll sort out email authentication later" is getting harder to justify.
 
 If you do nothing else after reading this:
 
