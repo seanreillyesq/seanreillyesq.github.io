@@ -54,9 +54,8 @@ Honestly, the reports alone are worth it, deadline or not. The first time you sw
 1. **SPF and DKIM on every sending source.** The two earlier posts walk through both. This is the foundation and nothing else works without it.
 2. **Publish a DMARC record at `p=none`.** That switches on reporting without touching delivery:
 
-```text
-v=DMARC1; p=none; rua=mailto:dmarc@example.com
-```
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v=DMARC1; p=none; rua=mailto:<!--email_off-->dmarc@example.com<!--/email_off-->
+</code></pre></div></div>
 
 3. **Read the reports for a few weeks.** Authorise or fix every legitimate sender you find.
 4. **Only then tighten** to `p=quarantine`, and later `p=reject`, once the reports are clean.
