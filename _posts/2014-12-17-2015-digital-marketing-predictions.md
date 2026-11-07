@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2014-12-17 09:00:00+00:00
+last_modified_at: 2014-12-17 09:00:00+00:00
 layout: post
 slug: 2015-digital-marketing-predictions
 hidden: true

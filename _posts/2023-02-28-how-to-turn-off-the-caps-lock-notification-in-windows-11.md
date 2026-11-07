@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2023-02-28 10:05:00+00:00
+last_modified_at: 2023-02-28 10:05:00+00:00
 layout: post
 title: "How to Disable Caps Lock Notifications in Windows 11"
 header-img: img/caps-lock-notification-windows-11.jpg

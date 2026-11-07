@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2016-10-15 09:00:00+00:00
+last_modified_at: 2016-10-15 09:00:00+00:00
 layout: post
 title: "Microsoft 30 Digital Champions: Watchfinder Video Feature"
 header-img: "img/watchfinder-digital-champions.jpg"

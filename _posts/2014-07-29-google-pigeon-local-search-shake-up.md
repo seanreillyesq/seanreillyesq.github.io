@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2014-07-29 09:00:00+00:00
+last_modified_at: 2014-07-29 09:00:00+00:00
 layout: post
 slug: google-pigeon-local-search-shake-up
 hidden: true

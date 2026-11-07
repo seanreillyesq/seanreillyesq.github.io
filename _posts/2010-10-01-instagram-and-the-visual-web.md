@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2010-10-01 18:00:00+00:00
+last_modified_at: 2010-10-01 18:00:00+00:00
 layout: post
 title: "Instagram and the Visual Web: What Publishers Should Watch"
 header-img: "img/instagram-visual-web-2010.jpg"

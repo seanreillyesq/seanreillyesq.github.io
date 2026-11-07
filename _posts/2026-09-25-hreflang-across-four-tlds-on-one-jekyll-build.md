@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2026-09-25 09:00:00+00:00
+last_modified_at: 2026-09-25 09:00:00+00:00
 layout: post
 title: "hreflang across four TLDs on one Jekyll build"
 header-img: "img/post-bg-03.jpg"

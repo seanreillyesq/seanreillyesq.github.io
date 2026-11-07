@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2011-03-15 09:00:00+00:00
+last_modified_at: 2011-03-15 09:00:00+00:00
 layout: post
 slug: why-publishers-need-content-strategy
 hidden: true

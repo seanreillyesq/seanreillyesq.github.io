@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2015-04-21 09:00:00+00:00
+last_modified_at: 2015-04-21 09:00:00+00:00
 layout: post
 slug: experiential-marketing-luxury
 hidden: true

@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2023-08-29 09:00:00+00:00
+last_modified_at: 2023-08-29 09:00:00+00:00
 layout: post
 slug: august-2023-core-update-before-you-panic
 hidden: true

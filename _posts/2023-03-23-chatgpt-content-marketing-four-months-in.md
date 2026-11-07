@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2023-03-23 09:00:00+00:00
+last_modified_at: 2023-03-23 09:00:00+00:00
 layout: post
 slug: chatgpt-content-marketing-four-months-in
 hidden: true

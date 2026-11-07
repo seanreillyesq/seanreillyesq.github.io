@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2012-11-15 09:00:00+00:00
+last_modified_at: 2012-11-15 09:00:00+00:00
 layout: post
 slug: responsive-ecommerce-performance
 hidden: true

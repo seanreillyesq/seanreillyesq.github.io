@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2013-01-14 09:00:00+00:00
+last_modified_at: 2013-01-14 09:00:00+00:00
 layout: post
 slug: seo-2013-technical-fundamentals
 hidden: true

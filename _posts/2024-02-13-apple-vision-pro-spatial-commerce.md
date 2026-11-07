@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2024-02-13 10:15:00+00:00
+last_modified_at: 2024-02-13 10:15:00+00:00
 layout: post
 slug: apple-vision-pro-spatial-commerce
 hidden: true

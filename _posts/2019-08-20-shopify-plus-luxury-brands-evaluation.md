@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2019-08-20 09:00:00+00:00
+last_modified_at: 2019-08-20 09:00:00+00:00
 layout: post
 slug: shopify-plus-luxury-brands-evaluation
 hidden: true

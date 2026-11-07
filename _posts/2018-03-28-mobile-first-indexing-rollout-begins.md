@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2018-03-28 09:00:00+00:00
+last_modified_at: 2018-03-28 09:00:00+00:00
 layout: post
 slug: mobile-first-indexing-rollout-begins
 hidden: true

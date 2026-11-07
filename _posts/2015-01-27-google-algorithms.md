@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2015-01-27 07:30:59+00:00
+last_modified_at: 2015-01-27 07:30:59+00:00
 layout: post
 title: "How to make Google algorithms work for you"
 header-img: "img/google-algorithms.jpg"

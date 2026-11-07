@@ -2,6 +2,7 @@
 layout: post
 title: "Mobile Marketing Isn't Coming - It's Here"
 date: 2010-11-01 09:30:00 +0000
+last_modified_at: 2010-11-01 09:30:00 +0000
 author: Sean
 comments: true
 header-img: "img/mobile-marketing-isnt-coming-its-here.jpg"

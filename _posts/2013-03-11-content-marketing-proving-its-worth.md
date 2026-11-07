@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2013-03-11 09:00:00+00:00
+last_modified_at: 2013-03-11 09:00:00+00:00
 layout: post
 slug: content-marketing-proving-its-worth
 hidden: true

@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2011-06-05 10:43:19+00:00
+last_modified_at: 2011-06-05 10:43:19+00:00
 layout: post
 slug: calamorro-mountain-benalmadena
 title: Calamorro - A confusing run up a sunny mountain

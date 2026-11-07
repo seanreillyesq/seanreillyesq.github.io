@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2015-02-27 09:00:00+00:00
+last_modified_at: 2015-02-27 09:00:00+00:00
 layout: post
 slug: google-mobile-friendly-update-april
 hidden: true

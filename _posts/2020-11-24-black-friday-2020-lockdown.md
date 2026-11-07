@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2020-11-24 09:00:00+00:00
+last_modified_at: 2020-11-24 09:00:00+00:00
 layout: post
 slug: black-friday-2020-lockdown
 hidden: true

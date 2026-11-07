@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2011-05-17 09:00:00+00:00
+last_modified_at: 2011-05-17 09:00:00+00:00
 layout: post
 slug: local-seo-multi-location-businesses
 hidden: true

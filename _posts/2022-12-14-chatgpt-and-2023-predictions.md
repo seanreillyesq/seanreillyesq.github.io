@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2022-12-14 09:00:00+00:00
+last_modified_at: 2022-12-14 09:00:00+00:00
 layout: post
 slug: chatgpt-and-2023-predictions
 hidden: true

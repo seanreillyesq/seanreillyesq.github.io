@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2018-10-09 09:00:00+00:00
+last_modified_at: 2018-10-09 09:00:00+00:00
 layout: post
 slug: instagram-shopping-luxury-brands
 hidden: true

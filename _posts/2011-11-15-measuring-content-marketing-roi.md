@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2011-11-15 09:00:00+00:00
+last_modified_at: 2011-11-15 09:00:00+00:00
 layout: post
 slug: measuring-content-marketing-roi
 hidden: true

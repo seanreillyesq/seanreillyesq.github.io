@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2018-01-01 17:51:57+00:00
+last_modified_at: 2018-01-01 17:51:57+00:00
 layout: post
 title: Useful Digital Marketing Learning Resources
 header-img: img/google-algorithms.jpg

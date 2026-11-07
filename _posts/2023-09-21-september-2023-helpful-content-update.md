@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2023-09-21 09:00:00+00:00
+last_modified_at: 2023-09-21 09:00:00+00:00
 layout: post
 slug: september-2023-helpful-content-update
 hidden: true

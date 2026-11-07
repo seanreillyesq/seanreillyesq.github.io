@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2016-03-22 09:00:00+00:00
+last_modified_at: 2016-03-22 09:00:00+00:00
 layout: post
 slug: marketplace-vs-branded-ecommerce-luxury
 hidden: true

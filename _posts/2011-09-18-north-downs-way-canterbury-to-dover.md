@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2011-09-18 20:00:00+00:00
+last_modified_at: 2011-09-18 20:00:00+00:00
 layout: post
 slug: north-downs-way-canterbury-to-dover
 title: "Nineteen miles to Dover, and a pint where the Channel swimmers sign"

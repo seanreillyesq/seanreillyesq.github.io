@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2014-01-15 09:00:00+00:00
+last_modified_at: 2014-01-15 09:00:00+00:00
 layout: post
 slug: mobile-seo-audit-what-agencies-miss
 hidden: true

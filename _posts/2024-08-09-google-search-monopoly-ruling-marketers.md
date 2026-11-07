@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2024-08-09 09:00:00+01:00
+last_modified_at: 2024-08-09 09:00:00+01:00
 layout: post
 slug: google-search-monopoly-ruling-marketers
 hidden: true

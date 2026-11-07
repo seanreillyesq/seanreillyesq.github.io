@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2010-09-28 09:15:00+00:00
+last_modified_at: 2010-09-28 09:15:00+00:00
 layout: post
 title: "Why Google Places is the Future of Local Marketing"
 header-img: "img/google-places.jpg"

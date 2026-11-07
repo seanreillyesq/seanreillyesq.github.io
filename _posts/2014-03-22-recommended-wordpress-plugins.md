@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2014-03-22 18:35:25+00:00
+last_modified_at: 2014-03-22 18:35:25+00:00
 layout: post
 slug: recommended-wordpress-plugins
 title: Recommended WordPress Plugins

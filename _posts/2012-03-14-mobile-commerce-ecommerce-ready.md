@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2012-03-14 09:00:00+00:00
+last_modified_at: 2012-03-14 09:00:00+00:00
 layout: post
 slug: mobile-commerce-ecommerce-ready
 hidden: true

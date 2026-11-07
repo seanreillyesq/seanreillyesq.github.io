@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2020-08-18 09:00:00+00:00
+last_modified_at: 2020-08-18 09:00:00+00:00
 layout: post
 slug: luxury-brands-crisis-behaviour
 hidden: true

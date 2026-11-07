@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2025-06-30 09:00:00+01:00
+last_modified_at: 2025-06-30 09:00:00+01:00
 layout: post
 title: "AI Search & SEO - What Marketers Should Really Be Asking"
 header-img: "img/ai-search-seo-what-marketers-should-ask.jpg"

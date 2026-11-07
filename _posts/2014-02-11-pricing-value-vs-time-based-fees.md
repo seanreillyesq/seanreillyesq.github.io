@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2014-02-11 09:00:00+00:00
+last_modified_at: 2014-02-11 09:00:00+00:00
 layout: post
 slug: pricing-value-vs-time-based-fees
 hidden: true

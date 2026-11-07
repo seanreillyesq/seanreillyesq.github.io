@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2015-01-08 07:30:59+00:00
+last_modified_at: 2015-01-08 07:30:59+00:00
 layout: post
 title: "Seven Steps to Successful Content Marketing"
 header-img: "img/content-marketing.jpg"

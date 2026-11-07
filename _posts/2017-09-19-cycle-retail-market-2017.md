@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2017-09-19 09:00:00+00:00
+last_modified_at: 2017-09-19 09:00:00+00:00
 layout: post
 slug: cycle-retail-market-2017
 hidden: true

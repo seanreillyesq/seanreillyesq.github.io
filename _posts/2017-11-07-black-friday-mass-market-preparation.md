@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2017-11-07 09:00:00+00:00
+last_modified_at: 2017-11-07 09:00:00+00:00
 layout: post
 slug: black-friday-mass-market-preparation
 hidden: true

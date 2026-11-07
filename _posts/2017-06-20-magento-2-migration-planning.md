@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2017-06-20 09:00:00+00:00
+last_modified_at: 2017-06-20 09:00:00+00:00
 layout: post
 slug: magento-2-migration-planning
 hidden: true

@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2010-12-01 09:00:00+00:00
+last_modified_at: 2010-12-01 09:00:00+00:00
 layout: post
 redirect_from:
   - /content-marketing-2011-20101201

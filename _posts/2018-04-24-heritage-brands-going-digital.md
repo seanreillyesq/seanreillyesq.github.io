@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2018-04-24 09:00:00+00:00
+last_modified_at: 2018-04-24 09:00:00+00:00
 layout: post
 slug: heritage-brands-going-digital
 hidden: true

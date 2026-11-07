@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2021-02-25 19:45:00+00:00
+last_modified_at: 2021-02-25 19:45:00+00:00
 layout: post
 slug: pandemic-ecommerce-what-stays
 hidden: true

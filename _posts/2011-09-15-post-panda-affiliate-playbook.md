@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2011-09-15 09:00:00+00:00
+last_modified_at: 2011-09-15 09:00:00+00:00
 layout: post
 slug: post-panda-affiliate-playbook
 hidden: true

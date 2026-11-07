@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2026-10-02 09:00:00+00:00
+last_modified_at: 2026-10-02 09:00:00+00:00
 layout: post
 title: "Four sitemaps and an index, Jekyll without the plugin"
 header-img: "img/post-bg-03.jpg"

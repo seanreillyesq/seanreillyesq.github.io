@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2021-01-28 08:30:00+00:00
+last_modified_at: 2021-01-28 08:30:00+00:00
 layout: post
 slug: core-web-vitals-page-experience-update-explained
 hidden: true

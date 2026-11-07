@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2013-03-15 09:00:00+00:00
+last_modified_at: 2013-03-15 09:00:00+00:00
 layout: post
 title: "Lessons from Rebranding a Digital Agency"
 header-img: "img/post-bg-01.jpg"

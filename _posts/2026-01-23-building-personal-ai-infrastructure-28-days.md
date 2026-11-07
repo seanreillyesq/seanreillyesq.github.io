@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2026-01-23 12:00:00+00:00
+last_modified_at: 2026-01-23 12:00:00+00:00
 layout: post
 title: "Building a Personal AI Infrastructure in 28 Days"
 header-img: "img/building-personal-ai-infrastructure.jpg"

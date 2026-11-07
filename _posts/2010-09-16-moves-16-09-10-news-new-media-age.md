@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2010-09-16 21:23:59+00:00
+last_modified_at: 2010-09-16 21:23:59+00:00
 layout: post
 title: New Media Age Moves - 16.09.10
 header-img: "img/moves.jpg"

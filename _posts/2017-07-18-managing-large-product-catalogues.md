@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2017-07-18 09:00:00+00:00
+last_modified_at: 2017-07-18 09:00:00+00:00
 layout: post
 slug: managing-large-product-catalogues
 hidden: true

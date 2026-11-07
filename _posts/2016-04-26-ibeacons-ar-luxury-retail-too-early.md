@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2016-04-26 09:00:00+00:00
+last_modified_at: 2016-04-26 09:00:00+00:00
 layout: post
 slug: ibeacons-ar-luxury-retail-too-early
 hidden: true

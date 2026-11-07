@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2013-08-14 09:00:00+00:00
+last_modified_at: 2013-08-14 09:00:00+00:00
 layout: post
 slug: shift-toward-semantic-search
 hidden: true

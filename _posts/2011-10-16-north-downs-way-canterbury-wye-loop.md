@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2011-10-16 19:30:00+00:00
+last_modified_at: 2011-10-16 19:30:00+00:00
 layout: post
 slug: north-downs-way-canterbury-wye-loop
 title: "Twenty-five miles to Wye and back, and a pint at the Tickled Trout"

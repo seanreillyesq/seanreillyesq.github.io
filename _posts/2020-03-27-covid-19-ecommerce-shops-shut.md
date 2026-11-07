@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2020-03-27 09:00:00+00:00
+last_modified_at: 2020-03-27 09:00:00+00:00
 layout: post
 slug: covid-19-ecommerce-shops-shut
 hidden: true

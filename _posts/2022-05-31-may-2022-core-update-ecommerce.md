@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2022-05-31 09:00:00+00:00
+last_modified_at: 2022-05-31 09:00:00+00:00
 layout: post
 slug: may-2022-core-update-ecommerce
 hidden: true

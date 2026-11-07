@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2020-06-25 09:00:00+00:00
+last_modified_at: 2020-06-25 09:00:00+00:00
 layout: post
 slug: post-lockdown-ecommerce-spike-or-shift
 hidden: true

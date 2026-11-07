@@ -2,6 +2,7 @@
 author: Sean
 comments: true
 date: 2010-10-01 21:28:21+00:00
+last_modified_at: 2010-10-01 21:28:21+00:00
 layout: post
 slug: new-media-age-launches-traffic-update-site-traffic-resource-news-new-media-age
 title: new media age launches Traffic Update site traffic resource
