@@ -20,32 +20,29 @@ hidden: true
 robots: noindex
 ---
 
-<p class="lead">There is a small nature reserve tucked into a loop of the River Stour at Sandwich, and I have known it since I was a boy. I went back this morning for the first time in years. It is still there, which these days feels like something worth saying out loud.</p>
+<p class="lead">There is a small nature reserve folded into a loop of the River Stour at Sandwich. I have known it since I was a boy, and I went back this morning for the first time in years.</p>
 
-Gazen Salts is about fifteen acres of woodland, water and reedbed, hidden off Strand Street behind the old town. You would walk past the entrance without noticing it, which is part of the charm. Most people who come to Sandwich go for the medieval streets, the Quay, the toll bridge over the Stour. Hardly anyone realises that two minutes from the town centre there is a lake with a kingfisher on it.
+Gazen Salts is about fifteen acres of woodland, water and reedbed, tucked off Strand Street behind the old town. The entrance is easy to miss. Most people who come to Sandwich come for the medieval streets, the Quay, the toll bridge over the Stour, and never find out that two minutes from the town centre there is a lake with a kingfisher on it.
 
-I came here as a kid, with my sister Mary and our friends Elenor and Madeline. The dykes then were as choked with weed as they are now, and half-sunk logs would drift in them, and I had decided, with total conviction, that these were crocodiles. Not content with scaring myself, I talked Mary into believing it too; that was most of the fun. A weedy ditch in Kent, a few floating logs, and one small boy running a crocodile scare for the benefit of his little sister. I could not have told you then that the whole place was man-made, or barely older than I was. It just felt like it had always been there, and faintly dangerous, which is exactly what you want from a childhood place.
+I came here as a kid, with my sister Mary and our friends Elenor and Madeline. The dykes then were as choked with weed as they are now, and half-sunk logs drifted about in them, and I had decided the logs were crocodiles. I more or less believed it myself. Better than that, I talked Mary into believing it too, and winding her up was most of the point. I did not know then that the whole place was man-made, and barely older than I was. It felt like it had always been there.
 
 ## A reserve with a strange name and a made-up past
 
-The name throws people. It is not "Grazen", and it has nothing to do with grazing. "Salts" is the old word for the saltings, the tidal salt marsh along the Stour. "Gazen" is a worn-down surname: a man called **John Gason** held the lease on these saltings back in the seventeenth century, and over a few hundred years "Gason's salts" slurred into "Gazen Salts". A field named after a long-dead tenant farmer. I rather like that nobody bothered to tidy it up.
+The name throws people. It is not "Grazen", and it has nothing to do with grazing. "Salts" is the old word for the saltings, the tidal salt marsh along the Stour. "Gazen" is a worn-down surname: a man called **John Gason** held the lease on these saltings in the seventeenth century, and over a few hundred years "Gason's salts" slurred into "Gazen Salts". The place is still named after a tenant farmer nobody remembers.
 
-The reserve itself is younger than it looks. It was dug out in **1973**, designed by a local naturalist called Dennis Harle, on a patch of ground that had been grazing fields, old allotments, a disused rubbish tip and a builder's yard. Not promising material. Fifty years on it has a lake, a scrape, a round pond, reedbeds and a ring of woodland with something like sixty species of tree and shrub in it, and over 160 kinds of bird have been recorded. There is a memorial to Harle near the middle of it, which seems only right. He imagined all of this onto a tip.
+The reserve itself is younger than it looks. It was dug out in **1973**, designed by a local naturalist called Dennis Harle, on ground that had been grazing fields, old allotments, a disused rubbish tip and a builder's yard. Not promising material. Fifty years on it has a lake, a scrape, a round pond, reedbeds and a ring of woodland with something like sixty species of tree and shrub, and over 160 kinds of bird recorded. There is a memorial to Harle near the middle of the reserve.
 
 ## The years it was shut
 
-<!-- MEMORY: PANDEMIC - this matches what you told me; correct or enrich as you like.
-     Who was with you (Nicole and the kids)? what did you tell them it would be?
-     how did it feel to find the gate shut? -->
-There was a long stretch when you could not get in at all, and I walked straight into it. Sometime during the pandemic, in one of those windows when the rules eased and we were allowed out properly again, I decided to bring my own family to the place I remembered. I wanted to show them the lake, the woods, the secret-feeling bit of Sandwich I had carried around in my head for thirty-odd years. We got there and it was shut. Gate closed, no way in. I remember the particular flatness of that, standing outside somewhere that had meant a lot to me and not being able to pass on a single bit of it.
+There was a long stretch when you could not get in at all, and I walked straight into it. Sometime during the pandemic, in one of those windows when the rules eased and we were allowed out properly again, I decided to bring my own family to the place I remembered. I wanted to show them the lake, the woods, the secret-feeling bit of Sandwich I had carried around in my head for thirty-odd years. We got there and it was shut. Gate closed, no way in. I had built the whole trip up in my head and then stood outside, unable to show them any of it.
 
-What I did not know at the time was why. In December 2013 a tidal surge put Sandwich under water, and Gazen Salts, sitting in its river loop, took the full force of it. The brackish ecosystems the reserve had spent forty years building were, in the words of its own leaflet, "all but destroyed". It closed, and it stayed closed for years. My locked gate was not bad luck on the day; it was a reserve that had drowned and not yet been brought back.
+What I did not know at the time was why. In December 2013 a tidal surge put Sandwich under water, and Gazen Salts, sitting in its river loop, took the full force of it. The brackish ecosystems the reserve had spent forty years building were, in the words of its own leaflet, "all but destroyed". It closed, and it stayed closed for years. That is what I had walked into on the day; I just did not know it at the time.
 
 ## The people who brought it back
 
 In 2019 a group of volunteers simply set to work. No grand reopening, no fanfare that I ever saw; just people turning up to reclaim and regenerate a flooded wreck of a place, Wednesday morning after Wednesday morning. It is run entirely by the Gazen Salts Trust now, a registered charity kept going by those volunteers and by donations, with help over the years from Dover District Council, the Sandwich Toll Bridge Fund and the Kent Community Foundation.
 
-They still meet every Wednesday, nine until noon, all year round. That is the whole reason I was able to walk through the gate this morning. Worth remembering, next time any of us moans about the state of the local green spaces: somewhere near you, a handful of people in wellies are quietly fixing one.
+They still meet every Wednesday, nine until noon, all year round. That is the only reason the gate was open when I turned up this morning.
 
 <figure class="text-center my-4">
   <img src="/assets/gazen-salts/friends-of-gazen.jpg" alt="A 'Friends of Gazen - Donations Welcome' sign beside an old green cast-iron honesty box stamped THANK YOU" class="img-fluid rounded mx-auto d-block" style="max-height:620px">
@@ -68,7 +65,7 @@ The lake is the heart of it, fed through a sluice from the tidal Stour, so the w
   <figcaption class="caption mt-2">One of the dykes, green from bank to bank. Still no crocodiles, Mary. I checked.</figcaption>
 </figure>
 
-Down at the feeding station the regulars were out in force, and among the mallards, improbably, a mandarin drake: copper cheeks, mad orange sail-feathers, the lot, picking seed off the wood chip as if he owned it. Not native, mandarins, but long escaped and thoroughly at home. The leaflet also claims, straight-faced, that there is now evidence of beavers on the reserve, and tells you to look out for chewed branches. I looked. I cannot honestly report a beaver, but I enjoyed the looking.
+Down at the feeding station the regulars were out in force, and among the mallards, improbably, a mandarin drake: copper cheeks, mad orange sail-feathers, the lot, picking seed off the wood chip as if he owned it. Not native, mandarins, but long escaped and thoroughly at home. The leaflet also claims, straight-faced, that there is now evidence of beavers on the reserve, and tells you to watch for chewed branches. I looked, and did not see one.
 
 <figure class="text-center my-4">
   <img src="/assets/gazen-salts/mandarin-duck.jpg" alt="A mandarin drake feeding on the wood-chip bank among mallards at Gazen Salts" class="img-fluid rounded mx-auto d-block" style="max-height:620px">
@@ -82,11 +79,11 @@ Down at the feeding station the regulars were out in force, and among the mallar
   <figcaption class="caption mt-2">Breakfast at the feeding station, the whole greedy committee of them.</figcaption>
 </figure>
 
-My favourite corner is Gallows Field, at the southern end, for the sheer cheerful darkness of the name. It is exactly what it sounds like: long ago it was where Sandwich executed and buried its criminals. Today it is a rough wildflower meadow, butterflies in summer and, apparently, harvest mice, with the chimneys and rooftops of the old town rising just beyond the grass. Kent does this well, I think; a meadow of orange-tip butterflies sitting on top of centuries of hanged men, and nobody making a fuss about it.
+My favourite corner is Gallows Field, at the southern end, mostly for the name. It is exactly what it sounds like: this is where Sandwich used to hang and bury its criminals. Now it is a rough wildflower meadow, butterflies in summer and harvest mice according to the leaflet, with the chimneys and rooftops of the old town rising just beyond the grass.
 
 <figure class="text-center my-4">
   <img src="/assets/gazen-salts/meadow-and-town.jpg" alt="Rough meadow grass in Gallows Field with the old rooftops and chimneys of Sandwich behind" class="img-fluid rounded mx-auto d-block" style="max-height:620px">
-  <figcaption class="caption mt-2">Gallows Field, with Sandwich's old roofs just over the grass. Nicer than its history.</figcaption>
+  <figcaption class="caption mt-2">Gallows Field, with Sandwich's old roofs just over the grass.</figcaption>
 </figure>
 
 <div class="card card-body my-4">
@@ -100,7 +97,7 @@ My favourite corner is Gallows Field, at the southern end, for the sheer cheerfu
 </ul>
 </div>
 
-I will be bringing my family back, now the gate opens. Thirty years late on the trip I tried to make, but the place waited, and other people made sure it was worth the wait.
+I will bring the family back now the gate is open again. Later than I meant to by about thirty years. But it is open, and that is down to the Wednesday crew, not to me.
 
 ---
 
