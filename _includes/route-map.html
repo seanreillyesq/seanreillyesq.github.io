@@ -33,8 +33,24 @@ required data attribution, and lock pan/zoom to the walk area.
   fetch('{{ include.route }}')
     .then(function (r) { return r.json(); })
     .then(function (geo) {
+      function routeColour(f) { return (f.properties && f.properties.color) || '#e60000'; }
       L.geoJSON(geo, { style: { color: '#ffffff', weight: 8, opacity: 0.85 } }).addTo(map); // casing
-      L.geoJSON(geo, { style: { color: '#e60000', weight: 4.5, opacity: 1 } }).addTo(map);   // route
+      L.geoJSON(geo, { style: function (f) { return { color: routeColour(f), weight: 4.5, opacity: 1 }; } }).addTo(map); // route
+      // Optional legend: only if features carry a name (multi-route maps); single-route posts are unchanged.
+      var named = (geo.features || []).filter(function (f) { return f.properties && f.properties.name; });
+      if (named.length > 1) {
+        var legend = L.control({ position: 'bottomright' });
+        legend.onAdd = function () {
+          var d = L.DomUtil.create('div');
+          d.style.cssText = 'background:rgba(255,255,255,0.9);padding:6px 9px;border-radius:5px;font:13px/1.4 sans-serif;box-shadow:0 1px 4px rgba(0,0,0,0.3)';
+          d.innerHTML = named.map(function (f) {
+            var km = f.properties.km ? ' (' + f.properties.km + ' km)' : '';
+            return '<span style="display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px;background:' + routeColour(f) + '"></span>' + f.properties.name + km;
+          }).join('<br>');
+          return d;
+        };
+        legend.addTo(map);
+      }
       var b = L.geoJSON(geo).getBounds();
       map.fitBounds(b, { padding: [25, 25] });
       map.setMinZoom(map.getZoom());       // can't zoom out past the walk
