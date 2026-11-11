@@ -65,7 +65,7 @@ The lake is the heart of it, fed through a sluice from the tidal Stour, so the w
   <figcaption class="caption mt-2">One of the dykes, green from bank to bank. Still no crocodiles, Mary. I checked.</figcaption>
 </figure>
 
-Down at the feeding station the regulars were out in force, and among the mallards, improbably, a mandarin drake: copper cheeks, mad orange sail-feathers, the lot, picking seed off the wood chip as if he owned it. Not native, mandarins, but long escaped and thoroughly at home. The leaflet also claims, straight-faced, that there is now evidence of beavers on the reserve, and tells you to watch for chewed branches. I looked, and did not see one.
+Down at the feeding station the regulars were out in force, and among the mallards, improbably, a mandarin drake: copper cheeks, mad orange sail-feathers, the lot, picking seed off the wood chip as if he owned it. Not native, mandarins, but long escaped and thoroughly at home. The leaflet also points out that there are beavers on the Stour now, and tells you to watch for chewed branches. I looked, but did not see one.
 
 <figure class="text-center my-4">
   <img src="/assets/gazen-salts/mandarin-duck.jpg" alt="A mandarin drake feeding on the wood-chip bank among mallards at Gazen Salts" class="img-fluid rounded mx-auto d-block" style="max-height:620px">
