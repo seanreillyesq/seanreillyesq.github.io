@@ -16,8 +16,6 @@ tags:
 header-img: "img/gazen-salts-nature-reserve-sandwich.jpg"
 header_overlay: true
 meta-description: "A return to Gazen Salts nature reserve in Sandwich - the place I loved as a kid, the flood that nearly killed it, and the volunteers who brought it back."
-hidden: true
-robots: noindex
 ---
 
 <p class="lead">There is a small nature reserve folded into a loop of the River Stour at Sandwich. I have known it since I was a boy, and I went back this morning for the first time in years.</p>
