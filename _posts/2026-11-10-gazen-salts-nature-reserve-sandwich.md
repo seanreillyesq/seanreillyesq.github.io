@@ -34,7 +34,7 @@ The reserve itself is younger than it looks. It was dug out in **1973**, designe
 
 ## The years it was shut
 
-There was a long stretch when you could not get in at all, and I walked straight into it. Sometime during the pandemic, in one of those windows when the rules eased and we were allowed out properly again, I decided to bring my own family to the place I remembered. I wanted to show them the lake, the woods, the secret-feeling bit of Sandwich I had carried around in my head for thirty-odd years. We got there and it was shut. Gate closed, no way in. I had built the whole trip up in my head and then stood outside, unable to show them any of it.
+There was a long stretch when you could not get in at all, and I walked straight into it. Back in 2016 I decided to bring my own family to the place I remembered. I wanted to show them the lake, the woods, the secret-feeling bit of Sandwich I had carried around in my head since I was a boy. We got there and it was shut. Gate closed, no way in. I had built the whole trip up and then stood outside, unable to show them any of it. We drove up the road to Richborough Fort instead and made an afternoon of the Roman ruins - a good day out, just not the one I had planned.
 
 What I did not know at the time was why. In December 2013 a tidal surge put Sandwich under water, and Gazen Salts, sitting in its river loop, took the full force of it. The brackish ecosystems the reserve had spent forty years building were, in the words of its own leaflet, "all but destroyed". It closed, and it stayed closed for years. That is what I had walked into on the day; I just did not know it at the time.
 
