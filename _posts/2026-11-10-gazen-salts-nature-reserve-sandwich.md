@@ -93,6 +93,7 @@ My favourite corner is Gallows Field, at the southern end, mostly for the name. 
 <li><strong>Cost:</strong> free, no opening restrictions.</li>
 <li><strong>Dogs:</strong> not allowed (assistance dogs excepted). Keep to the paths.</li>
 <li><strong>Trails:</strong> Woodland Walk (~35 min) and Field and Meadow Walk (~25 min), both flat and easy.</li>
+<li><strong>Access:</strong> the main paths are flat wood chip, firm enough for an off-road pushchair or a sturdy wheelchair in dry weather, though they do get muddy after rain. One meadow in the middle has a few steps at each end, so it is not fully step-free. No toilets on site; there is a buggy and bike rack by the gate. If step-free access matters, worth a quick word with the Trust first.</li>
 <li><strong>Support them:</strong> it runs on volunteers and donations - <a href="https://www.gazensalts.co.uk" target="_blank" rel="noopener">gazensalts.co.uk</a>. They meet Wednesdays, 9 to noon.</li>
 </ul>
 </div>
