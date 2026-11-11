@@ -113,13 +113,11 @@ I will bring the family back now the gate is open again. Later than I meant to b
 | **Terrain** | Level wood-chip and grass paths; can get muddy |
 | **Of note** | A small, man-made reserve that survived a flood and a long closure |
 
-Two routes below: a **short** reserve loop (about 2.4 km, flat), and a **longer** Sandwich circular (about 2.9 km) that strings Gazen Salts together with the Quay, the toll bridge and the riverside path along the Stour. Neither is precisely the line I walked; they are there to plan your own from the map. Download the GPX or KML to load onto a phone or watch.
+The green line below is the reserve's Woodland Walk, the signed loop round the north of the site, traced from my own GPS on the day: about 0.7 km, roughly twenty minutes at a normal pace, longer if you stop for the birds (the leaflet calls it 35). I wandered a good deal further than that poking about the meadows and dykes, but this is the one that is actually waymarked. Download the GPX or KML to load onto a phone or watch.
 
-{% include route-map.html route="/assets/routes/gazen-salts-sandwich.geojson" %}
+{% include route-map.html route="/assets/routes/gazen-salts-woodland-walk.geojson" %}
 
 <p class="text-center my-3">
-  <a class="btn btn-accent btn-sm" href="/assets/routes/gazen-salts-reserve-loop.gpx">Short loop GPX</a>
-  <a class="btn btn-accent btn-sm" href="/assets/routes/gazen-salts-reserve-loop.kml">Short loop KML</a>
-  <a class="btn btn-accent btn-sm" href="/assets/routes/gazen-salts-sandwich-circular.gpx">Long circular GPX</a>
-  <a class="btn btn-accent btn-sm" href="/assets/routes/gazen-salts-sandwich-circular.kml">Long circular KML</a>
+  <a class="btn btn-accent btn-sm" href="/assets/routes/gazen-salts-woodland-walk.gpx">Woodland Walk GPX</a>
+  <a class="btn btn-accent btn-sm" href="/assets/routes/gazen-salts-woodland-walk.kml">Woodland Walk KML</a>
 </p>
