@@ -21,11 +21,11 @@ tags:
 
 TikTok officially launched TikTok Shop in the US on 12 September, and it has dominated the ecommerce newsletters I read ever since. Here in the UK it isn't new. Sellers have been able to use it since 2021, though it has never had quite the attention it's getting now that the US is involved.
 
-This is my attempt to think through whether UK brands should take it seriously. I haven't run a TikTok Shop myself, so treat this as the questions I'd ask rather than advice from someone who has.
+I haven't run a TikTok Shop myself, so treat this as the questions I'd ask about whether UK brands should take it seriously, rather than advice from someone who has.
 
 ## What it is
 
-In short, shopping inside the app. Products appear in videos, in live streams and in a shop tab. Customers can buy without leaving TikTok, and creators can earn commission for promoting products from sellers they've never met, through an affiliate programme. Sellers list products, handle fulfilment (or use TikTok's in some markets), and TikTok takes a fee on each sale.
+It's shopping inside the app. Products appear in videos, in live streams and in a shop tab. Customers can buy without leaving TikTok, and creators can earn commission for promoting products from sellers they've never met, through an affiliate programme. Sellers list products, handle fulfilment (or use TikTok's in some markets), and TikTok takes a fee on each sale.
 
 That last part, the affiliate model, is the thing that makes it different from a shoppable Instagram post. Your product can end up in front of millions of people because a creator decided it would make a good video, without you commissioning anything.
 
@@ -49,7 +49,7 @@ TikTok also seems to be spending heavily to make the US launch work, with discou
 
 ## My view, for now
 
-For most UK brands I'd treat TikTok Shop as a test, not a strategy. Pick a handful of products that suit the format, work out the margin properly once fees, affiliate commission and any discounting are taken off, and give it a defined period with a clear measure of success.
+For most UK brands I'd treat TikTok Shop as something to test on a small scale. Pick a handful of products that suit the format, work out the margin properly once fees, affiliate commission and any discounting are taken off, and give it a defined period with a clear measure of success.
 
 If the product doesn't suit it, I'd sit it out and put the effort into the website and email list you control.
 

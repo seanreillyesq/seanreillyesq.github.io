@@ -25,7 +25,7 @@ Google is now asking millions of users to tell it which sites they never want to
 
 None of this comes out of nowhere. Back in January, Matt Cutts wrote about tackling low-quality sites and what everyone in the industry has taken to calling content farms; the eHows and Suite101s of the world, articles written to hit a keyword, wrapped in adverts, offering almost nothing to the person who clicked. Google has clearly decided that enough people are complaining about this to act on it.
 
-For a listings publisher like the one I work for, this is worth losing a little sleep over. Thin content is an occupational hazard when your database runs to tens of thousands of pages. A venue name, an address, a two-line blurb lifted from a press release; do that a few thousand times and you have accidentally built something that looks a lot like the sites Google is describing. Nobody set out to make a content farm. You just wake up one day owning one.
+For a listings publisher like the one I work for, this is worth losing a little sleep over. Thin content is an occupational hazard when your database runs to tens of thousands of pages. A venue name, an address, a two-line blurb lifted from a press release; do that a few thousand times and you have accidentally built something that looks a lot like the sites Google is describing.
 
 So I've spent this week auditing rather than publishing. The questions I'm asking of each template of page:
 
@@ -35,4 +35,4 @@ So I've spent this week auditing rather than publishing. The questions I'm askin
 
 That last option is the one people resist. There is a deep-seated belief in this industry that more indexed pages is always better. I'm not sure that holds any more. Ten strong pages may soon be worth more than a thousand weak ones, and I would rather make that call myself than have Google make it for me during a traffic drop I can't explain.
 
-I don't know when whatever's coming actually lands, or what they'll name it. The blocklist extension and the January blog posts feel like the warm-up act. Google hasn't put a date on any of it, which is the part that keeps me refreshing the search blogs each morning.
+I don't know when whatever's coming actually lands, or what they'll name it. The blocklist extension and the January blog posts feel like the warm-up act. Google hasn't put a date on any of it, so I'm keeping an eye on the search blogs each morning and auditing in the meantime.

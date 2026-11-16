@@ -23,7 +23,7 @@ Tell most B2B marketers you're running Facebook ads and you'll get a look. Faceb
 
 The reason the objection feels right is that Facebook has no intent. On Google someone types "crm for small business" and you know what they want this minute. On Facebook nobody is searching for anything; they're scrolling. If you're used to buying intent, paying to appear in front of people who aren't looking feels mad.
 
-Here's the thing, though. B2B buyers are people, and people are on Facebook in the evening. The targeting Facebook actually gives you is where it gets interesting. You can aim ads at people who list a particular employer, or a job title, or membership of an industry group. That's crude next to what you'd like, and plenty of people leave the work field blank so your real reach is smaller than the raw numbers suggest. Even so, the ability to put a message specifically in front of, say, marketing managers at companies above a certain size is a long way from nothing.
+But B2B buyers are people, and people are on Facebook in the evening. The targeting is the useful part. You can aim ads at people who list a particular employer, or a job title, or membership of an industry group. That's crude next to what you'd like, and plenty of people leave the work field blank so your real reach is smaller than the raw numbers suggest. Even so, the ability to put a message specifically in front of, say, marketing managers at companies above a certain size is a long way from nothing.
 
 What I've seen work, and what I'd try:
 
