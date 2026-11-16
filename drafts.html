@@ -1,0 +1,32 @@
+---
+layout: page
+title: "Draft Reading Index"
+subtitle: "Private index of unpublished drafts - not indexed by search engines"
+header-img: "img/home-bg.jpg"
+header_overlay: true
+meta-description: "Private index of hidden draft posts. Not indexed."
+robots: "noindex, nofollow"
+hidden: true
+sitemap: false
+nav: false
+permalink: /drafts/
+---
+
+{% assign hidden_posts = site.posts | where_exp: "p", "p.hidden == true" %}
+{% assign by_year = hidden_posts | group_by_exp: "p", "p.date | date: '%Y'" %}
+
+<p class="lead">{{ hidden_posts | size }} hidden drafts, newest first. These are noindex and off every public listing; this page is too. Open any one and use the Previous / Next links at the foot of it to read straight through, or jump back here from the Draft Index link.</p>
+
+{% for year in by_year %}
+<section class="mb-4">
+  <h2 class="fw-bold border-bottom pb-2">{{ year.name }} <small class="text-muted">({{ year.items | size }})</small></h2>
+  <ul class="list-unstyled">
+  {% for p in year.items %}
+    <li class="mb-1">
+      <span class="text-muted" style="display:inline-block;min-width:7.5em;">{{ p.date | date: "%d %b %Y" }}</span>
+      <a href="{{ p.url | prepend: site.baseurl | replace: '//', '/' }}">{{ p.title }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endfor %}

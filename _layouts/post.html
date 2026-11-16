@@ -50,6 +50,30 @@ layout: default
                     <a href="{{ next_post.url | prepend: site.baseurl | replace: '//', '/' }}" class="post-nav-next">Next Post &rarr;</a>
                     {% endif %}
                     {% endunless %}
+
+                    {% comment %} Hidden drafts get their own prev/next walking only the hidden set, plus a link back to the private index. This block never renders on public posts. {% endcomment %}
+                    {% if page.hidden %}
+                    {% assign hidden_posts = site.posts | where_exp: "item", "item.hidden == true" %}
+                    {% assign prev_draft = nil %}
+                    {% assign next_draft = nil %}
+                    {% assign passed_current = false %}
+                    {% for item in hidden_posts %}
+                        {% if item.url == page.url %}
+                            {% assign passed_current = true %}
+                        {% elsif passed_current and next_draft == nil %}
+                            {% assign next_draft = item %}
+                        {% elsif passed_current == false %}
+                            {% assign prev_draft = item %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if prev_draft %}
+                    <a href="{{ prev_draft.url | prepend: site.baseurl | replace: '//', '/' }}">&larr; Previous Draft</a>
+                    {% endif %}
+                    <a href="{{ '/drafts/' | prepend: site.baseurl | replace: '//', '/' }}" class="post-nav-index">Draft Index</a>
+                    {% if next_draft %}
+                    <a href="{{ next_draft.url | prepend: site.baseurl | replace: '//', '/' }}" class="post-nav-next">Next Draft &rarr;</a>
+                    {% endif %}
+                    {% endif %}
                 </div>
 
             </div>
