@@ -21,7 +21,7 @@ tags:
 
 If you run a content site and your revenue is mostly banner advertising, you have probably watched your rates drift downwards for a couple of years now and wondered when it stops. I don't think it does, at least not while ad networks keep making it easy to buy inventory by the ton at whatever price the market will bear.
 
-The banner still pays some of the bills at the city guide, and I'm not about to pretend otherwise. But the parts of the business that actually excite me now are the ones that have nothing to do with impressions and CPMs.
+The banner still paid a good share of the bills where I was, and I'm not about to pretend otherwise. But the parts of the business that actually excite me now are the ones that have nothing to do with impressions and CPMs.
 
 A few that are working, or at least worth a serious look for any publisher:
 

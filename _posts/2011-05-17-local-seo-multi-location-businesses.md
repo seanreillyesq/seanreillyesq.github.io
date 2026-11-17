@@ -21,7 +21,7 @@ tags:
 
 Almost every guide to local search assumes you are a single business with a single address. Claim your Google Places page, get some reviews, keep your details consistent, done. That advice is fine for a corner cafe and falls apart the moment you have twenty branches.
 
-I keep bumping into this because a lot of the businesses listed on the city guide are chains, or franchises, or a small local group with four or five sites. The questions they ask are different, and the plain starting point is that Google's local tools were built with the corner cafe in mind, so multi-location businesses spend a lot of time working around gaps.
+I kept bumping into this because of where I was working; so many of the local businesses I came across were chains, or franchises, or a small local group with four or five sites. The questions they ask are different, and the plain starting point is that Google's local tools were built with the corner cafe in mind, so multi-location businesses spend a lot of time working around gaps.
 
 The first mistake I see is one page for the whole company. A single "Locations" page with a long list of addresses, or worse, a shared page that a customer in Leeds and a customer in Bristol both land on. Google has nothing to attach each branch to. Every location needs its own proper page on your website, with its own address, its own phone number, its own opening hours, ideally something genuinely local on it rather than the same boilerplate with the town name swapped in.
 

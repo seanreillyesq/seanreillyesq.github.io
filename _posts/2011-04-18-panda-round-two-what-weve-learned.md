@@ -31,7 +31,7 @@ A few things I've taken from watching it play out:
 - **Recovery is slow.** The US sites that cleaned up didn't bounce straight back. The update seems to re-run periodically rather than continuously, so you fix things and then wait, sometimes weeks, to find out if it worked. Nobody enjoys that.
 - **"Block, delete or improve" beats endless tinkering.** The sites that reacted well made hard decisions about whole sections of their site rather than fiddling with meta descriptions.
 
-At the city guide we came out of this reasonably intact, and I think it is because we'd already started the tidying I wrote about in February. Not because we're clever, more because the warning signs were impossible to miss and we chose to act on them early rather than argue about it.
+A site I'd spent the past year working on came out of this reasonably intact, and I think it is because we'd already started the tidying I wrote about in February. The warning signs had been impossible to miss, and we chose to act on them early rather than argue about it.
 
 What I don't yet know is how this settles. The US results have kept shifting since February, so "we survived round one" is not the same as "we're safe". This is the second version in eight weeks. There will be a third.
 
