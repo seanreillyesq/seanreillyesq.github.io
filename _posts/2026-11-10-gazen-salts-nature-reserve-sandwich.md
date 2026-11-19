@@ -26,19 +26,19 @@ I came here as a kid, with my sister Mary and our friends Elenor and Madeline. T
 
 ## A reserve with a strange name and a made-up past
 
-The name throws people. It is not "Grazen", and it has nothing to do with grazing. "Salts" is the old word for the saltings, the tidal salt marsh along the Stour. "Gazen" is a worn-down surname: a man called **John Gason** held the lease on these saltings in the seventeenth century, and over a few hundred years "Gason's salts" slurred into "Gazen Salts". The place is still named after a tenant farmer nobody remembers.
+The name throws people. It is not "Grazen", and it has nothing to do with grazing. "Salts" is the old word for the saltings, the tidal salt marsh along the Stour. "Gazen" is a worn-down surname: a tenant farmer called **John Gason** held the lease on these saltings in the seventeenth century, and over a few hundred years "Gason's salts" slurred into "Gazen Salts".
 
 The reserve itself is younger than it looks. It was dug out in **1973**, designed by a local naturalist called Dennis Harle, on ground that had been grazing fields, old allotments, a disused rubbish tip and a builder's yard. Not promising material. Fifty years on it has a lake, a scrape, a round pond, reedbeds and a ring of woodland with something like sixty species of tree and shrub, and over 160 kinds of bird recorded. There is a memorial to Harle near the middle of the reserve.
 
 ## The years it was shut
 
-There was a long stretch when you could not get in at all, and I walked straight into it. Back in 2016 I decided to bring my own family to the place I remembered. I wanted to show them the lake, the woods, the secret-feeling bit of Sandwich I had carried around in my head since I was a boy. We got there and it was shut. Gate closed, no way in. I had built the whole trip up and then stood outside, unable to show them any of it. We drove up the road to Richborough Fort instead and made an afternoon of the Roman ruins - a good day out, just not the one I had planned.
+There was a long stretch when you could not get in at all, and I walked straight into it. Back in 2016 I decided to bring my own family to the place I remembered. I wanted to show them the lake, the woods, the secret-feeling bit of Sandwich I had carried around in my head since I was a boy. We got there and it was shut. Gate closed, no way in. I had built the whole trip up and then stood outside, unable to show them any of it. We drove up the road to Richborough Fort instead and made an afternoon of the Roman ruins.
 
-What I did not know at the time was why. In December 2013 a tidal surge put Sandwich under water, and Gazen Salts, sitting in its river loop, took the full force of it. The brackish ecosystems the reserve had spent forty years building were, in the words of its own leaflet, "all but destroyed". It closed, and it stayed closed for years. That is what I had walked into on the day; I just did not know it at the time.
+What I did not know at the time was why. In December 2013 a tidal surge put Sandwich under water, and Gazen Salts, sitting in its river loop, took the full force of it. The brackish ecosystems the reserve had spent forty years building were, in the words of its own leaflet, "all but destroyed". It closed, and it stayed closed for years.
 
 ## The people who brought it back
 
-In 2019 a group of volunteers simply set to work. No grand reopening, no fanfare that I ever saw; just people turning up to reclaim and regenerate a flooded wreck of a place, Wednesday morning after Wednesday morning. It is run entirely by the Gazen Salts Trust now, a registered charity kept going by those volunteers and by donations, with help over the years from Dover District Council, the Sandwich Toll Bridge Fund and the Kent Community Foundation.
+In 2019 a group of volunteers simply set to work. They turned up to reclaim and regenerate a flooded wreck of a place, Wednesday morning after Wednesday morning. It is run entirely by the Gazen Salts Trust now, a registered charity kept going by those volunteers and by donations, with help over the years from Dover District Council, the Sandwich Toll Bridge Fund and the Kent Community Foundation.
 
 They still meet every Wednesday, nine until noon, all year round. That is the only reason the gate was open when I turned up this morning.
 
@@ -96,7 +96,7 @@ My favourite corner is Gallows Field, at the southern end, mostly for the name. 
 </ul>
 </div>
 
-I will bring the family back now the gate is open again. Later than I meant to by about thirty years. But it is open, and that is down to the Wednesday crew, not to me.
+I will bring the family back now the gate is open again. The Wednesday crew are there every week, nine until noon, keeping it that way.
 
 ---
 
